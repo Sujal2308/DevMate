@@ -20,8 +20,8 @@ module.exports = {
         x: ["Helvetica Neue", "Arial", "sans-serif"],
       },
       maxWidth: {
-        "x-main": "600px",
-        "x-sidebar": "275px",
+        "x-main": "40rem", // 640px, matches new .x-main
+        "x-sidebar": "256px",
       },
       animation: {
         float: "float 6s ease-in-out infinite",

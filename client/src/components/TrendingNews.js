@@ -54,7 +54,7 @@ const TrendingNews = () => {
   };
 
   const sidebarClass =
-    "hidden xl:block xl:w-80 xl:ml-24 xl:pl-8 mt-6 flex-shrink-0";
+    "hidden xl:block xl:w-80 xl:ml-8 xl:pl-8 mt-6 flex-shrink-0 min-h-screen";
 
   if (loading) {
     return (
@@ -121,7 +121,7 @@ const TrendingNews = () => {
 
   return (
     <aside className={sidebarClass}>
-      <div className="bg-black rounded-xl p-4 border border-[#172554] shadow-lg border-l-2 border-l-[#172554] min-h-[420px]">
+      <div className="bg-black rounded-xl p-4 border border-[#172554] shadow-lg min-h-[420px]">
         {/* Header */}
         <div className="flex items-center gap-2 mb-4 pb-3 border-b border-x-border justify-between">
           <div className="flex items-center gap-2">

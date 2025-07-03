@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <div className="hidden lg:block bg-gradient-to-b from-x-black via-x-darker/30 to-x-darker/50 border-t border-x-border/20 lg:rounded-b-2xl">
       <footer className="py-8 relative z-10 shadow-lg w-full">
-        <div className="max-w-6xl mx-auto px-8 text-center">
+        <div className="max-w-x-main mx-auto px-4 text-center">
           {/* Simple minimal footer for app pages */}
           <div className="flex items-center justify-center space-x-6 text-sm text-x-gray mb-4">
             <Link to="/explore" className="hover:text-x-blue transition-colors">

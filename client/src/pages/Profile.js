@@ -174,7 +174,7 @@ const Profile = () => {
   );
 
   return (
-    <div className="max-w-6xl mx-auto py-8 px-6">
+    <div className="max-w-6xl mx-auto py-8 px-4">
       {/* Hero Profile Section */}
       <div className="relative mb-8">
         {/* Cover */}
