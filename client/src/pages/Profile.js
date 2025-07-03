@@ -174,21 +174,20 @@ const Profile = () => {
   );
 
   return (
-    <div className="max-w-6xl mx-auto py-4 lg:py-8 px-3 lg:px-6">
-      {" "}
+    <div className="max-w-6xl mx-auto py-8 px-6">
       {/* Hero Profile Section */}
       <div className="relative mb-8">
-        {/* Responsive cover for all devices */}
-        <div className="h-32 lg:h-64 bg-gradient-to-r from-x-blue via-purple-600 to-x-green rounded-t-3xl relative overflow-hidden">
+        {/* Cover */}
+        <div className="h-64 bg-gradient-to-r from-x-blue via-purple-600 to-x-green rounded-t-3xl relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-          <div className="absolute top-3 lg:top-4 right-3 lg:right-4">
+          <div className="absolute top-4 right-4">
             {isOwnProfile && (
               <Link
                 to="/edit-profile"
-                className="bg-x-white/10 backdrop-blur-sm hover:bg-x-white/20 text-white px-3 lg:px-4 py-1.5 lg:py-2 rounded-xl font-medium transition-all duration-200 flex items-center"
+                className="bg-x-white/10 backdrop-blur-sm hover:bg-x-white/20 text-white px-4 py-2 rounded-xl font-medium transition-all duration-200 flex items-center"
               >
                 <svg
-                  className="w-4 h-4 mr-0 lg:mr-2"
+                  className="w-4 h-4 mr-2"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -200,25 +199,25 @@ const Profile = () => {
                     d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
                   />
                 </svg>
-                <span className="hidden lg:inline">Edit Profile</span>
+                <span>Edit Profile</span>
               </Link>
             )}
           </div>
         </div>
 
-        {/* Responsive Profile Info Card */}
-        <div className="bg-gradient-to-br from-x-dark/90 to-x-dark/60 backdrop-blur-sm border border-x-border/50 rounded-b-3xl -mt-1 pt-6 lg:pt-8 pb-4 lg:pb-6 px-4 lg:px-8">
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between">
-            <div className="flex flex-col lg:flex-row lg:items-end text-center lg:text-left">
-              {/* Avatar - Responsive */}
-              <div className="relative -mt-12 lg:-mt-20 mb-4 lg:mb-0 lg:mr-6 mx-auto lg:mx-0">
-                <div className="bg-gradient-to-r from-x-blue to-purple-500 text-white w-20 h-20 lg:w-32 lg:h-32 rounded-2xl lg:rounded-3xl flex items-center justify-center text-2xl lg:text-4xl font-bold border-4 border-x-dark shadow-2xl">
+        {/* Profile Info Card */}
+        <div className="bg-gradient-to-br from-x-dark/90 to-x-dark/60 backdrop-blur-sm border border-x-border/50 rounded-b-3xl -mt-1 pt-8 pb-6 px-8">
+          <div className="flex flex-row items-end justify-between">
+            <div className="flex flex-row items-end text-left">
+              {/* Avatar */}
+              <div className="relative -mt-20 mb-0 mr-6">
+                <div className="bg-gradient-to-r from-x-blue to-purple-500 text-white w-32 h-32 rounded-3xl flex items-center justify-center text-4xl font-bold border-4 border-x-dark shadow-2xl">
                   {profileUser.displayName?.charAt(0).toUpperCase() ||
                     profileUser.username.charAt(0).toUpperCase()}
                 </div>
-                <div className="absolute -bottom-1 lg:-bottom-2 -right-1 lg:-right-2 bg-x-green w-6 h-6 lg:w-8 lg:h-8 rounded-full border-2 lg:border-4 border-x-dark flex items-center justify-center">
+                <div className="absolute -bottom-2 -right-2 bg-x-green w-8 h-8 rounded-full border-4 border-x-dark flex items-center justify-center">
                   <svg
-                    className="w-3 h-3 lg:w-4 lg:h-4 text-white"
+                    className="w-4 h-4 text-white"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -231,16 +230,16 @@ const Profile = () => {
                 </div>
               </div>
 
-              {/* Name and Info - Responsive */}
-              <div className="text-center lg:text-left">
-                <h1 className="text-2xl lg:text-4xl font-bold text-x-white mb-2">
+              {/* Name and Info */}
+              <div className="text-left">
+                <h1 className="text-4xl font-bold text-x-white mb-2">
                   {profileUser.displayName || profileUser.username}
                 </h1>
-                <div className="flex flex-col lg:flex-row lg:space-x-4 mb-2 space-y-1 lg:space-y-0">
-                  <p className="text-lg lg:text-xl text-x-gray mb-0">
+                <div className="flex flex-row space-x-4 mb-2">
+                  <p className="text-xl text-x-gray mb-0">
                     @{profileUser.username}
                   </p>
-                  <div className="flex items-center justify-center lg:justify-start text-sm text-x-gray">
+                  <div className="flex items-center justify-start text-sm text-x-gray">
                     <svg
                       className="w-4 h-4 mr-1"
                       fill="none"
@@ -264,12 +263,12 @@ const Profile = () => {
                     )}
                   </div>
                 </div>
-                {/* Follow button - Responsive */}
+                {/* Follow button */}
                 {!isOwnProfile && user && (
                   <button
                     onClick={handleFollowToggle}
                     disabled={followLoading}
-                    className={`mt-2 px-4 py-2 rounded-full font-semibold text-sm lg:text-base transition-all duration-200 shadow-md focus:outline-none focus:ring-2 focus:ring-x-blue focus:ring-offset-2 w-full lg:w-auto ${
+                    className={`mt-2 px-4 py-2 rounded-full font-semibold text-base transition-all duration-200 shadow-md focus:outline-none focus:ring-2 focus:ring-x-blue focus:ring-offset-2 w-auto ${
                       isFollowing
                         ? "bg-x-dark/40 text-x-gray border border-x-border/40 hover:bg-x-dark/60"
                         : "bg-x-blue text-white hover:bg-x-green"
@@ -291,8 +290,8 @@ const Profile = () => {
             </div>
           </div>
 
-          {/* Desktop Bio - with ABOUT header */}
-          <div className="mt-6 hidden lg:block">
+          {/* Bio - with ABOUT header */}
+          <div className="mt-6 block">
             <div className="flex items-center mb-3">
               <svg
                 className="w-4 h-4 text-x-blue mr-2"
@@ -316,8 +315,8 @@ const Profile = () => {
             )}
           </div>
 
-          {/* Desktop Skills and GitHub Section */}
-          <div className="mt-6 hidden lg:grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Skills and GitHub Section */}
+          <div className="mt-6 grid grid-cols-2 gap-6">
             {/* Skills */}
             <div className="skills-section">
               <div className="flex items-center mb-3">
@@ -352,7 +351,7 @@ const Profile = () => {
               )}
             </div>
 
-            {/* Desktop GitHub Link */}
+            {/* GitHub Link */}
             {profileUser.githubLink && (
               <div className="github-section">
                 <div className="flex items-center mb-3">
@@ -399,180 +398,122 @@ const Profile = () => {
           </div>
         </div>
       </div>
-      {/* Profile Metrics Section (Followers/Following) */}
-      <div className="mb-4">
-        <div className="bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/50 rounded-2xl p-4 lg:p-5">
-          <div className="flex items-center justify-center lg:justify-start mb-4">
-            <svg
-              className="w-4 h-4 text-x-blue mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m9-4a4 4 0 10-8 0 4 4 0 008 0z"
-              />
-            </svg>
-            <h2 className="text-lg lg:text-xl font-bold text-x-white">
-              Profile Metrics
-            </h2>
+      {/* Desktop-only Metrics Section */}
+      <div className="grid grid-cols-4 gap-4 mb-8">
+        <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center">
+          <div className="text-3xl font-bold text-x-white mb-1">
+            {posts.length}
           </div>
-
-          <div className="flex flex-row gap-3 lg:gap-6 justify-between items-center">
-            <div className="flex-1 bg-x-dark/40 border border-x-border/30 rounded-xl p-3 lg:p-4 text-center hover:border-x-border/60 transition-all duration-200 mx-0">
-              <div className="bg-x-blue/10 w-8 h-8 rounded-lg flex items-center justify-center mx-auto mb-2">
-                <svg
-                  className="w-4 h-4 text-x-blue"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m9-4a4 4 0 10-8 0 4 4 0 008 0z"
-                  />
-                </svg>
-              </div>
-              <div className="text-xl lg:text-2xl font-bold text-x-white mb-1">
-                {profileUser.followers?.length || 0}
-              </div>
-              <div className="text-xs lg:text-sm text-x-gray font-medium">
-                Followers
-              </div>
-            </div>
-            <div className="flex-1 bg-x-dark/40 border border-x-border/30 rounded-xl p-3 lg:p-4 text-center hover:border-x-border/60 transition-all duration-200 mx-0">
-              <div className="bg-x-green/10 w-8 h-8 rounded-lg flex items-center justify-center mx-auto mb-2">
-                <svg
-                  className="w-4 h-4 text-x-green"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 4v16m8-8H4"
-                  />
-                </svg>
-              </div>
-              <div className="text-xl lg:text-2xl font-bold text-x-white mb-1">
-                {profileUser.following?.length || 0}
-              </div>
-              <div className="text-xs lg:text-sm text-x-gray font-medium">
-                Following
-              </div>
-            </div>
+          <div className="text-x-gray text-sm">Posts</div>
+        </div>
+        <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center">
+          <div className="text-3xl font-bold text-x-white mb-1">
+            {profileUser.followers?.length || 0}
           </div>
+          <div className="text-x-gray text-sm">Followers</div>
+        </div>
+        <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center">
+          <div className="text-3xl font-bold text-x-white mb-1">
+            {profileUser.following?.length || 0}
+          </div>
+          <div className="text-x-gray text-sm">Following</div>
+        </div>
+        <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center">
+          <div className="text-3xl font-bold text-x-white mb-1">
+            {totalLikes}
+          </div>
+          <div className="text-x-gray text-sm">Likes</div>
         </div>
       </div>
-      {/* Posts Metrics Section */}
-      <div className="mb-6">
-        <div className="bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/50 rounded-2xl p-4 lg:p-5">
-          <div className="flex items-center justify-center lg:justify-start mb-4">
-            <svg
-              className="w-4 h-4 text-x-green mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-              />
-            </svg>
-            <h2 className="text-lg lg:text-xl font-bold text-x-white">
-              Posts Metrics
-            </h2>
-          </div>
 
-          {/* Responsive metrics row for all viewports */}
-          <div className="flex flex-row gap-3 lg:gap-6 justify-between items-center">
-            <div className="flex-1 bg-x-dark/40 border border-x-border/30 rounded-xl p-3 lg:p-4 text-center hover:border-x-border/60 transition-all duration-200 mx-0">
-              <div className="bg-x-blue/10 w-8 h-8 rounded-lg flex items-center justify-center mx-auto mb-2">
-                <svg
-                  className="w-4 h-4 text-x-blue"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-1l-4 4z"
-                  />
-                </svg>
-              </div>
-              <div className="text-xl lg:text-2xl font-bold text-x-white mb-1">
-                {posts.length}
-              </div>
-              <div className="text-xs lg:text-sm text-x-gray font-medium">
-                Posts
-              </div>
-            </div>
-
-            <div className="flex-1 bg-x-dark/40 border border-x-border/30 rounded-xl p-3 lg:p-4 text-center hover:border-x-border/60 transition-all duration-200 mx-0">
-              <div className="bg-red-500/10 w-8 h-8 rounded-lg flex items-center justify-center mx-auto mb-2">
-                <svg
-                  className="w-4 h-4 text-red-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                  />
-                </svg>
-              </div>
-              <div className="text-xl lg:text-2xl font-bold text-red-400 mb-1">
-                {totalLikes}
-              </div>
-              <div className="text-xs lg:text-sm text-x-gray font-medium">
-                Likes
-              </div>
-            </div>
-
-            <div className="flex-1 bg-x-dark/40 border border-x-border/30 rounded-xl p-3 lg:p-4 text-center hover:border-x-border/60 transition-all duration-200 mx-0">
-              <div className="bg-purple-500/10 w-8 h-8 rounded-lg flex items-center justify-center mx-auto mb-2">
-                <svg
-                  className="w-4 h-4 text-purple-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                  />
-                </svg>
-              </div>
-              <div className="text-xl lg:text-2xl font-bold text-purple-400 mb-1">
-                {totalComments}
-              </div>
-              <div className="text-xs lg:text-sm text-x-gray font-medium">
-                Comments
-              </div>
-            </div>
-          </div>
+      {/* Posts Section */}
+      <div className="bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/50 rounded-2xl p-6">
+        <div className="flex items-center justify-start mb-6">
+          <svg
+            className="w-5 h-5 text-x-green mr-3"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-1l-4 4z"
+            />
+          </svg>
+          <h2 className="text-2xl font-bold text-x-white">Posts</h2>
         </div>
+
+        {/* Loading state */}
+        {loading && (
+          <div className="flex items-center justify-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-x-blue"></div>
+            <span className="ml-3 text-x-gray">Loading posts...</span>
+          </div>
+        )}
+
+        {/* Posts grid */}
+        {!loading && posts.length > 0 && (
+          <div className="grid grid-cols-1 gap-6">
+            {posts.map((post) => (
+              <PostCard key={post._id} post={post} />
+            ))}
+          </div>
+        )}
+
+        {/* Empty state */}
+        {!loading && posts.length === 0 && (
+          <div className="text-center py-16">
+            <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-8">
+              <svg
+                className="w-16 h-16 text-x-gray mx-auto mb-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-1l-4 4z"
+                />
+              </svg>
+              <p className="text-x-gray text-lg">
+                {isOwnProfile
+                  ? "You haven't posted anything yet."
+                  : `${profileUser.username} hasn't posted anything yet.`}
+              </p>
+              {isOwnProfile && (
+                <Link
+                  to="/create-post"
+                  className="inline-flex items-center mt-4 bg-x-blue hover:bg-x-green text-white px-6 py-2 rounded-xl font-medium transition-colors"
+                >
+                  <svg
+                    className="w-4 h-4 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 4v16m8-8H4"
+                    />
+                  </svg>
+                  Create Your First Post
+                </Link>
+              )}
+            </div>
+          </div>
+        )}
       </div>
+
       {/* Content Tabs */}
       <div className="mb-8">
         <div className="border-b border-x-border/30">
-          <nav className="flex justify-center lg:justify-start space-x-8">
+          <nav className="flex justify-start space-x-8">
             <button
               onClick={() => setActiveTab("posts")}
               className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors ${

@@ -77,10 +77,10 @@ function AppContent() {
         // Logged in layout - Responsive 3-column
         <>
           <div className="flex-1 flex flex-col pt-16">
-            <div className="x-container-mobile">
+            <div className="x-container">
               <Sidebar />
               <div className="flex flex-col flex-1">
-                <main className="x-main-mobile">
+                <main className="x-main">
                   <Routes>
                     <Route
                       path="/"
