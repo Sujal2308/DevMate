@@ -38,7 +38,7 @@ const Sidebar = () => {
   }, []);
 
   return (
-    <div className="x-sidebar-mobile hidden lg:flex lg:flex-col h-full">
+    <div className="x-sidebar flex flex-col h-full">
       {/* Logo - Only visible on larger screens */}
       <div className="mb-8 hidden lg:block text-center select-none">
         <div className="flex flex-col items-center justify-center gap-2">
