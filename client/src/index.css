@@ -13,27 +13,11 @@
     -moz-osx-font-smoothing: grayscale;
     width: 100%;
     max-width: 100vw;
-    /* Ensure dark scrollbar on body */
-    scrollbar-width: thin;
-    scrollbar-color: #2f3336 #0f0f0f;
   }
 
   html::-webkit-scrollbar,
   body::-webkit-scrollbar {
-    width: 8px;
-    background: #0f0f0f;
-  }
-
-  html::-webkit-scrollbar-thumb,
-  body::-webkit-scrollbar-thumb {
-    background: #2f3336;
-    border-radius: 4px;
-    border: 1px solid #0f0f0f;
-  }
-
-  html::-webkit-scrollbar-thumb:hover,
-  body::-webkit-scrollbar-thumb:hover {
-    background: #1d9bf0;
+    display: none !important;
   }
 
   * {
@@ -105,8 +89,9 @@ html {
     min-height: 100vh;
     width: 100vw;
     position: relative;
-    padding: 0;
+    padding: 4rem 0 0 0;
     margin: 0;
+    overflow: visible !important;
   }
 
   .x-sidebar {
@@ -115,8 +100,8 @@ html {
     position: fixed;
     top: 4rem; /* navbar height */
     left: calc(
-      50% - 20rem - 8px - 256px
-    ); /* Position 8px left of centered main content */
+      50% - 20rem - 4px - 256px
+    ); /* Position 4px left of centered main content */
     height: calc(100vh - 4rem);
     z-index: 30;
     flex-shrink: 0;
@@ -125,7 +110,7 @@ html {
   .x-main {
     max-width: 40rem; /* 640px */
     width: 100%;
-    position: relative;
+    position: absolute;
     left: 50%;
     transform: translateX(-50%);
     top: 0;
@@ -136,7 +121,11 @@ html {
     padding-right: 1rem;
     background: transparent;
     z-index: 10;
-    overflow-x: hidden; /* Prevent horizontal scrollbar */
+    /* Ensure main content flows with document scroll */
+    overflow: visible !important;
+    height: auto !important;
+    /* Remove any transform that could create stacking context issues */
+    will-change: auto;
   }
 
   .x-post {
@@ -973,8 +962,8 @@ select.normal-dropdown {
   position: fixed !important;
   top: 4rem;
   right: calc(
-    50% - 20rem - 8px - 320px
-  ) !important; /* Position 8px right of centered main content */
+    50% - 20rem - 0px - 320px
+  ) !important; /* Flush with main content, 0px gap */
   width: 320px !important;
   height: calc(100vh - 4rem);
   margin-left: 0 !important;
@@ -986,4 +975,56 @@ select.normal-dropdown {
 /* Utility to hide Trending News section */
 .hide-trending-news {
   display: none !important;
+}
+
+/* Prevent custom scrollbars on layout containers - force browser default */
+.x-container,
+.x-main,
+.x-sidebar {
+  /* Remove any custom scrollbar styling */
+  scrollbar-width: auto !important;
+  scrollbar-color: initial !important;
+  overflow: visible !important;
+}
+
+.x-container::-webkit-scrollbar,
+.x-main::-webkit-scrollbar,
+.x-sidebar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  background: transparent !important;
+}
+
+/* Reset any inherited scrollbar styles */
+* {
+  scrollbar-width: inherit;
+  scrollbar-color: inherit;
+}
+
+*::-webkit-scrollbar {
+  width: inherit;
+  background: inherit;
+}
+
+/* Ensure ONLY body has the custom dark scrollbar */
+body {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: #2f3336 #0f0f0f !important;
+}
+
+body::-webkit-scrollbar {
+  width: 8px !important;
+  background: #0f0f0f !important;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: #2f3336 !important;
+  border-radius: 4px !important;
+  border: 1px solid #0f0f0f !important;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background: #1d9bf0 !important;
 }
