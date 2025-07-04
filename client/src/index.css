@@ -1010,7 +1010,9 @@ aside.xl\:w-80 {
 aside {
   position: fixed !important;
   top: 4rem !important;
-  left: calc(420px + 640px + 10px) !important; /* Position just 10px after main content */
+  left: calc(
+    420px + 640px + 10px
+  ) !important; /* Position just 10px after main content */
   width: 320px !important;
   height: calc(100vh - 4rem) !important;
   z-index: 999 !important;
@@ -1067,4 +1069,30 @@ body::-webkit-scrollbar-thumb {
 
 body::-webkit-scrollbar-thumb:hover {
   background: #1d9bf0 !important;
+}
+
+@media (max-width: 1024px) {
+  .x-sidebar,
+  aside,
+  .trending-news-border {
+    display: none !important;
+  }
+  .x-main {
+    margin-left: 0 !important;
+    border-left: none !important;
+    border-right: none !important;
+    box-shadow: none !important;
+    max-width: 100vw !important;
+    width: 100vw !important;
+    min-width: 0 !important;
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .x-main {
+    padding-left: 0.25rem !important;
+    padding-right: 0.25rem !important;
+  }
 }
