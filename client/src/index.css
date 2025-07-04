@@ -88,7 +88,6 @@ html {
     min-height: 100vh;
     width: 100vw;
     position: relative;
-    padding: 4rem 0 0 0;
     margin: 0;
     overflow: visible !important;
   }
@@ -113,8 +112,10 @@ html {
     margin: 0 auto;
     margin-left: 420px; /* Push content more to right of sidebar */
     box-sizing: border-box;
-    border-left: 1px solid #2f3336;
-    border-right: 1px solid #2f3336;
+    border-left: 2px solid #1d9bf0; /* Matching blue left border */
+    border-right: 2px solid #1d9bf0; /* Clean blue right border */
+    box-shadow: -2px 0 8px rgba(29, 155, 240, 0.2),
+      2px 0 8px rgba(29, 155, 240, 0.2); /* Blue glow on both sides */
     padding-left: 1rem;
     padding-right: 1rem;
     background: transparent;
@@ -122,6 +123,7 @@ html {
     /* Ensure main content flows with document scroll - key fix! */
     overflow: visible !important;
     height: auto !important;
+    min-height: 100vh; /* Ensure it takes full height */
   }
 
   .x-post {
@@ -347,6 +349,23 @@ html {
 @media (max-width: 1024px) {
   .x-main-mobile {
     padding-bottom: 80px; /* Space for floating action button */
+  }
+}
+
+/* Ensure main content border is visible on all screen sizes */
+@media (max-width: 1024px) {
+  .x-main {
+    border-right: 3px solid #1d9bf0 !important; /* Force border visibility on mobile */
+    box-shadow: 3px 0 10px rgba(29, 155, 240, 0.3) !important; /* Enhanced glow on mobile */
+    margin-left: 0 !important; /* Reset margin for mobile */
+    max-width: 100% !important; /* Full width on mobile */
+  }
+}
+
+@media (max-width: 768px) {
+  .x-main {
+    border-right: 4px solid #1d9bf0 !important; /* Even thicker border on small screens */
+    box-shadow: 4px 0 15px rgba(29, 155, 240, 0.4) !important; /* More prominent glow */
   }
 }
 
@@ -957,9 +976,7 @@ select.normal-dropdown {
 .xl\\:w-80 {
   position: fixed !important;
   top: 4rem;
-  right: calc(
-    50vw - 320px - 40px - 320px
-  ) !important; /* Proper gap from centered main content */
+  left: calc(420px + 640px) !important; /* No gap, flush with main content */
   width: 320px !important;
   height: calc(100vh - 4rem);
   margin-left: 0 !important;
