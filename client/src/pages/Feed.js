@@ -46,6 +46,17 @@ const Feed = () => {
     };
   }, [hasMore, loading, showEndMessage]);
 
+  useEffect(() => {
+    if (loading && posts.length === 0) {
+      document.body.classList.add("body--loading-feed");
+    } else {
+      document.body.classList.remove("body--loading-feed");
+    }
+    return () => {
+      document.body.classList.remove("body--loading-feed");
+    };
+  }, [loading, posts.length]);
+
   const fetchPosts = async (pageNum = 1) => {
     try {
       setLoading(true);
@@ -90,10 +101,17 @@ const Feed = () => {
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto py-2 sm:py-4 lg:py-8 px-3 sm:px-4 lg:px-4 pb-20 lg:pb-8">
-      <div className="flex flex-row justify-between items-center mb-4 sm:mb-6 lg:mb-8 gap-2 sm:gap-4">
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-x-blue via-purple-500 to-x-green bg-[length:200%_auto] bg-clip-text text-transparent animate-color-cycle hover:animate-gradient-x hover:scale-110 transform transition-all duration-500 cursor-default drop-shadow-lg">
-          Feed
+    <div
+      className={`w-full max-w-2xl mx-auto py-2 sm:py-4 lg:py-8 px-3 sm:px-4 lg:px-4 pb-20 lg:pb-8 x-main${
+        loading && posts.length === 0 ? " loading" : ""
+      }`}
+    >
+      <div className="flex flex-row justify-between items-center mb-4 sm:mb-6 lg:mb-8 gap-2 sm:gap-4 px-3 sm:px-0">
+        <h1 className="text-2xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-x-blue via-purple-500 to-x-green bg-[length:200%_auto] bg-clip-text text-transparent animate-color-cycle hover:animate-gradient-x hover:scale-110 transform transition-all duration-500 cursor-default drop-shadow-lg flex items-center">
+          <span>Feed</span>
+          <span className="inline sm:hidden ml-2 align-middle !bg-none !text-[initial]">
+            👀
+          </span>
         </h1>
         <div className="flex items-center gap-2">
           <Link
@@ -102,9 +120,23 @@ const Feed = () => {
           >
             Create 🖋️
           </Link>
-          <span className="inline sm:hidden font-bold text-base cursor-default bg-gradient-to-r from-x-blue via-purple-500 to-x-green bg-[length:200%_auto] bg-clip-text text-transparent animate-color-cycle hover:animate-gradient-x hover:scale-110">
-            Create📄
-          </span>
+          <Link
+            to="/create-post"
+            className="inline sm:hidden font-medium text-lg px-3 py-1 cursor-pointer hover:scale-110 transition-all duration-300"
+            style={{
+              textDecoration: "none",
+              color: "white",
+              background: "#1d9bf0",
+              border: "3px solid #1d9bf0",
+              borderRadius: "9999px",
+              fontWeight: 500,
+            }}
+          >
+            Create
+            <span className="ml-1 align-middle !bg-none !text-[initial]">
+              📄
+            </span>
+          </Link>
         </div>
       </div>
 
