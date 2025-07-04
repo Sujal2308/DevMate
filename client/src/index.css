@@ -972,22 +972,49 @@ select.normal-dropdown {
   background-color: #2f3336;
 }
 
-/* Position TrendingNews closer to main content */
-.xl\\:w-80 {
+/* Position TrendingNews closer to main content - DISABLED (using aside rule above) */
+/*
+aside.xl\:w-80 {
   position: fixed !important;
   top: 4rem;
-  left: calc(420px + 640px) !important; /* No gap, flush with main content */
+  left: calc(420px + 600px) !important;
+  right: 100px !important;
   width: 320px !important;
   height: calc(100vh - 4rem);
   margin-left: 0 !important;
   padding-left: 0 !important;
-  overflow-y: hidden !important; /* Remove scrollbar from container */
+  overflow-y: hidden !important;
   z-index: 30;
 }
+
+.xl\:w-80 {
+  position: fixed !important;
+  top: 4rem;
+  left: calc(420px + 600px) !important;
+  right: 100px !important;
+  width: 320px !important;
+  height: calc(100vh - 4rem);
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+  overflow-y: hidden !important;
+  z-index: 30;
+}
+*/
 
 /* Utility to hide Trending News section */
 .hide-trending-news {
   display: none !important;
+}
+
+/* Force positioning for TrendingNews - very close to main content */
+aside {
+  position: fixed !important;
+  top: 4rem !important;
+  left: calc(420px + 640px + 10px) !important; /* Position just 10px after main content */
+  width: 320px !important;
+  height: calc(100vh - 4rem) !important;
+  z-index: 999 !important;
+  background: transparent !important;
 }
 
 /* Prevent custom scrollbars on layout containers - force browser default */
