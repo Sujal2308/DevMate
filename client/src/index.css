@@ -86,10 +86,8 @@ html {
     justify-content: center;
     align-items: flex-start;
     min-height: 100vh;
-    width: 100vw;
     position: relative;
     margin: 0;
-    overflow: visible !important;
   }
 
   .x-sidebar {
@@ -112,8 +110,8 @@ html {
     margin: 0 auto;
     margin-left: 420px; /* Push content more to right of sidebar */
     box-sizing: border-box;
-    border-left: 2px solid #1d9bf0; /* Matching blue left border */
-    border-right: 2px solid #1d9bf0; /* Clean blue right border */
+    /* border-left: 2px solid #1d9bf0;  Remove this line */
+    /* border-right: 2px solid #1d9bf0;  Already removed */
     box-shadow: -2px 0 8px rgba(29, 155, 240, 0.2),
       2px 0 8px rgba(29, 155, 240, 0.2); /* Blue glow on both sides */
     padding-left: 1rem;
@@ -144,6 +142,12 @@ html {
 
   .x-card {
     @apply bg-x-dark border border-x-border rounded-2xl p-6 backdrop-blur;
+    background-color: var(--tw-bg-opacity, 1) #18181b;
+    /* border: border-x-border;  Remove border */
+    border: none !important;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    backdrop-filter: blur(4px);
   }
 
   /* Custom button styles */
@@ -343,6 +347,18 @@ html {
   .profile-header-mobile .profile-actions {
     flex-shrink: 0;
   }
+
+  /* Hide vertical scroll on .x-main while loading on mobile */
+  .x-main.loading {
+    overflow-y: hidden !important;
+  }
+
+  .x-main {
+    margin: 0 auto !important;
+    max-width: 100% !important;
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
 }
 
 /* Improved mobile navigation spacing */
@@ -366,6 +382,8 @@ html {
   .x-main {
     border-right: 4px solid #1d9bf0 !important; /* Even thicker border on small screens */
     box-shadow: 4px 0 15px rgba(29, 155, 240, 0.4) !important; /* More prominent glow */
+    margin: 0 !important;
+    margin-left: 0 !important;
   }
 }
 
@@ -1092,7 +1110,31 @@ body::-webkit-scrollbar-thumb:hover {
 
 @media (max-width: 768px) {
   .x-main {
-    padding-left: 0.25rem !important;
-    padding-right: 0.25rem !important;
+    margin: 0 !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+/* Hide scroll bar and overflow on body while feed is loading */
+.body--loading-feed {
+  overflow: hidden !important;
+  height: 100vh !important;
+}
+
+@media (max-width: 768px) {
+  .body--loading-feed {
+    position: fixed !important;
+    width: 100vw !important;
+  }
+}
+
+/* Fix: Only .x-main should have blue borders on desktop */
+@media (min-width: 1025px) {
+  .x-container {
+    border: none !important;
+    box-shadow: none !important;
   }
 }
