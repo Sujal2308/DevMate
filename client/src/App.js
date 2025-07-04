@@ -175,7 +175,7 @@ function AppContent() {
                   <Footer />
                 </main>
               </div>
-              <TrendingNews />
+              {/* <TrendingNews /> */}
             </div>
           </div>
         </>
