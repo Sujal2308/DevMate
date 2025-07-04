@@ -78,28 +78,42 @@ html {
 /* X App Custom Components */
 @layer components {
   .x-container {
-    @apply flex min-h-screen relative justify-center;
-    max-width: 100vw;
-    margin-left: 0;
-    margin-right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    width: 100vw;
+    position: relative;
+    padding: 0;
+    margin: 0;
   }
 
   .x-sidebar {
-    @apply w-64 p-4 min-h-screen flex-shrink-0;
+    width: 256px;
+    padding: 1rem;
     position: fixed;
     top: 4rem; /* navbar height */
     left: 32px; /* fixed distance from left edge */
     height: calc(100vh - 4rem);
     z-index: 30;
-    margin-right: 0;
+    flex-shrink: 0;
   }
 
   .x-main {
-    @apply flex-1 min-h-screen px-4 border-l border-r border-x-border relative;
-    max-width: 40rem; /* 640px, further reduced width */
-    margin-left: calc(256px + 48px); /* sidebar width + gap (32px + 16px) */
-    margin-right: auto;
+    max-width: 40rem; /* 640px */
+    width: 100%;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 0;
     box-sizing: border-box;
+    border-left: 1px solid #2f3336;
+    border-right: 1px solid #2f3336;
+    min-height: 100vh;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    background: transparent;
+    z-index: 10;
   }
 
   .x-post {

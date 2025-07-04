@@ -641,40 +641,40 @@ const Explore = () => {
               </div>
             </div>
 
-            <div className="space-y-2 lg:space-y-4 w-full max-w-full overflow-hidden">
+            <div className="space-y-2 lg:space-y-4">
               {users.map((user) => (
                 <div
                   key={user._id}
-                  className="max-w-full mx-auto card p-1 sm:p-3 lg:p-6 md:hover:shadow-xl md:hover:shadow-x-blue/20 md:hover:border-x-blue/30 md:transition-all md:duration-300 group bg-gradient-to-br from-x-dark/80 to-x-dark/40 md:backdrop-blur-sm backdrop-blur-none border border-x-border/30 overflow-hidden mobile-card"
+                  className="w-full card p-2 sm:p-3 lg:p-6 md:hover:shadow-xl md:hover:shadow-x-blue/20 md:hover:border-x-blue/30 md:transition-all md:duration-300 group bg-gradient-to-br from-x-dark/80 to-x-dark/40 md:backdrop-blur-sm backdrop-blur-none border border-x-border/30"
                 >
-                  <div className="max-w-full overflow-hidden">
+                  <div className="w-full">
                     {/* Mobile Layout - Avatar and View Profile Button Horizontal */}
-                    <div className="flex items-center justify-between sm:hidden mb-2 overflow-hidden w-full mobile-header">
-                      <div className="flex items-center gap-1 overflow-hidden flex-1">
-                        <div className="bg-gradient-to-r from-x-blue to-purple-500 text-white w-8 h-8 rounded-lg flex-shrink-0 flex items-center justify-center text-base font-bold">
+                    <div className="flex items-center justify-between sm:hidden mb-2">
+                      <div className="flex items-center gap-3">
+                        <div className="bg-gradient-to-r from-x-blue to-purple-500 text-white w-12 h-12 rounded-2xl flex items-center justify-center text-lg font-bold shadow-lg md:group-hover:shadow-x-blue/30 md:transition-all md:duration-300">
                           {user.displayName?.charAt(0).toUpperCase() ||
                             user.username.charAt(0).toUpperCase()}
                         </div>
-                        <div className="overflow-hidden min-w-0 flex-1 ml-1">
-                          <h3 className="font-bold text-x-white text-sm truncate mb-0 leading-tight">
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-bold text-x-white text-base md:group-hover:text-x-blue md:transition-colors md:duration-200 mb-1">
                             {user.displayName || user.username}
                           </h3>
-                          <p className="text-xs text-x-gray truncate leading-tight">
+                          <p className="text-xs text-x-gray">
                             @{user.username}
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-1 flex-shrink-0">
+                      <div className="flex items-center gap-2">
                         {user.githubLink && (
                           <a
                             href={user.githubLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-x-gray rounded-lg p-1 mobile-icon"
+                            className="text-x-gray md:hover:text-x-white md:transition-colors md:duration-200 p-2 rounded-lg md:hover:bg-x-dark/60"
                             title="GitHub Profile"
                           >
                             <svg
-                              className="w-4 h-4"
+                              className="w-5 h-5"
                               fill="currentColor"
                               viewBox="0 0 20 20"
                             >
@@ -688,9 +688,9 @@ const Explore = () => {
                         )}
                         <Link
                           to={`/profile/${user.username}`}
-                          className="mobile-btn"
+                          className="btn-primary text-xs px-3 py-2 md:hover:scale-105 transform md:transition-all md:duration-200 whitespace-nowrap"
                         >
-                          Profile
+                          View Profile
                         </Link>
                       </div>
                     </div>
@@ -746,30 +746,30 @@ const Explore = () => {
 
                     {/* Bio - Full Width */}
                     {user.bio && (
-                      <div className="w-full mb-2 sm:mb-4 overflow-hidden">
-                        <p className="text-x-gray text-xs sm:text-sm lg:text-base leading-tight sm:leading-relaxed text-left line-clamp-2 sm:line-clamp-3 overflow-hidden mobile-bio">
+                      <div className="w-full mb-4">
+                        <p className="text-x-gray text-sm lg:text-base leading-relaxed text-left line-clamp-3">
                           "{user.bio}"
                         </p>
                       </div>
                     )}
 
                     {/* Skills and Meta Info - Full Width */}
-                    <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-4 pt-2 sm:pt-4 border-t border-x-border/30 overflow-hidden mobile-footer">
+                    <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-x-border/30">
                       {/* Skills */}
                       {user.skills && user.skills.length > 0 && (
-                        <div className="flex-1 overflow-hidden">
-                          <div className="flex flex-wrap gap-1 sm:gap-2 justify-start overflow-hidden mobile-skills">
-                            {user.skills.slice(0, isMobile ? 2 : 8).map((skill, index) => (
+                        <div className="flex-1">
+                          <div className="flex flex-wrap gap-2 justify-start">
+                            {user.skills.slice(0, 8).map((skill, index) => (
                               <span
                                 key={index}
-                                className="bg-x-blue/20 text-x-blue border border-x-blue/30 px-2 sm:px-3 py-0 sm:py-1 rounded-full text-xs sm:text-sm font-medium md:hover:bg-x-blue/30 md:transition-colors md:duration-200 mb-1 mobile-skill-tag"
+                                className="bg-x-blue/20 text-x-blue border border-x-blue/30 px-3 py-1 rounded-full text-sm font-medium md:hover:bg-x-blue/30 md:transition-colors md:duration-200"
                               >
                                 {skill}
                               </span>
                             ))}
-                            {user.skills.length > (isMobile ? 2 : 8) && (
-                              <span className="text-xs sm:text-sm text-x-gray px-2 sm:px-3 py-0 sm:py-1 bg-x-dark/60 rounded-full border border-x-border mb-1 mobile-skill-tag">
-                                +{user.skills.length - (isMobile ? 2 : 8)} more
+                            {user.skills.length > 8 && (
+                              <span className="text-sm text-x-gray px-3 py-1 bg-x-dark/60 rounded-full border border-x-border">
+                                +{user.skills.length - 8} more
                               </span>
                             )}
                           </div>
@@ -777,9 +777,9 @@ const Explore = () => {
                       )}
 
                       {/* Join Date */}
-                      <div className="flex items-center justify-start text-xs sm:text-sm text-x-gray flex-shrink-0 mobile-date">
+                      <div className="flex items-center justify-start text-sm text-x-gray flex-shrink-0">
                         <svg
-                          className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2"
+                          className="w-4 h-4 mr-2"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -791,13 +791,11 @@ const Explore = () => {
                             d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                           />
                         </svg>
-                        <span className="whitespace-nowrap">
-                          Joined{" "}
-                          {new Date(user.createdAt).toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "short",
-                          })}
-                        </span>
+                        Joined{" "}
+                        {new Date(user.createdAt).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "short",
+                        })}
                       </div>
                     </div>
                   </div>
