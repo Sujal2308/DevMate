@@ -93,7 +93,7 @@ html {
     padding: 1rem;
     position: fixed;
     top: 4rem; /* navbar height */
-    left: 32px; /* fixed distance from left edge */
+    left: calc(50% - 20rem - 16px - 256px); /* Position 16px left of centered main content */
     height: calc(100vh - 4rem);
     z-index: 30;
     flex-shrink: 0;
@@ -940,4 +940,17 @@ select.normal-dropdown {
   bottom: 0;
   width: 1px;
   background-color: #2f3336;
+}
+
+/* Position TrendingNews closer to main content */
+.xl\\:w-80 {
+  position: fixed !important;
+  top: 4rem;
+  right: calc(50% - 20rem - 16px - 320px) !important; /* Position 16px right of centered main content */
+  width: 320px !important;
+  height: calc(100vh - 4rem);
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+  overflow-y: auto;
+  z-index: 30;
 }
