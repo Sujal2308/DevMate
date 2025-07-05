@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
@@ -101,6 +101,24 @@ const Profile = () => {
     }
   };
 
+  const [bioExpanded, setBioExpanded] = useState(false);
+  const bioRef = useRef(null);
+  const [showViewMore, setShowViewMore] = useState(false);
+
+  useEffect(() => {
+    if (profileData && profileData.user && bioRef.current) {
+      const lineHeight = parseFloat(
+        getComputedStyle(bioRef.current).lineHeight
+      );
+      const maxHeight = lineHeight * 3;
+      if (bioRef.current.scrollHeight > maxHeight) {
+        setShowViewMore(true);
+      } else {
+        setShowViewMore(false);
+      }
+    }
+  }, [profileData]);
+
   if (loading) {
     return <ShimmerEffect type="profile" />;
   }
@@ -178,7 +196,7 @@ const Profile = () => {
       {/* Hero Profile Section */}
       <div className="relative mb-8">
         {/* Cover */}
-        <div className="h-64 bg-gradient-to-r from-x-blue via-purple-600 to-x-green rounded-t-3xl relative overflow-hidden">
+        <div className="h-40 md:h-64 bg-gradient-to-r from-cyan-500 via-indigo-500 to-fuchsia-500 rounded-t-3xl relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
           <div className="absolute top-4 right-4">
             {isOwnProfile && (
@@ -203,15 +221,36 @@ const Profile = () => {
               </Link>
             )}
           </div>
+          {/* Date of Joining on Mobile */}
+          <div className="absolute bottom-2 right-2 md:hidden text-xs text-x-white px-4 py-2 rounded-xl font-medium transition-all duration-200 flex items-center">
+            <svg
+              className="w-4 h-4 mr-1"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
+            </svg>
+            Joined{" "}
+            {new Date(profileUser.createdAt).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+            })}
+          </div>
         </div>
 
         {/* Profile Info Card */}
-        <div className="bg-gradient-to-br from-x-dark/90 to-x-dark/60 backdrop-blur-sm border border-x-border/50 rounded-b-3xl -mt-1 pt-8 pb-6 px-8">
+        <div className="bg-gradient-to-br from-x-dark/90 to-x-dark/60 backdrop-blur-sm border border-x-border/50 rounded-b-3xl -mt-1 pt-2 md:pt-8 pb-6 px-8">
           <div className="flex flex-row items-end justify-between">
             <div className="flex flex-row items-end text-left">
               {/* Avatar */}
-              <div className="relative -mt-20 mb-0 mr-6">
-                <div className="bg-gradient-to-r from-x-blue to-purple-500 text-white w-32 h-32 rounded-3xl flex items-center justify-center text-4xl font-bold border-4 border-x-dark shadow-2xl">
+              <div className="relative -mt-40 md:-mt-20 mb-0 mr-6 z-20">
+                <div className="bg-gradient-to-r from-x-blue to-purple-500 text-white w-20 h-20 md:w-32 md:h-32 rounded-2xl md:rounded-3xl flex items-center justify-center text-2xl md:text-4xl font-bold border-4 border-x-dark shadow-2xl">
                   {profileUser.displayName?.charAt(0).toUpperCase() ||
                     profileUser.username.charAt(0).toUpperCase()}
                 </div>
@@ -229,17 +268,16 @@ const Profile = () => {
                   </svg>
                 </div>
               </div>
-
               {/* Name and Info */}
               <div className="text-left">
-                <h1 className="text-4xl font-bold text-x-white mb-2">
+                <h1 className="text-2xl md:text-4xl font-bold text-x-white mb-2">
                   {profileUser.displayName || profileUser.username}
                 </h1>
                 <div className="flex flex-row space-x-4 mb-2">
                   <p className="text-xl text-x-gray mb-0">
                     @{profileUser.username}
                   </p>
-                  <div className="flex items-center justify-start text-sm text-x-gray">
+                  <div className="hidden md:flex items-center justify-start text-sm text-x-gray">
                     <svg
                       className="w-4 h-4 mr-1"
                       fill="none"
@@ -311,12 +349,32 @@ const Profile = () => {
               </span>
             </div>
             {profileUser.bio && (
-              <p className="text-x-white leading-relaxed">{profileUser.bio}</p>
+              <div className="relative">
+                <p
+                  ref={bioRef}
+                  className={`text-x-white leading-relaxed transition-all duration-200 ${
+                    bioExpanded
+                      ? ""
+                      : "line-clamp-3 max-h-[4.5em] overflow-hidden"
+                  } md:line-clamp-none md:max-h-none`}
+                  style={{ WebkitLineClamp: bioExpanded ? "unset" : 3 }}
+                >
+                  {profileUser.bio}
+                </p>
+                {showViewMore && (
+                  <button
+                    className="mt-2 text-x-blue underline text-sm block md:hidden"
+                    onClick={() => setBioExpanded((v) => !v)}
+                  >
+                    {bioExpanded ? "View Less" : "View More"}
+                  </button>
+                )}
+              </div>
             )}
           </div>
 
           {/* Skills and GitHub Section */}
-          <div className="mt-6 grid grid-cols-2 gap-6">
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Skills */}
             <div className="skills-section">
               <div className="flex items-center mb-3">
@@ -339,7 +397,7 @@ const Profile = () => {
               </div>
               {profileUser.skills && profileUser.skills.length > 0 && (
                 <div className="flex flex-wrap gap-2">
-                  {profileUser.skills.map((skill, index) => (
+                  {profileUser.skills.slice(0, 5).map((skill, index) => (
                     <span
                       key={index}
                       className="bg-gradient-to-r from-x-blue/20 to-purple-500/20 border border-x-blue/30 text-x-blue px-3 py-1.5 rounded-full text-sm font-medium backdrop-blur-sm"
@@ -347,6 +405,11 @@ const Profile = () => {
                       {skill}
                     </span>
                   ))}
+                  {profileUser.skills.length > 5 && (
+                    <span className="text-x-gray text-xs font-medium px-2 py-1">
+                      +{profileUser.skills.length - 5} more
+                    </span>
+                  )}
                 </div>
               )}
             </div>
