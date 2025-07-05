@@ -461,119 +461,53 @@ const Profile = () => {
           </div>
         </div>
       </div>
-      {/* Desktop-only Metrics Section */}
-      <div className="grid grid-cols-4 gap-4 mb-8">
-        <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center">
-          <div className="text-3xl font-bold text-x-white mb-1">
-            {posts.length}
-          </div>
-          <div className="text-x-gray text-sm">Posts</div>
-        </div>
-        <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center">
-          <div className="text-3xl font-bold text-x-white mb-1">
-            {profileUser.followers?.length || 0}
-          </div>
-          <div className="text-x-gray text-sm">Followers</div>
-        </div>
-        <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center">
-          <div className="text-3xl font-bold text-x-white mb-1">
-            {profileUser.following?.length || 0}
-          </div>
-          <div className="text-x-gray text-sm">Following</div>
-        </div>
-        <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center">
-          <div className="text-3xl font-bold text-x-white mb-1">
-            {totalLikes}
-          </div>
-          <div className="text-x-gray text-sm">Likes</div>
-        </div>
-      </div>
-
-      {/* Posts Section */}
-      <div className="bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/50 rounded-2xl p-6">
-        <div className="flex items-center justify-start mb-6">
+      {/* Profile Metrics Card */}
+      <div className="bg-gradient-to-br from-x-dark/70 to-x-dark/40 backdrop-blur-sm border border-x-border/40 rounded-3xl p-4 mb-8">
+        <h3 className="text-lg font-bold mb-4 flex items-center gap-2 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-gradient-x">
           <svg
-            className="w-5 h-5 text-x-green mr-3"
+            className="w-6 h-6 text-x-blue"
             fill="none"
             stroke="currentColor"
+            strokeWidth="2"
             viewBox="0 0 24 24"
           >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
-              strokeWidth={2}
-              d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-1l-4 4z"
+              d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z"
             />
           </svg>
-          <h2 className="text-2xl font-bold text-x-white">Posts</h2>
-        </div>
-
-        {/* Loading state */}
-        {loading && (
-          <div className="flex items-center justify-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-x-blue"></div>
-            <span className="ml-3 text-x-gray">Loading posts...</span>
-          </div>
-        )}
-
-        {/* Posts grid */}
-        {!loading && posts.length > 0 && (
-          <div className="grid grid-cols-1 gap-6">
-            {posts.map((post) => (
-              <PostCard key={post._id} post={post} />
-            ))}
-          </div>
-        )}
-
-        {/* Empty state */}
-        {!loading && posts.length === 0 && (
-          <div className="text-center py-16">
-            <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-8">
-              <svg
-                className="w-16 h-16 text-x-gray mx-auto mb-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-1l-4 4z"
-                />
-              </svg>
-              <p className="text-x-gray text-lg">
-                {isOwnProfile
-                  ? "You haven't posted anything yet."
-                  : `${profileUser.username} hasn't posted anything yet.`}
-              </p>
-              {isOwnProfile && (
-                <Link
-                  to="/create-post"
-                  className="inline-flex items-center mt-4 bg-x-blue hover:bg-x-green text-white px-6 py-2 rounded-xl font-medium transition-colors"
-                >
-                  <svg
-                    className="w-4 h-4 mr-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 4v16m8-8H4"
-                    />
-                  </svg>
-                  Create Your First Post
-                </Link>
-              )}
+          Profile Metrics
+        </h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center">
+            <div className="text-3xl font-bold text-x-white mb-1">
+              {posts.length}
             </div>
+            <div className="text-x-gray text-sm">Posts</div>
           </div>
-        )}
+          <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center">
+            <div className="text-3xl font-bold text-x-white mb-1">
+              {profileUser.followers?.length || 0}
+            </div>
+            <div className="text-x-gray text-sm">Followers</div>
+          </div>
+          <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center">
+            <div className="text-3xl font-bold text-x-white mb-1">
+              {profileUser.following?.length || 0}
+            </div>
+            <div className="text-x-gray text-sm">Following</div>
+          </div>
+          <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center">
+            <div className="text-3xl font-bold text-x-white mb-1">
+              {totalLikes}
+            </div>
+            <div className="text-x-gray text-sm">Likes</div>
+          </div>
+        </div>
       </div>
 
-      {/* Content Tabs */}
+      {/* Tabs: Posts, Activity, About */}
       <div className="mb-8">
         <div className="border-b border-x-border/30">
           <nav className="flex justify-start space-x-8">
@@ -585,22 +519,7 @@ const Profile = () => {
                   : "border-transparent text-x-gray hover:text-x-white hover:border-x-border"
               }`}
             >
-              <div className="flex items-center">
-                <svg
-                  className="w-4 h-4 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-1l-4 4z"
-                  />
-                </svg>
-                Posts ({posts.length})
-              </div>
+              Posts
             </button>
             <button
               onClick={() => setActiveTab("activity")}
@@ -610,22 +529,7 @@ const Profile = () => {
                   : "border-transparent text-x-gray hover:text-x-white hover:border-x-border"
               }`}
             >
-              <div className="flex items-center">
-                <svg
-                  className="w-4 h-4 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                  />
-                </svg>
-                Activity
-              </div>
+              Activity
             </button>
             <button
               onClick={() => setActiveTab("about")}
@@ -635,34 +539,55 @@ const Profile = () => {
                   : "border-transparent text-x-gray hover:text-x-white hover:border-x-border"
               }`}
             >
-              <div className="flex items-center">
-                <svg
-                  className="w-4 h-4 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 10h.01M12 10h.01M16 10h.01M9 16h6a2 2 0 002-2V7a2 2 0 00-2-2H9a2 2 0 00-2 2v7a2 2 0 002 2z"
-                  />
-                </svg>
-                About
-              </div>
+              About
             </button>
           </nav>
         </div>
       </div>
-      {/* Content */}
+
+      {/* Tab Content */}
       {activeTab === "posts" && (
-        <div>
-          {posts.length === 0 ? (
-            <div className="card p-12 text-center bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/20">
-              <div className="bg-x-blue/10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+        <div className="bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/50 rounded-2xl p-6">
+          <div className="flex items-center justify-start mb-6">
+            <svg
+              className="w-5 h-5 text-x-green mr-3"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-1l-4 4z"
+              />
+            </svg>
+            <h2 className="text-2xl font-bold text-x-white">Posts</h2>
+          </div>
+
+          {/* Loading state */}
+          {loading && (
+            <div className="flex items-center justify-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-x-blue"></div>
+              <span className="ml-3 text-x-gray">Loading posts...</span>
+            </div>
+          )}
+
+          {/* Posts grid */}
+          {!loading && posts.length > 0 && (
+            <div className="grid grid-cols-1 gap-6">
+              {posts.map((post) => (
+                <PostCard key={post._id} post={post} />
+              ))}
+            </div>
+          )}
+
+          {/* Empty state */}
+          {!loading && posts.length === 0 && (
+            <div className="text-center py-16">
+              <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-8">
                 <svg
-                  className="w-10 h-10 text-x-blue"
+                  className="w-16 h-16 text-x-gray mx-auto mb-4"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -674,24 +599,33 @@ const Profile = () => {
                     d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-1l-4 4z"
                   />
                 </svg>
+                <p className="text-x-white text-lg font-semibold mb-2">
+                  No posts yet!
+                </p>
+                <p className="text-x-gray text-sm max-w-md mx-auto">
+                  This user hasn't shared any posts yet. Check back later or
+                  follow them to see their updates.
+                </p>
               </div>
-              <h3 className="text-2xl font-bold text-x-white mb-3">
-                No Posts Yet
-              </h3>
-              <p className="text-x-gray mb-6 max-w-md mx-auto">
-                {isOwnProfile
-                  ? "You haven't created any posts yet. Share your first post with the DevMate community!"
-                  : `${
-                      profileUser.displayName || profileUser.username
-                    } hasn't posted anything yet.`}
-              </p>
-              {isOwnProfile && (
-                <Link
-                  to="/create-post"
-                  className="btn-primary inline-flex items-center px-6 py-3"
+            </div>
+          )}
+
+          {/* Pagination - Mobile */}
+          {totalPages > 1 && (
+            <div className="mt-6 block md:hidden">
+              <span className="text-x-gray text-sm">
+                Page {currentPage} of {totalPages}
+              </span>
+              <div className="flex items-center justify-center gap-2 mt-2">
+                <button
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.max(prev - 1, 1))
+                  }
+                  disabled={currentPage === 1}
+                  className="px-4 py-2 rounded-full bg-x-dark/40 text-x-white font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-1 disabled:opacity-50"
                 >
                   <svg
-                    className="w-5 h-5 mr-2"
+                    className="w-4 h-4"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -700,102 +634,85 @@ const Profile = () => {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
-                      d="M12 4v16m8-8H4"
+                      d="M15 18l-6-6 6-6"
                     />
                   </svg>
-                  Create First Post
-                </Link>
-              )}
-            </div>
-          ) : (
-            <div>
-              <div className="space-y-6">
-                {currentPosts.map((post) => (
-                  <PostCard
-                    key={post._id}
-                    post={post}
-                    onUpdate={handlePostUpdate}
-                    onDelete={handlePostDelete}
-                  />
-                ))}
+                  Previous
+                </button>
+                <button
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                  }
+                  disabled={currentPage === totalPages}
+                  className="px-4 py-2 rounded-full bg-x-blue text-white font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-1 disabled:opacity-50"
+                >
+                  Next
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 6l6 6-6 6"
+                    />
+                  </svg>
+                </button>
               </div>
+            </div>
+          )}
 
-              {/* Pagination Controls */}
-              {totalPages > 1 && (
-                <div className="mt-8 flex justify-center items-center space-x-4">
-                  <button
-                    onClick={() =>
-                      setCurrentPage((prev) => Math.max(prev - 1, 1))
-                    }
-                    disabled={currentPage === 1}
-                    className={`flex items-center px-4 py-2 rounded-xl font-medium transition-all duration-200 ${
-                      currentPage === 1
-                        ? "bg-x-dark/20 text-x-gray/50 cursor-not-allowed"
-                        : "bg-x-dark/40 text-x-white hover:bg-x-dark/60 border border-x-border/30 hover:border-x-border/60"
-                    }`}
-                  >
-                    <svg
-                      className="w-4 h-4 mr-2"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 19l-7-7 7-7"
-                      />
-                    </svg>
-                    Previous
-                  </button>
-
-                  <div className="flex items-center space-x-2">
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                      (page) => (
-                        <button
-                          key={page}
-                          onClick={() => setCurrentPage(page)}
-                          className={`w-10 h-10 rounded-xl font-medium transition-all duration-200 ${
-                            currentPage === page
-                              ? "bg-x-blue text-white"
-                              : "bg-x-dark/40 text-x-gray hover:bg-x-dark/60 hover:text-x-white border border-x-border/30 hover:border-x-border/60"
-                          }`}
-                        >
-                          {page}
-                        </button>
-                      )
-                    )}
-                  </div>
-
-                  <button
-                    onClick={() =>
-                      setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                    }
-                    disabled={currentPage === totalPages}
-                    className={`flex items-center px-4 py-2 rounded-xl font-medium transition-all duration-200 ${
-                      currentPage === totalPages
-                        ? "bg-x-dark/20 text-x-gray/50 cursor-not-allowed"
-                        : "bg-x-dark/40 text-x-white hover:bg-x-dark/60 border border-x-border/30 hover:border-x-border/60"
-                    }`}
-                  >
-                    Next
-                    <svg
-                      className="w-4 h-4 ml-2"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              )}
+          {/* Pagination - Desktop */}
+          {totalPages > 1 && (
+            <div className="hidden md:flex items-center justify-between mt-6">
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="px-4 py-2 rounded-full bg-x-dark/40 text-x-white font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-1 disabled:opacity-50"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 18l-6-6 6-6"
+                  />
+                </svg>
+                Previous
+              </button>
+              <div className="text-x-gray text-sm">
+                Page {currentPage} of {totalPages}
+              </div>
+              <button
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 rounded-full bg-x-blue text-white font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-1 disabled:opacity-50"
+              >
+                Next
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 6l6 6-6 6"
+                  />
+                </svg>
+              </button>
             </div>
           )}
         </div>
@@ -826,7 +743,6 @@ const Profile = () => {
           </p>
         </div>
       )}
-      {/* About Section */}
       {activeTab === "about" && profileUser && (
         <div className="card p-8 bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/20 mb-8">
           <h3 className="text-xl font-bold text-x-white mb-4 text-left">
