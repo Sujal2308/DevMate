@@ -255,7 +255,11 @@ const Register = () => {
             >
               {loading ? (
                 <>
-                  <LoadingSpinner size="small" className="mr-2" />
+                  <LoadingSpinner
+                    size="small"
+                    className="mr-2"
+                    compact={true}
+                  />
                   Creating account...
                 </>
               ) : (

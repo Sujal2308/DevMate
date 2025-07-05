@@ -49,6 +49,30 @@ const Login = () => {
       </div>
 
       <div className="relative max-w-md w-full">
+        {/* Back to Home Button */}
+        <div className="mb-4 flex justify-center">
+          <Link
+            to="/"
+            className="text-x-blue hover:text-x-blue-hover font-semibold text-sm flex items-center gap-1 bg-x-dark/40 px-3 py-1.5 rounded-full border border-x-blue/20 shadow-sm transition-colors duration-200"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4 mr-1"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M3 12l7-7m0 0l7 7m-7-7v18"
+              />
+            </svg>
+            Back to Home
+          </Link>
+        </div>
+
         {/* Main Card */}
         <div className="bg-x-dark/60 backdrop-blur-md border border-x-border/30 rounded-xl shadow-lg shadow-x-black/30 p-6 space-y-6">
           {/* Header */}
@@ -147,7 +171,11 @@ const Login = () => {
             >
               {loading ? (
                 <>
-                  <LoadingSpinner size="small" className="mr-2" />
+                  <LoadingSpinner
+                    size="small"
+                    className="mr-2"
+                    compact={true}
+                  />
                   Signing in...
                 </>
               ) : (
