@@ -45,22 +45,23 @@ const Profile = () => {
 
   const handlePostDelete = (deletedPostId) => {
     setProfileData((prev) => {
+      if (!prev) return prev;
       const updatedPosts = prev.posts.filter(
         (post) => post._id !== deletedPostId
       );
+      // recalculate totalPages and currentPage if needed
+      const newTotalPages = Math.ceil(updatedPosts.length / postsPerPage);
+      let newCurrentPage = currentPage;
+      if (newCurrentPage > newTotalPages && newTotalPages > 0) {
+        newCurrentPage = newTotalPages;
+      }
+      // If no posts left, go to first page
+      if (updatedPosts.length === 0) newCurrentPage = 1;
+      setCurrentPage(newCurrentPage);
       return {
         ...prev,
         posts: updatedPosts,
       };
-    });
-
-    // Reset to first page if current page becomes empty after deletion
-    setCurrentPage((prevPage) => {
-      const newTotalPages = Math.ceil((posts.length - 1) / postsPerPage);
-      if (prevPage > newTotalPages && newTotalPages > 0) {
-        return newTotalPages;
-      }
-      return prevPage;
     });
   };
 
@@ -547,7 +548,7 @@ const Profile = () => {
 
       {/* Tab Content */}
       {activeTab === "posts" && (
-        <div className="bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/50 rounded-2xl p-6">
+        <div className="bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/50 rounded-2xl p-6 mb-24 md:mb-8">
           <div className="flex items-center justify-start mb-6">
             <svg
               className="w-5 h-5 text-x-green mr-3"
@@ -576,8 +577,12 @@ const Profile = () => {
           {/* Posts grid */}
           {!loading && posts.length > 0 && (
             <div className="grid grid-cols-1 gap-6">
-              {posts.map((post) => (
-                <PostCard key={post._id} post={post} />
+              {currentPosts.map((post) => (
+                <PostCard
+                  key={post._id}
+                  post={post}
+                  onDelete={handlePostDelete}
+                />
               ))}
             </div>
           )}

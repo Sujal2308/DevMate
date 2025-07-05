@@ -164,49 +164,96 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
         </div>
         {/* Delete Icon Button for Post Author - Top Right */}
         {isAuthor && (
-          <button
-            onClick={() => setShowDeleteModal(true)}
-            title="Delete Post"
-            className="ml-2 flex items-center justify-center p-2 rounded-full hover:bg-red-500/10 focus:outline-none focus:ring-2 focus:ring-red-500 transition-all group"
-            aria-label="Delete Post"
-            disabled={isDeleting}
-          >
-            {/* Classic Dustbin Icon */}
-            <svg
-              className="w-5 h-5 text-white group-hover:text-red-500 transition-colors"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.2"
-              viewBox="0 0 24 24"
+          <div className="relative">
+            <button
+              onClick={() => setShowDeleteModal(true)}
+              title="Delete Post"
+              className="ml-2 flex items-center justify-center p-2 rounded-full hover:bg-red-500/10 focus:outline-none focus:ring-2 focus:ring-red-500 transition-all group"
+              aria-label="Delete Post"
+              disabled={isDeleting}
             >
-              <path
-                d="M3 6h18"
+              {/* Classic Dustbin Icon */}
+              <svg
+                className="w-5 h-5 text-white group-hover:text-red-500 transition-colors"
+                fill="none"
                 stroke="currentColor"
                 strokeWidth="2.2"
-                strokeLinecap="round"
-              />
-              <path
-                d="M8 6V4.5A2.5 2.5 0 0 1 10.5 2h3A2.5 2.5 0 0 1 16 4.5V6"
-                stroke="currentColor"
-                strokeWidth="2.2"
-              />
-              <rect
-                x="5"
-                y="6"
-                width="14"
-                height="14"
-                rx="2"
-                stroke="currentColor"
-                strokeWidth="2.2"
-              />
-              <path
-                d="M10 11v5M14 11v5"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-              />
-            </svg>
-          </button>
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M3 6h18"
+                  stroke="currentColor"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M8 6V4.5A2.5 2.5 0 0 1 10.5 2h3A2.5 2.5 0 0 1 16 4.5V6"
+                  stroke="currentColor"
+                  strokeWidth="2.2"
+                />
+                <rect
+                  x="5"
+                  y="6"
+                  width="14"
+                  height="14"
+                  rx="2"
+                  stroke="currentColor"
+                  strokeWidth="2.2"
+                />
+                <path
+                  d="M10 11v5M14 11v5"
+                  stroke="currentColor"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </button>
+            {/* Inline Delete Confirmation Popover with Backdrop Blur */}
+            {showDeleteModal && (
+              <>
+                {/* Blurred overlay */}
+                <div
+                  className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm transition-all"
+                  onClick={() => setShowDeleteModal(false)}
+                />
+                <div className="absolute right-0 mt-2 z-50 w-64 bg-gradient-to-br from-x-dark to-x-darker border border-red-500/30 rounded-2xl shadow-2xl p-4 animate-fade-in">
+                  <h3 className="text-base font-bold text-x-white mb-1 flex items-center">
+                    <svg
+                      className="w-5 h-5 text-red-400 mr-2"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.464 0L4.35 16.5c-.77.833.192 2.5 1.732 2.5z"
+                      />
+                    </svg>
+                    Delete Post
+                  </h3>
+                  <p className="text-x-white mb-2 text-sm">
+                    Are you sure you want to delete this post?
+                  </p>
+                  <div className="flex space-x-2 mt-4">
+                    <button
+                      onClick={() => setShowDeleteModal(false)}
+                      className="flex-1 px-3 py-2 bg-x-dark/60 hover:bg-x-dark/80 border border-x-border text-x-white rounded-xl transition-all duration-200 font-medium text-sm"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleDelete}
+                      className="flex-1 px-3 py-2 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white rounded-xl transition-all duration-200 font-medium text-sm shadow-lg hover:shadow-red-500/25"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
         )}
       </div>
 
@@ -491,77 +538,6 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
               </div>
             </div>
           </form>
-        </div>
-      )}
-
-      {/* Custom Delete Confirmation Modal */}
-      {showDeleteModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-gradient-to-br from-x-dark to-x-darker border border-red-500/30 rounded-2xl shadow-2xl max-w-md w-full transform transition-all duration-300 scale-100">
-            {/* Modal Header */}
-            <div className="p-6 border-b border-red-500/20">
-              <div className="flex items-center">
-                <div className="bg-red-500/20 rounded-full p-3 mr-4">
-                  <svg
-                    className="w-6 h-6 text-red-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.464 0L4.35 16.5c-.77.833.192 2.5 1.732 2.5z"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-x-white">
-                    Delete Post
-                  </h3>
-                  <p className="text-sm text-x-gray">
-                    This action cannot be undone
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Modal Content */}
-            <div className="p-6">
-              <p className="text-x-white mb-2">
-                Are you sure you want to delete this post?
-              </p>
-              <p className="text-x-gray text-sm">
-                This will permanently remove your post and all its comments.
-                This action cannot be reversed.
-              </p>
-
-              {/* Post Preview */}
-              <div className="mt-4 bg-x-black/40 border border-x-border/30 rounded-lg p-3">
-                <p className="text-x-gray text-sm line-clamp-2">
-                  "{post.content.substring(0, 100)}
-                  {post.content.length > 100 ? "..." : ""}"
-                </p>
-              </div>
-            </div>
-
-            {/* Modal Actions */}
-            <div className="p-6 pt-0 flex space-x-3">
-              <button
-                onClick={() => setShowDeleteModal(false)}
-                className="flex-1 px-4 py-3 bg-x-dark/60 hover:bg-x-dark/80 border border-x-border text-x-white rounded-xl transition-all duration-200 font-medium"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleDelete}
-                className="flex-1 px-4 py-3 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-red-500/25"
-              >
-                🗑️ Delete Post
-              </button>
-            </div>
-          </div>
         </div>
       )}
     </div>
