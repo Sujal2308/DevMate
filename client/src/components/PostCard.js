@@ -157,8 +157,8 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
             >
               {post.author.displayName || post.author.username}
             </Link>
-            <p className="text-xs sm:text-sm text-x-gray truncate">
-              @{post.author.username} • {formatDate(post.createdAt)}
+            <p className="text-xs sm:text-sm text-x-gray truncate mt-1">
+              posted on : {new Date(post.createdAt).toLocaleDateString()}
             </p>
           </div>
         </div>
@@ -267,7 +267,7 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
                   e.currentTarget.blur();
                 }}
                 title="Copy code"
-                className="copy-btn p-1 rounded hover:bg-x-blue/20 focus:outline-none focus:ring-2 focus:ring-x-blue transition-all group"
+                className="copy-btn p-1 rounded hover:bg-x-blue/20 focus:outline-none focus:ring-2 focus:ring-x-blue transition-all group flex items-center"
               >
                 <svg
                   className="w-4 h-4 sm:w-5 sm:h-5 text-x-gray group-hover:text-x-blue transition-colors"

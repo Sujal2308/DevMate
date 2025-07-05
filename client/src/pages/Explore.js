@@ -370,8 +370,20 @@ const Explore = () => {
             "height var(--transition-speed), opacity var(--transition-speed)",
         }}
       >
-        <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-x-blue via-purple-500 to-x-green bg-[length:200%_auto] bg-clip-text text-transparent md:animate-color-cycle mb-1 lg:mb-2">
-          Explore Developers
+        <h1 className="mt-4 text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-x-blue via-purple-500 to-x-green bg-[length:200%_auto] bg-clip-text text-transparent md:animate-color-cycle mb-1 lg:mb-2 explore-mobile-heading">
+          <span className="inline sm:hidden">
+            Discover Devs{" "}
+            <span
+              style={{
+                background: "none",
+                WebkitBackgroundClip: "initial",
+                color: "initial",
+              }}
+            >
+              🚀
+            </span>
+          </span>
+          <span className="hidden sm:inline">Explore Developers</span>
         </h1>
         <p className="text-x-gray text-xs sm:text-sm lg:text-base max-w-2xl">
           Discover and connect with talented developers in the DevMate
@@ -382,9 +394,7 @@ const Explore = () => {
       {/* Search and Filter Controls - Fixed position on mobile when keyboard active */}
       <div
         ref={searchContainerRef}
-        className={`card search-control-panel p-2 sm:p-3 lg:p-6 mb-1 sm:mb-2 lg:mb-4 bg-gradient-to-r from-x-dark/50 to-x-dark/30 md:backdrop-blur-sm backdrop-blur-none border border-x-border/50 ${
-          isKeyboardOpen ? "keyboard-search-active" : ""
-        }`}
+        className={`card search-control-panel p-2 sm:p-3 lg:p-6 mb-1 sm:mb-2 lg:mb-4 bg-gradient-to-r from-x-dark/50 to-x-dark/30 md:backdrop-blur-sm backdrop-blur-none border border-x-border/50 mt-4-mobile`}
         style={{
           zIndex: isKeyboardOpen ? 50 : "auto",
           position: isKeyboardOpen ? "sticky" : "relative",
@@ -552,258 +562,266 @@ const Explore = () => {
       </div>
 
       {/* Results - Fixed dimensions on mobile */}
-      <div
-        ref={resultsContainerRef}
-        className={`results-container ${isMobile ? "fixed-height-mobile" : ""}`}
-        style={{
-          height: isMobile ? "calc(100vh - 220px)" : "auto",
-          overflow: isMobile ? "auto" : "visible",
-          contain: isMobile ? "content" : "none",
-          transform: "translateZ(0)", // Force GPU acceleration
-          perspective: "1000px", // Create new stacking context
-          willChange: "transform", // Hint to browser for optimization
-        }}
-      >
-        {loading ? (
-          <ShimmerEffect type="explore" />
-        ) : error ? (
-          <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-6 py-4 rounded-xl backdrop-blur-sm">
-            <div className="flex items-center">
-              <svg
-                className="w-5 h-5 mr-2"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              {error}
-            </div>
-          </div>
-        ) : users.length === 0 || !shouldShowResults ? (
-          <div className="text-center py-3 min-h-[120px] flex flex-col items-center justify-center">
-            <div className="bg-x-blue/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
-              <svg
-                className="w-8 h-8 text-x-blue"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                />
-              </svg>
-            </div>
-            <h3 className="text-lg font-semibold text-x-white mb-1">
-              {(debouncedSearchTerm || selectedSkill) && users.length === 0
-                ? "No developers found"
-                : "Search for developers"}
-            </h3>
-            <p className="text-x-gray text-xs sm:text-sm max-w-md mx-auto">
-              {users.length === 0 && (debouncedSearchTerm || selectedSkill)
-                ? "Try adjusting your search criteria or clear the filters."
-                : users.length === 0
-                ? "No developers have joined yet. Be the first to connect!"
-                : "Enter a search term or select a skill to find developers."}
-            </p>
-          </div>
-        ) : (
-          <>
-            <div className="mb-2 min-h-[100px]">
-              <div className="flex items-center justify-between">
-                <p className="text-x-gray text-xs sm:text-sm">
-                  <span className="text-x-white font-semibold">
-                    {users.length}
-                  </span>{" "}
-                  developer{users.length !== 1 ? "s" : ""} found
-                  {debouncedSearchTerm && (
-                    <span className="text-x-blue">
-                      {" "}
-                      matching "{debouncedSearchTerm}"
-                    </span>
-                  )}
-                  {selectedSkill && (
-                    <span className="text-x-green">
-                      {" "}
-                      with skill "{selectedSkill}"
-                    </span>
-                  )}
-                </p>
-                <div className="hidden md:block text-xs text-x-gray">
-                  💡 Click on profiles to connect
-                </div>
+      <div className={isMobile ? "overflow-x-hidden-mobile" : ""}>
+        <div
+          ref={resultsContainerRef}
+          className={`results-container ${
+            isMobile ? "fixed-height-mobile" : ""
+          }`}
+          style={{
+            height: isMobile ? "calc(100vh - 180px)" : "auto", // increased height for more space
+            paddingBottom: isMobile ? "2.5rem" : undefined, // extra bottom padding on mobile
+            overflow: isMobile ? "auto" : "visible",
+            contain: isMobile ? "content" : "none",
+            transform: "translateZ(0)", // Force GPU acceleration
+            perspective: "1000px", // Create new stacking context
+            willChange: "transform", // Hint to browser for optimization
+          }}
+        >
+          {loading ? (
+            <ShimmerEffect type="explore" />
+          ) : error ? (
+            <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-6 py-4 rounded-xl backdrop-blur-sm">
+              <div className="flex items-center">
+                <svg
+                  className="w-5 h-5 mr-2"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                {error}
               </div>
             </div>
-
-            <div className="space-y-2 lg:space-y-4">
-              {users.map((user) => (
-                <div
-                  key={user._id}
-                  className="w-full card p-2 sm:p-3 lg:p-6 md:hover:shadow-xl md:hover:shadow-x-blue/20 md:hover:border-x-blue/30 md:transition-all md:duration-300 group bg-gradient-to-br from-x-dark/80 to-x-dark/40 md:backdrop-blur-sm backdrop-blur-none border border-x-border/30"
+          ) : users.length === 0 || !shouldShowResults ? (
+            <div className="text-center py-3 min-h-[120px] flex flex-col items-center justify-center">
+              <div className="bg-x-blue/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
+                <svg
+                  className="w-8 h-8 text-x-blue"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  <div className="w-full">
-                    {/* Mobile Layout - Avatar and View Profile Button Horizontal */}
-                    <div className="flex items-center justify-between sm:hidden mb-2">
-                      <div className="flex items-center gap-3">
-                        <div className="bg-gradient-to-r from-x-blue to-purple-500 text-white w-12 h-12 rounded-2xl flex items-center justify-center text-lg font-bold shadow-lg md:group-hover:shadow-x-blue/30 md:transition-all md:duration-300">
-                          {user.displayName?.charAt(0).toUpperCase() ||
-                            user.username.charAt(0).toUpperCase()}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-bold text-x-white text-base md:group-hover:text-x-blue md:transition-colors md:duration-200 mb-1">
-                            {user.displayName || user.username}
-                          </h3>
-                          <p className="text-xs text-x-gray">
-                            @{user.username}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        {user.githubLink && (
-                          <a
-                            href={user.githubLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-x-gray md:hover:text-x-white md:transition-colors md:duration-200 p-2 rounded-lg md:hover:bg-x-dark/60"
-                            title="GitHub Profile"
-                          >
-                            <svg
-                              className="w-5 h-5"
-                              fill="currentColor"
-                              viewBox="0 0 20 20"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                          </a>
-                        )}
-                        <Link
-                          to={`/profile/${user.username}`}
-                          className="btn-primary text-xs px-3 py-2 md:hover:scale-105 transform md:transition-all md:duration-200 whitespace-nowrap"
-                        >
-                          View Profile
-                        </Link>
-                      </div>
-                    </div>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-x-white mb-1">
+                {(debouncedSearchTerm || selectedSkill) && users.length === 0
+                  ? "No developers found"
+                  : "Search for developers"}
+              </h3>
+              <p className="text-x-gray text-xs sm:text-sm max-w-md mx-auto">
+                {users.length === 0 && (debouncedSearchTerm || selectedSkill)
+                  ? "Try adjusting your search criteria or clear the filters."
+                  : users.length === 0
+                  ? "No developers have joined yet. Be the first to connect!"
+                  : "Enter a search term or select a skill to find developers."}
+              </p>
+            </div>
+          ) : (
+            <>
+              <div className="mb-2 min-h-[100px]">
+                <div className="flex items-center justify-between">
+                  <p className="text-x-gray text-xs sm:text-sm">
+                    <span className="text-x-white font-semibold">
+                      {users.length}
+                    </span>{" "}
+                    developer{users.length !== 1 ? "s" : ""} found
+                    {debouncedSearchTerm && (
+                      <span className="text-x-blue">
+                        {" "}
+                        matching "{debouncedSearchTerm}"
+                      </span>
+                    )}
+                    {selectedSkill && (
+                      <span className="text-x-green">
+                        {" "}
+                        with skill "{selectedSkill}"
+                      </span>
+                    )}
+                  </p>
+                  <div className="hidden md:block text-xs text-x-gray">
+                    💡 Click on profiles to connect
+                  </div>
+                </div>
+              </div>
 
-                    {/* Desktop Layout - Side by Side with Action Buttons */}
-                    <div className="hidden sm:flex items-start justify-between gap-6 mb-4">
-                      <div className="flex items-start gap-6 flex-1">
-                        <div className="flex-shrink-0">
-                          <div className="bg-gradient-to-r from-x-blue to-purple-500 text-white w-16 h-16 rounded-2xl flex items-center justify-center text-xl font-bold shadow-lg md:group-hover:shadow-x-blue/30 md:transition-all md:duration-300">
+              <div className="space-y-2 lg:space-y-4">
+                {users.map((user) => (
+                  <div
+                    key={user._id}
+                    className="w-full card p-2 sm:p-3 lg:p-6 md:hover:shadow-xl md:hover:shadow-x-blue/20 md:hover:border-x-blue/30 md:transition-all md:duration-300 group bg-gradient-to-br from-x-dark/80 to-x-dark/40 md:backdrop-blur-sm backdrop-blur-none border border-x-border/30"
+                  >
+                    <div className="w-full">
+                      {/* Mobile Layout - Avatar and View Profile Button Horizontal */}
+                      <div className="flex items-center justify-between sm:hidden mb-2">
+                        <div className="flex items-center gap-3">
+                          <div className="bg-gradient-to-r from-x-blue to-purple-500 text-white w-12 h-12 rounded-2xl flex items-center justify-center text-lg font-bold shadow-lg md:group-hover:shadow-x-blue/30 md:transition-all md:duration-300">
                             {user.displayName?.charAt(0).toUpperCase() ||
                               user.username.charAt(0).toUpperCase()}
                           </div>
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-bold text-x-white text-xl md:group-hover:text-x-blue md:transition-colors md:duration-200 mb-1">
-                            {user.displayName || user.username}
-                          </h3>
-                          <p className="text-base text-x-gray mb-3">
-                            @{user.username}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3 flex-shrink-0">
-                        {user.githubLink && (
-                          <a
-                            href={user.githubLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-x-gray md:hover:text-x-white md:transition-colors md:duration-200 md:hover:scale-110 transform p-2 rounded-lg md:hover:bg-x-dark/60"
-                            title="GitHub Profile"
-                          >
-                            <svg
-                              className="w-6 h-6"
-                              fill="currentColor"
-                              viewBox="0 0 20 20"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                          </a>
-                        )}
-                        <Link
-                          to={`/profile/${user.username}`}
-                          className="btn-primary text-base px-6 py-3 md:hover:scale-105 transform md:transition-all md:duration-200 whitespace-nowrap"
-                        >
-                          View Profile
-                        </Link>
-                      </div>
-                    </div>
-
-                    {/* Bio - Full Width */}
-                    {user.bio && (
-                      <div className="w-full mb-4">
-                        <p className="text-x-gray text-sm lg:text-base leading-relaxed text-left line-clamp-3">
-                          "{user.bio}"
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Skills and Meta Info - Full Width */}
-                    <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-x-border/30">
-                      {/* Skills */}
-                      {user.skills && user.skills.length > 0 && (
-                        <div className="flex-1">
-                          <div className="flex flex-wrap gap-2 justify-start">
-                            {user.skills.slice(0, 8).map((skill, index) => (
-                              <span
-                                key={index}
-                                className="bg-x-blue/20 text-x-blue border border-x-blue/30 px-3 py-1 rounded-full text-sm font-medium md:hover:bg-x-blue/30 md:transition-colors md:duration-200"
-                              >
-                                {skill}
-                              </span>
-                            ))}
-                            {user.skills.length > 8 && (
-                              <span className="text-sm text-x-gray px-3 py-1 bg-x-dark/60 rounded-full border border-x-border">
-                                +{user.skills.length - 8} more
-                              </span>
-                            )}
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-bold text-x-white text-base md:group-hover:text-x-blue md:transition-colors md:duration-200 mb-1">
+                              {user.displayName || user.username}
+                            </h3>
+                            <p className="text-xs text-x-gray">
+                              @{user.username}
+                            </p>
                           </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {user.githubLink && (
+                            <a
+                              href={user.githubLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-x-gray md:hover:text-x-white md:transition-colors md:duration-200 p-2 rounded-lg md:hover:bg-x-dark/60"
+                              title="GitHub Profile"
+                            >
+                              <svg
+                                className="w-5 h-5"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                            </a>
+                          )}
+                          <Link
+                            to={`/profile/${user.username}`}
+                            className="btn-primary text-xs px-3 py-2 md:hover:scale-105 transform md:transition-all md:duration-200 whitespace-nowrap"
+                          >
+                            View Profile
+                          </Link>
+                        </div>
+                      </div>
+
+                      {/* Desktop Layout - Side by Side with Action Buttons */}
+                      <div className="hidden sm:flex items-start justify-between gap-6 mb-4">
+                        <div className="flex items-start gap-6 flex-1">
+                          <div className="flex-shrink-0">
+                            <div className="bg-gradient-to-r from-x-blue to-purple-500 text-white w-16 h-16 rounded-2xl flex items-center justify-center text-xl font-bold shadow-lg md:group-hover:shadow-x-blue/30 md:transition-all md:duration-300">
+                              {user.displayName?.charAt(0).toUpperCase() ||
+                                user.username.charAt(0).toUpperCase()}
+                            </div>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-bold text-x-white text-xl md:group-hover:text-x-blue md:transition-colors md:duration-200 mb-1">
+                              {user.displayName || user.username}
+                            </h3>
+                            <p className="text-base text-x-gray mb-3">
+                              @{user.username}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3 flex-shrink-0">
+                          {user.githubLink && (
+                            <a
+                              href={user.githubLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-x-gray md:hover:text-x-white md:transition-colors md:duration-200 md:hover:scale-110 transform p-2 rounded-lg md:hover:bg-x-dark/60"
+                              title="GitHub Profile"
+                            >
+                              <svg
+                                className="w-6 h-6"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                            </a>
+                          )}
+                          <Link
+                            to={`/profile/${user.username}`}
+                            className="btn-primary text-base px-6 py-3 md:hover:scale-105 transform md:transition-all md:duration-200 whitespace-nowrap"
+                          >
+                            View Profile
+                          </Link>
+                        </div>
+                      </div>
+
+                      {/* Bio - Full Width */}
+                      {user.bio && (
+                        <div className="w-full mb-4">
+                          <p className="text-x-gray text-sm lg:text-base leading-relaxed text-left line-clamp-3">
+                            "{user.bio}"
+                          </p>
                         </div>
                       )}
 
-                      {/* Join Date */}
-                      <div className="flex items-center justify-start text-sm text-x-gray flex-shrink-0">
-                        <svg
-                          className="w-4 h-4 mr-2"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                          />
-                        </svg>
-                        Joined{" "}
-                        {new Date(user.createdAt).toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "short",
-                        })}
+                      {/* Skills and Meta Info - Full Width */}
+                      <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-x-border/30">
+                        {/* Skills */}
+                        {user.skills && user.skills.length > 0 && (
+                          <div className="flex-1">
+                            <div className="flex flex-wrap gap-2 justify-start">
+                              {user.skills.slice(0, 8).map((skill, index) => (
+                                <span
+                                  key={index}
+                                  className="bg-x-blue/20 text-x-blue border border-x-blue/30 px-3 py-1 rounded-full text-sm font-medium md:hover:bg-x-blue/30 md:transition-colors md:duration-200"
+                                >
+                                  {skill}
+                                </span>
+                              ))}
+                              {user.skills.length > 8 && (
+                                <span className="text-sm text-x-gray px-3 py-1 bg-x-dark/60 rounded-full border border-x-border">
+                                  +{user.skills.length - 8} more
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Join Date */}
+                        <div className="flex items-center justify-start text-sm text-x-gray flex-shrink-0">
+                          <svg
+                            className="w-4 h-4 mr-2"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                            />
+                          </svg>
+                          Joined{" "}
+                          {new Date(user.createdAt).toLocaleDateString(
+                            "en-US",
+                            {
+                              year: "numeric",
+                              month: "short",
+                            }
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
+                ))}
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

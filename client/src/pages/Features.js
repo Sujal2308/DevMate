@@ -34,12 +34,12 @@ const FeatureCard = ({ icon, title, description, details, delay = 0 }) => {
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Animated Background Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-x-blue/5 to-x-green/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      <div className="absolute inset-0 bg-x-dark rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
       {/* Icon */}
       <div className="relative mb-6">
         <div
-          className={`w-16 h-16 bg-gradient-to-r from-x-blue to-x-green rounded-xl flex items-center justify-center text-2xl transform transition-transform duration-300 ${
+          className={`w-16 h-16 bg-purple-500 rounded-xl flex items-center justify-center text-2xl transform transition-transform duration-300 ${
             isHovered ? "rotate-12 scale-110" : ""
           }`}
         >
@@ -430,17 +430,11 @@ const Features = () => {
 
       {/* Hero Section */}
       <section className="relative mt-8 pt-10 pb-16 overflow-hidden">
-        {/* Animated Background */}
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-0 w-72 h-72 bg-x-blue/20 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-          <div
-            className="absolute top-0 right-0 w-72 h-72 bg-x-green/20 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"
-            style={{ animationDelay: "2s" }}
-          ></div>
-          <div
-            className="absolute -bottom-8 left-20 w-72 h-72 bg-x-purple/20 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"
-            style={{ animationDelay: "4s" }}
-          ></div>
+        {/* Animated Background - Glowing Effect */}
+        <div className="absolute inset-0 pointer-events-none z-0">
+          <div className="absolute top-0 left-0 w-72 h-72 bg-blue-400/20 rounded-full mix-blend-multiply filter blur-2xl opacity-60 animate-blob"></div>
+          <div className="absolute top-0 right-0 w-72 h-72 bg-green-400/20 rounded-full mix-blend-multiply filter blur-2xl opacity-60 animate-blob animation-delay-2000"></div>
+          <div className="absolute -bottom-8 left-20 w-72 h-72 bg-purple-500/20 rounded-full mix-blend-multiply filter blur-2xl opacity-60 animate-blob animation-delay-4000"></div>
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -450,10 +444,9 @@ const Features = () => {
             }`}
           >
             <h1 className="text-3xl xs:text-4xl md:text-7xl font-bold text-x-white mb-6 flex flex-wrap items-center justify-center gap-3">
-              <span>Powerful</span>
-              <span className="animate-gradient-text bg-gradient-to-r from-x-blue via-x-green via-x-purple to-x-blue bg-[length:200%_200%] bg-clip-text text-transparent relative">
-                Features
-                <span className="block absolute left-0 right-0 -bottom-2 h-1 animate-underline-gradient rounded-full"></span>
+              <span>Elevate Your</span>
+              <span className="help-you-animated relative no-underline">
+                Workflow
               </span>
             </h1>
             <p className="text-base xs:text-lg md:text-2xl text-x-gray mb-8 max-w-3xl mx-auto leading-relaxed">
@@ -508,6 +501,30 @@ const Features = () => {
           </div>
         </div>
       </section>
+
+      {/* Animated Scroll Down Logo - with extra space from top */}
+      <div className="flex justify-center mt-12 mb-8 z-10 relative">
+        <div className="scroll-down-bounce flex flex-col items-center">
+          <div className="w-12 h-12 bg-gradient-to-br from-x-blue via-x-green to-purple-500 rounded-full flex items-center justify-center shadow-xl">
+            <svg
+              className="w-7 h-7 text-white"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 5v14m0 0l-5-5m5 5l5-5"
+              />
+            </svg>
+          </div>
+          <span className="mt-2 text-xs text-x-gray font-semibold tracking-wide">
+            Scroll Down
+          </span>
+        </div>
+      </div>
 
       {/* Features Grid */}
       <section className="py-8 md:py-14 relative mt-4 md:mt-10">
@@ -807,6 +824,32 @@ const Features = () => {
         .animate-blob {
           animation: blob 7s infinite;
         }
+        .animation-delay-2000 {
+          animation-delay: 2s;
+        }
+        .animation-delay-4000 {
+          animation-delay: 4s;
+        }
+        @keyframes helpYouGradient {
+          0% {
+            color: #fb7185;
+          }
+          25% {
+            color: #38bdf8;
+          }
+          50% {
+            color: #34d399;
+          }
+          75% {
+            color: #fbbf24;
+          }
+          100% {
+            color: #fb7185;
+          }
+        }
+        .help-you-animated {
+          animation: helpYouGradient 3s linear infinite;
+        }
         @keyframes gradientText {
           0% {
             background-position: 0% 50%;
@@ -880,6 +923,28 @@ const Features = () => {
             linear-gradient(#fff 0 0);
           -webkit-mask-composite: xor;
           mask-composite: exclude;
+        }
+        .scroll-down-bounce {
+          animation: scrollBounce 2.2s cubic-bezier(0.22, 0.61, 0.36, 1)
+            infinite;
+        }
+        @keyframes scrollBounce {
+          0%,
+          100% {
+            transform: translateY(0);
+          }
+          20% {
+            transform: translateY(-6px) scaleY(1.08);
+          }
+          40% {
+            transform: translateY(14px) scaleY(0.92);
+          }
+          60% {
+            transform: translateY(-3px) scaleY(1.04);
+          }
+          80% {
+            transform: translateY(6px) scaleY(0.98);
+          }
         }
       `}</style>
     </div>

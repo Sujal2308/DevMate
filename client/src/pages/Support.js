@@ -40,6 +40,69 @@ const FAQItem = ({ question, answer, isOpen, onToggle }) => {
   );
 };
 
+// Custom Select Component
+const CustomSelect = ({ value, onChange, options }) => {
+  const [open, setOpen] = useState(false);
+  const ref = useRef();
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (ref.current && !ref.current.contains(event.target)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const selectedOption = options.find((opt) => opt.value === value);
+
+  return (
+    <div ref={ref} className="relative w-full">
+      <button
+        type="button"
+        className="w-full px-4 pr-10 py-3 bg-x-darker border border-x-border rounded-lg text-x-white focus:border-x-blue focus:ring-1 focus:ring-x-blue transition-colors duration-200 flex justify-between items-center"
+        onClick={() => setOpen((o) => !o)}
+      >
+        <span>{selectedOption ? selectedOption.label : "Select..."}</span>
+        <svg
+          className="w-5 h-5 text-x-blue ml-2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
+      </button>
+      {open && (
+        <ul className="absolute z-10 mt-2 w-full bg-x-dark border border-x-border rounded-lg shadow-lg overflow-hidden animate-fade-in">
+          {options.map((opt) => (
+            <li
+              key={opt.value}
+              onClick={() => {
+                onChange({ target: { name: "priority", value: opt.value } });
+                setOpen(false);
+              }}
+              className={`px-4 py-3 cursor-pointer transition-all duration-150 text-x-white hover:bg-x-blue/80 hover:text-white ${
+                value === opt.value
+                  ? "bg-x-blue/60 text-white font-semibold"
+                  : ""
+              }`}
+            >
+              {opt.label}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
+
 // Contact Form Component
 const ContactForm = () => {
   const [formData, setFormData] = useState({
@@ -117,17 +180,16 @@ const ContactForm = () => {
         <label className="block text-sm font-medium text-x-white mb-2">
           Priority Level
         </label>
-        <select
-          name="priority"
+        <CustomSelect
           value={formData.priority}
           onChange={handleChange}
-          className="w-full px-4 py-3 bg-x-darker border border-x-border rounded-lg text-x-white focus:border-x-blue focus:ring-1 focus:ring-x-blue transition-colors duration-200"
-        >
-          <option value="low">Low - General inquiry</option>
-          <option value="medium">Medium - Account issues</option>
-          <option value="high">High - Technical problems</option>
-          <option value="urgent">Urgent - Security concerns</option>
-        </select>
+          options={[
+            { value: "low", label: "Low - General inquiry" },
+            { value: "medium", label: "Medium - Account issues" },
+            { value: "high", label: "High - Technical problems" },
+            { value: "urgent", label: "Urgent - Security concerns" },
+          ]}
+        />
       </div>
 
       <div>
@@ -551,9 +613,10 @@ const Support = () => {
                 </p>
               </div>
 
-              <div className="grid md:grid-cols-3 gap-8 mb-12">
-                <div className="bg-x-dark border border-x-border rounded-xl p-6 text-center">
-                  <div className="w-12 h-12 bg-gradient-to-r from-x-blue to-x-green rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="grid md:grid-cols-3 gap-4 mb-8 sm:gap-6">
+                {/* Email Support Card */}
+                <div className="bg-x-dark/70 border border-x-border rounded-lg p-4 sm:p-6 min-h-[90px] flex flex-row sm:flex-col items-center sm:items-center text-left sm:text-center backdrop-blur-md">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-x-blue to-x-green rounded-full flex items-center justify-center mr-4 sm:mr-0 mb-0 sm:mb-4">
                     <svg
                       className="w-6 h-6 text-white"
                       fill="none"
@@ -568,20 +631,24 @@ const Support = () => {
                       />
                     </svg>
                   </div>
-                  <h3 className="text-lg font-semibold text-x-white mb-2">
-                    Email Support
-                  </h3>
-                  <p className="text-x-gray text-sm mb-3">Get help via email</p>
-                  <a
-                    href="mailto:support@devmate.com"
-                    className="text-x-blue hover:underline"
-                  >
-                    support@devmate.com
-                  </a>
+                  <div className="flex-1">
+                    <h3 className="text-base sm:text-lg font-semibold text-x-white mb-1 sm:mb-2">
+                      Email Support
+                    </h3>
+                    <p className="text-x-gray text-xs sm:text-sm mb-2 sm:mb-3">
+                      Get help via email
+                    </p>
+                    <a
+                      href="mailto:support@devmate.com"
+                      className="text-x-blue hover:underline text-xs sm:text-base"
+                    >
+                      support@devmate.com
+                    </a>
+                  </div>
                 </div>
-
-                <div className="bg-x-dark border border-x-border rounded-xl p-6 text-center">
-                  <div className="w-12 h-12 bg-gradient-to-r from-x-blue to-x-green rounded-full flex items-center justify-center mx-auto mb-4">
+                {/* Response Time Card */}
+                <div className="bg-x-dark/70 border border-x-border rounded-lg p-4 sm:p-6 min-h-[90px] flex flex-row sm:flex-col items-center sm:items-center text-left sm:text-center backdrop-blur-md">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-x-blue to-x-green rounded-full flex items-center justify-center mr-4 sm:mr-0 mb-0 sm:mb-4">
                     <svg
                       className="w-6 h-6 text-white"
                       fill="none"
@@ -596,17 +663,21 @@ const Support = () => {
                       />
                     </svg>
                   </div>
-                  <h3 className="text-lg font-semibold text-x-white mb-2">
-                    Response Time
-                  </h3>
-                  <p className="text-x-gray text-sm mb-3">
-                    We typically respond within
-                  </p>
-                  <span className="text-x-green font-semibold">24 hours</span>
+                  <div className="flex-1">
+                    <h3 className="text-base sm:text-lg font-semibold text-x-white mb-1 sm:mb-2">
+                      Response Time
+                    </h3>
+                    <p className="text-x-gray text-xs sm:text-sm mb-2 sm:mb-3">
+                      We typically respond within
+                    </p>
+                    <span className="text-x-green font-semibold text-xs sm:text-base">
+                      24 hours
+                    </span>
+                  </div>
                 </div>
-
-                <div className="bg-x-dark border border-x-border rounded-xl p-6 text-center">
-                  <div className="w-12 h-12 bg-gradient-to-r from-x-blue to-x-green rounded-full flex items-center justify-center mx-auto mb-4">
+                {/* Location Card */}
+                <div className="bg-x-dark/70 border border-x-border rounded-lg p-4 sm:p-6 min-h-[90px] flex flex-row sm:flex-col items-center sm:items-center text-left sm:text-center backdrop-blur-md">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-x-blue to-x-green rounded-full flex items-center justify-center mr-4 sm:mr-0 mb-0 sm:mb-4">
                     <svg
                       className="w-6 h-6 text-white"
                       fill="none"
@@ -627,11 +698,17 @@ const Support = () => {
                       />
                     </svg>
                   </div>
-                  <h3 className="text-lg font-semibold text-x-white mb-2">
-                    Location
-                  </h3>
-                  <p className="text-x-gray text-sm mb-3">Based in</p>
-                  <span className="text-x-blue">Global Support</span>
+                  <div className="flex-1">
+                    <h3 className="text-base sm:text-lg font-semibold text-x-white mb-1 sm:mb-2">
+                      Location
+                    </h3>
+                    <p className="text-x-gray text-xs sm:text-sm mb-2 sm:mb-3">
+                      Based in
+                    </p>
+                    <span className="text-x-blue text-xs sm:text-base">
+                      Global Support
+                    </span>
+                  </div>
                 </div>
               </div>
 

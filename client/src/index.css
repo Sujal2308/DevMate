@@ -141,10 +141,10 @@ html {
   }
 
   .x-card {
-    @apply bg-x-dark border border-x-border rounded-2xl p-6 backdrop-blur;
+    @apply bg-x-dark rounded-2xl p-6 backdrop-blur;
     background-color: var(--tw-bg-opacity, 1) #18181b;
-    /* border: border-x-border;  Remove border */
-    border: none !important;
+    border: 2px solid #1d9bf0 !important;
+    box-shadow: 0 0 12px 2px #1d9bf0cc;
     border-radius: 1rem;
     padding: 1.5rem;
     backdrop-filter: blur(4px);
@@ -358,6 +358,21 @@ html {
     max-width: 100% !important;
     padding-left: 0.75rem !important;
     padding-right: 0.75rem !important;
+  }
+
+  .explore-mobile-heading {
+    font-size: 2rem !important;
+    line-height: 2.4rem !important;
+  }
+
+  .mt-4-mobile {
+    margin-top: 1rem !important;
+  }
+
+  .results-container .card {
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
   }
 }
 
