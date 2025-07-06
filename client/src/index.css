@@ -1254,3 +1254,15 @@ body::-webkit-scrollbar-thumb:hover {
     border-radius: 0 !important;
   }
 }
+
+/* Center the 'Search for developers' section on mobile */
+@media (max-width: 767px) {
+  .mobile-center-section {
+    min-height: 60vh;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0 !important;
+  }
+}

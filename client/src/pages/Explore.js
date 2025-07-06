@@ -77,11 +77,9 @@ const Explore = () => {
       rootContainerRef.current &&
       !initialRenderComplete.current
     ) {
-      // Set the initial container height only once
-      const contentHeight =
-        windowWidth < 768 ? window.innerHeight - 150 : "auto";
-      rootContainerRef.current.style.height = `${contentHeight}px`;
-      rootContainerRef.current.style.overflow = "hidden";
+      // Remove fixed height and overflow logic for natural scroll
+      rootContainerRef.current.style.height = "";
+      rootContainerRef.current.style.overflow = "";
       initialRenderComplete.current = true;
     }
   }, [isMobile, windowWidth]);
@@ -348,33 +346,36 @@ const Explore = () => {
       ref={rootContainerRef}
       className={`w-full max-w-7xl mx-auto py-1 sm:py-2 lg:py-6 px-2 sm:px-3 lg:px-6 pb-16 lg:pb-8 explore-root-container`}
       style={{
-        height: isMobile ? "100vh" : "auto",
+        minHeight: isMobile ? "100vh" : "auto",
+        height: "auto",
         isolation: "isolate",
         contain: isMobile ? "strict" : "none",
         willChange: isMobile ? "transform" : "auto",
       }}
     >
       {/* Hero Section - Reduced when keyboard active */}
-      <div
-        className={`hero-container ${
-          isKeyboardOpen
-            ? "h-0 opacity-0 overflow-hidden"
-            : "mb-2 sm:mb-3 lg:mb-6"
-        }`}
-        style={{
-          transition:
-            "height var(--transition-speed), opacity var(--transition-speed)",
-        }}
-      >
-        <h1 className="mt-4 text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-x-blue via-purple-500 to-x-green bg-[length:200%_auto] bg-clip-text text-transparent md:animate-color-cycle mb-1 lg:mb-2 explore-mobile-heading">
-          <span className="inline sm:hidden">Discover Devs</span>
-          <span className="hidden sm:inline">Explore Developers</span>
-        </h1>
-        <p className="text-x-gray text-xs sm:text-sm lg:text-base max-w-2xl">
-          Discover and connect with talented developers in the DevMate
-          community. Find your next collaborator, mentor, or coding buddy.
-        </p>
-      </div>
+      {!isMobile && (
+        <div
+          className={`hero-container ${
+            isKeyboardOpen
+              ? "h-0 opacity-0 overflow-hidden"
+              : "mb-2 sm:mb-3 lg:mb-6"
+          }`}
+          style={{
+            transition:
+              "height var(--transition-speed), opacity var(--transition-speed)",
+          }}
+        >
+          <h1 className="mt-4 text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-x-blue via-purple-500 to-x-green bg-[length:200%_auto] bg-clip-text text-transparent md:animate-color-cycle mb-1 lg:mb-2 explore-mobile-heading">
+            <span className="inline sm:hidden">Discover Devs</span>
+            <span className="hidden sm:inline">Explore Developers</span>
+          </h1>
+          <p className="text-x-gray text-xs sm:text-sm lg:text-base max-w-2xl">
+            Discover and connect with talented developers in the DevMate
+            community. Find your next collaborator, mentor, or coding buddy.
+          </p>
+        </div>
+      )}
 
       {/* Search and Filter Controls - Fixed position on mobile when keyboard active */}
       <div
@@ -558,7 +559,11 @@ const Explore = () => {
               </div>
             </div>
           ) : users.length === 0 || !shouldShowResults ? (
-            <div className="text-center py-3 min-h-[120px] flex flex-col items-center justify-center">
+            <div
+              className={`text-center py-3 min-h-[120px] flex flex-col items-center justify-center${
+                isMobile ? " mt-8 mobile-center-section" : ""
+              }`}
+            >
               <div className="bg-x-blue/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
                 <svg
                   className="w-8 h-8 text-x-blue"
