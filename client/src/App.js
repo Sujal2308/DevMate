@@ -50,10 +50,17 @@ function AppContent() {
   const { user, loading } = useAuth();
   const [showSplash, setShowSplash] = useState(true);
   const location = useLocation();
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
     const timer = setTimeout(() => setShowSplash(false), 2000);
     return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   if (showSplash) {
@@ -172,7 +179,9 @@ function AppContent() {
                     />
                     <Route path="*" element={<Navigate to="/feed" />} />
                   </Routes>
-                  <Footer />
+                  {!(
+                    location.pathname === "/explore" && windowWidth >= 768
+                  ) && <Footer />}
                 </main>
               </div>
               <TrendingNews />

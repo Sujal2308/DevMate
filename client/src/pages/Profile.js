@@ -197,7 +197,7 @@ const Profile = () => {
       {/* Hero Profile Section */}
       <div className="relative mb-8">
         {/* Cover */}
-        <div className="h-40 md:h-64 bg-gradient-to-r from-cyan-500 via-indigo-500 to-fuchsia-500 rounded-t-3xl relative overflow-hidden">
+        <div className="h-40 md:h-64 bg-gradient-to-r from-cyan-500 via-indigo-500 to-fuchsia-500 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
           <div className="absolute top-4 right-4">
             {isOwnProfile && (
@@ -246,7 +246,7 @@ const Profile = () => {
         </div>
 
         {/* Profile Info Card */}
-        <div className="bg-gradient-to-br from-x-dark/90 to-x-dark/60 backdrop-blur-sm border border-x-border/50 rounded-b-3xl -mt-1 pt-2 md:pt-8 pb-6 px-8">
+        <div className="bg-gradient-to-br from-x-dark/90 to-x-dark/60 backdrop-blur-sm border border-x-border/50 -mt-1 pt-2 md:pt-8 pb-6 px-4 md:px-8">
           <div className="flex flex-row items-end justify-between">
             <div className="flex flex-row items-end text-left">
               {/* Avatar */}
@@ -463,8 +463,8 @@ const Profile = () => {
         </div>
       </div>
       {/* Profile Metrics Card */}
-      <div className="bg-gradient-to-br from-x-dark/70 to-x-dark/40 backdrop-blur-sm border border-x-border/40 rounded-3xl p-4 mb-8">
-        <h3 className="text-lg font-bold mb-4 flex items-center gap-2 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-gradient-x">
+      <div className="bg-gradient-to-br from-x-dark/70 to-x-dark/40 backdrop-blur-sm border border-x-border/40 p-4 mb-8">
+        <h3 className="text-lg font-bold mb-4 flex items-center gap-2 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-gradient-x font-mono">
           <svg
             className="w-6 h-6 text-x-blue"
             fill="none"
@@ -482,28 +482,28 @@ const Profile = () => {
         </h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center">
-            <div className="text-3xl font-bold text-x-white mb-1">
-              {posts.length}
-            </div>
-            <div className="text-x-gray text-sm">Posts</div>
-          </div>
-          <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center">
-            <div className="text-3xl font-bold text-x-white mb-1">
+            <div className="text-3xl font-bold text-x-white mb-1 font-mono">
               {profileUser.followers?.length || 0}
             </div>
-            <div className="text-x-gray text-sm">Followers</div>
+            <div className="text-x-gray text-sm font-mono">Followers</div>
           </div>
           <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center">
-            <div className="text-3xl font-bold text-x-white mb-1">
+            <div className="text-3xl font-bold text-x-white mb-1 font-mono">
               {profileUser.following?.length || 0}
             </div>
-            <div className="text-x-gray text-sm">Following</div>
+            <div className="text-x-gray text-sm font-mono">Following</div>
           </div>
           <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center">
-            <div className="text-3xl font-bold text-x-white mb-1">
+            <div className="text-3xl font-bold text-x-white mb-1 font-mono">
+              {posts.length}
+            </div>
+            <div className="text-x-gray text-sm font-mono">Posts</div>
+          </div>
+          <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center">
+            <div className="text-3xl font-bold text-x-white mb-1 font-mono">
               {totalLikes}
             </div>
-            <div className="text-x-gray text-sm">Likes</div>
+            <div className="text-x-gray text-sm font-mono">Likes</div>
           </div>
         </div>
       </div>

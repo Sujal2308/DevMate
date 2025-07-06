@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Select from "react-select";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import LoadingSpinner from "../components/LoadingSpinner";
@@ -11,6 +12,7 @@ const CreatePost = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState("");
+  const [showCodeSnippet, setShowCodeSnippet] = useState(false);
 
   const navigate = useNavigate();
 
@@ -119,6 +121,18 @@ SELECT * FROM users WHERE name = 'Developer';`,
 }`,
   };
 
+  const languageOptions = [
+    { value: "javascript", label: "🟨 JavaScript", color: "#f7df1e" },
+    { value: "python", label: "🐍 Python", color: "#4B8BBE" },
+    { value: "java", label: "☕ Java", color: "#b07219" },
+    { value: "cpp", label: "⚡ C++", color: "#00599C" },
+    { value: "react", label: "⚛️ React", color: "#61dafb" },
+    { value: "html", label: "🌐 HTML", color: "#e34c26" },
+    { value: "css", label: "🎨 CSS", color: "#563d7c" },
+    { value: "sql", label: "🗄️ SQL", color: "#336791" },
+    { value: "json", label: "📋 JSON", color: "#f4a460" },
+  ];
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -127,7 +141,8 @@ SELECT * FROM users WHERE name = 'Developer';`,
     if (error) setError("");
   };
 
-  const handleLanguageSelect = (language) => {
+  const handleLanguageSelect = (option) => {
+    const language = option ? option.value : "";
     setSelectedLanguage(language);
     if (language && languageTemplates[language]) {
       setFormData({
@@ -170,8 +185,21 @@ SELECT * FROM users WHERE name = 'Developer';`,
     <div className="w-full max-w-4xl mx-auto py-2 sm:py-4 lg:py-8 px-3 sm:px-4 lg:px-6 pb-20 lg:pb-8">
       {/* Header Section */}
       <div className="mb-4 sm:mb-6 lg:mb-8">
-        <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-x-blue via-purple-500 to-x-green bg-[length:200%_auto] bg-clip-text text-transparent animate-color-cycle mb-2 lg:mb-3">
-          Create a Post
+        <h1 className="text-xl sm:text-xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-x-blue via-purple-500 to-x-green bg-[length:200%_auto] bg-clip-text text-transparent animate-color-cycle mb-2 lg:mb-3">
+          Create a Post{" "}
+          <span
+            role="img"
+            aria-label="notebook"
+            style={{
+              color: "initial",
+              background: "none",
+              WebkitBackgroundClip: "unset",
+              WebkitTextFillColor: "initial",
+              filter: "none",
+            }}
+          >
+            📝
+          </span>
         </h1>
         <p className="text-x-gray text-sm sm:text-base lg:text-base">
           Share your thoughts, ideas, or code with the DevMate community.
@@ -216,10 +244,10 @@ SELECT * FROM users WHERE name = 'Developer';`,
               name="content"
               rows="8"
               required
-              className="w-full p-6 bg-x-black/60 border border-x-border text-x-white placeholder-x-gray rounded-xl resize-none focus:ring-2 focus:ring-x-blue focus:border-x-blue transition-colors text-lg leading-relaxed"
-              placeholder="Share your thoughts, ideas, experiences, or questions with the DevMate community...
-
-💡 Pro tip: You can add code snippets below to enhance your post!"
+              className="w-full p-6 bg-x-black/60 border border-x-border text-x-white placeholder-x-gray rounded-xl resize-none focus:ring-2 focus:ring-x-blue focus:border-x-blue transition-colors text-lg leading-relaxed font-mono placeholder:font-mono"
+              placeholder={
+                "• Share your thoughts, ideas, experiences, or questions with the DevMate community...\n• Pro tip: You can add code snippets below to enhance your post!"
+              }
               value={formData.content}
               onChange={handleChange}
               maxLength="2000"
@@ -251,82 +279,100 @@ SELECT * FROM users WHERE name = 'Developer';`,
 
           <div className="mb-8 border-t border-x-border/30 pt-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-              {/* Move select and button to one line */}
+              {/* Custom react-select dropdown */}
               <div className="flex flex-row items-center gap-2 w-full">
-                <select
-                  value={selectedLanguage}
-                  onChange={(e) => handleLanguageSelect(e.target.value)}
-                  className="language-dropdown appearance-none bg-gradient-to-r from-x-dark to-x-darker border border-x-border/50 text-x-white font-mono text-xs px-4 py-2 pr-8 rounded-xl hover:from-x-darker hover:to-x-black transition-all duration-200 focus:ring-2 focus:ring-x-blue focus:border-x-blue cursor-pointer shadow-lg hover:shadow-x-blue/20 backdrop-blur-sm"
-                >
-                  <option value="" className="bg-x-dark text-x-white font-mono">
-                    🔤 Choose Language
-                  </option>
-                  <option
-                    value="javascript"
-                    className="bg-x-dark text-x-white font-mono"
-                  >
-                    🟨 JavaScript
-                  </option>
-                  <option
-                    value="python"
-                    className="bg-x-dark text-x-white font-mono"
-                  >
-                    🐍 Python
-                  </option>
-                  <option
-                    value="java"
-                    className="bg-x-dark text-x-white font-mono"
-                  >
-                    ☕ Java
-                  </option>
-                  <option
-                    value="cpp"
-                    className="bg-x-dark text-x-white font-mono"
-                  >
-                    ⚡ C++
-                  </option>
-                  <option
-                    value="react"
-                    className="bg-x-dark text-x-white font-mono"
-                  >
-                    ⚛️ React
-                  </option>
-                  <option
-                    value="html"
-                    className="bg-x-dark text-x-white font-mono"
-                  >
-                    🌐 HTML
-                  </option>
-                  <option
-                    value="css"
-                    className="bg-x-dark text-x-white font-mono"
-                  >
-                    🎨 CSS
-                  </option>
-                  <option
-                    value="sql"
-                    className="bg-x-dark text-x-white font-mono"
-                  >
-                    🗄️ SQL
-                  </option>
-                  <option
-                    value="json"
-                    className="bg-x-dark text-x-white font-mono"
-                  >
-                    📋 JSON
-                  </option>
-                </select>
-                <button
-                  type="button"
-                  className="ml-2 flex items-center font-bold text-base bg-x-dark hover:bg-x-blue text-x-white px-4 py-2 rounded-xl transition-all duration-200 shadow"
-                >
-                  <span className="mr-2">💻</span>add{" "}
-                  <span className="ml-1">&lt;/&gt;</span>
-                </button>
+                <Select
+                  className="w-full text-xs font-mono"
+                  classNamePrefix="react-select"
+                  options={languageOptions}
+                  value={languageOptions.find(
+                    (opt) => opt.value === selectedLanguage
+                  )}
+                  onChange={handleLanguageSelect}
+                  isClearable
+                  isSearchable={false}
+                  placeholder="✨ Choose Language"
+                  styles={{
+                    control: (base, state) => ({
+                      ...base,
+                      background:
+                        "linear-gradient(90deg, #181c24 60%, #23272f 100%)",
+                      borderImage:
+                        "linear-gradient(90deg, #1d9bf0, #a259f7, #00ba7c, #1d9bf0) 1",
+                      borderImageSlice: 1,
+                      borderWidth: "2px 2px 3px 2px", // Thicker bottom border
+                      borderStyle: "solid",
+                      borderColor: "transparent",
+                      borderBottomColor: "#1d9bf0", // Fallback for bottom border
+                      boxShadow: "none",
+                      outline: "none",
+                      borderRadius: 12,
+                      minHeight: 38,
+                      height: 38, // Prevent expansion
+                      maxHeight: 38, // Prevent expansion
+                      paddingTop: 0,
+                      paddingBottom: 0,
+                      fontSize: 13,
+                      fontWeight: 500,
+                      letterSpacing: "0.02em",
+                      color: "#fff",
+                      zIndex: 100,
+                      animation: "border-gradient 3s linear infinite",
+                      transition: "border-image 0.5s",
+                    }),
+                    menu: (base) => ({
+                      ...base,
+                      background: "#23272f",
+                      color: "#fff",
+                      borderRadius: 12,
+                      boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
+                      fontSize: 13,
+                      zIndex: 9999,
+                    }),
+                    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                    option: (base, state) => ({
+                      ...base,
+                      background: state.isSelected
+                        ? "#1d9bf0"
+                        : state.isFocused
+                        ? "#23272f"
+                        : "transparent",
+                      color: state.isSelected ? "#fff" : "#fff",
+                      fontWeight: state.isSelected ? 700 : 500,
+                      fontFamily: "monospace",
+                      cursor: "pointer",
+                    }),
+                    singleValue: (base) => ({
+                      ...base,
+                      color: "#fff",
+                      fontFamily: "monospace",
+                    }),
+                    placeholder: (base) => ({
+                      ...base,
+                      color: "#888",
+                      fontFamily: "monospace",
+                    }),
+                  }}
+                  menuPortalTarget={
+                    typeof window !== "undefined" ? document.body : null
+                  }
+                  menuPosition="fixed"
+                  theme={(theme) => ({
+                    ...theme,
+                    borderRadius: 12,
+                    colors: {
+                      ...theme.colors,
+                      primary: "#1d9bf0",
+                      primary25: "#23272f",
+                      neutral0: "#23272f",
+                      neutral80: "#fff",
+                    },
+                  })}
+                />
               </div>
             </div>
 
-            {(selectedLanguage || formData.codeSnippet) && (
+            {(selectedLanguage || formData.codeSnippet || showCodeSnippet) && (
               <div className="bg-x-black/80 border border-x-border/50 rounded-xl overflow-hidden">
                 <div className="flex items-center justify-between bg-x-dark/60 px-4 py-2 border-b border-x-border/30">
                   <div className="flex items-center space-x-2">
@@ -388,14 +434,14 @@ console.log("Welcome to DevMate!");`
             <button
               type="button"
               onClick={() => navigate("/feed")}
-              className="btn-outline px-8 py-3 hover:scale-105 transform transition-all duration-200"
+              className="btn-outline px-8 h-[38px] hover:scale-105 transform transition-all duration-200"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading || !formData.content.trim()}
-              className="btn-primary px-8 py-3 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center hover:scale-105 transform transition-all duration-200"
+              className="btn-primary px-8 h-[38px] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center hover:scale-105 transform transition-all duration-200"
             >
               {loading ? (
                 <>
@@ -555,6 +601,15 @@ console.log("Welcome to DevMate!");`
           )}
         </div>
       </div>
+
+      {/* Add keyframes for border gradient animation */}
+      <style>
+        {`
+        @keyframes border-gradient {
+          0% { border-image-source: linear-gradient(90deg, #1d9bf0, #a259f7, #00ba7c, #1d9bf0); }
+          100% { border-image-source: linear-gradient(270deg, #1d9bf0, #a259f7, #00ba7c, #1d9bf0); }
+        }`}
+      </style>
     </div>
   );
 };

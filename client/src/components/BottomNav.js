@@ -125,7 +125,7 @@ const BottomNav = () => {
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               fill="currentColor"
-              className="w-6 h-6 text-x-blue"
+              className="w-6 h-6 animate-colorchange"
             >
               <path
                 fillRule="evenodd"
