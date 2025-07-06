@@ -346,11 +346,7 @@ const Explore = () => {
   return (
     <div
       ref={rootContainerRef}
-      className={`w-full max-w-7xl mx-auto py-1 sm:py-2 lg:py-6 px-2 sm:px-3 lg:px-6 pb-16 lg:pb-8 explore-root-container ${
-        isMobile ? "fixed-mobile-layout" : ""
-      } ${isKeyboardOpen ? "keyboard-active" : ""} ${
-        isSearchActive ? "search-active" : ""
-      }`}
+      className={`w-full max-w-7xl mx-auto py-1 sm:py-2 lg:py-6 px-2 sm:px-3 lg:px-6 pb-16 lg:pb-8 explore-root-container`}
       style={{
         height: isMobile ? "100vh" : "auto",
         isolation: "isolate",
@@ -371,18 +367,7 @@ const Explore = () => {
         }}
       >
         <h1 className="mt-4 text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-x-blue via-purple-500 to-x-green bg-[length:200%_auto] bg-clip-text text-transparent md:animate-color-cycle mb-1 lg:mb-2 explore-mobile-heading">
-          <span className="inline sm:hidden">
-            Discover Devs{" "}
-            <span
-              style={{
-                background: "none",
-                WebkitBackgroundClip: "initial",
-                color: "initial",
-              }}
-            >
-              🚀
-            </span>
-          </span>
+          <span className="inline sm:hidden">Discover Devs</span>
           <span className="hidden sm:inline">Explore Developers</span>
         </h1>
         <p className="text-x-gray text-xs sm:text-sm lg:text-base max-w-2xl">
@@ -394,7 +379,7 @@ const Explore = () => {
       {/* Search and Filter Controls - Fixed position on mobile when keyboard active */}
       <div
         ref={searchContainerRef}
-        className={`card search-control-panel p-2 sm:p-3 lg:p-6 mb-1 sm:mb-2 lg:mb-4 bg-gradient-to-r from-x-dark/50 to-x-dark/30 md:backdrop-blur-sm backdrop-blur-none border border-x-border/50 mt-4-mobile`}
+        className={`card search-control-panel p-2 sm:p-3 lg:p-6 mb-1 sm:mb-2 lg:mb-4 bg-gradient-to-r from-x-dark/50 to-x-dark/30 md:backdrop-blur-sm backdrop-blur-none border border-x-border/50 mt-4-mobile overflow-x-hidden max-w-full`}
         style={{
           zIndex: isKeyboardOpen ? 50 : "auto",
           position: isKeyboardOpen ? "sticky" : "relative",
@@ -405,158 +390,133 @@ const Explore = () => {
         <div className="flex flex-col gap-2 sm:gap-3 lg:gap-4">
           <div className="flex flex-col gap-3 sm:gap-4 lg:gap-6">
             <div className="w-full">
-              <label
-                htmlFor="search"
-                className={`block text-sm font-medium text-x-white mb-2 sm:mb-3 ${
-                  isKeyboardOpen ? "sr-only" : ""
-                }`}
+              {!isMobile && (
+                <label
+                  htmlFor="search"
+                  className="block text-sm font-medium text-x-white mb-2 sm:mb-3"
+                >
+                  🔍 Search by name or username
+                </label>
+              )}
+              <div
+                className={
+                  !isMobile
+                    ? "flex flex-col gap-2 items-start w-full"
+                    : "relative"
+                }
               >
-                🔍 Search by name or username
-              </label>
-              <div className="relative">
-                <input
-                  ref={searchInputRef}
-                  type="text"
-                  id="search"
-                  className="w-full bg-x-black/60 border border-x-border text-x-white placeholder-x-gray rounded-xl px-4 py-3 pr-12 focus:ring-2 focus:ring-x-blue focus:border-x-blue transform-gpu"
-                  placeholder="Search developers..."
-                  value={searchTerm}
-                  onChange={handleSearchChange}
-                  onFocus={handleSearchFocus}
-                  onBlur={handleSearchBlur}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && isMobile && searchTerm) {
-                      e.preventDefault();
-                      executeSearch();
-                    }
-                  }}
-                  style={{
-                    WebkitAppearance: "none",
-                    transform: "translateZ(0)",
-                  }}
-                />
-                <div className="absolute right-0 top-0 h-full flex items-center pr-3">
-                  {searchTerm ? (
-                    <button
-                      onClick={() => {
-                        setSearchTerm("");
-                        if (searchInputRef.current) {
-                          searchInputRef.current.focus();
-                        }
-                      }}
-                      className="mr-1 p-1 text-x-gray hover:text-x-white focus:outline-none search-clear-button"
-                      aria-label="Clear search"
-                      type="button"
-                    >
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        style={{ transform: "translateZ(0)" }}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M6 18L18 6M6 6l12 12"
-                        />
-                      </svg>
-                    </button>
-                  ) : (
-                    <svg
-                      className="w-5 h-5 text-x-gray flex-shrink-0"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      style={{ transform: "translateZ(0)" }}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                      />
-                    </svg>
-                  )}
-
-                  {/* Mobile search button that dismisses keyboard and shows results */}
-                  {isMobile && searchTerm && (
-                    <button
-                      onClick={executeSearch}
-                      className="ml-2 bg-x-blue text-white rounded-lg px-3 py-1 text-xs font-medium search-execute-button"
-                      aria-label="Search"
-                      type="button"
-                    >
-                      Search
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Hide skill filter on mobile, show on desktop */}
-            <div className="hidden md:block relative">
-              <div style={{ display: "flex", alignItems: "flex-end" }}>
-                <div>
-                  <label
-                    htmlFor="skill"
-                    className={`block text-sm font-medium text-x-white mb-3 ${
-                      isKeyboardOpen ? "sr-only" : ""
-                    }`}
-                  >
-                    🏷️ Filter by skill
-                  </label>
-                  <select
-                    id="skill"
-                    className="bg-x-black/60 border border-x-border text-x-white rounded-xl px-4 py-3 focus:ring-2 focus:ring-x-blue focus:border-x-blue normal-dropdown"
-                    value={selectedSkill}
-                    onChange={handleSkillChange}
+                {/* Large Search Bar Row */}
+                <div className="relative w-full flex items-center">
+                  <input
+                    ref={searchInputRef}
+                    type="text"
+                    id="search"
+                    className="w-full bg-x-black/60 border border-x-border text-x-white placeholder-x-gray rounded-xl px-6 py-4 pr-16 text-lg font-mono transform-gpu animated-gradient-border focus:pr-16"
+                    placeholder="Search developers..."
+                    value={searchTerm}
+                    onChange={handleSearchChange}
                     onFocus={handleSearchFocus}
                     onBlur={handleSearchBlur}
-                    style={{ minWidth: "180px" }}
-                  >
-                    <option value="">All skills</option>
-                    {allSkills.map((skill) => (
-                      <option key={skill} value={skill}>
-                        {skill}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Desktop Clear Filters button positioned to the right of dropdown */}
-                <div
-                  style={{
-                    marginLeft: "16px",
-                    height: "50px",
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  {(searchTerm || selectedSkill) && (
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && isMobile && searchTerm) {
+                        e.preventDefault();
+                        executeSearch();
+                      }
+                    }}
+                  />
+                  {/* Clear (cross) icon inside search bar */}
+                  {searchTerm && (
                     <button
-                      onClick={clearFilters}
-                      className="btn-outline px-6 py-3 whitespace-nowrap"
+                      type="button"
+                      onClick={() => setSearchTerm("")}
+                      className="absolute right-16 top-1/2 -translate-y-1/2 text-x-gray hover:text-x-blue focus:outline-none text-2xl px-2"
+                      tabIndex={0}
+                      aria-label="Clear search"
+                      style={{ zIndex: 2 }}
                     >
-                      ✨ Clear Filters
+                      ×
                     </button>
                   )}
+                  {/* Small search button */}
+                  <button
+                    type="button"
+                    onClick={executeSearch}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 bg-x-blue hover:bg-x-green text-white rounded-full p-2 shadow-md focus:outline-none transition-colors"
+                    style={{
+                      width: "2.2rem",
+                      height: "2.2rem",
+                      minWidth: "2.2rem",
+                      zIndex: 1,
+                    }}
+                    aria-label="Search"
+                  >
+                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24">
+                      <circle
+                        cx="11"
+                        cy="11"
+                        r="7"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      />
+                      <path
+                        d="M20 20L16.65 16.65"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  </button>
                 </div>
+                {/* Skill dropdown row (moved below search bar) */}
+                {!isMobile && allSkills.length > 0 && (
+                  <div className="mt-2 w-full flex items-center">
+                    <select
+                      id="skill"
+                      value={selectedSkill}
+                      onChange={handleSkillChange}
+                      className="skill-dropdown bg-x-dark border border-x-border text-x-white focus:outline-none focus:border-x-blue transition-colors min-w-[120px] shadow-md px-3 py-2 h-10"
+                      style={{
+                        backgroundImage:
+                          "url(\"data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 8L10 12L14 8' stroke='%23e7e9ea' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\")",
+                        backgroundRepeat: "no-repeat",
+                        backgroundPosition: "right 0.75rem center",
+                        backgroundSize: "1.1em",
+                        appearance: "none",
+                        borderRadius: 0,
+                      }}
+                    >
+                      <option value="">All Skills</option>
+                      {allSkills.map((skill) => (
+                        <option
+                          key={skill}
+                          value={skill}
+                          className="dropdown-option"
+                        >
+                          {skill}
+                        </option>
+                      ))}
+                    </select>
+                    {/* Clear filter button for desktop only */}
+                    {(searchTerm || selectedSkill) && (
+                      <button
+                        onClick={clearFilters}
+                        className="ml-4 px-2 py-2 bg-transparent border-none text-x-blue hover:text-x-green transition-colors text-base font-mono font-semibold shadow-none focus:outline-none focus:underline flex items-center gap-1"
+                        style={{
+                          boxShadow: "none",
+                          background: "none",
+                          border: "none",
+                        }}
+                      >
+                        <span>Clear</span>
+                        <span role="img" aria-label="sparkles">
+                          ✨
+                        </span>
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
-          </div>
-
-          {/* Mobile Clear Search button (centered) */}
-          <div className="flex md:hidden justify-center h-10">
-            {searchTerm && (
-              <button
-                onClick={clearFilters}
-                className="btn-outline px-6 py-2 whitespace-nowrap"
-              >
-                ✨ Clear Search
-              </button>
-            )}
           </div>
         </div>
       </div>
