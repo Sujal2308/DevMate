@@ -259,7 +259,7 @@ const Profile = () => {
               {/* Avatar */}
               <div
                 className={`relative ${
-                  isOwnProfile ? "mt-1 md:-mt-10" : "mt-2 md:-mt-12"
+                  isOwnProfile ? "mt-1 md:-mt-10" : "-mt-2 md:-mt-12" // move avatar higher for other users on mobile
                 } mb-0 mr-6 z-20`}
               >
                 <div className="bg-gradient-to-r from-x-blue to-purple-500 text-white w-20 h-20 md:w-32 md:h-32 rounded-2xl md:rounded-3xl flex items-center justify-center text-2xl md:text-4xl font-bold border-4 border-x-dark shadow-2xl">
@@ -780,6 +780,30 @@ const Profile = () => {
                 <p className="text-x-white mt-1">{profileUser.bio}</p>
               </div>
             )}
+            <div>
+              <span className="font-semibold text-x-gray">
+                Date of Joining:
+              </span>
+              <span className="text-x-white ml-2">
+                <svg
+                  className="w-4 h-4 inline-block mr-1 align-middle"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+                {new Date(profileUser.createdAt).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                })}
+              </span>
+            </div>
             {profileUser.skills && profileUser.skills.length > 0 && (
               <div>
                 <span className="font-semibold text-x-gray">Skills:</span>
