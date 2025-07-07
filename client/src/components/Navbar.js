@@ -107,16 +107,18 @@ const Navbar = () => {
                     ></div>
                   </Link>
                   <Link
-                    to="/create-post"
+                    to="/notifications"
                     className={`relative text-x-white hover:text-x-blue transition-all duration-200 font-medium group ${
-                      location.pathname === "/create-post" ? "text-x-blue" : ""
+                      location.pathname === "/notifications"
+                        ? "text-x-blue"
+                        : ""
                     }`}
-                    onClick={(e) => handleNavClick("/create-post", e)}
+                    onClick={(e) => handleNavClick("/notifications", e)}
                   >
-                    <span>Create</span>
+                    <span>Notifications</span>
                     <div
                       className={`absolute bottom-0 left-0 h-0.5 bg-x-blue transition-all duration-200 ${
-                        location.pathname === "/create-post"
+                        location.pathname === "/notifications"
                           ? "w-full"
                           : "w-0 group-hover:w-full"
                       }`}

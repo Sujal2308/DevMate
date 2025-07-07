@@ -31,6 +31,7 @@ import Features from "./pages/Features"; // Import the new Features page
 import Support from "./pages/Support"; // Import the new Support page
 import { useLocation } from "react-router-dom";
 import TrendingNews from "./components/TrendingNews"; // Import TrendingNews
+import Notifications from "./pages/Notifications"; // Import Notifications page
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -76,18 +77,17 @@ function AppContent() {
   }
 
   return (
-    <div className="min-h-screen bg-x-black text-x-white flex flex-col">
+    <div className="min-h-screen flex flex-col bg-x-black text-x-white">
       <ScrollToTop />
       <Navbar />
-
       {user ? (
         // Logged in layout - Responsive 3-column
         <>
           <div className="flex-1 flex flex-col pt-16">
-            <div className="x-container">
+            <div className="x-container flex-1 flex">
               <Sidebar />
               <div className="flex flex-col flex-1">
-                <main className="x-main">
+                <main className="x-main flex-1 flex flex-col">
                   <Routes>
                     <Route
                       path="/"
@@ -177,10 +177,19 @@ function AppContent() {
                         </ProtectedRoute>
                       }
                     />
+                    <Route
+                      path="/notifications"
+                      element={
+                        <ProtectedRoute>
+                          <Notifications />
+                        </ProtectedRoute>
+                      }
+                    />
                     <Route path="*" element={<Navigate to="/feed" />} />
                   </Routes>
                   {!(
-                    location.pathname === "/explore" && windowWidth >= 768
+                    (location.pathname === "/explore" && windowWidth >= 768) ||
+                    location.pathname === "/notifications"
                   ) && <Footer />}
                 </main>
               </div>
@@ -190,7 +199,7 @@ function AppContent() {
         </>
       ) : (
         // Not logged in layout - full width
-        <div className="w-full pt-16">
+        <div className="w-full pt-16 flex-1 flex flex-col">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route
@@ -223,12 +232,11 @@ function AppContent() {
             {/* New Support route */}
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
+          <Footer />
         </div>
       )}
-
       {/* Global Floating Post Button for Mobile */}
       {/* <FloatingPostButton /> */}
-
       {/* Bottom Navigation for Mobile */}
       <BottomNav />
     </div>

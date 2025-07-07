@@ -248,166 +248,99 @@ const Profile = () => {
             null}
         </div>
 
-        {/* Profile Info Card - Sleek & Minimal */}
-        <div className="bg-x-dark/80 border border-x-border/20 shadow-lg -mt-8 pt-6 pb-6 px-4 md:px-8 rounded-2xl">
-          <div className="flex flex-row items-center justify-between gap-4 flex-wrap">
-            {/* Avatar */}
-            <div className="relative flex-shrink-0">
-              <div className="bg-x-dark/60 text-white w-20 h-20 md:w-28 md:h-28 rounded-full flex items-center justify-center text-3xl md:text-4xl font-bold border-2 border-x-border/30 shadow-md">
-                {profileUser.displayName?.charAt(0).toUpperCase() ||
-                  profileUser.username.charAt(0).toUpperCase()}
-              </div>
-              <div className="absolute -bottom-2 -right-2 bg-x-green w-7 h-7 rounded-full border-2 border-x-dark flex items-center justify-center">
-                <svg
-                  className="w-3.5 h-3.5 text-white"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
-            </div>
-            {/* Name, Username, Date, Follow */}
-            <div className="flex-1 min-w-0 flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-              <div className="min-w-0">
-                <h1 className="text-2xl md:text-3xl font-semibold text-x-white truncate mb-1 md:mb-0">
-                  {profileUser.displayName || profileUser.username}
-                </h1>
-                <div className="flex items-center gap-3 text-x-gray text-base font-mono">
-                  <span>@{profileUser.username}</span>
-                  {isOwnProfile && (
-                    <span className="hidden md:inline-flex items-center text-xs text-x-gray/80 font-normal ml-2">
-                      <svg
-                        className="w-4 h-4 mr-1"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                        />
-                      </svg>
-                      Joined{" "}
-                      {new Date(profileUser.createdAt).toLocaleDateString(
-                        "en-US",
-                        {
-                          year: "numeric",
-                          month: "long",
-                        }
-                      )}
-                    </span>
-                  )}
+        {/* Profile Info Card */}
+        <div className="bg-gradient-to-br from-x-dark/90 to-x-dark/60 backdrop-blur-sm border border-x-border/50 -mt-1 pt-2 md:pt-8 pb-6 px-4 md:px-8">
+          <div
+            className={`flex flex-row ${
+              isOwnProfile ? "items-end" : "items-start"
+            } justify-between`}
+          >
+            <div className="flex flex-row items-start text-left">
+              {/* Avatar */}
+              <div
+                className={`relative ${
+                  isOwnProfile ? "mt-1 md:-mt-10" : "-mt-2 md:-mt-12" // move avatar higher for other users on mobile
+                } mb-0 mr-6 z-20`}
+              >
+                <div className="bg-gradient-to-r from-x-blue to-purple-500 text-white w-20 h-20 md:w-32 md:h-32 rounded-2xl md:rounded-3xl flex items-center justify-center text-2xl md:text-4xl font-bold border-4 border-x-dark shadow-2xl">
+                  {profileUser.displayName?.charAt(0).toUpperCase() ||
+                    profileUser.username.charAt(0).toUpperCase()}
                 </div>
               </div>
-              {/* Follow button or Edit button */}
-              <div className="flex items-center gap-2 mt-2 md:mt-0">
-                {!isOwnProfile && user && (
-                  <button
-                    onClick={handleFollowToggle}
-                    disabled={followLoading}
-                    className={`px-5 py-2 rounded-full font-medium text-base transition-all duration-200 border border-x-border/30 focus:outline-none focus:ring-2 focus:ring-x-blue focus:ring-offset-2 shadow-sm ${
-                      isFollowing
-                        ? "bg-x-dark/30 text-x-gray hover:bg-x-dark/50"
-                        : "bg-x-blue text-white hover:bg-x-green"
-                    } ${
-                      followLoading ? "opacity-60 cursor-not-allowed" : ""
-                    } ${followAnim ? "animate-follow-pop" : ""}`}
-                    style={{ minWidth: 90 }}
-                  >
-                    {followLoading ? (
-                      <span className="animate-pulse">...</span>
-                    ) : isFollowing ? (
-                      "Following"
-                    ) : (
-                      "Follow"
+              {/* Name and Info */}
+              <div
+                className={`text-left flex flex-col justify-start ${
+                  !isOwnProfile ? "mt-0 md:-mt-6" : ""
+                }`}
+              >
+                <h1 className="text-2xl md:text-4xl font-bold text-x-white mb-2">
+                  {profileUser.displayName || profileUser.username}
+                </h1>
+                <div className="flex flex-row space-x-4 mb-2 items-center">
+                  <p className="text-xl text-x-gray mb-0 flex items-center font-mono">
+                    @{profileUser.username}
+                    {isOwnProfile && (
+                      <span className="profile-joined-date profile-joined-date-inline-desktop ml-3 flex items-center text-sm text-x-gray font-normal align-middle">
+                        <svg
+                          className="w-4 h-4 mr-1 align-middle"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          style={{ display: "inline", verticalAlign: "middle" }}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          />
+                        </svg>
+                        Joined{" "}
+                        {new Date(profileUser.createdAt).toLocaleDateString(
+                          "en-US",
+                          {
+                            year: "numeric",
+                            month: "long",
+                          }
+                        )}
+                      </span>
                     )}
-                  </button>
-                )}
-                {isOwnProfile && (
-                  <Link
-                    to="/edit-profile"
-                    className="px-5 py-2 rounded-full font-medium text-base border border-x-border/30 text-x-white bg-x-dark/40 hover:bg-x-dark/60 transition-all duration-200 shadow-sm flex items-center gap-2"
-                  >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                  </p>
+                  {/* Follow button inline with username for other users */}
+                  {!isOwnProfile && user && (
+                    <button
+                      onClick={handleFollowToggle}
+                      disabled={followLoading}
+                      className={`ml-2 px-4 py-2 rounded-full font-semibold text-base transition-all duration-200 shadow-md focus:outline-none focus:ring-2 focus:ring-x-blue focus:ring-offset-2 w-auto ${
+                        isFollowing
+                          ? "bg-x-dark/40 text-x-gray border border-x-border/40 hover:bg-x-dark/60"
+                          : "bg-x-blue text-white hover:bg-x-green"
+                      } ${
+                        followLoading ? "opacity-60 cursor-not-allowed" : ""
+                      } ${followAnim ? "animate-follow-pop" : ""}`}
+                      style={{ minWidth: 80, maxWidth: 160 }}
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                      />
-                    </svg>
-                    Edit
-                  </Link>
-                )}
+                      {followLoading ? (
+                        <span className="animate-pulse">...</span>
+                      ) : isFollowing ? (
+                        "Following"
+                      ) : (
+                        "Follow"
+                      )}
+                    </button>
+                  )}
+                </div>
+                {/* Follow button - stacked for own profile */}
+                {/* Date of joining for other users removed - only at cover image now */}
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Bio - with ABOUT header */}
-        <div className="mt-6 block">
-          <div className="flex items-center mb-3">
-            <svg
-              className="w-4 h-4 text-x-blue mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-              />
-            </svg>
-            <span className="text-sm font-semibold text-x-blue uppercase tracking-wide">
-              About
-            </span>
-          </div>
-          {profileUser.bio && (
-            <div className="relative">
-              <p
-                ref={bioRef}
-                className={`text-x-white leading-relaxed transition-all duration-200 ${
-                  bioExpanded
-                    ? ""
-                    : "line-clamp-3 max-h-[4.5em] overflow-hidden"
-                } md:line-clamp-none md:max-h-none`}
-                style={{ WebkitLineClamp: bioExpanded ? "unset" : 3 }}
-              >
-                {profileUser.bio}
-              </p>
-              {showViewMore && (
-                <button
-                  className="mt-2 text-x-blue underline text-sm block md:hidden"
-                  onClick={() => setBioExpanded((v) => !v)}
-                >
-                  {bioExpanded ? "View Less" : "View More"}
-                </button>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* Skills and GitHub Section */}
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Skills */}
-          <div className="skills-section">
+          {/* Bio - with ABOUT header */}
+          <div className="mt-6 block">
             <div className="flex items-center mb-3">
               <svg
-                className="w-4 h-4 text-x-green mr-2"
+                className="w-4 h-4 text-x-blue mr-2"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -416,62 +349,45 @@ const Profile = () => {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                 />
               </svg>
-              <span className="text-sm font-semibold text-x-green uppercase tracking-wide">
-                Skills
+              <span className="text-sm font-semibold text-x-blue uppercase tracking-wide">
+                About
               </span>
             </div>
-            {profileUser.skills && profileUser.skills.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {profileUser.skills.slice(0, 5).map((skill, index) => (
-                  <span
-                    key={index}
-                    className="bg-gradient-to-r from-x-blue/20 to-purple-500/20 border border-x-blue/30 text-x-blue px-3 py-1.5 rounded-full text-sm font-medium backdrop-blur-sm"
+            {profileUser.bio && (
+              <div className="relative">
+                <p
+                  ref={bioRef}
+                  className={`text-x-white leading-relaxed transition-all duration-200 ${
+                    bioExpanded
+                      ? ""
+                      : "line-clamp-3 max-h-[4.5em] overflow-hidden"
+                  } md:line-clamp-none md:max-h-none`}
+                  style={{ WebkitLineClamp: bioExpanded ? "unset" : 3 }}
+                >
+                  {profileUser.bio}
+                </p>
+                {showViewMore && (
+                  <button
+                    className="mt-2 text-x-blue underline text-sm block md:hidden"
+                    onClick={() => setBioExpanded((v) => !v)}
                   >
-                    {skill}
-                  </span>
-                ))}
-                {profileUser.skills.length > 5 && (
-                  <span className="text-x-gray text-xs font-medium px-2 py-1">
-                    +{profileUser.skills.length - 5} more
-                  </span>
+                    {bioExpanded ? "View Less" : "View More"}
+                  </button>
                 )}
               </div>
             )}
           </div>
 
-          {/* GitHub Link */}
-          {profileUser.githubLink && (
-            <div className="github-section">
+          {/* Skills and GitHub Section */}
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Skills */}
+            <div className="skills-section">
               <div className="flex items-center mb-3">
                 <svg
-                  className="w-4 h-4 text-purple-400 mr-2"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <span className="text-sm font-semibold text-purple-400 uppercase tracking-wide">
-                  GitHub
-                </span>
-              </div>
-              <a
-                href={profileUser.githubLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center text-x-white hover:text-x-blue transition-colors group"
-              >
-                <span className="group-hover:underline">
-                  View GitHub Profile
-                </span>
-                <svg
-                  className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform"
+                  className="w-4 h-4 text-x-green mr-2"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -480,12 +396,77 @@ const Profile = () => {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}
-                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                    d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
                   />
                 </svg>
-              </a>
+                <span className="text-sm font-semibold text-x-green uppercase tracking-wide">
+                  Skills
+                </span>
+              </div>
+              {profileUser.skills && profileUser.skills.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {profileUser.skills.slice(0, 5).map((skill, index) => (
+                    <span
+                      key={index}
+                      className="bg-gradient-to-r from-x-blue/20 to-purple-500/20 border border-x-blue/30 text-x-blue px-3 py-1.5 rounded-full text-sm font-medium backdrop-blur-sm"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                  {profileUser.skills.length > 5 && (
+                    <span className="text-x-gray text-xs font-medium px-2 py-1">
+                      +{profileUser.skills.length - 5} more
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
-          )}
+
+            {/* GitHub Link */}
+            {profileUser.githubLink && (
+              <div className="github-section">
+                <div className="flex items-center mb-3">
+                  <svg
+                    className="w-4 h-4 text-purple-400 mr-2"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  <span className="text-sm font-semibold text-purple-400 uppercase tracking-wide">
+                    GitHub
+                  </span>
+                </div>
+                <a
+                  href={profileUser.githubLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center text-x-white hover:text-x-blue transition-colors group"
+                >
+                  <span className="group-hover:underline">
+                    View GitHub Profile
+                  </span>
+                  <svg
+                    className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                    />
+                  </svg>
+                </a>
+              </div>
+            )}
+          </div>
         </div>
       </div>
       {/* Profile Metrics Card */}

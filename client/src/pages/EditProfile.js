@@ -75,13 +75,13 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto py-6 px-4 lg:px-6">
+    <div className="max-w-3xl mx-auto py-6 px-4 lg:px-6 pb-24 sm:pb-6">
       {/* Header Section */}
       <div className="mb-8 text-center">
-        <div className="bg-gradient-to-r from-x-blue via-purple-600 to-x-green h-32 rounded-3xl relative overflow-hidden mb-6">
+        <div className="bg-x-navy h-32 relative overflow-hidden mb-6">
           <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="bg-x-dark/80 backdrop-blur-sm rounded-2xl p-6 border border-x-border/50">
+            <div className="bg-black backdrop-blur-sm rounded-2xl p-6 border-2 border-purple-500 shadow-[0_0_16px_4px_rgba(168,85,247,0.5)]">
               <svg
                 className="w-8 h-8 text-x-blue mx-auto mb-2"
                 fill="none"
@@ -95,7 +95,7 @@ const EditProfile = () => {
                   d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
                 />
               </svg>
-              <h1 className="text-2xl lg:text-3xl font-bold text-x-white">
+              <h1 className="text-2xl lg:text-3xl font-bold text-x-gray-300 font-mono">
                 Edit Profile
               </h1>
             </div>
@@ -148,7 +148,7 @@ const EditProfile = () => {
 
         <div className="space-y-8">
           {/* Display Name */}
-          <div className="bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/50 rounded-3xl p-6">
+          <div className="bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/50 p-6">
             <div className="flex items-center mb-4">
               <svg
                 className="w-5 h-5 text-x-blue mr-3"
@@ -183,7 +183,7 @@ const EditProfile = () => {
           </div>
 
           {/* Bio */}
-          <div className="bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/50 rounded-3xl p-6">
+          <div className="bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/50 p-6">
             <div className="flex items-center mb-4">
               <svg
                 className="w-5 h-5 text-purple-400 mr-3"
@@ -221,7 +221,7 @@ const EditProfile = () => {
           </div>
 
           {/* Skills */}
-          <div className="bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/50 rounded-3xl p-6">
+          <div className="bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/50 p-6">
             <div className="flex items-center mb-4">
               <svg
                 className="w-5 h-5 text-x-green mr-3"
@@ -311,7 +311,7 @@ const EditProfile = () => {
           </div>
 
           {/* GitHub Link */}
-          <div className="bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/50 rounded-3xl p-6">
+          <div className="bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/50 p-6">
             <div className="flex items-center mb-4">
               <svg
                 className="w-5 h-5 text-purple-400 mr-3"

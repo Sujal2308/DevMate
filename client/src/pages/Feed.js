@@ -120,22 +120,28 @@ const Feed = () => {
           >
             Create 🖋️
           </Link>
+          {/* Mobile notification bell icon */}
           <Link
-            to="/create-post"
-            className="inline sm:hidden font-medium text-lg px-3 py-1 cursor-pointer hover:scale-110 transition-all duration-300"
-            style={{
-              textDecoration: "none",
-              color: "white",
-              background: "#1d9bf0",
-              border: "3px solid #1d9bf0",
-              borderRadius: "9999px",
-              fontWeight: 500,
-            }}
+            to="/notifications"
+            className="inline sm:hidden p-2 rounded-full hover:bg-blue-100 transition-all duration-200 relative"
+            aria-label="Notifications"
+            style={{ color: "#1d9bf0", fontSize: 28 }}
           >
-            Create
-            <span className="ml-1 align-middle !bg-none !text-[initial]">
-              📄
-            </span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              width="28"
+              height="28"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+              />
+            </svg>
           </Link>
         </div>
       </div>

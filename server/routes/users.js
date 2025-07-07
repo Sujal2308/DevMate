@@ -3,6 +3,7 @@ const { body, validationResult } = require("express-validator");
 const User = require("../models/User");
 const Post = require("../models/Post");
 const auth = require("../middleware/auth");
+const bcrypt = require("bcryptjs");
 
 const router = express.Router();
 
@@ -115,6 +116,57 @@ router.put(
   }
 );
 
+// Change user password
+router.put(
+  "/:id/password",
+  auth,
+  [
+    body("currentPassword")
+      .notEmpty()
+      .withMessage("Current password is required"),
+    body("newPassword")
+      .isLength({ min: 6 })
+      .withMessage("New password must be at least 6 characters"),
+    body("confirmPassword").custom((value, { req }) => {
+      if (value !== req.body.newPassword) {
+        throw new Error("Passwords do not match");
+      }
+      return true;
+    }),
+  ],
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+      if (req.user._id.toString() !== req.params.id) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      const user = await User.findById(req.params.id);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      const isMatch = await bcrypt.compare(
+        req.body.currentPassword,
+        user.password
+      );
+      if (!isMatch) {
+        return res
+          .status(400)
+          .json({ message: "Current password is incorrect" });
+      }
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(req.body.newPassword, salt);
+      await user.save();
+      res.json({ message: "Password updated successfully" });
+    } catch (error) {
+      console.error("Change password error:", error);
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+);
+
 // Get all users (for explore page)
 router.get("/", async (req, res) => {
   try {
@@ -188,6 +240,24 @@ router.put("/:username/unfollow", auth, async (req, res) => {
     res.json({ message: "Unfollowed successfully" });
   } catch (error) {
     console.error("Unfollow error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Delete user account and their posts
+router.delete("/:id", auth, async (req, res) => {
+  try {
+    // Only allow user to delete their own account
+    if (req.user._id.toString() !== req.params.id) {
+      return res.status(403).json({ message: "Access denied" });
+    }
+    // Delete all posts by this user
+    await Post.deleteMany({ author: req.params.id });
+    // Delete the user
+    await User.findByIdAndDelete(req.params.id);
+    res.json({ message: "Account deleted successfully" });
+  } catch (error) {
+    console.error("Delete user error:", error);
     res.status(500).json({ message: "Server error" });
   }
 });
