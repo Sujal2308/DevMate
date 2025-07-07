@@ -412,7 +412,7 @@ const Explore = () => {
                     ref={searchInputRef}
                     type="text"
                     id="search"
-                    className="w-full bg-x-black/60 border border-x-border text-x-white placeholder-x-gray rounded-xl px-6 py-4 pr-16 text-lg font-mono transform-gpu animated-gradient-border focus:pr-16"
+                    className="w-full bg-x-black/60 border border-x-border text-x-white placeholder-x-gray rounded-xl px-6 py-4 pr-16 text-lg font-mono transform-gpu animated-gradient-border focus:pr-16 focus:outline-none focus:ring-0 focus:border-x-border autofill:!bg-x-black/60"
                     placeholder="Search developers..."
                     value={searchTerm}
                     onChange={handleSearchChange}
@@ -424,6 +424,7 @@ const Explore = () => {
                         executeSearch();
                       }
                     }}
+                    autoComplete="on"
                   />
                   {/* Clear (cross) icon inside search bar */}
                   {searchTerm && (
@@ -520,6 +521,21 @@ const Explore = () => {
             </div>
           </div>
         </div>
+        {/* Mobile-only tip below the search bar */}
+        {isMobile && (
+          <div
+            className="mt-2 text-xs text-x-gray rounded-lg px-3 py-2 flex items-center gap-2 animate-fade-in"
+            style={{ background: "none", border: "none" }}
+          >
+            <span role="img" aria-label="tip">
+              💡
+            </span>
+            <span>
+              Tip: Use the search bar to find developers by name or username.
+              Tap a profile to connect!
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Results - Fixed dimensions on mobile */}
@@ -788,6 +804,20 @@ const Explore = () => {
           )}
         </div>
       </div>
+      <style>
+        {`
+          input:-webkit-autofill,
+          input:-webkit-autofill:focus,
+          input:-webkit-autofill:hover,
+          input:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 1000px #181c24 inset !important;
+            box-shadow: 0 0 0 1000px #181c24 inset !important;
+            -webkit-text-fill-color: #fff !important;
+            caret-color: #fff !important;
+            transition: background-color 5000s ease-in-out 0s;
+          }
+        `}
+      </style>
     </div>
   );
 };
