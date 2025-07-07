@@ -222,35 +222,66 @@ const Profile = () => {
               </Link>
             )}
           </div>
-          {/* Date of Joining on Mobile */}
-          <div className="absolute bottom-2 right-2 md:hidden text-xs text-x-white px-4 py-2 rounded-xl font-medium transition-all duration-200 flex items-center">
-            <svg
-              className="w-4 h-4 mr-1"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-              />
-            </svg>
-            Joined{" "}
-            {new Date(profileUser.createdAt).toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "long",
-            })}
-          </div>
+          {/* Date of Joining on Mobile and on Desktop for other users */}
+          {(!isOwnProfile && (
+            <div className="hidden md:flex absolute top-4 right-8 text-xs text-x-white px-4 py-2 rounded-xl font-medium transition-all duration-200 items-center bg-x-dark/60 shadow-lg z-10">
+              <svg
+                className="w-4 h-4 mr-1"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+              Joined{" "}
+              {new Date(profileUser.createdAt).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+              })}
+            </div>
+          )) || (
+            <div className="absolute bottom-2 right-2 md:hidden text-xs text-x-white px-4 py-2 rounded-xl font-medium transition-all duration-200 flex items-center">
+              <svg
+                className="w-4 h-4 mr-1"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+              Joined{" "}
+              {new Date(profileUser.createdAt).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+              })}
+            </div>
+          )}
         </div>
 
         {/* Profile Info Card */}
         <div className="bg-gradient-to-br from-x-dark/90 to-x-dark/60 backdrop-blur-sm border border-x-border/50 -mt-1 pt-2 md:pt-8 pb-6 px-4 md:px-8">
-          <div className="flex flex-row items-end justify-between">
-            <div className="flex flex-row items-end text-left">
+          <div
+            className={`flex flex-row ${
+              isOwnProfile ? "items-end" : "items-start"
+            } justify-between`}
+          >
+            <div className="flex flex-row items-start text-left">
               {/* Avatar */}
-              <div className="relative -mt-40 md:-mt-20 mb-0 mr-6 z-20">
+              <div
+                className={`relative ${
+                  isOwnProfile ? "mt-1 md:-mt-10" : "mt-2 md:-mt-12"
+                } mb-0 mr-6 z-20`}
+              >
                 <div className="bg-gradient-to-r from-x-blue to-purple-500 text-white w-20 h-20 md:w-32 md:h-32 rounded-2xl md:rounded-3xl flex items-center justify-center text-2xl md:text-4xl font-bold border-4 border-x-dark shadow-2xl">
                   {profileUser.displayName?.charAt(0).toUpperCase() ||
                     profileUser.username.charAt(0).toUpperCase()}
@@ -270,15 +301,71 @@ const Profile = () => {
                 </div>
               </div>
               {/* Name and Info */}
-              <div className="text-left">
+              <div
+                className={`text-left flex flex-col justify-start ${
+                  !isOwnProfile ? "mt-0 md:-mt-6" : ""
+                }`}
+              >
                 <h1 className="text-2xl md:text-4xl font-bold text-x-white mb-2">
                   {profileUser.displayName || profileUser.username}
                 </h1>
-                <div className="flex flex-row space-x-4 mb-2">
-                  <p className="text-xl text-x-gray mb-0">
+                <div className="flex flex-row space-x-4 mb-2 items-center">
+                  <p className="text-xl text-x-gray mb-0 flex items-center">
                     @{profileUser.username}
+                    {isOwnProfile && (
+                      <span className="profile-joined-date profile-joined-date-inline-desktop ml-3 flex items-center text-sm text-x-gray font-normal align-middle">
+                        <svg
+                          className="w-4 h-4 mr-1 align-middle"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          style={{ display: "inline", verticalAlign: "middle" }}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          />
+                        </svg>
+                        Joined{" "}
+                        {new Date(profileUser.createdAt).toLocaleDateString(
+                          "en-US",
+                          {
+                            year: "numeric",
+                            month: "long",
+                          }
+                        )}
+                      </span>
+                    )}
                   </p>
-                  <div className="hidden md:flex items-center justify-start text-sm text-x-gray">
+                  {/* Follow button inline with username for other users */}
+                  {!isOwnProfile && user && (
+                    <button
+                      onClick={handleFollowToggle}
+                      disabled={followLoading}
+                      className={`ml-2 px-4 py-2 rounded-full font-semibold text-base transition-all duration-200 shadow-md focus:outline-none focus:ring-2 focus:ring-x-blue focus:ring-offset-2 w-auto ${
+                        isFollowing
+                          ? "bg-x-dark/40 text-x-gray border border-x-border/40 hover:bg-x-dark/60"
+                          : "bg-x-blue text-white hover:bg-x-green"
+                      } ${
+                        followLoading ? "opacity-60 cursor-not-allowed" : ""
+                      } ${followAnim ? "animate-follow-pop" : ""}`}
+                      style={{ minWidth: 80, maxWidth: 160 }}
+                    >
+                      {followLoading ? (
+                        <span className="animate-pulse">...</span>
+                      ) : isFollowing ? (
+                        "Following"
+                      ) : (
+                        "Follow"
+                      )}
+                    </button>
+                  )}
+                </div>
+                {/* Follow button - stacked for own profile */}
+                {isOwnProfile ? null : (
+                  <div className="flex items-center justify-start text-sm text-x-gray mt-2">
                     <svg
                       className="w-4 h-4 mr-1"
                       fill="none"
@@ -301,29 +388,6 @@ const Profile = () => {
                       }
                     )}
                   </div>
-                </div>
-                {/* Follow button */}
-                {!isOwnProfile && user && (
-                  <button
-                    onClick={handleFollowToggle}
-                    disabled={followLoading}
-                    className={`mt-2 px-4 py-2 rounded-full font-semibold text-base transition-all duration-200 shadow-md focus:outline-none focus:ring-2 focus:ring-x-blue focus:ring-offset-2 w-auto ${
-                      isFollowing
-                        ? "bg-x-dark/40 text-x-gray border border-x-border/40 hover:bg-x-dark/60"
-                        : "bg-x-blue text-white hover:bg-x-green"
-                    } ${followLoading ? "opacity-60 cursor-not-allowed" : ""} ${
-                      followAnim ? "animate-follow-pop" : ""
-                    }`}
-                    style={{ minWidth: 80, maxWidth: 160 }}
-                  >
-                    {followLoading ? (
-                      <span className="animate-pulse">...</span>
-                    ) : isFollowing ? (
-                      "Following"
-                    ) : (
-                      "Follow"
-                    )}
-                  </button>
                 )}
               </div>
             </div>
