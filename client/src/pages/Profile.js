@@ -244,28 +244,8 @@ const Profile = () => {
                 month: "long",
               })}
             </div>
-          )) || (
-            <div className="absolute bottom-2 right-2 md:hidden text-xs text-x-white px-4 py-2 rounded-xl font-medium transition-all duration-200 flex items-center">
-              <svg
-                className="w-4 h-4 mr-1"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
-              Joined{" "}
-              {new Date(profileUser.createdAt).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-              })}
-            </div>
-          )}
+          )) ||
+            null}
         </div>
 
         {/* Profile Info Card */}
@@ -310,7 +290,7 @@ const Profile = () => {
                   {profileUser.displayName || profileUser.username}
                 </h1>
                 <div className="flex flex-row space-x-4 mb-2 items-center">
-                  <p className="text-xl text-x-gray mb-0 flex items-center">
+                  <p className="text-xl text-x-gray mb-0 flex items-center font-mono">
                     @{profileUser.username}
                     {isOwnProfile && (
                       <span className="profile-joined-date profile-joined-date-inline-desktop ml-3 flex items-center text-sm text-x-gray font-normal align-middle">
@@ -364,31 +344,7 @@ const Profile = () => {
                   )}
                 </div>
                 {/* Follow button - stacked for own profile */}
-                {isOwnProfile ? null : (
-                  <div className="flex items-center justify-start text-sm text-x-gray mt-2">
-                    <svg
-                      className="w-4 h-4 mr-1"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                      />
-                    </svg>
-                    Joined{" "}
-                    {new Date(profileUser.createdAt).toLocaleDateString(
-                      "en-US",
-                      {
-                        year: "numeric",
-                        month: "long",
-                      }
-                    )}
-                  </div>
-                )}
+                {/* Date of joining for other users removed - only at cover image now */}
               </div>
             </div>
           </div>
