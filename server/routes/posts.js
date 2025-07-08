@@ -1,7 +1,9 @@
 const express = require("express");
 const { body, validationResult } = require("express-validator");
 const Post = require("../models/Post");
+const Notification = require("../models/Notification");
 const auth = require("../middleware/auth");
+const emitNotification = require("../utils/notify");
 
 const router = express.Router();
 
@@ -98,30 +100,36 @@ router.get("/:id", async (req, res) => {
 router.put("/:id/like", auth, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
-
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
     }
-
     // Check if user already liked the post
     const likeIndex = post.likes.findIndex(
       (like) => like.user.toString() === req.user._id.toString()
     );
-
+    let liked = false;
     if (likeIndex > -1) {
       // Unlike the post
       post.likes.splice(likeIndex, 1);
     } else {
       // Like the post
       post.likes.push({ user: req.user._id });
+      liked = true;
     }
-
     await post.save();
-
     // Populate author info
     await post.populate("author", "username displayName");
     await post.populate("comments.user", "username displayName");
-
+    // Create notification if liked and not self
+    if (liked && post.author._id.toString() !== req.user._id.toString()) {
+      const notification = await Notification.create({
+        user: post.author._id,
+        type: "like",
+        fromUser: req.user._id,
+        post: post._id,
+      });
+      emitNotification(req.app, notification);
+    }
     res.json(post);
   } catch (error) {
     console.error("Like post error:", error);
@@ -144,26 +152,30 @@ router.post(
       if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
       }
-
       const { text } = req.body;
       const post = await Post.findById(req.params.id);
-
       if (!post) {
         return res.status(404).json({ message: "Post not found" });
       }
-
       const newComment = {
         user: req.user._id,
         text,
       };
-
       post.comments.push(newComment);
       await post.save();
-
       // Populate author info
       await post.populate("author", "username displayName");
       await post.populate("comments.user", "username displayName");
-
+      // Create notification if not self
+      if (post.author._id.toString() !== req.user._id.toString()) {
+        const notification = await Notification.create({
+          user: post.author._id,
+          type: "comment",
+          fromUser: req.user._id,
+          post: post._id,
+        });
+        emitNotification(req.app, notification);
+      }
       res.json(post);
     } catch (error) {
       console.error("Add comment error:", error);

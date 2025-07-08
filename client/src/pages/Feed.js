@@ -5,6 +5,7 @@ import ShimmerEffect from "../components/ShimmerEffect";
 import LoadingSpinner from "../components/LoadingSpinner";
 import PostCard from "../components/PostCard";
 import FakeFeedLoader from "../components/FakeFeedLoader";
+import { useNotification } from "../contexts/NotificationContext";
 
 const Feed = () => {
   const [posts, setPosts] = useState([]);
@@ -14,6 +15,7 @@ const Feed = () => {
   const [hasMore, setHasMore] = useState(true);
   const [showEndMessage, setShowEndMessage] = useState(false);
   const loaderRef = useRef(null);
+  const { hasUnread } = useNotification();
 
   useEffect(() => {
     fetchPosts();
@@ -138,10 +140,12 @@ const Feed = () => {
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
               />
             </svg>
+            {hasUnread && (
+              <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full shadow-lg animate-pulse border-2 border-white"></span>
+            )}
           </Link>
         </div>
       </div>

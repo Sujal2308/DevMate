@@ -2,8 +2,10 @@ const express = require("express");
 const { body, validationResult } = require("express-validator");
 const User = require("../models/User");
 const Post = require("../models/Post");
+const Notification = require("../models/Notification");
 const auth = require("../middleware/auth");
 const bcrypt = require("bcryptjs");
+const emitNotification = require("../utils/notify");
 
 const router = express.Router();
 
@@ -211,6 +213,13 @@ router.put("/:username/follow", auth, async (req, res) => {
     currentUser.following.push(userToFollow._id);
     await userToFollow.save();
     await currentUser.save();
+    // Create notification for follow (if not self)
+    const notification = await Notification.create({
+      user: userToFollow._id,
+      type: "follow",
+      fromUser: currentUser._id,
+    });
+    emitNotification(req.app, notification);
     res.json({ message: "Followed successfully" });
   } catch (error) {
     console.error("Follow error:", error);

@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
+const http = require("http");
+const { Server } = require("socket.io");
 
 // Load environment variables
 require("dotenv").config();
@@ -20,6 +22,30 @@ const initializeDatabase = async () => {
 initializeDatabase();
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
+});
+
+// Store userId <-> socketId mapping
+const userSocketMap = {};
+
+io.on("connection", (socket) => {
+  // Expect userId in query or handshake
+  const userId = socket.handshake.query.userId;
+  if (userId) {
+    userSocketMap[userId] = socket.id;
+  }
+  socket.on("disconnect", () => {
+    if (userId) delete userSocketMap[userId];
+  });
+});
+
+app.set("io", io);
+app.set("userSocketMap", userSocketMap);
 
 // Middleware to check database connection
 const checkDBConnection = (req, res, next) => {
@@ -42,6 +68,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", checkDBConnection, require("./routes/auth"));
 app.use("/api/users", checkDBConnection, require("./routes/users"));
 app.use("/api/posts", checkDBConnection, require("./routes/posts"));
+app.use(
+  "/api/notifications",
+  checkDBConnection,
+  require("./routes/notifications")
+);
 
 // Health check route (doesn't require DB)
 app.get("/api/health", (req, res) => {
@@ -77,7 +108,8 @@ app.use("*", (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+// IMPORTANT: Only use server.listen, NOT app.listen!
+server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV}`);
 });

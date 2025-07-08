@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { useNotification } from "../contexts/NotificationContext";
 
 const Navbar = () => {
   const { user } = useAuth();
+  const { hasUnread } = useNotification();
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -116,6 +118,10 @@ const Navbar = () => {
                     onClick={(e) => handleNavClick("/notifications", e)}
                   >
                     <span>Notifications</span>
+                    {/* Red glowing dot for unread notifications */}
+                    {hasUnread && (
+                      <span className="absolute -top-1 -right-3 w-3 h-3 bg-red-500 rounded-full shadow-lg animate-pulse border-2 border-x-black"></span>
+                    )}
                     <div
                       className={`absolute bottom-0 left-0 h-0.5 bg-x-blue transition-all duration-200 ${
                         location.pathname === "/notifications"

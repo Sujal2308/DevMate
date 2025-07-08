@@ -262,7 +262,7 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
             className="ml-2 flex items-center justify-center p-2 rounded-full hover:bg-x-blue/10 focus:outline-none focus:ring-2 focus:ring-x-blue transition-all group"
             title="View Profile"
             aria-label="View Profile"
-            style={{ color: '#1d9bf0' }}
+            style={{ color: "#1d9bf0" }}
           >
             <svg
               className="w-5 h-5 text-x-blue group-hover:text-x-green transition-colors"

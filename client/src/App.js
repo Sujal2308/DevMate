@@ -6,6 +6,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
+import { NotificationProvider } from "./contexts/NotificationContext";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -32,6 +33,7 @@ import Support from "./pages/Support"; // Import the new Support page
 import { useLocation } from "react-router-dom";
 import TrendingNews from "./components/TrendingNews"; // Import TrendingNews
 import Notifications from "./pages/Notifications"; // Import Notifications page
+import axios from "axios";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -52,6 +54,21 @@ function AppContent() {
   const [showSplash, setShowSplash] = useState(true);
   const location = useLocation();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [hasUnreadNotifications, setHasUnreadNotifications] = useState(false);
+
+  // Fetch unread notifications count on mount and when user changes
+  useEffect(() => {
+    if (!user) return;
+    const fetchUnread = async () => {
+      try {
+        const res = await axios.get("/api/notifications");
+        setHasUnreadNotifications(res.data.some((n) => !n.read));
+      } catch (err) {
+        setHasUnreadNotifications(false);
+      }
+    };
+    fetchUnread();
+  }, [user]);
 
   useEffect(() => {
     const timer = setTimeout(() => setShowSplash(false), 2000);
@@ -79,7 +96,7 @@ function AppContent() {
   return (
     <div className="min-h-screen flex flex-col bg-x-black text-x-white">
       <ScrollToTop />
-      <Navbar />
+      <Navbar hasUnreadNotifications={hasUnreadNotifications} />
       {user ? (
         // Logged in layout - Responsive 3-column
         <>
@@ -232,7 +249,11 @@ function AppContent() {
             {/* New Support route */}
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
-          <Footer />
+          {/* Only show Footer if not on '/', '/support', or '/features' on desktop */}
+          {!(
+            windowWidth >= 1024 &&
+            ["/", "/support", "/features"].includes(location.pathname)
+          ) && <Footer />}
         </div>
       )}
       {/* Global Floating Post Button for Mobile */}
@@ -246,9 +267,11 @@ function AppContent() {
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <AppContent />
-      </Router>
+      <NotificationProvider>
+        <Router>
+          <AppContent />
+        </Router>
+      </NotificationProvider>
     </AuthProvider>
   );
 }
