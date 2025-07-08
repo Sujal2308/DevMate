@@ -111,9 +111,6 @@ const Feed = () => {
       <div className="flex flex-row justify-between items-center mb-4 sm:mb-6 lg:mb-8 gap-2 sm:gap-4 px-3 sm:px-0">
         <h1 className="text-2xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-x-blue via-purple-500 to-x-green bg-[length:200%_auto] bg-clip-text text-transparent animate-color-cycle hover:animate-gradient-x hover:scale-110 transform transition-all duration-500 cursor-default drop-shadow-lg flex items-center">
           <span>Feed</span>
-          <span className="inline sm:hidden ml-2 align-middle !bg-none !text-[initial]">
-            👀
-          </span>
         </h1>
         <div className="flex items-center gap-2">
           <Link

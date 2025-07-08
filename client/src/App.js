@@ -34,6 +34,8 @@ import { useLocation } from "react-router-dom";
 import TrendingNews from "./components/TrendingNews"; // Import TrendingNews
 import Notifications from "./pages/Notifications"; // Import Notifications page
 import axios from "axios";
+import FollowersList from "./pages/FollowersList";
+import FollowingList from "./pages/FollowingList"; // Import FollowingList
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -202,11 +204,31 @@ function AppContent() {
                         </ProtectedRoute>
                       }
                     />
+                    <Route
+                      path="/profile/:username/followers"
+                      element={
+                        <ProtectedRoute>
+                          <FollowersList />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/profile/:username/following"
+                      element={
+                        <ProtectedRoute>
+                          <FollowingList />
+                        </ProtectedRoute>
+                      }
+                    />
                     <Route path="*" element={<Navigate to="/feed" />} />
                   </Routes>
                   {!(
                     (location.pathname === "/explore" && windowWidth >= 768) ||
-                    location.pathname === "/notifications"
+                    location.pathname === "/notifications" ||
+                    (windowWidth >= 1024 &&
+                      /\/profile\/[^/]+\/(followers|following)/.test(
+                        location.pathname
+                      ))
                   ) && <Footer />}
                 </main>
               </div>

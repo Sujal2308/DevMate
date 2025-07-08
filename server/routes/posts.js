@@ -209,11 +209,9 @@ router.put("/:postId/comment/:commentId", auth, async (req, res) => {
     const comment = post.comments.id(req.params.commentId);
     if (!comment) {
       console.log("❌ Comment not found:", req.params.commentId);
-      return res
-        .status(404)
-        .json({
-          message: `Comment not found for id ${req.params.commentId} in post ${req.params.postId}`,
-        });
+      return res.status(404).json({
+        message: `Comment not found for id ${req.params.commentId} in post ${req.params.postId}`,
+      });
     }
 
     // Only comment author can edit
@@ -253,11 +251,9 @@ router.delete("/:postId/comment/:commentId", auth, async (req, res) => {
     const comment = post.comments.id(req.params.commentId);
     if (!comment) {
       console.log("❌ Comment not found:", req.params.commentId);
-      return res
-        .status(404)
-        .json({
-          message: `Comment not found for id ${req.params.commentId} in post ${req.params.postId}`,
-        });
+      return res.status(404).json({
+        message: `Comment not found for id ${req.params.commentId} in post ${req.params.postId}`,
+      });
     }
     // Only comment author or post author can delete
     if (

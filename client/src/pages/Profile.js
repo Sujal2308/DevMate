@@ -489,16 +489,26 @@ const Profile = () => {
         </h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center">
-            <div className="text-3xl font-bold text-x-white mb-1 font-mono">
-              {profileUser.followers?.length || 0}
-            </div>
-            <div className="text-x-gray text-sm font-mono">Followers</div>
+            <Link
+              to={`/profile/${profileUser.username}/followers`}
+              className="block cursor-pointer"
+            >
+              <div className="text-3xl font-bold text-x-white mb-1 font-mono">
+                {profileUser.followers?.length || 0}
+              </div>
+              <div className="text-x-gray text-sm font-mono">Followers</div>
+            </Link>
           </div>
           <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center">
-            <div className="text-3xl font-bold text-x-white mb-1 font-mono">
-              {profileUser.following?.length || 0}
-            </div>
-            <div className="text-x-gray text-sm font-mono">Following</div>
+            <Link
+              to={`/profile/${profileUser.username}/following`}
+              className="block cursor-pointer"
+            >
+              <div className="text-3xl font-bold text-x-white mb-1 font-mono">
+                {profileUser.following?.length || 0}
+              </div>
+              <div className="text-x-gray text-sm font-mono">Following</div>
+            </Link>
           </div>
           <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center">
             <div className="text-3xl font-bold text-x-white mb-1 font-mono">

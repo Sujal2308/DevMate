@@ -271,4 +271,26 @@ router.delete("/:id", auth, async (req, res) => {
   }
 });
 
+// Get all followers for a user
+router.get("/:username/followers", async (req, res) => {
+  try {
+    const user = await User.findOne({ username: req.params.username })
+      .select("followers")
+      .populate("followers", "username displayName");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.json({
+      followers: user.followers.map((u) => ({
+        _id: u._id,
+        username: u.username,
+        displayName: u.displayName,
+      })),
+    });
+  } catch (error) {
+    console.error("Get followers error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 module.exports = router;
