@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import axios from "axios";
 import { socket } from "../socket";
 import { useAuth } from "./AuthContext";
@@ -18,13 +24,16 @@ export function NotificationProvider({ children }) {
   useEffect(() => {
     if (!user) return;
     setLoading(true);
-    axios.get("/api/notifications").then(res => {
-      setNotifications(res.data);
-      setLoading(false);
-    }).catch(() => {
-      setNotifications([]);
-      setLoading(false);
-    });
+    axios
+      .get("/api/notifications")
+      .then((res) => {
+        setNotifications(res.data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setNotifications([]);
+        setLoading(false);
+      });
   }, [user]);
 
   // Real-time notifications
@@ -33,7 +42,7 @@ export function NotificationProvider({ children }) {
     socket.io.opts.query = { userId: user.id };
     socket.connect();
     socket.on("notification", (notification) => {
-      setNotifications(prev => [notification, ...prev]);
+      setNotifications((prev) => [notification, ...prev]);
     });
     return () => {
       socket.off("notification");
@@ -44,7 +53,7 @@ export function NotificationProvider({ children }) {
   // Mark all as read
   const markAllAsRead = useCallback(async () => {
     await axios.put("/api/notifications/mark-all-read");
-    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
   }, []);
 
   // Delete all
@@ -54,10 +63,19 @@ export function NotificationProvider({ children }) {
   }, []);
 
   // Recompute hasUnread whenever notifications change
-  const hasUnread = notifications.some(n => !n.read);
+  const hasUnread = notifications.some((n) => !n.read);
 
   return (
-    <NotificationContext.Provider value={{ notifications, setNotifications, loading, hasUnread, markAllAsRead, deleteAll }}>
+    <NotificationContext.Provider
+      value={{
+        notifications,
+        setNotifications,
+        loading,
+        hasUnread,
+        markAllAsRead,
+        deleteAll,
+      }}
+    >
       {children}
     </NotificationContext.Provider>
   );

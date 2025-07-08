@@ -184,6 +184,102 @@ router.post(
   }
 );
 
+// Edit a comment from a post
+router.put("/:postId/comment/:commentId", auth, async (req, res) => {
+  console.log("✏️ Edit comment route hit:", req.params);
+  try {
+    const { text } = req.body;
+    if (!text || text.trim().length === 0) {
+      return res.status(400).json({ message: "Comment text is required" });
+    }
+    if (text.length > 500) {
+      return res
+        .status(400)
+        .json({ message: "Comment text must be less than 500 characters" });
+    }
+
+    const post = await Post.findById(req.params.postId);
+    if (!post) {
+      console.log("❌ Post not found:", req.params.postId);
+      return res
+        .status(404)
+        .json({ message: `Post not found for id ${req.params.postId}` });
+    }
+
+    const comment = post.comments.id(req.params.commentId);
+    if (!comment) {
+      console.log("❌ Comment not found:", req.params.commentId);
+      return res
+        .status(404)
+        .json({
+          message: `Comment not found for id ${req.params.commentId} in post ${req.params.postId}`,
+        });
+    }
+
+    // Only comment author can edit
+    if (comment.user.toString() !== req.user._id.toString()) {
+      console.log("❌ Not authorized to edit comment");
+      return res
+        .status(403)
+        .json({ message: "Not authorized to edit this comment" });
+    }
+
+    // Update comment text
+    comment.text = text.trim();
+    comment.updatedAt = new Date();
+
+    await post.save();
+    await post.populate("comments.user", "username displayName");
+    console.log("✅ Comment edited successfully");
+    res.json(post);
+  } catch (error) {
+    console.error("Edit comment error:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+// Delete a comment from a post (soft delete)
+router.delete("/:postId/comment/:commentId", auth, async (req, res) => {
+  console.log("🗑️ Delete comment route hit:", req.params);
+  try {
+    const post = await Post.findById(req.params.postId);
+    if (!post) {
+      console.log("❌ Post not found:", req.params.postId);
+      return res
+        .status(404)
+        .json({ message: `Post not found for id ${req.params.postId}` });
+    }
+    const comment = post.comments.id(req.params.commentId);
+    if (!comment) {
+      console.log("❌ Comment not found:", req.params.commentId);
+      return res
+        .status(404)
+        .json({
+          message: `Comment not found for id ${req.params.commentId} in post ${req.params.postId}`,
+        });
+    }
+    // Only comment author or post author can delete
+    if (
+      comment.user.toString() !== req.user._id.toString() &&
+      post.author.toString() !== req.user._id.toString()
+    ) {
+      console.log("❌ Not authorized to delete comment");
+      return res
+        .status(403)
+        .json({ message: "Not authorized to delete this comment" });
+    }
+    // Soft delete: set deleted flag
+    comment.deleted = true;
+    await post.save();
+    await post.populate("comments.user", "username displayName");
+    console.log("✅ Comment deleted successfully");
+    res.json(post);
+  } catch (error) {
+    console.error("Soft delete comment error:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
 // Delete a post (only by author)
 router.delete("/:id", auth, async (req, res) => {
   try {

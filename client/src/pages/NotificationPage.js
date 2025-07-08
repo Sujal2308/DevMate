@@ -209,7 +209,10 @@ const NotificationPage = () => {
           Notifications
         </h1>
         {/* Desktop: Mark all as read + delete icon */}
-        <button className="ml-auto text-xs text-blue-400 hover:underline font-mono hidden sm:inline" onClick={handleMarkAllAsRead}>
+        <button
+          className="ml-auto text-xs text-blue-400 hover:underline font-mono hidden sm:inline"
+          onClick={handleMarkAllAsRead}
+        >
           Mark all as read
         </button>
         <button

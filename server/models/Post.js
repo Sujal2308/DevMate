@@ -40,6 +40,14 @@ const postSchema = new mongoose.Schema(
           type: Date,
           default: Date.now,
         },
+        updatedAt: {
+          type: Date,
+          default: Date.now,
+        },
+        deleted: {
+          type: Boolean,
+          default: false,
+        },
       },
     ],
   },

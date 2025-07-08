@@ -5,7 +5,13 @@ module.exports = function emitNotification(app, notification) {
   if (!io || !userSocketMap) return;
   const recipientId = notification.user?.toString?.() || notification.user;
   const socketId = userSocketMap[recipientId];
-  console.log("Emitting notification to", recipientId, "socket:", socketId, notification);
+  console.log(
+    "Emitting notification to",
+    recipientId,
+    "socket:",
+    socketId,
+    notification
+  );
   if (socketId) {
     io.to(socketId).emit("notification", notification);
   }
