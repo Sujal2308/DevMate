@@ -230,6 +230,7 @@ router.put("/:postId/comment/:commentId", auth, async (req, res) => {
 
     await post.save();
     await post.populate("comments.user", "username displayName");
+    await post.populate("author", "username displayName");
     console.log("✅ Comment edited successfully");
     res.json(post);
   } catch (error) {
@@ -272,6 +273,7 @@ router.delete("/:postId/comment/:commentId", auth, async (req, res) => {
     comment.deleted = true;
     await post.save();
     await post.populate("comments.user", "username displayName");
+    await post.populate("author", "username displayName");
     console.log("✅ Comment deleted successfully");
     res.json(post);
   } catch (error) {
