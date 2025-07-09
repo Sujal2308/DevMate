@@ -895,3 +895,4 @@ const Profile = () => {
 };
 
 export default Profile;
+// No unused variables found in Profile.js main logic

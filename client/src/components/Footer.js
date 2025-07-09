@@ -41,3 +41,4 @@ const Footer = () => {
 };
 
 export default Footer;
+// No unused variables found in Footer.js main logic

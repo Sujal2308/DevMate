@@ -1,5 +1,7 @@
 const express = require("express");
 const cors = require("cors");
+const helmet = require("helmet"); // Security middleware
+const rateLimit = require("express-rate-limit"); // Rate limiting
 const connectDB = require("./config/db");
 const http = require("http");
 const { Server } = require("socket.io");
@@ -25,7 +27,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: process.env.CLIENT_ORIGIN || "*", // Restrict in production
     methods: ["GET", "POST"],
   },
 });
@@ -60,9 +62,27 @@ const checkDBConnection = (req, res, next) => {
 };
 
 // Middleware
+app.use(helmet());
 app.use(cors());
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
+
+// Rate limiting (apply to all requests)
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 200, // limit each IP to 200 requests per windowMs
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use(limiter);
+
+// CORS
+app.use(
+  cors({
+    origin: process.env.CLIENT_ORIGIN || "*", // Restrict in production
+    credentials: true,
+  })
+);
 
 // Routes
 app.use("/api/auth", checkDBConnection, require("./routes/auth"));

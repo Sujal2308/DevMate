@@ -209,3 +209,4 @@ const BottomNav = () => {
 };
 
 export default BottomNav;
+// No unused variables found in BottomNav.js main logic

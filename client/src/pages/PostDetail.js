@@ -108,3 +108,4 @@ const PostDetail = () => {
 };
 
 export default PostDetail;
+// No unused variables found in PostDetail.js main logic

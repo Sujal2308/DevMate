@@ -21,7 +21,6 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
 import Sidebar from "./components/Sidebar";
 import Footer from "./components/Footer";
-import FloatingPostButton from "./components/FloatingPostButton";
 import BottomNav from "./components/BottomNav";
 import { useAuth } from "./contexts/AuthContext";
 import LogoutConfirm from "./pages/LogoutConfirm";
@@ -57,17 +56,10 @@ function AppContent() {
   const { user, loading } = useAuth();
   const [showSplash, setShowSplash] = useState(true);
   const location = useLocation();
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
     const timer = setTimeout(() => setShowSplash(false), 2000);
     return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   if (showSplash) {
@@ -210,12 +202,11 @@ function AppContent() {
                     <Route path="*" element={<Navigate to="/feed" />} />
                   </Routes>
                   {!(
-                    (location.pathname === "/explore" && windowWidth >= 768) ||
+                    location.pathname === "/explore" ||
                     location.pathname === "/notifications" ||
-                    (windowWidth >= 1024 &&
-                      /\/profile\/[^/]+\/(followers|following)/.test(
-                        location.pathname
-                      ))
+                    /\/profile\/[^/]+\/(followers|following)/.test(
+                      location.pathname
+                    )
                   ) && <Footer />}
                 </main>
               </div>
