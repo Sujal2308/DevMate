@@ -161,6 +161,14 @@ const Login = () => {
                   value={formData.password}
                   onChange={handleChange}
                 />
+                <div className="text-right mt-1">
+                  <a
+                    href="/forgot-password"
+                    className="text-xs text-x-blue hover:underline focus:outline-none"
+                  >
+                    Forgot password?
+                  </a>
+                </div>
               </div>
             </div>
 

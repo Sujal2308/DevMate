@@ -36,6 +36,8 @@ import Notifications from "./pages/Notifications"; // Import Notifications page
 import axios from "axios";
 import FollowersList from "./pages/FollowersList";
 import FollowingList from "./pages/FollowingList"; // Import FollowingList
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -245,6 +247,30 @@ function AppContent() {
                   <div className="w-full max-w-md">
                     <PublicRoute>
                       <Register />
+                    </PublicRoute>
+                  </div>
+                </div>
+              }
+            />
+            <Route
+              path="/forgot-password"
+              element={
+                <div className="flex justify-center items-center min-h-screen px-4">
+                  <div className="w-full max-w-md">
+                    <PublicRoute>
+                      <ForgotPassword />
+                    </PublicRoute>
+                  </div>
+                </div>
+              }
+            />
+            <Route
+              path="/reset-password"
+              element={
+                <div className="flex justify-center items-center min-h-screen px-4">
+                  <div className="w-full max-w-md">
+                    <PublicRoute>
+                      <ResetPassword />
                     </PublicRoute>
                   </div>
                 </div>

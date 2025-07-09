@@ -14,11 +14,18 @@ const Feed = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [showEndMessage, setShowEndMessage] = useState(false);
+  const [minLoading, setMinLoading] = useState(true); // New: for 10s shimmer
   const loaderRef = useRef(null);
+  const minLoadingTimer = useRef(null);
   const { hasUnread } = useNotification();
 
   useEffect(() => {
     fetchPosts();
+    // Always show shimmer for at least 10s
+    minLoadingTimer.current = setTimeout(() => {
+      setMinLoading(false);
+    }, 10000);
+    return () => clearTimeout(minLoadingTimer.current);
   }, []);
 
   useEffect(() => {
@@ -66,8 +73,10 @@ const Feed = () => {
 
       if (pageNum === 1) {
         setPosts(response.data.posts);
+        setError(""); // Clear error on successful fetch
       } else {
         setPosts((prev) => [...prev, ...response.data.posts]);
+        setError(""); // Clear error on successful fetch
       }
 
       setHasMore(
@@ -98,8 +107,43 @@ const Feed = () => {
     setPosts(posts.filter((post) => post._id !== deletedPostId));
   };
 
-  if (loading && posts.length === 0) {
+  if ((loading || error) && posts.length === 0 && minLoading) {
+    // Always show shimmer for first 10s if loading or error and no posts
     return <ShimmerEffect type="feed" />;
+  }
+
+  // After 10s, if error and no posts, show error/info
+  if (error && posts.length === 0 && !minLoading) {
+    return (
+      <div className="bg-blue-50 border border-blue-200 text-blue-700 px-3 sm:px-4 py-3 rounded-lg mb-4 sm:mb-6 text-base flex items-center gap-3 animate-fade-in mt-8 max-w-xl mx-auto">
+        <svg
+          className="w-6 h-6 text-blue-400"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z"
+          />
+        </svg>
+        <span className="flex-1">
+          Wait, your feed is getting ready... If this takes too long,{" "}
+          <button
+            onClick={() => {
+              setMinLoading(true);
+              setTimeout(() => setMinLoading(false), 10000);
+              fetchPosts(1);
+            }}
+            className="text-x-blue underline font-semibold hover:text-x-green transition-colors"
+          >
+            Retry
+          </button>
+        </span>
+      </div>
+    );
   }
 
   return (
@@ -152,12 +196,6 @@ const Feed = () => {
           </Link>
         </div>
       </div>
-
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-3 sm:px-4 py-2 sm:py-3 rounded-lg mb-4 sm:mb-6 text-sm sm:text-base">
-          {error}
-        </div>
-      )}
 
       {posts.length === 0 && !loading ? (
         <div className="text-center py-8 sm:py-12 px-4">
