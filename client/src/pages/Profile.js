@@ -487,6 +487,12 @@ const Profile = () => {
           </svg>
           Profile Metrics
         </h3>
+        <div className="mb-3 text-x-gray text-xs md:text-sm font-mono text-center md:text-left">
+          Tip: Click on{" "}
+          <span className="text-x-blue font-semibold">Followers</span> or{" "}
+          <span className="text-x-blue font-semibold">Following</span> to view
+          the full list.
+        </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center">
             <Link

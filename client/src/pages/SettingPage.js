@@ -23,6 +23,7 @@ const SettingPage = () => {
   const [passLoading, setPassLoading] = useState(false);
   const [passError, setPassError] = useState("");
   const [passSuccess, setPassSuccess] = useState("");
+  const [showNewPassword, setShowNewPassword] = useState(false);
   const deleteDialogRef = useRef(null);
 
   useEffect(() => {
@@ -161,16 +162,28 @@ const SettingPage = () => {
             <label htmlFor="new" className="text-xs text-gray-300 font-medium">
               New Password
             </label>
-            <input
-              type="password"
-              name="new"
-              id="new"
-              placeholder="Enter new password"
-              value={passwords.new}
-              onChange={handlePasswordChange}
-              className="w-full p-3 rounded-lg bg-gray-900 border border-gray-700 text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition placeholder:font-mono"
-              autoComplete="new-password"
-            />
+            <div className="relative">
+              <input
+                type={showNewPassword ? "text" : "password"}
+                name="new"
+                id="new"
+                placeholder="Enter new password"
+                value={passwords.new}
+                onChange={handlePasswordChange}
+                className="w-full p-3 rounded-lg bg-gray-900 border border-gray-700 text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition placeholder:font-mono pr-20"
+                autoComplete="new-password"
+              />
+              <button
+                type="button"
+                onClick={() => setShowNewPassword((v) => !v)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-mono text-gray-400 hover:text-blue-400 focus:outline-none px-2 py-1 bg-gray-800/80 rounded"
+                tabIndex={0}
+                aria-label={showNewPassword ? "Hide password" : "Show password"}
+                style={{ minWidth: '3.5rem' }}
+              >
+                {showNewPassword ? "Hide" : "Show"}
+              </button>
+            </div>
           </div>
           <div className="flex flex-col gap-1">
             <label
