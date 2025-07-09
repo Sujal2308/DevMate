@@ -73,6 +73,8 @@ app.use(
   checkDBConnection,
   require("./routes/notifications")
 );
+const messagesRouter = require("./routes/messages");
+app.use("/api/messages", messagesRouter);
 
 // Health check route (doesn't require DB)
 app.get("/api/health", (req, res) => {

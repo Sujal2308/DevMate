@@ -56,21 +56,6 @@ function AppContent() {
   const [showSplash, setShowSplash] = useState(true);
   const location = useLocation();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const [hasUnreadNotifications, setHasUnreadNotifications] = useState(false);
-
-  // Fetch unread notifications count on mount and when user changes
-  useEffect(() => {
-    if (!user) return;
-    const fetchUnread = async () => {
-      try {
-        const res = await axios.get("/api/notifications");
-        setHasUnreadNotifications(res.data.some((n) => !n.read));
-      } catch (err) {
-        setHasUnreadNotifications(false);
-      }
-    };
-    fetchUnread();
-  }, [user]);
 
   useEffect(() => {
     const timer = setTimeout(() => setShowSplash(false), 2000);
@@ -98,7 +83,7 @@ function AppContent() {
   return (
     <div className="min-h-screen flex flex-col bg-x-black text-x-white">
       <ScrollToTop />
-      <Navbar hasUnreadNotifications={hasUnreadNotifications} />
+      <Navbar />
       {user ? (
         // Logged in layout - Responsive 3-column
         <>

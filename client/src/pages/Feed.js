@@ -122,9 +122,16 @@ const Feed = () => {
           {/* Mobile notification bell icon */}
           <Link
             to="/notifications"
-            className="inline sm:hidden p-2 rounded-full hover:bg-blue-100 transition-all duration-200 relative"
+            className="inline sm:hidden p-2 rounded-full transition-all duration-200 relative"
             aria-label="Notifications"
-            style={{ color: "#1d9bf0", fontSize: 28 }}
+            style={{
+              color: hasUnread ? "#ef4444" : "#1d9bf0",
+              fontSize: 28,
+              filter: hasUnread ? "drop-shadow(0 0 8px #ef4444)" : "none",
+              background: hasUnread ? "rgba(239,68,68,0.08)" : "transparent",
+              boxShadow: hasUnread ? "0 0 8px 2px #ef4444aa" : "none",
+              transition: "color 0.2s, filter 0.2s, box-shadow 0.2s",
+            }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -138,11 +145,10 @@ const Feed = () => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                stroke={hasUnread ? "#ef4444" : "#1d9bf0"}
+                strokeWidth={2}
               />
             </svg>
-            {hasUnread && (
-              <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full shadow-lg animate-pulse border-2 border-white"></span>
-            )}
           </Link>
         </div>
       </div>

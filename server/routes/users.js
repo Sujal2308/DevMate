@@ -6,12 +6,28 @@ const Notification = require("../models/Notification");
 const auth = require("../middleware/auth");
 const bcrypt = require("bcryptjs");
 const emitNotification = require("../utils/notify");
+const { sendEmail } = require("../utils/email");
 
 const router = express.Router();
 
 // Get user by username
 router.get("/:username", async (req, res) => {
   try {
+    // Try to authenticate if token is present
+    let reqUser = null;
+    const authHeader = req.header("Authorization");
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      try {
+        const jwt = require("jsonwebtoken");
+        const User = require("../models/User");
+        const token = authHeader.replace("Bearer ", "");
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        reqUser = await User.findById(decoded.userId).select("-password");
+      } catch (err) {
+        // Ignore token errors for public profiles
+      }
+    }
+
     const user = await User.findOne({ username: req.params.username })
       .select("-password")
       .populate("followers", "username displayName")
@@ -19,6 +35,45 @@ router.get("/:username", async (req, res) => {
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
+    }
+
+    // Determine if requester is owner or follower
+    let isOwner = false;
+    let isFollower = false;
+    if (reqUser) {
+      isOwner = reqUser._id.toString() === user._id.toString();
+      isFollower = user.followers.some(
+        (f) => f._id.toString() === reqUser._id.toString()
+      );
+    }
+
+    // If profile is private and requester is not owner or follower, restrict info
+    if (user.isPrivate && !isOwner && !isFollower) {
+      return res.json({
+        user: {
+          id: user._id,
+          username: user.username,
+          displayName: user.displayName,
+          bio: user.bio,
+          skills: user.skills,
+          githubLink: user.githubLink,
+          createdAt: user.createdAt,
+          avatar: user.avatar,
+          isPrivate: user.isPrivate,
+          followers: user.followers.map((u) => ({
+            id: u._id,
+            username: u.username,
+            displayName: u.displayName,
+          })),
+          following: user.following.map((u) => ({
+            id: u._id,
+            username: u.username,
+            displayName: u.displayName,
+          })),
+        },
+        posts: [],
+        metricsHidden: true,
+      });
     }
 
     // Get user's posts
@@ -36,6 +91,8 @@ router.get("/:username", async (req, res) => {
         skills: user.skills,
         githubLink: user.githubLink,
         createdAt: user.createdAt,
+        avatar: user.avatar,
+        isPrivate: user.isPrivate,
         followers: user.followers.map((u) => ({
           id: u._id,
           username: u.username,
@@ -48,6 +105,7 @@ router.get("/:username", async (req, res) => {
         })),
       },
       posts,
+      metricsHidden: false,
     });
   } catch (error) {
     console.error("Get user error:", error);
@@ -220,6 +278,26 @@ router.put("/:username/follow", auth, async (req, res) => {
       fromUser: currentUser._id,
     });
     emitNotification(req.app, notification);
+    // Send email if enabled
+    if (
+      userToFollow.notificationPreferences?.newFollower &&
+      userToFollow.email
+    ) {
+      try {
+        await sendEmail({
+          to: userToFollow.email,
+          subject: `You have a new follower on DevMate!`,
+          text: `${
+            currentUser.displayName || currentUser.username
+          } is now following you on DevMate!`,
+          html: `<p><b>${
+            currentUser.displayName || currentUser.username
+          }</b> is now following you on DevMate!</p>`,
+        });
+      } catch (e) {
+        console.error("Email send error (new follower):", e);
+      }
+    }
     res.json({ message: "Followed successfully" });
   } catch (error) {
     console.error("Follow error:", error);
@@ -292,5 +370,71 @@ router.get("/:username/followers", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+// Update notification preferences
+router.put(
+  "/:id/notifications",
+  auth,
+  [
+    body("notificationPreferences")
+      .isObject()
+      .withMessage("notificationPreferences must be an object"),
+  ],
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+      if (req.user._id.toString() !== req.params.id) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      const { notificationPreferences } = req.body;
+      const user = await User.findByIdAndUpdate(
+        req.params.id,
+        { notificationPreferences },
+        { new: true }
+      ).select("-password");
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      res.json({ notificationPreferences: user.notificationPreferences });
+    } catch (error) {
+      console.error("Update notification preferences error:", error);
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+);
+
+// Update profile privacy (public/private)
+router.put(
+  "/:id/privacy",
+  auth,
+  [body("isPrivate").isBoolean().withMessage("isPrivate must be a boolean")],
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+      if (req.user._id.toString() !== req.params.id) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      const { isPrivate } = req.body;
+      const user = await User.findByIdAndUpdate(
+        req.params.id,
+        { isPrivate },
+        { new: true }
+      ).select("-password");
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      res.json({ isPrivate: user.isPrivate });
+    } catch (error) {
+      console.error("Update privacy error:", error);
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+);
 
 module.exports = router;

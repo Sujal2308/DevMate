@@ -4,6 +4,7 @@ const Post = require("../models/Post");
 const Notification = require("../models/Notification");
 const auth = require("../middleware/auth");
 const emitNotification = require("../utils/notify");
+const { sendEmail } = require("../utils/email");
 
 const router = express.Router();
 
@@ -49,12 +50,46 @@ router.post(
 );
 
 // Get all posts (feed)
-router.get("/", async (req, res) => {
+router.get("/", auth, async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
+    // If viewing posts for a specific user, check privacy
+    if (req.query.userId) {
+      const user = await require("../models/User").findById(req.query.userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      let isOwner = req.user && req.user._id.toString() === user._id.toString();
+      let isFollower = user.followers.some(
+        (f) => f.toString() === req.user._id.toString()
+      );
+      if (user.isPrivate && !isOwner && !isFollower) {
+        return res
+          .status(403)
+          .json({ message: "This user's posts are private." });
+      }
+      // Only fetch posts for this user
+      const posts = await Post.find({ author: user._id })
+        .populate("author", "username displayName")
+        .populate("comments.user", "username displayName")
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit);
+      const total = await Post.countDocuments({ author: user._id });
+      return res.json({
+        posts,
+        pagination: {
+          current: page,
+          pages: Math.ceil(total / limit),
+          total,
+        },
+      });
+    }
+
+    // Default: fetch all public posts
     const posts = await Post.find()
       .populate("author", "username displayName")
       .populate("comments.user", "username displayName")
@@ -153,7 +188,7 @@ router.post(
         return res.status(400).json({ errors: errors.array() });
       }
       const { text } = req.body;
-      const post = await Post.findById(req.params.id);
+      const post = await Post.findById(req.params.id).populate("author");
       if (!post) {
         return res.status(404).json({ message: "Post not found" });
       }
@@ -164,7 +199,10 @@ router.post(
       post.comments.push(newComment);
       await post.save();
       // Populate author info
-      await post.populate("author", "username displayName");
+      await post.populate(
+        "author",
+        "username displayName email notificationPreferences"
+      );
       await post.populate("comments.user", "username displayName");
       // Create notification if not self
       if (post.author._id.toString() !== req.user._id.toString()) {
@@ -175,6 +213,26 @@ router.post(
           post: post._id,
         });
         emitNotification(req.app, notification);
+        // Send email if enabled
+        if (
+          post.author.notificationPreferences?.newComment &&
+          post.author.email
+        ) {
+          try {
+            await sendEmail({
+              to: post.author.email,
+              subject: `New comment on your post!`,
+              text: `${
+                req.user.displayName || req.user.username
+              } commented on your post on DevMate!`,
+              html: `<p><b>${
+                req.user.displayName || req.user.username
+              }</b> commented on your post on DevMate!</p>`,
+            });
+          } catch (e) {
+            console.error("Email send error (new comment):", e);
+          }
+        }
       }
       res.json(post);
     } catch (error) {

@@ -24,6 +24,7 @@ const SettingPage = () => {
   const [passError, setPassError] = useState("");
   const [passSuccess, setPassSuccess] = useState("");
   const [showNewPassword, setShowNewPassword] = useState(false);
+  const [privacyError, setPrivacyError] = useState("");
   const deleteDialogRef = useRef(null);
 
   useEffect(() => {
@@ -39,6 +40,18 @@ const SettingPage = () => {
     }
   }, [showDelete]);
 
+  // Fetch current privacy status on mount
+  useEffect(() => {
+    if (user?.id) {
+      axios
+        .get(`/api/users/${user.username}`)
+        .then((res) => {
+          setIsPrivate(res.data.user.isPrivate || false);
+        })
+        .catch(() => setIsPrivate(false));
+    }
+  }, [user]);
+
   const handlePasswordChange = (e) => {
     setPasswords({ ...passwords, [e.target.name]: e.target.value });
   };
@@ -47,7 +60,26 @@ const SettingPage = () => {
     setNotifications({ ...notifications, [e.target.name]: e.target.checked });
   };
 
-  const handlePrivacyToggle = () => setIsPrivate((v) => !v);
+  // Update privacy on toggle
+  const handlePrivacyToggle = async () => {
+    const newValue = !isPrivate;
+    setIsPrivate(newValue);
+    setPrivacyError("");
+    const userId = user._id || user.id; // prefer _id if present
+    console.log("Privacy PUT id:", userId, user);
+    try {
+      await axios.put(`/api/users/${userId}/privacy`, { isPrivate: newValue });
+    } catch (err) {
+      setIsPrivate(!newValue); // revert on error
+      setPrivacyError(
+        err.response?.data?.message ||
+          (err.response?.data?.errors?.[0]?.msg
+            ? `Validation: ${err.response.data.errors[0].msg}`
+            : "Failed to update privacy. Check your connection and try again.")
+      );
+      console.error("Privacy toggle error:", err.response || err);
+    }
+  };
 
   const handleDeleteAccount = async () => {
     setDeleteLoading(true);
@@ -179,7 +211,7 @@ const SettingPage = () => {
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-mono text-gray-400 hover:text-blue-400 focus:outline-none px-2 py-1 bg-gray-800/80 rounded"
                 tabIndex={0}
                 aria-label={showNewPassword ? "Hide password" : "Show password"}
-                style={{ minWidth: '3.5rem' }}
+                style={{ minWidth: "3.5rem" }}
               >
                 {showNewPassword ? "Hide" : "Show"}
               </button>
@@ -230,6 +262,63 @@ const SettingPage = () => {
             />
           </svg>
           <h3 className="font-semibold text-lg">Email Notifications</h3>
+          {/* Dynamic notifications indicator */}
+          <span
+            className="ml-3 px-3 py-1 rounded-full text-xs font-mono font-semibold flex items-center gap-1 animate-fade-in"
+            style={{
+              background:
+                notifications.followers &&
+                notifications.comments &&
+                notifications.messages
+                  ? "rgba(16,185,129,0.8)"
+                  : "rgba(251,191,36,0.8)",
+              color:
+                notifications.followers &&
+                notifications.comments &&
+                notifications.messages
+                  ? "#d1fae5"
+                  : "#fffbe6",
+            }}
+          >
+            {notifications.followers &&
+            notifications.comments &&
+            notifications.messages ? (
+              <>
+                <svg
+                  className="w-4 h-4 inline-block mr-1"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                All notifications ON
+              </>
+            ) : (
+              <>
+                <svg
+                  className="w-4 h-4 inline-block mr-1"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"
+                  />
+                </svg>
+                {Object.entries(notifications).filter(([k, v]) => !v).length}{" "}
+                off
+              </>
+            )}
+          </span>
         </div>
         <div className="space-y-3">
           <div className="flex items-center justify-between bg-gray-900/60 rounded-lg px-4 py-3">
@@ -340,6 +429,9 @@ const SettingPage = () => {
           </div>
         </div>
         <div className="mt-2 text-xs text-gray-400 font-mono">
+          {privacyError && (
+            <div className="mb-2 text-red-400 text-sm">{privacyError}</div>
+          )}
           {isPrivate
             ? "Only you and approved followers can see your profile and posts."
             : "Anyone can view your profile and posts."}

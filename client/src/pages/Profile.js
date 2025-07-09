@@ -192,6 +192,12 @@ const Profile = () => {
     0
   );
 
+  // Determine privacy: show only card if private and not owner/follower
+  const isPrivate = profileUser.isPrivate;
+  const isFollower =
+    user && profileUser.followers?.some((f) => f.id === user.id);
+  const showFullProfile = !isPrivate || isOwnProfile || isFollower;
+
   return (
     <div className="max-w-6xl mx-auto py-8 px-4">
       {/* Hero Profile Section */}
@@ -460,7 +466,7 @@ const Profile = () => {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
-                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14l-4-4-6 6"
                     />
                   </svg>
                 </a>
@@ -469,153 +475,115 @@ const Profile = () => {
           </div>
         </div>
       </div>
-      {/* Profile Metrics Card */}
-      <div className="bg-gradient-to-br from-x-dark/70 to-x-dark/40 backdrop-blur-sm border border-x-border/40 p-4 mb-8">
-        <h3 className="text-lg font-bold mb-4 flex items-center gap-2 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-gradient-x font-mono">
-          <svg
-            className="w-6 h-6 text-x-blue"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z"
-            />
-          </svg>
-          Profile Metrics
-        </h3>
-        <div className="mb-3 text-x-gray text-xs md:text-sm font-mono text-center md:text-left">
-          Tip: Click on{" "}
-          <span className="text-x-blue font-semibold">Followers</span> or{" "}
-          <span className="text-x-blue font-semibold">Following</span> to view
-          the full list.
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center">
-            <Link
-              to={`/profile/${profileUser.username}/followers`}
-              className="block cursor-pointer"
-            >
-              <div className="text-3xl font-bold text-x-white mb-1 font-mono">
-                {profileUser.followers?.length || 0}
-              </div>
-              <div className="text-x-gray text-sm font-mono">Followers</div>
-            </Link>
-          </div>
-          <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center">
-            <Link
-              to={`/profile/${profileUser.username}/following`}
-              className="block cursor-pointer"
-            >
-              <div className="text-3xl font-bold text-x-white mb-1 font-mono">
-                {profileUser.following?.length || 0}
-              </div>
-              <div className="text-x-gray text-sm font-mono">Following</div>
-            </Link>
-          </div>
-          <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center">
-            <div className="text-3xl font-bold text-x-white mb-1 font-mono">
-              {posts.length}
-            </div>
-            <div className="text-x-gray text-sm font-mono">Posts</div>
-          </div>
-          <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center">
-            <div className="text-3xl font-bold text-x-white mb-1 font-mono">
-              {totalLikes}
-            </div>
-            <div className="text-x-gray text-sm font-mono">Likes</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Tabs: Posts, Activity, About */}
-      <div className="mb-8">
-        <div className="border-b border-x-border/30">
-          <nav className="flex justify-start space-x-8">
-            <button
-              onClick={() => setActiveTab("posts")}
-              className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors ${
-                activeTab === "posts"
-                  ? "border-x-blue text-x-blue"
-                  : "border-transparent text-x-gray hover:text-x-white hover:border-x-border"
-              }`}
-            >
-              Posts
-            </button>
-            <button
-              onClick={() => setActiveTab("activity")}
-              className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors ${
-                activeTab === "activity"
-                  ? "border-x-blue text-x-blue"
-                  : "border-transparent text-x-gray hover:text-x-white hover:border-x-border"
-              }`}
-            >
-              Activity
-            </button>
-            <button
-              onClick={() => setActiveTab("about")}
-              className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors ${
-                activeTab === "about"
-                  ? "border-x-blue text-x-blue"
-                  : "border-transparent text-x-gray hover:text-x-white hover:border-x-border"
-              }`}
-            >
-              About
-            </button>
-          </nav>
-        </div>
-      </div>
-
-      {/* Tab Content */}
-      {activeTab === "posts" && (
-        <div className="bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/50 rounded-2xl p-6 mb-24 md:mb-8">
-          <div className="flex items-center justify-start mb-6">
-            <svg
-              className="w-5 h-5 text-x-green mr-3"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-1l-4 4z"
-              />
-            </svg>
-            <h2 className="text-2xl font-bold text-x-white">Posts</h2>
-          </div>
-
-          {/* Loading state */}
-          {loading && (
-            <div className="flex items-center justify-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-x-blue"></div>
-              <span className="ml-3 text-x-gray">Loading posts...</span>
-            </div>
-          )}
-
-          {/* Posts grid */}
-          {!loading && posts.length > 0 && (
-            <div className="grid grid-cols-1 gap-6">
-              {currentPosts.map((post) => (
-                <PostCard
-                  key={post._id}
-                  post={post}
-                  onDelete={handlePostDelete}
+      {/* Only show rest if not private, or if owner/follower */}
+      {showFullProfile ? (
+        <>
+          {/* Profile Metrics Card */}
+          <div className="bg-gradient-to-br from-x-dark/70 to-x-dark/40 backdrop-blur-sm border border-x-border/40 p-4 mb-8">
+            <h3 className="text-lg font-bold mb-4 flex items-center gap-2 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-gradient-x font-mono">
+              <svg
+                className="w-6 h-6 text-x-blue"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z"
                 />
-              ))}
+              </svg>
+              Profile Metrics
+            </h3>
+            <div className="mb-3 text-x-gray text-xs md:text-sm font-mono text-center md:text-left">
+              Tip: Click on{" "}
+              <span className="text-x-blue font-semibold">Followers</span> or{" "}
+              <span className="text-x-blue font-semibold">Following</span> to
+              view the full list.
             </div>
-          )}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center">
+                <Link
+                  to={`/profile/${profileUser.username}/followers`}
+                  className="block cursor-pointer"
+                >
+                  <div className="text-3xl font-bold text-x-white mb-1 font-mono">
+                    {profileUser.followers?.length || 0}
+                  </div>
+                  <div className="text-x-gray text-sm font-mono">Followers</div>
+                </Link>
+              </div>
+              <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center">
+                <Link
+                  to={`/profile/${profileUser.username}/following`}
+                  className="block cursor-pointer"
+                >
+                  <div className="text-3xl font-bold text-x-white mb-1 font-mono">
+                    {profileUser.following?.length || 0}
+                  </div>
+                  <div className="text-x-gray text-sm font-mono">Following</div>
+                </Link>
+              </div>
+              <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center">
+                <div className="text-3xl font-bold text-x-white mb-1 font-mono">
+                  {posts.length}
+                </div>
+                <div className="text-x-gray text-sm font-mono">Posts</div>
+              </div>
+              <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center">
+                <div className="text-3xl font-bold text-x-white mb-1 font-mono">
+                  {totalLikes}
+                </div>
+                <div className="text-x-gray text-sm font-mono">Likes</div>
+              </div>
+            </div>
+          </div>
 
-          {/* Empty state */}
-          {!loading && posts.length === 0 && (
-            <div className="text-center py-16">
-              <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-8">
+          {/* Tabs: Posts, Activity, About */}
+          <div className="mb-8">
+            <div className="border-b border-x-border/30">
+              <nav className="flex justify-start space-x-8">
+                <button
+                  onClick={() => setActiveTab("posts")}
+                  className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors ${
+                    activeTab === "posts"
+                      ? "border-x-blue text-x-blue"
+                      : "border-transparent text-x-gray hover:text-x-white hover:border-x-border"
+                  }`}
+                >
+                  Posts
+                </button>
+                <button
+                  onClick={() => setActiveTab("activity")}
+                  className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors ${
+                    activeTab === "activity"
+                      ? "border-x-blue text-x-blue"
+                      : "border-transparent text-x-gray hover:text-x-white hover:border-x-border"
+                  }`}
+                >
+                  Activity
+                </button>
+                <button
+                  onClick={() => setActiveTab("about")}
+                  className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors ${
+                    activeTab === "about"
+                      ? "border-x-blue text-x-blue"
+                      : "border-transparent text-x-gray hover:text-x-white hover:border-x-border"
+                  }`}
+                >
+                  About
+                </button>
+              </nav>
+            </div>
+          </div>
+
+          {/* Tab Content */}
+          {activeTab === "posts" && (
+            <div className="bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/50 rounded-2xl p-6 mb-24 md:mb-8">
+              <div className="flex items-center justify-start mb-6">
                 <svg
-                  className="w-16 h-16 text-x-gray mx-auto mb-4"
+                  className="w-5 h-5 text-x-green mr-3"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -627,216 +595,299 @@ const Profile = () => {
                     d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-1l-4 4z"
                   />
                 </svg>
-                <p className="text-x-white text-lg font-semibold mb-2">
-                  No posts yet!
-                </p>
-                <p className="text-x-gray text-sm max-w-md mx-auto">
-                  This user hasn't shared any posts yet. Check back later or
-                  follow them to see their updates.
-                </p>
+                <h2 className="text-2xl font-bold text-x-white">Posts</h2>
               </div>
-            </div>
-          )}
 
-          {/* Pagination - Mobile */}
-          {totalPages > 1 && (
-            <div className="mt-6 block md:hidden">
-              <span className="text-x-gray text-sm">
-                Page {currentPage} of {totalPages}
-              </span>
-              <div className="flex items-center justify-center gap-2 mt-2">
-                <button
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.max(prev - 1, 1))
-                  }
-                  disabled={currentPage === 1}
-                  className="px-4 py-2 rounded-full bg-x-dark/40 text-x-white font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-1 disabled:opacity-50"
-                >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 18l-6-6 6-6"
-                    />
-                  </svg>
-                  Previous
-                </button>
-                <button
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                  }
-                  disabled={currentPage === totalPages}
-                  className="px-4 py-2 rounded-full bg-x-blue text-white font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-1 disabled:opacity-50"
-                >
-                  Next
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 6l6 6-6 6"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          )}
+              {/* Loading state */}
+              {loading && (
+                <div className="flex items-center justify-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-x-blue"></div>
+                  <span className="ml-3 text-x-gray">Loading posts...</span>
+                </div>
+              )}
 
-          {/* Pagination - Desktop */}
-          {totalPages > 1 && (
-            <div className="hidden md:flex items-center justify-between mt-6">
-              <button
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1}
-                className="px-4 py-2 rounded-full bg-x-dark/40 text-x-white font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-1 disabled:opacity-50"
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 18l-6-6 6-6"
-                  />
-                </svg>
-                Previous
-              </button>
-              <div className="text-x-gray text-sm">
-                Page {currentPage} of {totalPages}
-              </div>
-              <button
-                onClick={() =>
-                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                }
-                disabled={currentPage === totalPages}
-                className="px-4 py-2 rounded-full bg-x-blue text-white font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-1 disabled:opacity-50"
-              >
-                Next
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 6l6 6-6 6"
-                  />
-                </svg>
-              </button>
-            </div>
-          )}
-        </div>
-      )}
-      {activeTab === "activity" && (
-        <div className="card p-8 bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/20 text-center mb-8">
-          <div className="bg-x-blue/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg
-              className="w-8 h-8 text-x-blue"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-              />
-            </svg>
-          </div>
-          <h3 className="text-xl font-bold text-x-white mb-2">
-            Activity Timeline
-          </h3>
-          <p className="text-x-gray">
-            Activity tracking coming soon! This will show recent likes,
-            comments, and interactions.
-          </p>
-        </div>
-      )}
-      {activeTab === "about" && profileUser && (
-        <div className="card p-8 bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/20 mb-8">
-          <h3 className="text-xl font-bold text-x-white mb-4 text-left">
-            About
-          </h3>
-          <div className="text-left space-y-4">
-            {profileUser.bio && (
-              <div>
-                <span className="font-semibold text-x-gray">Description:</span>
-                <p className="text-x-white mt-1">{profileUser.bio}</p>
-              </div>
-            )}
-            <div>
-              <span className="font-semibold text-x-gray">
-                Date of Joining:
-              </span>
-              <span className="text-x-white ml-2">
-                <svg
-                  className="w-4 h-4 inline-block mr-1 align-middle"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
-                {new Date(profileUser.createdAt).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                })}
-              </span>
-            </div>
-            {profileUser.skills && profileUser.skills.length > 0 && (
-              <div>
-                <span className="font-semibold text-x-gray">Skills:</span>
-                <div className="flex flex-wrap gap-2 mt-1">
-                  {profileUser.skills.map((skill, index) => (
-                    <span
-                      key={index}
-                      className="bg-gradient-to-r from-x-blue/20 to-purple-500/20 border border-x-blue/30 text-x-blue px-3 py-1.5 rounded-full text-sm font-medium backdrop-blur-sm"
-                    >
-                      {skill}
-                    </span>
+              {/* Posts grid */}
+              {!loading && posts.length > 0 && (
+                <div className="grid grid-cols-1 gap-6">
+                  {currentPosts.map((post) => (
+                    <PostCard
+                      key={post._id}
+                      post={post}
+                      onDelete={handlePostDelete}
+                    />
                   ))}
                 </div>
-              </div>
-            )}
-            {profileUser.githubLink && (
-              <div>
-                <span className="font-semibold text-x-gray">GitHub:</span>
-                <a
-                  href={profileUser.githubLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-x-blue underline ml-2 hover:text-x-green"
+              )}
+
+              {/* Empty state */}
+              {!loading && posts.length === 0 && (
+                <div className="text-center py-16">
+                  <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-8">
+                    <svg
+                      className="w-16 h-16 text-x-gray mx-auto mb-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-1l-4 4z"
+                      />
+                    </svg>
+                    <p className="text-x-white text-lg font-semibold mb-2">
+                      {isOwnProfile
+                        ? "You haven't posted yet!"
+                        : "No posts yet!"}
+                    </p>
+                    <p className="text-x-gray text-sm max-w-md mx-auto mb-4">
+                      {isOwnProfile
+                        ? "Start sharing your thoughts and projects with the community."
+                        : "This user hasn't shared any posts yet. Check back later or follow them to see their updates."}
+                    </p>
+                    {isOwnProfile && (
+                      <Link
+                        to="/create-post"
+                        className="btn-primary px-6 py-3 text-base font-semibold"
+                      >
+                        Create your first post
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Pagination - Mobile */}
+              {totalPages > 1 && (
+                <div className="mt-6 block md:hidden">
+                  <span className="text-x-gray text-sm">
+                    Page {currentPage} of {totalPages}
+                  </span>
+                  <div className="flex items-center justify-center gap-2 mt-2">
+                    <button
+                      onClick={() =>
+                        setCurrentPage((prev) => Math.max(prev - 1, 1))
+                      }
+                      disabled={currentPage === 1}
+                      className="px-4 py-2 rounded-full bg-x-dark/40 text-x-white font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-1 disabled:opacity-50"
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M15 18l-6-6 6-6"
+                        />
+                      </svg>
+                      Previous
+                    </button>
+                    <button
+                      onClick={() =>
+                        setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                      }
+                      disabled={currentPage === totalPages}
+                      className="px-4 py-2 rounded-full bg-x-blue text-white font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-1 disabled:opacity-50"
+                    >
+                      Next
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 6l6 6-6 6"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Pagination - Desktop */}
+              {totalPages > 1 && (
+                <div className="hidden md:flex items-center justify-between mt-6">
+                  <button
+                    onClick={() =>
+                      setCurrentPage((prev) => Math.max(prev - 1, 1))
+                    }
+                    disabled={currentPage === 1}
+                    className="px-4 py-2 rounded-full bg-x-dark/40 text-x-white font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-1 disabled:opacity-50"
+                  >
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 18l-6-6 6-6"
+                      />
+                    </svg>
+                    Previous
+                  </button>
+                  <div className="text-x-gray text-sm">
+                    Page {currentPage} of {totalPages}
+                  </div>
+                  <button
+                    onClick={() =>
+                      setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                    }
+                    disabled={currentPage === totalPages}
+                    className="px-4 py-2 rounded-full bg-x-blue text-white font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-1 disabled:opacity-50"
+                  >
+                    Next
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 6l6 6-6 6"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+          {activeTab === "activity" && (
+            <div className="card p-8 bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/20 text-center mb-8">
+              <div className="bg-x-blue/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg
+                  className="w-8 h-8 text-x-blue"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  {profileUser.githubLink}
-                </a>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 7h8m0 0v8m0-8L10 14l-4-4-6 6"
+                  />
+                </svg>
               </div>
-            )}
-            {/* Add more fields as needed */}
-          </div>
+              <h3 className="text-xl font-bold text-x-white mb-2">
+                Activity Timeline
+              </h3>
+              <p className="text-x-gray">
+                Activity tracking coming soon! This will show recent likes,
+                comments, and interactions.
+              </p>
+            </div>
+          )}
+          {activeTab === "about" && profileUser && (
+            <div className="card p-8 bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/20 mb-8">
+              <h3 className="text-xl font-bold text-x-white mb-4 text-left">
+                About
+              </h3>
+              <div className="text-left space-y-4">
+                {profileUser.bio && (
+                  <div>
+                    <span className="font-semibold text-x-gray">
+                      Description:
+                    </span>
+                    <p className="text-x-white mt-1">{profileUser.bio}</p>
+                  </div>
+                )}
+                <div>
+                  <span className="font-semibold text-x-gray">
+                    Date of Joining:
+                  </span>
+                  <span className="text-x-white ml-2">
+                    <svg
+                      className="w-4 h-4 inline-block mr-1 align-middle"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                    {new Date(profileUser.createdAt).toLocaleDateString(
+                      "en-US",
+                      {
+                        year: "numeric",
+                        month: "long",
+                      }
+                    )}
+                  </span>
+                </div>
+                {profileUser.skills && profileUser.skills.length > 0 && (
+                  <div>
+                    <span className="font-semibold text-x-gray">Skills:</span>
+                    <div className="flex flex-wrap gap-2 mt-1">
+                      {profileUser.skills.map((skill, index) => (
+                        <span
+                          key={index}
+                          className="bg-gradient-to-r from-x-blue/20 to-purple-500/20 border border-x-blue/30 text-x-blue px-3 py-1.5 rounded-full text-sm font-medium backdrop-blur-sm"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {profileUser.githubLink && (
+                  <div>
+                    <span className="font-semibold text-x-gray">GitHub:</span>
+                    <a
+                      href={profileUser.githubLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-x-blue underline ml-2 hover:text-x-green"
+                    >
+                      {profileUser.githubLink}
+                    </a>
+                  </div>
+                )}
+                {/* Add more fields as needed */}
+              </div>
+            </div>
+          )}
+        </>
+      ) : (
+        <div className="bg-gradient-to-br from-x-dark/70 to-x-dark/40 backdrop-blur-sm border border-x-border/40 p-8 mt-8 text-center rounded-2xl">
+          <svg
+            className="w-12 h-12 text-x-gray mx-auto mb-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 4v16m8-8H4"
+            />
+          </svg>
+          <h3 className="text-xl font-bold text-x-white mb-2">
+            This profile is private
+          </h3>
+          <p className="text-x-gray text-sm max-w-md mx-auto">
+            Follow this user to see their posts and metrics.
+          </p>
         </div>
       )}
     </div>

@@ -49,6 +49,15 @@ const userSchema = new mongoose.Schema(
     },
     followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    notificationPreferences: {
+      newFollower: { type: Boolean, default: true },
+      newComment: { type: Boolean, default: true },
+      newMessage: { type: Boolean, default: true },
+    },
+    isPrivate: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
