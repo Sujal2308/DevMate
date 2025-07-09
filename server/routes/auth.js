@@ -171,12 +171,14 @@ router.post("/forgot-password", async (req, res) => {
     user.resetPasswordExpires = Date.now() + 1000 * 60 * 60; // 1 hour
     await user.save();
     // Send email
-    const resetUrl = `${process.env.FRONTEND_URL || "http://localhost:3000"}/reset-password?token=${token}`;
+    const resetUrl = `${
+      process.env.FRONTEND_URL || "http://localhost:3000"
+    }/reset-password?token=${token}`;
     await sendEmail({
       to: user.email,
       subject: "Password Reset Request",
       text: `You requested a password reset. Click the link to reset: ${resetUrl}`,
-      html: `<p>You requested a password reset.</p><p><a href="${resetUrl}">Reset your password</a></p>`
+      html: `<p>You requested a password reset.</p><p><a href="${resetUrl}">Reset your password</a></p>`,
     });
     res.json({ message: "Password reset email sent." });
   } catch (err) {

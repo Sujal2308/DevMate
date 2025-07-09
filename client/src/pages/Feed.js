@@ -166,15 +166,13 @@ const Feed = () => {
           {/* Mobile notification bell icon */}
           <Link
             to="/notifications"
-            className="inline sm:hidden p-2 rounded-full transition-all duration-200 relative"
+            className="inline sm:hidden p-2 transition-all duration-200 relative"
             aria-label="Notifications"
             style={{
               color: hasUnread ? "#ef4444" : "#1d9bf0",
               fontSize: 28,
               filter: hasUnread ? "drop-shadow(0 0 8px #ef4444)" : "none",
-              background: hasUnread ? "rgba(239,68,68,0.08)" : "transparent",
-              boxShadow: hasUnread ? "0 0 8px 2px #ef4444aa" : "none",
-              transition: "color 0.2s, filter 0.2s, box-shadow 0.2s",
+              transition: "color 0.2s, filter 0.2s",
             }}
           >
             <svg

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { socket } from "../socket";
 import { useAuth } from "../contexts/AuthContext";
+import { Link } from "react-router-dom";
 
 const iconForType = (type) => {
   switch (type) {
@@ -316,17 +317,35 @@ const NotificationPage = () => {
             >
               <div className="mr-3 mt-1">{iconForType(n.type)}</div>
               <div className="flex-1">
-                <span className="font-mono text-white">
-                  {n.fromUser?.displayName || n.fromUser?.username || "Someone"}
-                </span>
+                {n.fromUser?.username ? (
+                  <Link
+                    to={`/profile/${n.fromUser.username}`}
+                    className="font-mono text-white hover:underline hover:text-x-blue transition-colors"
+                  >
+                    {n.fromUser.displayName || n.fromUser.username}
+                  </Link>
+                ) : (
+                  <span className="font-mono text-white">
+                    {n.fromUser?.displayName ||
+                      n.fromUser?.username ||
+                      "Someone"}
+                  </span>
+                )}
                 <span className="font-mono text-gray-300">
-                  {n.type === "like"
-                    ? " liked your post."
-                    : n.type === "comment"
-                    ? " commented on your post."
-                    : n.type === "follow"
-                    ? " followed you."
-                    : " sent a notification."}
+                  {(n.type === "like" || n.type === "comment") && n.post ? (
+                    <Link
+                      to={`/post/${n.post._id || n.post}`}
+                      className="hover:underline hover:text-x-blue transition-colors"
+                    >
+                      {n.type === "like"
+                        ? " liked your post."
+                        : " commented on your post."}
+                    </Link>
+                  ) : n.type === "follow" ? (
+                    " followed you."
+                  ) : (
+                    " sent a notification."
+                  )}
                 </span>
                 <div className="text-xs text-gray-500 mt-1 font-mono">
                   {new Date(n.createdAt).toLocaleString()}

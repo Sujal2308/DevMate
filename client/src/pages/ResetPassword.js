@@ -31,7 +31,8 @@ const ResetPassword = () => {
       setTimeout(() => navigate("/login"), 2000);
     } catch (err) {
       setError(
-        err.response?.data?.message || "Reset failed. Try again or request a new link."
+        err.response?.data?.message ||
+          "Reset failed. Try again or request a new link."
       );
     } finally {
       setLoading(false);

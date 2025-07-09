@@ -14,7 +14,9 @@ const ForgotPassword = () => {
     setError("");
     try {
       await axios.post("/api/auth/forgot-password", { email });
-      setMessage("If an account with that email exists, a reset link has been sent.");
+      setMessage(
+        "If an account with that email exists, a reset link has been sent."
+      );
     } catch (err) {
       setError(
         err.response?.data?.message || "Something went wrong. Please try again."
