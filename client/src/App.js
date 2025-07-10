@@ -32,7 +32,6 @@ import Support from "./pages/Support"; // Import the new Support page
 import { useLocation } from "react-router-dom";
 import TrendingNews from "./components/TrendingNews"; // Import TrendingNews
 import Notifications from "./pages/Notifications"; // Import Notifications page
-import axios from "axios";
 import FollowersList from "./pages/FollowersList";
 import FollowingList from "./pages/FollowingList"; // Import FollowingList
 import ForgotPassword from "./pages/ForgotPassword";
