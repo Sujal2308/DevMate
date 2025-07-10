@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import ShimmerEffect from "../components/ShimmerEffect";
-import LoadingSpinner from "../components/LoadingSpinner";
 import PostCard from "../components/PostCard";
 
 const PostDetail = () => {
@@ -108,4 +107,4 @@ const PostDetail = () => {
 };
 
 export default PostDetail;
-// No unused variables found in PostDetail.js main logic
+// No unused variables: navigate, totalComments, handlePostUpdate are not present or are used.
