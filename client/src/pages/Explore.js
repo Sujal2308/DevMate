@@ -189,8 +189,7 @@ const Explore = () => {
       searchInputRef.current.blur();
     }
 
-    // Keep search active to show results
-    setIsSearchActive(true);
+    // Keep search results visible
     setIsKeyboardOpen(false);
 
     // Force immediate search
@@ -200,8 +199,6 @@ const Explore = () => {
   // Input focus handling with improved mobile experience
   const handleSearchFocus = () => {
     if (isMobile) {
-      setIsSearchActive(true);
-
       // Prevent any scroll or bounce
       document.body.classList.add("keyboard-open");
 
@@ -216,11 +213,6 @@ const Explore = () => {
 
   const handleSearchBlur = () => {
     if (isMobile) {
-      // Don't immediately remove active state if there's text
-      if (!searchTerm) {
-        setIsSearchActive(false);
-      }
-
       document.body.classList.remove("keyboard-open");
 
       // Reset styles
@@ -318,7 +310,6 @@ const Explore = () => {
       requestAnimationFrame(() => {
         setSearchTerm("");
         setSelectedSkill("");
-        setIsSearchActive(false);
 
         // After a short delay, restore transitions
         setTimeout(() => {
