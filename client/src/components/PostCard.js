@@ -225,12 +225,9 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
   const [likeAnimating, setLikeAnimating] = useState(false); // For like button animation
   const [copied, setCopied] = useState(false); // Copy feedback state
 
-  // Follow/Unfollow logic
-  const [isFollowing, setIsFollowing] = useState(false);
-
   React.useEffect(() => {
     if (user && post?.author?.followers) {
-      setIsFollowing(post.author.followers.some((f) => f._id === user.id));
+      // Check if user is following this author
     }
   }, [post?.author?.followers, user]);
 
