@@ -79,7 +79,10 @@ app.use(limiter);
 // CORS
 app.use(
   cors({
-    origin: process.env.CLIENT_ORIGIN || "*", // Restrict in production
+    origin: [
+      "https://strong-arithmetic-3b534a.netlify.app",
+      "http://localhost:3000",
+    ],
     credentials: true,
   })
 );
