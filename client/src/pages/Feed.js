@@ -18,53 +18,6 @@ const Feed = () => {
   const minLoadingTimer = useRef(null);
   const { hasUnread } = useNotification();
 
-  useEffect(() => {
-    fetchPosts();
-    // Always show shimmer for at least 10s
-    minLoadingTimer.current = setTimeout(() => {
-      setMinLoading(false);
-    }, 10000);
-    return () => clearTimeout(minLoadingTimer.current);
-  }, []);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const [entry] = entries;
-        if (entry.isIntersecting && hasMore && !loading) {
-          loadMore();
-        }
-        if (entry.isIntersecting && !hasMore && !showEndMessage) {
-          setTimeout(() => {
-            setShowEndMessage(true);
-          }, 2000);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (loaderRef.current) {
-      observer.observe(loaderRef.current);
-    }
-
-    return () => {
-      if (loaderRef.current) {
-        observer.unobserve(loaderRef.current);
-      }
-    };
-  }, [hasMore, loading, showEndMessage, loadMore]);
-
-  useEffect(() => {
-    if (loading && posts.length === 0) {
-      document.body.classList.add("body--loading-feed");
-    } else {
-      document.body.classList.remove("body--loading-feed");
-    }
-    return () => {
-      document.body.classList.remove("body--loading-feed");
-    };
-  }, [loading, posts.length]);
-
   const fetchPosts = useCallback(async (pageNum = 1) => {
     try {
       setLoading(true);
@@ -95,6 +48,61 @@ const Feed = () => {
       fetchPosts(page + 1);
     }
   }, [loading, hasMore, page, fetchPosts]);
+
+  // Initial fetch effect
+  useEffect(() => {
+    fetchPosts();
+    // Always show shimmer for at least 10s
+    minLoadingTimer.current = setTimeout(() => {
+      setMinLoading(false);
+    }, 10000);
+    return () => {
+      if (minLoadingTimer.current) {
+        clearTimeout(minLoadingTimer.current);
+      }
+    };
+  }, [fetchPosts]);
+
+  // Intersection observer effect
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting && hasMore && !loading) {
+          loadMore();
+        }
+        if (entry.isIntersecting && !hasMore && !showEndMessage) {
+          setTimeout(() => {
+            setShowEndMessage(true);
+          }, 2000);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const currentLoaderRef = loaderRef.current;
+    if (currentLoaderRef) {
+      observer.observe(currentLoaderRef);
+    }
+
+    return () => {
+      if (currentLoaderRef) {
+        observer.unobserve(currentLoaderRef);
+      }
+    };
+  }, [hasMore, loading, showEndMessage, loadMore]);
+
+  // Body class effect
+  useEffect(() => {
+    if (loading && posts.length === 0) {
+      document.body.classList.add("body--loading-feed");
+    } else {
+      document.body.classList.remove("body--loading-feed");
+    }
+    return () => {
+      document.body.classList.remove("body--loading-feed");
+    };
+  }, [loading, posts.length]);
 
   const handlePostUpdate = (updatedPost) => {
     setPosts(
