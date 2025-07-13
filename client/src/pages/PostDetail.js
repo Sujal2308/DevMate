@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import ShimmerEffect from "../components/ShimmerEffect";
@@ -10,11 +10,7 @@ const PostDetail = () => {
   const [error, setError] = useState("");
   const { id } = useParams();
 
-  useEffect(() => {
-    fetchPost();
-  }, [id]);
-
-  const fetchPost = async () => {
+  const fetchPost = useCallback(async () => {
     try {
       const response = await axios.get(`/api/posts/${id}`);
       setPost(response.data);
@@ -23,7 +19,11 @@ const PostDetail = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
+
+  useEffect(() => {
+    fetchPost();
+  }, [fetchPost]);
 
   const handlePostUpdate = (updatedPost) => {
     setPost(updatedPost);

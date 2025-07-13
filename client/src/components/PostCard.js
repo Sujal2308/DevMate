@@ -227,11 +227,6 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
 
   // Follow/Unfollow logic
   const [isFollowing, setIsFollowing] = useState(false);
-  const [followLoading, setFollowLoading] = useState(false);
-  // For hover effect to show 'Unfollow' when already following
-  const [isHovered, setIsHovered] = useState(false);
-  // Animation state for follow button
-  const [followAnim, setFollowAnim] = useState(false);
 
   React.useEffect(() => {
     if (user && post?.author?.followers) {
@@ -293,31 +288,6 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
       console.error("Delete error:", error);
     } finally {
       setIsDeleting(false);
-    }
-  };
-
-  const handleFollowToggle = async () => {
-    if (!user) return;
-    setFollowLoading(true);
-    setFollowAnim(true); // Trigger animation
-    try {
-      if (isFollowing) {
-        await axios.put(`/api/users/${post.author.username}/unfollow`);
-      } else {
-        await axios.put(`/api/users/${post.author.username}/follow`);
-      }
-      // Fetch updated author data
-      const updatedAuthorRes = await axios.get(
-        `/api/users/${post.author.username}`
-      );
-      // Update the post's author followers/following in parent/feed state
-      onUpdate({ ...post, author: updatedAuthorRes.data.user });
-      // setIsFollowing will be handled by useEffect
-    } catch (err) {
-      // Optionally show error
-    } finally {
-      setFollowLoading(false);
-      setTimeout(() => setFollowAnim(false), 350); // Reset animation after duration
     }
   };
 

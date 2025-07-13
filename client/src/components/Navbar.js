@@ -289,7 +289,7 @@ function EmojiConverter() {
       setIndex((prev) => (prev + 1) % emojis.length);
     }, 900);
     return () => clearInterval(interval);
-  }, []);
+  }, [emojis.length]);
   return (
     <span
       className="text-3xl transition-all duration-500 ease-in-out select-none"
