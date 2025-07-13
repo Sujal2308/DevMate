@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
 import ShimmerEffect from "../components/ShimmerEffect";
-import LoadingSpinner from "../components/LoadingSpinner";
 import PostCard from "../components/PostCard";
 
 const Profile = () => {
@@ -15,7 +14,6 @@ const Profile = () => {
   const [postsPerPage] = useState(2);
   const { username } = useParams();
   const { user } = useAuth();
-  const navigate = useNavigate();
 
   const isOwnProfile = user?.username === username;
 
@@ -185,10 +183,6 @@ const Profile = () => {
 
   const totalLikes = posts.reduce(
     (total, post) => total + post.likes.length,
-    0
-  );
-  const totalComments = posts.reduce(
-    (total, post) => total + post.comments.length,
     0
   );
 
