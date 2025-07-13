@@ -12,7 +12,6 @@ const CreatePost = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState("");
-  const [showCodeSnippet, setShowCodeSnippet] = useState(false);
 
   const navigate = useNavigate();
 
@@ -372,7 +371,7 @@ SELECT * FROM users WHERE name = 'Developer';`,
               </div>
             </div>
 
-            {(selectedLanguage || formData.codeSnippet || showCodeSnippet) && (
+            {(selectedLanguage || formData.codeSnippet) && (
               <div className="bg-x-black/80 border border-x-border/50 rounded-xl overflow-hidden">
                 <div className="flex items-center justify-between bg-x-dark/60 px-4 py-2 border-b border-x-border/30">
                   <div className="flex items-center space-x-2">

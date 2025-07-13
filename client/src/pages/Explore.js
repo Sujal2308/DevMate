@@ -8,7 +8,6 @@ import React, {
 import { Link } from "react-router-dom";
 import axios from "axios";
 import ShimmerEffect from "../components/ShimmerEffect";
-import LoadingSpinner from "../components/LoadingSpinner";
 
 // Window dimensions singleton to avoid repeated calculations
 const useWindowDimensions = () => {

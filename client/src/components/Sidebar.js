@@ -16,7 +16,7 @@ const devQuotes = [
 ];
 
 const Sidebar = () => {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [quoteIdx, setQuoteIdx] = useState(0);

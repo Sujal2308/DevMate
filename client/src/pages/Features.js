@@ -601,25 +601,25 @@ const Features = () => {
               </p>
               <div className="flex justify-center space-x-2 mb-3">
                 <a
-                  href="#"
+                  href="mailto:contact@devmate.com"
                   className="w-8 h-8 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all text-lg"
                 >
                   📧
                 </a>
                 <a
-                  href="#"
+                  href="https://github.com"
                   className="w-8 h-8 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all text-lg"
                 >
                   🐙
                 </a>
                 <a
-                  href="#"
+                  href="https://twitter.com"
                   className="w-8 h-8 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all text-lg"
                 >
                   🐦
                 </a>
                 <a
-                  href="#"
+                  href="https://discord.com"
                   className="w-8 h-8 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all text-lg"
                 >
                   💬
@@ -627,28 +627,28 @@ const Features = () => {
               </div>
               <div className="flex justify-center items-center space-x-0 mt-2 w-full max-w-xs mx-auto">
                 <a
-                  href="#"
+                  href="https://linkedin.com"
                   className="text-x-gray hover:text-x-blue text-xs font-medium px-2"
                 >
                   Privacy
                 </a>
                 <span className="h-4 w-px bg-x-border mx-1"></span>
                 <a
-                  href="#"
+                  href="javascript:void(0)"
                   className="text-x-gray hover:text-x-blue text-xs font-medium px-2"
                 >
                   Terms
                 </a>
                 <span className="h-4 w-px bg-x-border mx-1"></span>
                 <a
-                  href="#"
+                  href="javascript:void(0)"
                   className="text-x-gray hover:text-x-blue text-xs font-medium px-2"
                 >
                   Help
                 </a>
                 <span className="h-4 w-px bg-x-border mx-1"></span>
                 <a
-                  href="#"
+                  href="javascript:void(0)"
                   className="text-x-gray hover:text-x-blue text-xs font-medium px-2"
                 >
                   Guidelines
@@ -690,19 +690,19 @@ const Features = () => {
               </p>
               <div className="flex space-x-3">
                 <a
-                  href="#"
+                  href="javascript:void(0)"
                   className="w-9 h-9 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all"
                 >
                   📧
                 </a>
                 <a
-                  href="#"
+                  href="javascript:void(0)"
                   className="w-9 h-9 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all"
                 >
                   🐙
                 </a>
                 <a
-                  href="#"
+                  href="javascript:void(0)"
                   className="w-9 h-9 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all"
                 >
                   🐦
@@ -739,7 +739,7 @@ const Features = () => {
                 </li>
                 <li>
                   <a
-                    href="#"
+                    href="javascript:void(0)"
                     className="text-x-gray hover:text-x-blue transition-colors"
                   >
                     Trending
@@ -754,7 +754,7 @@ const Features = () => {
               <ul className="space-y-3">
                 <li>
                   <a
-                    href="#"
+                    href="javascript:void(0)"
                     className="text-x-gray hover:text-x-blue transition-colors"
                   >
                     Guidelines
@@ -762,7 +762,7 @@ const Features = () => {
                 </li>
                 <li>
                   <a
-                    href="#"
+                    href="javascript:void(0)"
                     className="text-x-gray hover:text-x-blue transition-colors"
                   >
                     Help Center
@@ -770,7 +770,7 @@ const Features = () => {
                 </li>
                 <li>
                   <a
-                    href="#"
+                    href="javascript:void(0)"
                     className="text-x-gray hover:text-x-blue transition-colors"
                   >
                     Privacy
@@ -778,7 +778,7 @@ const Features = () => {
                 </li>
                 <li>
                   <a
-                    href="#"
+                    href="javascript:void(0)"
                     className="text-x-gray hover:text-x-blue transition-colors"
                   >
                     Terms

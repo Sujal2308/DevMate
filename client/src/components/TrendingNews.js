@@ -1,18 +1,5 @@
 import React, { useState, useEffect } from "react";
 
-const BurningFireEmoji = () => (
-  <span
-    className="inline-block text-2xl animate-fire"
-    role="img"
-    aria-label="burning fire"
-    style={{
-      filter: "drop-shadow(0 0 6px #ff9800) drop-shadow(0 0 12px #ff5722)",
-    }}
-  >
-    🔥
-  </span>
-);
-
 const TrendingNews = () => {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
