@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import ShimmerEffect from "../components/ShimmerEffect";
-import LoadingSpinner from "../components/LoadingSpinner";
 import PostCard from "../components/PostCard";
 import FakeFeedLoader from "../components/FakeFeedLoader";
 import { useNotification } from "../contexts/NotificationContext";
@@ -53,7 +52,7 @@ const Feed = () => {
         observer.unobserve(loaderRef.current);
       }
     };
-  }, [hasMore, loading, showEndMessage]);
+  }, [hasMore, loading, showEndMessage, loadMore]);
 
   useEffect(() => {
     if (loading && posts.length === 0) {
@@ -66,7 +65,7 @@ const Feed = () => {
     };
   }, [loading, posts.length]);
 
-  const fetchPosts = async (pageNum = 1) => {
+  const fetchPosts = useCallback(async (pageNum = 1) => {
     try {
       setLoading(true);
       const response = await axios.get(`/api/posts?page=${pageNum}&limit=10`);
@@ -89,13 +88,13 @@ const Feed = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const loadMore = () => {
+  const loadMore = useCallback(() => {
     if (!loading && hasMore) {
       fetchPosts(page + 1);
     }
-  };
+  }, [loading, hasMore, page, fetchPosts]);
 
   const handlePostUpdate = (updatedPost) => {
     setPosts(

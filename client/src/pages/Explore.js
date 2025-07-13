@@ -235,15 +235,13 @@ const Explore = () => {
   useEffect(() => {
     let debounceTimeout = null;
 
-    if (searchTerm !== debouncedSearchTerm) {
-      // Cancel any pending updates
-      clearTimeout(debounceTimeout);
+    // Cancel any pending updates
+    clearTimeout(debounceTimeout);
 
-      // Set a longer debounce for input to minimize flickering
-      debounceTimeout = setTimeout(() => {
-        setDebouncedSearchTerm(searchTerm);
-      }, 500); // Increased debounce time for smoother experience
-    }
+    // Set a longer debounce for input to minimize flickering
+    debounceTimeout = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500); // Increased debounce time for smoother experience
 
     return () => clearTimeout(debounceTimeout);
   }, [searchTerm]);

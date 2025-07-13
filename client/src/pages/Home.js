@@ -568,25 +568,25 @@ const Home = () => {
                 </p>
                 <div className="flex justify-center space-x-2 mb-3">
                   <a
-                    href="javascript:void(0)"
+                    href="#contact"
                     className="w-8 h-8 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all text-lg"
                   >
                     📧
                   </a>
                   <a
-                    href="javascript:void(0)"
+                    href="#contact"
                     className="w-8 h-8 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all text-lg"
                   >
                     🐙
                   </a>
                   <a
-                    href="javascript:void(0)"
+                    href="#contact"
                     className="w-8 h-8 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all text-lg"
                   >
                     🐦
                   </a>
                   <a
-                    href="javascript:void(0)"
+                    href="#contact"
                     className="w-8 h-8 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all text-lg"
                   >
                     💬
@@ -594,28 +594,28 @@ const Home = () => {
                 </div>
                 <div className="flex justify-center items-center space-x-0 mt-2 w-full max-w-xs mx-auto">
                   <a
-                    href="javascript:void(0)"
+                    href="#contact"
                     className="text-x-gray hover:text-x-blue text-xs font-medium px-2"
                   >
                     Privacy
                   </a>
                   <span className="h-4 w-px bg-x-border mx-1"></span>
                   <a
-                    href="javascript:void(0)"
+                    href="#contact"
                     className="text-x-gray hover:text-x-blue text-xs font-medium px-2"
                   >
                     Terms
                   </a>
                   <span className="h-4 w-px bg-x-border mx-1"></span>
                   <a
-                    href="javascript:void(0)"
+                    href="#contact"
                     className="text-x-gray hover:text-x-blue text-xs font-medium px-2"
                   >
                     Help
                   </a>
                   <span className="h-4 w-px bg-x-border mx-1"></span>
                   <a
-                    href="javascript:void(0)"
+                    href="#contact"
                     className="text-x-gray hover:text-x-blue text-xs font-medium px-2"
                   >
                     Guidelines
@@ -660,25 +660,25 @@ const Home = () => {
                 </p>
                 <div className="flex space-x-3 mt-2">
                   <a
-                    href="javascript:void(0)"
+                    href="#contact"
                     className="w-9 h-9 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all text-xl"
                   >
                     📧
                   </a>
                   <a
-                    href="javascript:void(0)"
+                    href="#contact"
                     className="w-9 h-9 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all text-xl"
                   >
                     🐙
                   </a>
                   <a
-                    href="javascript:void(0)"
+                    href="#contact"
                     className="w-9 h-9 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all text-xl"
                   >
                     🐦
                   </a>
                   <a
-                    href="javascript:void(0)"
+                    href="#contact"
                     className="w-9 h-9 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all text-xl"
                   >
                     💬
@@ -716,7 +716,7 @@ const Home = () => {
                   </li>
                   <li>
                     <a
-                      href="javascript:void(0)"
+                      href="#contact"
                       className="text-x-gray hover:text-x-blue transition-colors"
                     >
                       Trending
@@ -731,7 +731,7 @@ const Home = () => {
                 <ul className="space-y-3">
                   <li>
                     <a
-                      href="javascript:void(0)"
+                      href="#contact"
                       className="text-x-gray hover:text-x-blue transition-colors"
                     >
                       Guidelines
@@ -739,7 +739,7 @@ const Home = () => {
                   </li>
                   <li>
                     <a
-                      href="javascript:void(0)"
+                      href="#contact"
                       className="text-x-gray hover:text-x-blue transition-colors"
                     >
                       Help Center
@@ -747,7 +747,7 @@ const Home = () => {
                   </li>
                   <li>
                     <a
-                      href="javascript:void(0)"
+                      href="#contact"
                       className="text-x-gray hover:text-x-blue transition-colors"
                     >
                       Privacy
@@ -755,7 +755,7 @@ const Home = () => {
                   </li>
                   <li>
                     <a
-                      href="javascript:void(0)"
+                      href="#contact"
                       className="text-x-gray hover:text-x-blue transition-colors"
                     >
                       Terms
