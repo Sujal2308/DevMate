@@ -32,15 +32,6 @@ const Profile = () => {
     fetchProfile();
   }, [username]);
 
-  const handlePostUpdate = (updatedPost) => {
-    setProfileData((prev) => ({
-      ...prev,
-      posts: prev.posts.map((post) =>
-        post._id === updatedPost._id ? updatedPost : post
-      ),
-    }));
-  };
-
   const handlePostDelete = (deletedPostId) => {
     setProfileData((prev) => {
       if (!prev) return prev;

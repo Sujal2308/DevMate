@@ -12,17 +12,17 @@ const Footer = () => {
               Explore
             </Link>
             <span>•</span>
-            <a href="#" className="hover:text-x-blue transition-colors">
+            <Link to="/support" className="hover:text-x-blue transition-colors">
               Help
-            </a>
+            </Link>
             <span>•</span>
-            <a href="#" className="hover:text-x-blue transition-colors">
+            <Link to="/privacy" className="hover:text-x-blue transition-colors">
               Privacy
-            </a>
+            </Link>
             <span>•</span>
-            <a href="#" className="hover:text-x-blue transition-colors">
+            <Link to="/terms" className="hover:text-x-blue transition-colors">
               Terms
-            </a>
+            </Link>
           </div>
           <div className="flex items-center justify-center space-x-3 text-xs text-x-gray/60">
             <div className="flex items-center">
