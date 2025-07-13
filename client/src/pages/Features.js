@@ -87,60 +87,6 @@ const FeatureCard = ({ icon, title, description, details, delay = 0 }) => {
   );
 };
 
-// Statistics Counter Component
-const StatCounter = ({ target, label, delay = 0 }) => {
-  const [count, setCount] = useState(0);
-  const [isVisible, setIsVisible] = useState(false);
-  const counterRef = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !isVisible) {
-          setIsVisible(true);
-          setTimeout(() => {
-            let start = 0;
-            const duration = 2000;
-            const increment = target / (duration / 16);
-
-            const timer = setInterval(() => {
-              start += increment;
-              if (start >= target) {
-                setCount(target);
-                clearInterval(timer);
-              } else {
-                setCount(Math.floor(start));
-              }
-            }, 16);
-          }, delay);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (counterRef.current) {
-      observer.observe(counterRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, [target, delay, isVisible]);
-
-  return (
-    <div ref={counterRef} className="text-center group">
-      <div className="relative">
-        <div className="text-4xl md:text-5xl font-bold text-x-white mb-2 group-hover:scale-110 transition-transform duration-300">
-          {count.toLocaleString()}
-          {target >= 1000 && count === target && (
-            <span className="text-x-blue">+</span>
-          )}
-        </div>
-        <div className="absolute -inset-2 bg-gradient-to-r from-x-blue/20 to-x-green/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur"></div>
-      </div>
-      <p className="text-x-gray font-medium">{label}</p>
-    </div>
-  );
-};
-
 // Interactive Demo Component
 const InteractiveDemo = () => {
   const [activeDemo, setActiveDemo] = useState("code");
@@ -634,21 +580,21 @@ const Features = () => {
                 </a>
                 <span className="h-4 w-px bg-x-border mx-1"></span>
                 <a
-                  href="javascript:void(0)"
+                  href="#contact"
                   className="text-x-gray hover:text-x-blue text-xs font-medium px-2"
                 >
                   Terms
                 </a>
                 <span className="h-4 w-px bg-x-border mx-1"></span>
                 <a
-                  href="javascript:void(0)"
+                  href="#contact"
                   className="text-x-gray hover:text-x-blue text-xs font-medium px-2"
                 >
                   Help
                 </a>
                 <span className="h-4 w-px bg-x-border mx-1"></span>
                 <a
-                  href="javascript:void(0)"
+                  href="#contact"
                   className="text-x-gray hover:text-x-blue text-xs font-medium px-2"
                 >
                   Guidelines
@@ -690,19 +636,19 @@ const Features = () => {
               </p>
               <div className="flex space-x-3">
                 <a
-                  href="javascript:void(0)"
+                  href="#contact"
                   className="w-9 h-9 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all"
                 >
                   📧
                 </a>
                 <a
-                  href="javascript:void(0)"
+                  href="#contact"
                   className="w-9 h-9 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all"
                 >
                   🐙
                 </a>
                 <a
-                  href="javascript:void(0)"
+                  href="#contact"
                   className="w-9 h-9 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all"
                 >
                   🐦
@@ -739,7 +685,7 @@ const Features = () => {
                 </li>
                 <li>
                   <a
-                    href="javascript:void(0)"
+                    href="#contact"
                     className="text-x-gray hover:text-x-blue transition-colors"
                   >
                     Trending
@@ -754,7 +700,7 @@ const Features = () => {
               <ul className="space-y-3">
                 <li>
                   <a
-                    href="javascript:void(0)"
+                    href="#contact"
                     className="text-x-gray hover:text-x-blue transition-colors"
                   >
                     Guidelines
@@ -762,7 +708,7 @@ const Features = () => {
                 </li>
                 <li>
                   <a
-                    href="javascript:void(0)"
+                    href="#contact"
                     className="text-x-gray hover:text-x-blue transition-colors"
                   >
                     Help Center
@@ -770,7 +716,7 @@ const Features = () => {
                 </li>
                 <li>
                   <a
-                    href="javascript:void(0)"
+                    href="#contact"
                     className="text-x-gray hover:text-x-blue transition-colors"
                   >
                     Privacy
@@ -778,7 +724,7 @@ const Features = () => {
                 </li>
                 <li>
                   <a
-                    href="javascript:void(0)"
+                    href="#contact"
                     className="text-x-gray hover:text-x-blue transition-colors"
                   >
                     Terms

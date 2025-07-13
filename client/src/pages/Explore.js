@@ -4,6 +4,7 @@ import React, {
   useRef,
   useLayoutEffect,
   useMemo,
+  useCallback,
 } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -59,9 +60,6 @@ const Explore = () => {
 
   // Track keyboard state
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
-
-  // Search state tracking
-  const [isSearchActive, setIsSearchActive] = useState(false);
 
   // Function to determine if we should show results - memoized
   const shouldShowResults = useMemo(() => {
@@ -242,9 +240,6 @@ const Explore = () => {
     }
   };
 
-  // Advanced debounce with cancellation and buffering
-  const searchChangeRef = useRef(null);
-
   useEffect(() => {
     let debounceTimeout = null;
 
@@ -261,12 +256,7 @@ const Explore = () => {
     return () => clearTimeout(debounceTimeout);
   }, [searchTerm]);
 
-  // Fetch users when search parameters change
-  useEffect(() => {
-    fetchUsers();
-  }, [debouncedSearchTerm, selectedSkill]);
-
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
@@ -281,7 +271,12 @@ const Explore = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [debouncedSearchTerm, selectedSkill]);
+
+  // Fetch users when search parameters change
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
 
   // Get all unique skills from users for filter dropdown
   const allSkills = [...new Set(users.flatMap((user) => user.skills))].sort();
