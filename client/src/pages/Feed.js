@@ -13,7 +13,8 @@ const Feed = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [showEndMessage, setShowEndMessage] = useState(false);
-  const [minLoading, setMinLoading] = useState(true); // New: for 10s shimmer
+  const [minLoading, setMinLoading] = useState(true);
+  const [retryCount, setRetryCount] = useState(0);
   const loaderRef = useRef(null);
   const minLoadingTimer = useRef(null);
   const { hasUnread } = useNotification();
@@ -22,9 +23,11 @@ const Feed = () => {
     try {
       setLoading(true);
       
-      // Set a reasonable timeout to avoid hanging
+      // Increase timeout for initial load to handle Render cold starts
+      const timeoutDuration = pageNum === 1 ? 15000 : 8000; // 15s for first load, 8s for pagination
+      
       const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Posts fetch timeout')), 8000)
+        setTimeout(() => reject(new Error('Posts fetch timeout')), timeoutDuration)
       );
       
       const postsPromise = axios.get(`/api/posts?page=${pageNum}&limit=10`);
@@ -34,6 +37,8 @@ const Feed = () => {
       if (pageNum === 1) {
         setPosts(response.data.posts);
         setError(""); // Clear error on successful fetch
+        // Release minimum loading immediately on success
+        setMinLoading(false);
       } else {
         setPosts((prev) => [...prev, ...response.data.posts]);
         setError(""); // Clear error on successful fetch
@@ -45,11 +50,13 @@ const Feed = () => {
       setPage(pageNum);
     } catch (error) {
       if (error.message === 'Posts fetch timeout') {
-        setError("Loading is taking longer than expected. Please check your connection.");
+        setError(`The server is taking longer than usual to respond ${retryCount > 0 ? `(Attempt ${retryCount + 1})` : ''}. This might be due to a cold start - please try again.`);
       } else {
         setError("Failed to fetch posts");
       }
       console.error("Fetch posts error:", error);
+      // Release minimum loading on error too
+      setMinLoading(false);
     } finally {
       setLoading(false);
     }
@@ -64,10 +71,10 @@ const Feed = () => {
   // Initial fetch effect
   useEffect(() => {
     fetchPosts();
-    // Always show shimmer for at least 10s
+    // Reduce minimum loading time to 2 seconds for better UX
     minLoadingTimer.current = setTimeout(() => {
       setMinLoading(false);
-    }, 10000);
+    }, 2000);
     return () => {
       if (minLoadingTimer.current) {
         clearTimeout(minLoadingTimer.current);
@@ -126,41 +133,67 @@ const Feed = () => {
     setPosts(posts.filter((post) => post._id !== deletedPostId));
   };
 
+  // Retry mechanism for failed loads
+  const retryFetch = useCallback(() => {
+    setError("");
+    setRetryCount(prev => prev + 1);
+    setLoading(true);
+    setMinLoading(true);
+    fetchPosts(1);
+  }, [fetchPosts]);
+
   if ((loading || error) && posts.length === 0 && minLoading) {
-    // Always show shimmer for first 10s if loading or error and no posts
+    // Show shimmer for first 2s if loading or error and no posts
     return <ShimmerEffect type="feed" />;
   }
 
-  // After 10s, if error and no posts, show error/info
+  // After 2s, if error and no posts, show error/info
   if (error && posts.length === 0 && !minLoading) {
     return (
-      <div className="bg-blue-50 border border-blue-200 text-blue-700 px-3 sm:px-4 py-3 rounded-lg mb-4 sm:mb-6 text-base flex items-center gap-3 animate-fade-in mt-8 max-w-xl mx-auto">
-        <svg
-          className="w-6 h-6 text-blue-400"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z"
-          />
-        </svg>
-        <span className="flex-1">
-          Wait, your feed is getting ready... If this takes too long,{" "}
-          <button
-            onClick={() => {
-              setMinLoading(true);
-              setTimeout(() => setMinLoading(false), 10000);
-              fetchPosts(1);
-            }}
-            className="text-x-blue underline font-semibold hover:text-x-green transition-colors"
+      <div className="w-full max-w-2xl mx-auto py-2 sm:py-4 lg:py-8 px-3 sm:px-4 lg:px-4">
+        <div className="bg-gradient-to-r from-orange-50 to-red-50 border border-orange-200 text-orange-800 px-4 py-6 rounded-xl mb-4 sm:mb-6 text-sm sm:text-base flex flex-col items-center gap-4 animate-fade-in mt-8 max-w-xl mx-auto text-center">
+          <svg
+            className="w-12 h-12 text-orange-500"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            viewBox="0 0 24 24"
           >
-            Retry
-          </button>
-        </span>
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+            />
+          </svg>
+          <div>
+            <h3 className="font-semibold text-lg mb-2">Server Taking Longer Than Expected</h3>
+            <p className="mb-4 leading-relaxed">
+              {error}
+            </p>
+            <div className="text-xs text-orange-600 mb-4">
+              💡 <strong>Tip:</strong> If you're on mobile, try switching to WiFi or wait 30-60 seconds for the server to wake up.
+            </div>
+            <button
+              onClick={retryFetch}
+              className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-full font-semibold transition-all duration-200 shadow-md hover:shadow-lg flex items-center gap-2 mx-auto"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                />
+              </svg>
+              Try Again {retryCount > 0 && `(${retryCount + 1})`}
+            </button>
+          </div>
+        </div>
       </div>
     );
   }

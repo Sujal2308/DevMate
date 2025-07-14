@@ -210,4 +210,13 @@ router.post("/reset-password", async (req, res) => {
   }
 });
 
+// Keep-alive ping endpoint to prevent cold starts
+router.get("/ping", auth, (req, res) => {
+  res.status(200).json({
+    message: "Server is alive",
+    timestamp: new Date().toISOString(),
+    user: req.user?.username || "anonymous",
+  });
+});
+
 module.exports = router;

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "../config/axios";
+import { keepAliveService } from "../utils/keepAlive";
 
 const AuthContext = createContext();
 
@@ -30,9 +31,9 @@ export const AuthProvider = ({ children }) => {
     const checkAuth = async () => {
       if (token) {
         try {
-          // Set a reasonable timeout to avoid long loading times
+          // Reduce timeout to 3 seconds for faster perceived loading
           const timeoutPromise = new Promise((_, reject) =>
-            setTimeout(() => reject(new Error('Timeout')), 5000)
+            setTimeout(() => reject(new Error('Timeout')), 3000)
           );
           
           const authPromise = axios.get("/api/auth/me");
@@ -41,10 +42,26 @@ export const AuthProvider = ({ children }) => {
           setUser(response.data);
         } catch (error) {
           console.error("Auth check failed:", error);
-          // If timeout or error, clear auth but don't block the UI
+          // If timeout or server error, don't logout but continue with cached token
           if (error.message === 'Timeout' || error.response?.status >= 500) {
-            console.warn('Auth check timed out or server error, continuing...');
+            console.warn('Auth check timed out or server error, continuing with cached token...');
+            // Create a minimal user object from token if we have one
+            if (token) {
+              try {
+                const tokenPayload = JSON.parse(atob(token.split('.')[1]));
+                setUser({ 
+                  id: tokenPayload.userId, 
+                  email: tokenPayload.email || 'user@example.com',
+                  username: tokenPayload.username || 'user',
+                  _isFromCache: true 
+                });
+              } catch (parseError) {
+                console.error('Token parse error:', parseError);
+                logout();
+              }
+            }
           } else {
+            // Only logout on actual auth errors (401, 403)
             logout();
           }
         }
@@ -63,6 +80,9 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("token", newToken);
       setToken(newToken);
       setUser(userData);
+
+      // Start keep-alive service when user logs in
+      keepAliveService.start();
 
       return { success: true };
     } catch (error) {
@@ -130,6 +150,9 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     setUser(null);
     delete axios.defaults.headers.common["Authorization"];
+    
+    // Stop keep-alive service when user logs out
+    keepAliveService.stop();
   };
 
   const updateUser = (userData) => {
