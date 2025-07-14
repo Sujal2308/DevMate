@@ -60,7 +60,7 @@ const Feed = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [retryCount]);
 
   const loadMore = useCallback(() => {
     if (!loading && hasMore) {

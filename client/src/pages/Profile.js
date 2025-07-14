@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
-import ShimmerEffect from "../components/ShimmerEffect";
 import PostCard from "../components/PostCard";
 
 const Profile = () => {
@@ -268,7 +267,6 @@ const Profile = () => {
 
   // Pagination calculations
   const totalPosts = profileData?.pagination?.total || posts.length;
-  const totalPages = profileData?.pagination?.pages || Math.ceil(totalPosts / postsPerPage);
   const currentPosts = posts; // No slicing needed since we're using server-side pagination
 
   const totalLikes = posts.reduce(
