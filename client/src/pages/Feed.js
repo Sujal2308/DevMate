@@ -50,9 +50,20 @@ const Feed = () => {
       setPage(pageNum);
     } catch (error) {
       if (error.message === 'Posts fetch timeout') {
-        setError(`The server is taking longer than usual to respond ${retryCount > 0 ? `(Attempt ${retryCount + 1})` : ''}. This might be due to a cold start - please try again.`);
+        const funMessages = [
+          "🌙 Our servers are taking a quick power nap! They'll be back in a jiffy.",
+          "🚀 Houston, we have a... tiny delay! Mission control is on it.",
+          "☕ The server is brewing some fresh content for you. Worth the wait!",
+          "🎭 Our hamsters running the servers took a coffee break. They're back now!",
+          "🌟 Good things come to those who wait... including awesome posts!",
+          "🎪 The digital circus is setting up backstage. The show will begin shortly!",
+          "🎵 The server is composing a symphony of posts just for you.",
+          "🧙‍♂️ Our wizard is casting a spell to summon your feed... almost done!"
+        ];
+        const randomMessage = funMessages[Math.floor(Math.random() * funMessages.length)];
+        setError(randomMessage + (retryCount > 0 ? ` (Attempt ${retryCount + 1})` : ''));
       } else {
-        setError("Failed to fetch posts");
+        setError("Oops! Something went wrong while fetching posts. Let's try again! 🔄");
       }
       console.error("Fetch posts error:", error);
       // Release minimum loading on error too
@@ -151,34 +162,33 @@ const Feed = () => {
   if (error && posts.length === 0 && !minLoading) {
     return (
       <div className="w-full max-w-2xl mx-auto py-2 sm:py-4 lg:py-8 px-3 sm:px-4 lg:px-4">
-        <div className="bg-gradient-to-r from-orange-50 to-red-50 border border-orange-200 text-orange-800 px-4 py-6 rounded-xl mb-4 sm:mb-6 text-sm sm:text-base flex flex-col items-center gap-4 animate-fade-in mt-8 max-w-xl mx-auto text-center">
-          <svg
-            className="w-12 h-12 text-orange-500"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
-            />
-          </svg>
+        <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 text-blue-800 px-4 py-6 rounded-xl mb-4 sm:mb-6 text-sm sm:text-base flex flex-col items-center gap-4 animate-fade-in mt-8 max-w-xl mx-auto text-center">
+          <div className="text-4xl animate-bounce">
+            {error.includes('🌙') ? '🌙' : 
+             error.includes('🚀') ? '🚀' : 
+             error.includes('☕') ? '☕' : 
+             error.includes('🎭') ? '🎭' : 
+             error.includes('🌟') ? '🌟' : 
+             error.includes('🎪') ? '🎪' : 
+             error.includes('🎵') ? '🎵' : 
+             error.includes('🧙‍♂️') ? '🧙‍♂️' : '🔄'}
+          </div>
           <div>
-            <h3 className="font-semibold text-lg mb-2">Server Taking Longer Than Expected</h3>
-            <p className="mb-4 leading-relaxed">
+            <h3 className="font-bold text-xl mb-3 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Hold On, Magic is Happening! ✨
+            </h3>
+            <p className="mb-4 leading-relaxed text-lg font-medium">
               {error}
             </p>
-            <div className="text-xs text-orange-600 mb-4">
-              💡 <strong>Tip:</strong> If you're on mobile, try switching to WiFi or wait 30-60 seconds for the server to wake up.
+            <div className="text-sm text-blue-600 mb-4 bg-blue-100 rounded-lg p-3">
+              💡 <strong>Pro Tip:</strong> Good things come to those who wait! Our servers are just making sure everything is perfect for you.
             </div>
             <button
               onClick={retryFetch}
-              className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-full font-semibold transition-all duration-200 shadow-md hover:shadow-lg flex items-center gap-2 mx-auto"
+              className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-8 py-3 rounded-full font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2 mx-auto"
             >
               <svg
-                className="w-4 h-4"
+                className="w-5 h-5 animate-spin"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -190,7 +200,7 @@ const Feed = () => {
                   d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                 />
               </svg>
-              Try Again {retryCount > 0 && `(${retryCount + 1})`}
+              Let's Try Again! {retryCount > 0 && `(Round ${retryCount + 1})`}
             </button>
           </div>
         </div>
