@@ -25,16 +25,28 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token]);
 
-  // Check for existing user on mount
+  // Check for existing user on mount with timeout for faster perceived loading
   useEffect(() => {
     const checkAuth = async () => {
       if (token) {
         try {
-          const response = await axios.get("/api/auth/me");
+          // Set a reasonable timeout to avoid long loading times
+          const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Timeout')), 5000)
+          );
+          
+          const authPromise = axios.get("/api/auth/me");
+          
+          const response = await Promise.race([authPromise, timeoutPromise]);
           setUser(response.data);
         } catch (error) {
           console.error("Auth check failed:", error);
-          logout();
+          // If timeout or error, clear auth but don't block the UI
+          if (error.message === 'Timeout' || error.response?.status >= 500) {
+            console.warn('Auth check timed out or server error, continuing...');
+          } else {
+            logout();
+          }
         }
       }
       setLoading(false);

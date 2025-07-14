@@ -21,15 +21,7 @@ const Feed = () => {
   const fetchPosts = useCallback(async (pageNum = 1) => {
     try {
       setLoading(true);
-      
-      // Set a reasonable timeout to avoid hanging
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Posts fetch timeout')), 8000)
-      );
-      
-      const postsPromise = axios.get(`/api/posts?page=${pageNum}&limit=10`);
-      
-      const response = await Promise.race([postsPromise, timeoutPromise]);
+      const response = await axios.get(`/api/posts?page=${pageNum}&limit=10`);
 
       if (pageNum === 1) {
         setPosts(response.data.posts);
@@ -44,11 +36,7 @@ const Feed = () => {
       );
       setPage(pageNum);
     } catch (error) {
-      if (error.message === 'Posts fetch timeout') {
-        setError("Loading is taking longer than expected. Please check your connection.");
-      } else {
-        setError("Failed to fetch posts");
-      }
+      setError("Failed to fetch posts");
       console.error("Fetch posts error:", error);
     } finally {
       setLoading(false);

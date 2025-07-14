@@ -273,7 +273,9 @@ function AppContent() {
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
           {/* Only show Footer if not on '/', '/support', or '/features' on desktop */}
-          {!['/', '/support', '/features'].includes(location.pathname) && <Footer />}
+          {!["/", "/support", "/features"].includes(location.pathname) && (
+            <Footer />
+          )}
         </div>
       )}
       {/* Global Floating Post Button for Mobile */}

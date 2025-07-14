@@ -12,6 +12,9 @@ const Profile = () => {
   const [activeTab, setActiveTab] = useState("posts");
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage] = useState(2);
+  const [copied, setCopied] = useState(false);
+  const [loadingMorePosts, setLoadingMorePosts] = useState(false);
+  const [hasMorePosts, setHasMorePosts] = useState(true);
   const { username } = useParams();
   const { user } = useAuth();
 
@@ -20,8 +23,16 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get(`/api/users/${username}`);
+        setLoading(true);
+        // Fetch only basic profile data first (no posts, minimal data)
+        const response = await axios.get(`/api/users/${username}?limit=2`);
         setProfileData(response.data);
+        
+        // Update pagination state from response
+        if (response.data.pagination) {
+          setHasMorePosts(response.data.pagination.hasMore);
+          setCurrentPage(response.data.pagination.current);
+        }
       } catch (error) {
         setError(error.response?.data?.message || "Failed to fetch profile");
       } finally {
@@ -38,19 +49,28 @@ const Profile = () => {
       const updatedPosts = prev.posts.filter(
         (post) => post._id !== deletedPostId
       );
-      // recalculate totalPages and currentPage if needed
-      const newTotalPages = Math.ceil(updatedPosts.length / postsPerPage);
-      let newCurrentPage = currentPage;
-      if (newCurrentPage > newTotalPages && newTotalPages > 0) {
-        newCurrentPage = newTotalPages;
-      }
-      // If no posts left, go to first page
-      if (updatedPosts.length === 0) newCurrentPage = 1;
-      setCurrentPage(newCurrentPage);
+      
+      // Update pagination info when a post is deleted
+      const newTotalPosts = prev.pagination ? prev.pagination.total - 1 : updatedPosts.length;
+      const newTotalPages = Math.ceil(newTotalPosts / postsPerPage);
+      
       return {
         ...prev,
         posts: updatedPosts,
+        pagination: {
+          ...prev.pagination,
+          total: newTotalPosts,
+          pages: newTotalPages,
+          hasMore: currentPage < newTotalPages
+        }
       };
+    });
+    
+    // Update hasMorePosts state
+    setHasMorePosts(prev => {
+      const newTotal = profileData?.pagination?.total ? profileData.pagination.total - 1 : profileData?.posts?.length - 1 || 0;
+      const newTotalPages = Math.ceil(newTotal / postsPerPage);
+      return currentPage < newTotalPages;
     });
   };
 
@@ -60,7 +80,14 @@ const Profile = () => {
 
   useEffect(() => {
     if (profileData && user) {
-      setIsFollowing(profileData.user.followers?.some((f) => f.id === user.id));
+      // Check if following using either the full followers array or just the counts
+      if (profileData.user.followers) {
+        setIsFollowing(profileData.user.followers.some((f) => f.id === user.id));
+      } else {
+        // If we don't have the full followers list, we'll need to check via API
+        // For now, assume not following if we don't have the data
+        setIsFollowing(false);
+      }
     }
   }, [profileData, user]);
 
@@ -78,14 +105,15 @@ const Profile = () => {
       } else {
         await axios.put(`/api/users/${profileData.user.username}/follow`);
       }
-      // Fetch updated profile data
+      // Fetch updated profile data with follower counts
       const updatedProfile = await axios.get(
-        `/api/users/${profileData.user.username}`
+        `/api/users/${profileData.user.username}?limit=2&includeFollowersData=true`
       );
       setProfileData(updatedProfile.data);
       // setIsFollowing will be updated by useEffect
     } catch (err) {
       // Optionally show error
+      console.error('Follow toggle error:', err);
     } finally {
       setFollowLoading(false);
     }
@@ -109,8 +137,81 @@ const Profile = () => {
     }
   }, [profileData]);
 
+  // Function to load more posts
+  const loadMorePosts = async () => {
+    if (loadingMorePosts || !hasMorePosts) return;
+    
+    try {
+      setLoadingMorePosts(true);
+      const nextPage = currentPage + 1;
+      const response = await axios.get(`/api/users/${username}/posts?page=${nextPage}&limit=${postsPerPage}`);
+      
+      if (response.data.posts.length > 0) {
+        setProfileData(prev => ({
+          ...prev,
+          posts: [...prev.posts, ...response.data.posts]
+        }));
+        setCurrentPage(nextPage);
+        setHasMorePosts(response.data.pagination.hasMore);
+      } else {
+        setHasMorePosts(false);
+      }
+    } catch (error) {
+      console.error('Error loading more posts:', error);
+    } finally {
+      setLoadingMorePosts(false);
+    }
+  };
+
   if (loading) {
-    return <ShimmerEffect type="profile" />;
+    return (
+      <div className="max-w-6xl mx-auto py-8 px-4">
+        {/* Quick loading skeleton for better perceived performance */}
+        <div className="relative mb-8">
+          {/* Cover skeleton */}
+          <div className="h-40 md:h-64 bg-gradient-to-r from-gray-600 to-gray-500 animate-pulse relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+          </div>
+          
+          {/* Profile info skeleton */}
+          <div className="bg-gradient-to-br from-x-dark/90 to-x-dark/60 backdrop-blur-sm border border-x-border/50 -mt-1 pt-2 md:pt-8 pb-6 px-4 md:px-8">
+            <div className="flex flex-row items-start justify-between">
+              <div className="flex flex-row items-start text-left">
+                {/* Avatar skeleton */}
+                <div className="relative -mt-2 md:-mt-12 mb-0 mr-6 z-20">
+                  <div className="bg-gray-600 animate-pulse w-20 h-20 md:w-32 md:h-32 rounded-2xl md:rounded-3xl border-4 border-x-dark shadow-2xl"></div>
+                </div>
+                {/* Name skeleton */}
+                <div className="text-left flex flex-col justify-start">
+                  <div className="h-6 md:h-8 bg-gray-600 animate-pulse rounded mb-2 w-48"></div>
+                  <div className="h-4 md:h-5 bg-gray-600 animate-pulse rounded mb-2 w-32"></div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Bio skeleton */}
+            <div className="mt-6">
+              <div className="h-4 bg-gray-600 animate-pulse rounded mb-2 w-3/4"></div>
+              <div className="h-4 bg-gray-600 animate-pulse rounded mb-2 w-1/2"></div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Metrics skeleton */}
+        <div className="bg-gradient-to-br from-x-dark/70 to-x-dark/40 backdrop-blur-sm border border-x-border/40 p-4 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center">
+                <div className="h-8 bg-gray-600 animate-pulse rounded mb-2 w-12 mx-auto"></div>
+                <div className="h-4 bg-gray-600 animate-pulse rounded w-16 mx-auto"></div>
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        <p className="text-center text-x-gray text-sm">Loading profile...</p>
+      </div>
+    );
   }
 
   if (error || !profileData) {
@@ -166,11 +267,9 @@ const Profile = () => {
   const { user: profileUser, posts } = profileData;
 
   // Pagination calculations
-  const totalPosts = posts.length;
-  const totalPages = Math.ceil(totalPosts / postsPerPage);
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+  const totalPosts = profileData?.pagination?.total || posts.length;
+  const totalPages = profileData?.pagination?.pages || Math.ceil(totalPosts / postsPerPage);
+  const currentPosts = posts; // No slicing needed since we're using server-side pagination
 
   const totalLikes = posts.reduce(
     (total, post) => total + post.likes.length,
@@ -190,6 +289,59 @@ const Profile = () => {
         {/* Cover */}
         <div className="h-40 md:h-64 bg-gradient-to-r from-cyan-500 via-indigo-500 to-fuchsia-500 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+          {/* Username at bottom right on mobile only */}
+          <div className="absolute bottom-2 right-2 sm:hidden flex items-center text-xs text-x-white font-mono">
+            <span>@{profileUser.username}</span>
+            <button 
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(profileUser.username);
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 1000);
+                } catch (err) {
+                  console.error('Failed to copy username:', err);
+                }
+              }}
+              className="ml-2 p-1 hover:bg-white/20 rounded transition-colors"
+              title="Copy username"
+            >
+              {copied ? (
+                <svg 
+                  className="w-3 h-3 text-green-400" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={2} 
+                    d="M5 13l4 4L19 7" 
+                  />
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={2} 
+                    d="M9 17l4 4L23 11" 
+                  />
+                </svg>
+              ) : (
+                <svg 
+                  className="w-3 h-3 text-white" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={2} 
+                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" 
+                  />
+                </svg>
+              )}
+            </button>
+          </div>
           <div className="absolute top-4 right-4">
             {isOwnProfile && (
               <Link
@@ -264,11 +416,35 @@ const Profile = () => {
                   !isOwnProfile ? "mt-0 md:-mt-6" : ""
                 }`}
               >
-                <h1 className="text-2xl md:text-4xl font-bold text-x-white mb-2">
+                <h1 className="text-lg sm:text-2xl md:text-4xl font-bold text-x-white mb-2">
                   {profileUser.displayName || profileUser.username}
                 </h1>
                 <div className="flex flex-row space-x-4 mb-2 items-center">
-                  <p className="text-xl text-x-gray mb-0 flex items-center font-mono">
+                  {/* On mobile, show follow button at left, completely hide username */}
+                  {!isOwnProfile && user && (
+                    <button
+                      onClick={handleFollowToggle}
+                      disabled={followLoading}
+                      className={`px-4 py-2 rounded-full font-semibold text-base transition-all duration-200 shadow-md focus:outline-none focus:ring-2 focus:ring-x-blue focus:ring-offset-2 w-auto ${
+                        isFollowing
+                          ? "bg-x-dark/40 text-x-gray border border-x-border/40 hover:bg-x-dark/60"
+                          : "bg-x-blue text-white hover:bg-x-green"
+                      } ${
+                        followLoading ? "opacity-60 cursor-not-allowed" : ""
+                      } ${followAnim ? "animate-follow-pop" : ""} sm:hidden`}
+                      style={{ minWidth: 80, maxWidth: 160 }}
+                    >
+                      {followLoading ? (
+                        <span className="animate-pulse">...</span>
+                      ) : isFollowing ? (
+                        "Following"
+                      ) : (
+                        "Follow"
+                      )}
+                    </button>
+                  )}
+                  {/* Username only visible on desktop (sm and above) */}
+                  <p className="hidden sm:flex text-base sm:text-xl text-x-gray mb-0 items-center font-mono">
                     @{profileUser.username}
                     {isOwnProfile && (
                       <span className="profile-joined-date profile-joined-date-inline-desktop ml-3 flex items-center text-sm text-x-gray font-normal align-middle">
@@ -308,7 +484,7 @@ const Profile = () => {
                           : "bg-x-blue text-white hover:bg-x-green"
                       } ${
                         followLoading ? "opacity-60 cursor-not-allowed" : ""
-                      } ${followAnim ? "animate-follow-pop" : ""}`}
+                      } ${followAnim ? "animate-follow-pop" : ""} hidden sm:inline-flex`}
                       style={{ minWidth: 80, maxWidth: 160 }}
                     >
                       {followLoading ? (
@@ -494,7 +670,7 @@ const Profile = () => {
                   className="block cursor-pointer"
                 >
                   <div className="text-3xl font-bold text-x-white mb-1 font-mono">
-                    {profileUser.followers?.length || 0}
+                    {profileUser.followersCount ?? (profileUser.followers?.length || 0)}
                   </div>
                   <div className="text-x-gray text-sm font-mono">Followers</div>
                 </Link>
@@ -505,14 +681,14 @@ const Profile = () => {
                   className="block cursor-pointer"
                 >
                   <div className="text-3xl font-bold text-x-white mb-1 font-mono">
-                    {profileUser.following?.length || 0}
+                    {profileUser.followingCount ?? (profileUser.following?.length || 0)}
                   </div>
                   <div className="text-x-gray text-sm font-mono">Following</div>
                 </Link>
               </div>
               <div className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center">
                 <div className="text-3xl font-bold text-x-white mb-1 font-mono">
-                  {posts.length}
+                  {totalPosts}
                 </div>
                 <div className="text-x-gray text-sm font-mono">Posts</div>
               </div>
@@ -643,111 +819,47 @@ const Profile = () => {
                 </div>
               )}
 
-              {/* Pagination - Mobile */}
-              {totalPages > 1 && (
-                <div className="mt-6 block md:hidden">
-                  <span className="text-x-gray text-sm">
-                    Page {currentPage} of {totalPages}
-                  </span>
-                  <div className="flex items-center justify-center gap-2 mt-2">
-                    <button
-                      onClick={() =>
-                        setCurrentPage((prev) => Math.max(prev - 1, 1))
-                      }
-                      disabled={currentPage === 1}
-                      className="px-4 py-2 rounded-full bg-x-dark/40 text-x-white font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-1 disabled:opacity-50"
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M15 18l-6-6 6-6"
-                        />
-                      </svg>
-                      Previous
-                    </button>
-                    <button
-                      onClick={() =>
-                        setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                      }
-                      disabled={currentPage === totalPages}
-                      className="px-4 py-2 rounded-full bg-x-blue text-white font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-1 disabled:opacity-50"
-                    >
-                      Next
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 6l6 6-6 6"
-                        />
-                      </svg>
-                    </button>
-                  </div>
+              {/* Load More Button or Pagination */}
+              {hasMorePosts && (
+                <div className="mt-6 text-center">
+                  <button
+                    onClick={loadMorePosts}
+                    disabled={loadingMorePosts}
+                    className="px-6 py-3 bg-x-blue text-white rounded-full font-semibold text-sm transition-all duration-200 hover:bg-x-green disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center mx-auto gap-2"
+                  >
+                    {loadingMorePosts ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                        Loading...
+                      </>
+                    ) : (
+                      <>
+                        Load More Posts
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                          />
+                        </svg>
+                      </>
+                    )}
+                  </button>
                 </div>
               )}
 
-              {/* Pagination - Desktop */}
-              {totalPages > 1 && (
-                <div className="hidden md:flex items-center justify-between mt-6">
-                  <button
-                    onClick={() =>
-                      setCurrentPage((prev) => Math.max(prev - 1, 1))
-                    }
-                    disabled={currentPage === 1}
-                    className="px-4 py-2 rounded-full bg-x-dark/40 text-x-white font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-1 disabled:opacity-50"
-                  >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 18l-6-6 6-6"
-                      />
-                    </svg>
-                    Previous
-                  </button>
-                  <div className="text-x-gray text-sm">
-                    Page {currentPage} of {totalPages}
-                  </div>
-                  <button
-                    onClick={() =>
-                      setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                    }
-                    disabled={currentPage === totalPages}
-                    className="px-4 py-2 rounded-full bg-x-blue text-white font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-1 disabled:opacity-50"
-                  >
-                    Next
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 6l6 6-6 6"
-                      />
-                    </svg>
-                  </button>
+              {/* Show end message when no more posts */}
+              {!hasMorePosts && posts.length > 0 && (
+                <div className="mt-6 text-center">
+                  <p className="text-x-gray text-sm">
+                    🎉 You've seen all posts from {profileUser.username}!
+                  </p>
                 </div>
               )}
             </div>

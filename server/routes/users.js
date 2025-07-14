@@ -60,27 +60,39 @@ router.get("/:username", async (req, res) => {
           createdAt: user.createdAt,
           avatar: user.avatar,
           isPrivate: user.isPrivate,
-          followers: user.followers.map((u) => ({
-            id: u._id,
-            username: u.username,
-            displayName: u.displayName,
-          })),
-          following: user.following.map((u) => ({
-            id: u._id,
-            username: u.username,
-            displayName: u.displayName,
-          })),
+          followersCount: user.followers.length,
+          followingCount: user.following.length,
         },
         posts: [],
+        pagination: {
+          current: 1,
+          pages: 0,
+          total: 0,
+          hasMore: false,
+        },
         metricsHidden: true,
       });
     }
 
-    // Get user's posts
+    // Get pagination parameters
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 2; // Start with just 2 posts for faster loading
+    const skip = (page - 1) * limit;
+
+    // Get user's posts with pagination
     const posts = await Post.find({ author: user._id })
       .populate("author", "username displayName")
       .populate("comments.user", "username displayName")
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    // Get total posts count for pagination
+    const totalPosts = await Post.countDocuments({ author: user._id });
+
+    // Limit followers/following data for faster loading - just return counts
+    const followersCount = user.followers.length;
+    const followingCount = user.following.length;
 
     res.json({
       user: {
@@ -93,18 +105,29 @@ router.get("/:username", async (req, res) => {
         createdAt: user.createdAt,
         avatar: user.avatar,
         isPrivate: user.isPrivate,
-        followers: user.followers.map((u) => ({
-          id: u._id,
-          username: u.username,
-          displayName: u.displayName,
-        })),
-        following: user.following.map((u) => ({
-          id: u._id,
-          username: u.username,
-          displayName: u.displayName,
-        })),
+        followersCount,
+        followingCount,
+        // Only include actual followers/following data if requested
+        ...(req.query.includeFollowersData === 'true' && {
+          followers: user.followers.map((u) => ({
+            id: u._id,
+            username: u.username,
+            displayName: u.displayName,
+          })),
+          following: user.following.map((u) => ({
+            id: u._id,
+            username: u.username,
+            displayName: u.displayName,
+          })),
+        }),
       },
       posts,
+      pagination: {
+        current: page,
+        pages: Math.ceil(totalPosts / limit),
+        total: totalPosts,
+        hasMore: page < Math.ceil(totalPosts / limit),
+      },
       metricsHidden: false,
     });
   } catch (error) {
@@ -436,5 +459,107 @@ router.put(
     }
   }
 );
+
+// Get user's posts with pagination (for infinite scroll)
+router.get("/:username/posts", async (req, res) => {
+  try {
+    // Try to authenticate if token is present
+    let reqUser = null;
+    const authHeader = req.header("Authorization");
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      try {
+        const jwt = require("jsonwebtoken");
+        const User = require("../models/User");
+        const token = authHeader.replace("Bearer ", "");
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        reqUser = await User.findById(decoded.userId).select("-password");
+      } catch (err) {
+        // Ignore token errors for public profiles
+      }
+    }
+
+    const user = await User.findOne({ username: req.params.username })
+      .select("-password")
+      .populate("followers", "_id");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Determine if requester is owner or follower
+    let isOwner = false;
+    let isFollower = false;
+    if (reqUser) {
+      isOwner = reqUser._id.toString() === user._id.toString();
+      isFollower = user.followers.some(
+        (f) => f._id.toString() === reqUser._id.toString()
+      );
+    }
+
+    // If profile is private and requester is not owner or follower, restrict access
+    if (user.isPrivate && !isOwner && !isFollower) {
+      return res.status(403).json({ message: "This user's posts are private." });
+    }
+
+    // Get pagination parameters
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    const skip = (page - 1) * limit;
+
+    // Get user's posts with pagination
+    const posts = await Post.find({ author: user._id })
+      .populate("author", "username displayName")
+      .populate("comments.user", "username displayName")
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    // Get total posts count for pagination
+    const totalPosts = await Post.countDocuments({ author: user._id });
+
+    res.json({
+      posts,
+      pagination: {
+        current: page,
+        pages: Math.ceil(totalPosts / limit),
+        total: totalPosts,
+        hasMore: page < Math.ceil(totalPosts / limit),
+      },
+    });
+  } catch (error) {
+    console.error("Get user posts error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Get user's followers or following list
+router.get("/:username/:type(followers|following)", async (req, res) => {
+  try {
+    const { username, type } = req.params;
+    
+    const user = await User.findOne({ username })
+      .populate(type, "username displayName avatar")
+      .select(`${type} isPrivate`);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // For now, return all followers/following
+    // In the future, this could also be paginated if lists get very large
+    res.json({
+      [type]: user[type].map((u) => ({
+        id: u._id,
+        username: u.username,
+        displayName: u.displayName,
+        avatar: u.avatar,
+      })),
+      total: user[type].length,
+    });
+  } catch (error) {
+    console.error(`Get user ${req.params.type} error:`, error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 module.exports = router;
