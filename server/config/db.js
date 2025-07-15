@@ -3,7 +3,8 @@ require("dotenv").config();
 
 const connectDB = async () => {
   try {
-    let mongoUri = process.env.MONGO_URI;
+    // Use MONGODB_URI (Atlas format) or MONGO_URI (local format)
+    let mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
 
     // If username and password are provided, create authenticated URI
     if (process.env.MONGO_USERNAME && process.env.MONGO_PASSWORD) {
