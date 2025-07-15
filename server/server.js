@@ -5,6 +5,7 @@ const rateLimit = require("express-rate-limit"); // Rate limiting
 const connectDB = require("./config/db");
 const http = require("http");
 const { Server } = require("socket.io");
+const path = require("path");
 
 // Load environment variables
 require("dotenv").config();
@@ -120,15 +121,22 @@ app.get("/api/db-status", (req, res) => {
   });
 });
 
+// Serve static files from React build
+app.use(express.static(path.join(__dirname, "../client/build")));
+
+// Serve React app for all non-API routes
+app.get("*", (req, res) => {
+  // Don't serve React for API routes
+  if (req.path.startsWith("/api")) {
+    return res.status(404).json({ message: "API route not found" });
+  }
+  res.sendFile(path.join(__dirname, "../client/build", "index.html"));
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: "Something went wrong!" });
-});
-
-// 404 handler
-app.use("*", (req, res) => {
-  res.status(404).json({ message: "Route not found" });
 });
 
 const PORT = process.env.PORT || 5000;
