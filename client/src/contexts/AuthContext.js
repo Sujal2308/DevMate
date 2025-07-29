@@ -33,30 +33,32 @@ export const AuthProvider = ({ children }) => {
         try {
           // Reduce timeout to 3 seconds for faster perceived loading
           const timeoutPromise = new Promise((_, reject) =>
-            setTimeout(() => reject(new Error('Timeout')), 3000)
+            setTimeout(() => reject(new Error("Timeout")), 3000)
           );
-          
+
           const authPromise = axios.get("/api/auth/me");
-          
+
           const response = await Promise.race([authPromise, timeoutPromise]);
           setUser(response.data);
         } catch (error) {
           console.error("Auth check failed:", error);
           // If timeout or server error, don't logout but continue with cached token
-          if (error.message === 'Timeout' || error.response?.status >= 500) {
-            console.warn('Auth check timed out or server error, continuing with cached token...');
+          if (error.message === "Timeout" || error.response?.status >= 500) {
+            console.warn(
+              "Auth check timed out or server error, continuing with cached token..."
+            );
             // Create a minimal user object from token if we have one
             if (token) {
               try {
-                const tokenPayload = JSON.parse(atob(token.split('.')[1]));
-                setUser({ 
-                  id: tokenPayload.userId, 
-                  email: tokenPayload.email || 'user@example.com',
-                  username: tokenPayload.username || 'user',
-                  _isFromCache: true 
+                const tokenPayload = JSON.parse(atob(token.split(".")[1]));
+                setUser({
+                  id: tokenPayload.userId,
+                  email: tokenPayload.email || "user@example.com",
+                  username: tokenPayload.username || "user",
+                  _isFromCache: true,
                 });
               } catch (parseError) {
-                console.error('Token parse error:', parseError);
+                console.error("Token parse error:", parseError);
                 logout();
               }
             }
@@ -150,7 +152,7 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     setUser(null);
     delete axios.defaults.headers.common["Authorization"];
-    
+
     // Stop keep-alive service when user logs out
     keepAliveService.stop();
   };

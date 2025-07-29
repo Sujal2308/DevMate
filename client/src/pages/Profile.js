@@ -23,10 +23,12 @@ const Profile = () => {
     const fetchProfile = async () => {
       try {
         setLoading(true);
-        // Fetch only basic profile data first (no posts, minimal data)
-        const response = await axios.get(`/api/users/${username}?limit=2`);
+        // Fetch profile data with followers data to properly detect follow state
+        const response = await axios.get(
+          `/api/users/${username}?limit=2&includeFollowersData=true`
+        );
         setProfileData(response.data);
-        
+
         // Update pagination state from response
         if (response.data.pagination) {
           setHasMorePosts(response.data.pagination.hasMore);
@@ -48,11 +50,13 @@ const Profile = () => {
       const updatedPosts = prev.posts.filter(
         (post) => post._id !== deletedPostId
       );
-      
+
       // Update pagination info when a post is deleted
-      const newTotalPosts = prev.pagination ? prev.pagination.total - 1 : updatedPosts.length;
+      const newTotalPosts = prev.pagination
+        ? prev.pagination.total - 1
+        : updatedPosts.length;
       const newTotalPages = Math.ceil(newTotalPosts / postsPerPage);
-      
+
       return {
         ...prev,
         posts: updatedPosts,
@@ -60,14 +64,16 @@ const Profile = () => {
           ...prev.pagination,
           total: newTotalPosts,
           pages: newTotalPages,
-          hasMore: currentPage < newTotalPages
-        }
+          hasMore: currentPage < newTotalPages,
+        },
       };
     });
-    
+
     // Update hasMorePosts state
-    setHasMorePosts(prev => {
-      const newTotal = profileData?.pagination?.total ? profileData.pagination.total - 1 : profileData?.posts?.length - 1 || 0;
+    setHasMorePosts((prev) => {
+      const newTotal = profileData?.pagination?.total
+        ? profileData.pagination.total - 1
+        : profileData?.posts?.length - 1 || 0;
       const newTotalPages = Math.ceil(newTotal / postsPerPage);
       return currentPage < newTotalPages;
     });
@@ -80,11 +86,37 @@ const Profile = () => {
   useEffect(() => {
     if (profileData && user) {
       // Check if following using either the full followers array or just the counts
-      if (profileData.user.followers) {
-        setIsFollowing(profileData.user.followers.some((f) => f.id === user.id));
+      if (
+        profileData.user.followers &&
+        Array.isArray(profileData.user.followers)
+      ) {
+        const currentUserId = user.id || user._id;
+        const isCurrentlyFollowing = profileData.user.followers.some((f) => {
+          // Handle different follower object formats
+          const followerId = f.id || f._id || f;
+          return (
+            followerId === currentUserId ||
+            followerId === user.id ||
+            followerId === user._id ||
+            followerId.toString() === currentUserId?.toString() ||
+            followerId.toString() === user.id?.toString() ||
+            followerId.toString() === user._id?.toString()
+          );
+        });
+        console.log("[FOLLOW DETECTION] Current user:", {
+          id: user.id,
+          _id: user._id,
+        });
+        console.log(
+          "[FOLLOW DETECTION] Followers:",
+          profileData.user.followers
+        );
+        console.log("[FOLLOW DETECTION] Is following:", isCurrentlyFollowing);
+        setIsFollowing(isCurrentlyFollowing);
       } else {
-        // If we don't have the full followers list, we'll need to check via API
-        // For now, assume not following if we don't have the data
+        console.log(
+          "[FOLLOW DETECTION] No followers array found, setting to false"
+        );
         setIsFollowing(false);
       }
     }
@@ -99,20 +131,50 @@ const Profile = () => {
     setTimeout(() => setFollowAnim(false), 350);
     setFollowLoading(true);
     try {
+      let response;
       if (isFollowing) {
-        await axios.put(`/api/users/${profileData.user.username}/unfollow`);
+        response = await axios.put(
+          `/api/users/${profileData.user.username}/unfollow`
+        );
       } else {
-        await axios.put(`/api/users/${profileData.user.username}/follow`);
+        response = await axios.put(
+          `/api/users/${profileData.user.username}/follow`
+        );
       }
-      // Fetch updated profile data with follower counts
-      const updatedProfile = await axios.get(
-        `/api/users/${profileData.user.username}?limit=2&includeFollowersData=true`
-      );
-      setProfileData(updatedProfile.data);
-      // setIsFollowing will be updated by useEffect
+
+      // Update profile data with the returned user data
+      if (response.data.user) {
+        setProfileData((prev) => ({
+          ...prev,
+          user: {
+            ...prev.user,
+            ...response.data.user,
+          },
+        }));
+
+        // Update isFollowing state immediately based on the updated followers
+        const updatedFollowers = response.data.user.followers || [];
+        const nowFollowing = updatedFollowers.some(
+          (f) =>
+            f.id === user.id ||
+            f._id === user.id ||
+            f === user.id ||
+            f._id === user._id ||
+            f.id === user._id ||
+            f === user._id
+        );
+        setIsFollowing(nowFollowing);
+        console.log("[FOLLOW] Updated isFollowing to:", nowFollowing);
+        console.log("[FOLLOW] Updated followers:", updatedFollowers);
+      } else {
+        // Fallback: fetch latest profile data if backend doesn't return user data
+        const updatedProfile = await axios.get(
+          `/api/users/${profileData.user.username}?includeFollowersData=true&includeFollowingData=true`
+        );
+        setProfileData(updatedProfile.data);
+      }
     } catch (err) {
-      // Optionally show error
-      console.error('Follow toggle error:', err);
+      console.error("Follow toggle error:", err);
     } finally {
       setFollowLoading(false);
     }
@@ -139,16 +201,18 @@ const Profile = () => {
   // Function to load more posts
   const loadMorePosts = async () => {
     if (loadingMorePosts || !hasMorePosts) return;
-    
+
     try {
       setLoadingMorePosts(true);
       const nextPage = currentPage + 1;
-      const response = await axios.get(`/api/users/${username}/posts?page=${nextPage}&limit=${postsPerPage}`);
-      
+      const response = await axios.get(
+        `/api/users/${username}/posts?page=${nextPage}&limit=${postsPerPage}`
+      );
+
       if (response.data.posts.length > 0) {
-        setProfileData(prev => ({
+        setProfileData((prev) => ({
           ...prev,
-          posts: [...prev.posts, ...response.data.posts]
+          posts: [...prev.posts, ...response.data.posts],
         }));
         setCurrentPage(nextPage);
         setHasMorePosts(response.data.pagination.hasMore);
@@ -156,7 +220,7 @@ const Profile = () => {
         setHasMorePosts(false);
       }
     } catch (error) {
-      console.error('Error loading more posts:', error);
+      console.error("Error loading more posts:", error);
     } finally {
       setLoadingMorePosts(false);
     }
@@ -171,7 +235,7 @@ const Profile = () => {
           <div className="h-40 md:h-64 bg-gradient-to-r from-gray-600 to-gray-500 animate-pulse relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
           </div>
-          
+
           {/* Profile info skeleton */}
           <div className="bg-gradient-to-br from-x-dark/90 to-x-dark/60 backdrop-blur-sm border border-x-border/50 -mt-1 pt-2 md:pt-8 pb-6 px-4 md:px-8">
             <div className="flex flex-row items-start justify-between">
@@ -187,7 +251,7 @@ const Profile = () => {
                 </div>
               </div>
             </div>
-            
+
             {/* Bio skeleton */}
             <div className="mt-6">
               <div className="h-4 bg-gray-600 animate-pulse rounded mb-2 w-3/4"></div>
@@ -195,19 +259,22 @@ const Profile = () => {
             </div>
           </div>
         </div>
-        
+
         {/* Metrics skeleton */}
         <div className="bg-gradient-to-br from-x-dark/70 to-x-dark/40 backdrop-blur-sm border border-x-border/40 p-4 mb-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center">
+              <div
+                key={i}
+                className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center"
+              >
                 <div className="h-8 bg-gray-600 animate-pulse rounded mb-2 w-12 mx-auto"></div>
                 <div className="h-4 bg-gray-600 animate-pulse rounded w-16 mx-auto"></div>
               </div>
             ))}
           </div>
         </div>
-        
+
         <p className="text-center text-x-gray text-sm">Loading profile...</p>
       </div>
     );
@@ -290,51 +357,51 @@ const Profile = () => {
           {/* Username at bottom right on mobile only */}
           <div className="absolute bottom-2 right-2 sm:hidden flex items-center text-xs text-x-white font-mono">
             <span>@{profileUser.username}</span>
-            <button 
+            <button
               onClick={async () => {
                 try {
                   await navigator.clipboard.writeText(profileUser.username);
                   setCopied(true);
                   setTimeout(() => setCopied(false), 1000);
                 } catch (err) {
-                  console.error('Failed to copy username:', err);
+                  console.error("Failed to copy username:", err);
                 }
               }}
               className="ml-2 p-1 hover:bg-white/20 rounded transition-colors"
               title="Copy username"
             >
               {copied ? (
-                <svg 
-                  className="w-3 h-3 text-green-400" 
-                  fill="none" 
-                  stroke="currentColor" 
+                <svg
+                  className="w-3 h-3 text-green-400"
+                  fill="none"
+                  stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth={2} 
-                    d="M5 13l4 4L19 7" 
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
                   />
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth={2} 
-                    d="M9 17l4 4L23 11" 
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 17l4 4L23 11"
                   />
                 </svg>
               ) : (
-                <svg 
-                  className="w-3 h-3 text-white" 
-                  fill="none" 
-                  stroke="currentColor" 
+                <svg
+                  className="w-3 h-3 text-white"
+                  fill="none"
+                  stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth={2} 
-                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" 
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
                   />
                 </svg>
               )}
@@ -429,7 +496,9 @@ const Profile = () => {
                           : "bg-x-blue text-white hover:bg-x-green"
                       } ${
                         followLoading ? "opacity-60 cursor-not-allowed" : ""
-                      } ${followAnim ? "animate-follow-pop" : ""} sm:hidden`}
+                      } ${
+                        followAnim ? "animate-follow-pop" : ""
+                      } block sm:hidden`}
                       style={{ minWidth: 80, maxWidth: 160 }}
                     >
                       {followLoading ? (
@@ -482,7 +551,9 @@ const Profile = () => {
                           : "bg-x-blue text-white hover:bg-x-green"
                       } ${
                         followLoading ? "opacity-60 cursor-not-allowed" : ""
-                      } ${followAnim ? "animate-follow-pop" : ""} hidden sm:inline-flex`}
+                      } ${
+                        followAnim ? "animate-follow-pop" : ""
+                      } hidden sm:inline-flex`}
                       style={{ minWidth: 80, maxWidth: 160 }}
                     >
                       {followLoading ? (
@@ -668,7 +739,8 @@ const Profile = () => {
                   className="block cursor-pointer"
                 >
                   <div className="text-3xl font-bold text-x-white mb-1 font-mono">
-                    {profileUser.followersCount ?? (profileUser.followers?.length || 0)}
+                    {profileUser.followersCount ??
+                      (profileUser.followers?.length || 0)}
                   </div>
                   <div className="text-x-gray text-sm font-mono">Followers</div>
                 </Link>
@@ -679,7 +751,8 @@ const Profile = () => {
                   className="block cursor-pointer"
                 >
                   <div className="text-3xl font-bold text-x-white mb-1 font-mono">
-                    {profileUser.followingCount ?? (profileUser.following?.length || 0)}
+                    {profileUser.followingCount ??
+                      (profileUser.following?.length || 0)}
                   </div>
                   <div className="text-x-gray text-sm font-mono">Following</div>
                 </Link>

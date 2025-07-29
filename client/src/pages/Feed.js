@@ -19,59 +19,71 @@ const Feed = () => {
   const minLoadingTimer = useRef(null);
   const { hasUnread } = useNotification();
 
-  const fetchPosts = useCallback(async (pageNum = 1) => {
-    try {
-      setLoading(true);
-      
-      // Increase timeout for initial load to handle Render cold starts
-      const timeoutDuration = pageNum === 1 ? 15000 : 8000; // 15s for first load, 8s for pagination
-      
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Posts fetch timeout')), timeoutDuration)
-      );
-      
-      const postsPromise = axios.get(`/api/posts?page=${pageNum}&limit=10`);
-      
-      const response = await Promise.race([postsPromise, timeoutPromise]);
+  const fetchPosts = useCallback(
+    async (pageNum = 1) => {
+      try {
+        setLoading(true);
 
-      if (pageNum === 1) {
-        setPosts(response.data.posts);
-        setError(""); // Clear error on successful fetch
-        // Release minimum loading immediately on success
+        // Increase timeout for initial load to handle Render cold starts
+        const timeoutDuration = pageNum === 1 ? 15000 : 8000; // 15s for first load, 8s for pagination
+
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(
+            () => reject(new Error("Posts fetch timeout")),
+            timeoutDuration
+          )
+        );
+
+        const postsPromise = axios.get(`/api/posts?page=${pageNum}&limit=10`);
+
+        const response = await Promise.race([postsPromise, timeoutPromise]);
+
+        if (pageNum === 1) {
+          setPosts(response.data.posts);
+          setError(""); // Clear error on successful fetch
+          // Release minimum loading immediately on success
+          setMinLoading(false);
+        } else {
+          setPosts((prev) => [...prev, ...response.data.posts]);
+          setError(""); // Clear error on successful fetch
+        }
+
+        setHasMore(
+          response.data.pagination.current < response.data.pagination.pages
+        );
+        setPage(pageNum);
+      } catch (error) {
+        if (error.message === "Posts fetch timeout") {
+          const funMessages = [
+            "🌙 Our servers are taking a quick power nap! They'll be back in a jiffy.",
+            "🚀 Houston, we have a... tiny delay! Mission control is on it.",
+            "☕ The server is brewing some fresh content for you. Worth the wait!",
+            "🎭 Our hamsters running the servers took a coffee break. They're back now!",
+            "🌟 Good things come to those who wait... including awesome posts!",
+            "🎪 The digital circus is setting up backstage. The show will begin shortly!",
+            "🎵 The server is composing a symphony of posts just for you.",
+            "🧙‍♂️ Our wizard is casting a spell to summon your feed... almost done!",
+          ];
+          const randomMessage =
+            funMessages[Math.floor(Math.random() * funMessages.length)];
+          setError(
+            randomMessage +
+              (retryCount > 0 ? ` (Attempt ${retryCount + 1})` : "")
+          );
+        } else {
+          setError(
+            "Oops! Something went wrong while fetching posts. Let's try again! 🔄"
+          );
+        }
+        console.error("Fetch posts error:", error);
+        // Release minimum loading on error too
         setMinLoading(false);
-      } else {
-        setPosts((prev) => [...prev, ...response.data.posts]);
-        setError(""); // Clear error on successful fetch
+      } finally {
+        setLoading(false);
       }
-
-      setHasMore(
-        response.data.pagination.current < response.data.pagination.pages
-      );
-      setPage(pageNum);
-    } catch (error) {
-      if (error.message === 'Posts fetch timeout') {
-        const funMessages = [
-          "🌙 Our servers are taking a quick power nap! They'll be back in a jiffy.",
-          "🚀 Houston, we have a... tiny delay! Mission control is on it.",
-          "☕ The server is brewing some fresh content for you. Worth the wait!",
-          "🎭 Our hamsters running the servers took a coffee break. They're back now!",
-          "🌟 Good things come to those who wait... including awesome posts!",
-          "🎪 The digital circus is setting up backstage. The show will begin shortly!",
-          "🎵 The server is composing a symphony of posts just for you.",
-          "🧙‍♂️ Our wizard is casting a spell to summon your feed... almost done!"
-        ];
-        const randomMessage = funMessages[Math.floor(Math.random() * funMessages.length)];
-        setError(randomMessage + (retryCount > 0 ? ` (Attempt ${retryCount + 1})` : ''));
-      } else {
-        setError("Oops! Something went wrong while fetching posts. Let's try again! 🔄");
-      }
-      console.error("Fetch posts error:", error);
-      // Release minimum loading on error too
-      setMinLoading(false);
-    } finally {
-      setLoading(false);
-    }
-  }, [retryCount]);
+    },
+    [retryCount]
+  );
 
   const loadMore = useCallback(() => {
     if (!loading && hasMore) {
@@ -147,7 +159,7 @@ const Feed = () => {
   // Retry mechanism for failed loads
   const retryFetch = useCallback(() => {
     setError("");
-    setRetryCount(prev => prev + 1);
+    setRetryCount((prev) => prev + 1);
     setLoading(true);
     setMinLoading(true);
     fetchPosts(1);
@@ -164,24 +176,32 @@ const Feed = () => {
       <div className="w-full max-w-2xl mx-auto py-2 sm:py-4 lg:py-8 px-3 sm:px-4 lg:px-4">
         <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 text-blue-800 px-4 py-6 rounded-xl mb-4 sm:mb-6 text-sm sm:text-base flex flex-col items-center gap-4 animate-fade-in mt-8 max-w-xl mx-auto text-center">
           <div className="text-4xl animate-bounce">
-            {error.includes('🌙') ? '🌙' : 
-             error.includes('🚀') ? '🚀' : 
-             error.includes('☕') ? '☕' : 
-             error.includes('🎭') ? '🎭' : 
-             error.includes('🌟') ? '🌟' : 
-             error.includes('🎪') ? '🎪' : 
-             error.includes('🎵') ? '🎵' : 
-             error.includes('🧙‍♂️') ? '🧙‍♂️' : '🔄'}
+            {error.includes("🌙")
+              ? "🌙"
+              : error.includes("🚀")
+              ? "🚀"
+              : error.includes("☕")
+              ? "☕"
+              : error.includes("🎭")
+              ? "🎭"
+              : error.includes("🌟")
+              ? "🌟"
+              : error.includes("🎪")
+              ? "🎪"
+              : error.includes("🎵")
+              ? "🎵"
+              : error.includes("🧙‍♂️")
+              ? "🧙‍♂️"
+              : "🔄"}
           </div>
           <div>
             <h3 className="font-bold text-xl mb-3 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               Hold On, Magic is Happening! ✨
             </h3>
-            <p className="mb-4 leading-relaxed text-lg font-medium">
-              {error}
-            </p>
+            <p className="mb-4 leading-relaxed text-lg font-medium">{error}</p>
             <div className="text-sm text-blue-600 mb-4 bg-blue-100 rounded-lg p-3">
-              💡 <strong>Pro Tip:</strong> Good things come to those who wait! Our servers are just making sure everything is perfect for you.
+              💡 <strong>Pro Tip:</strong> Good things come to those who wait!
+              Our servers are just making sure everything is perfect for you.
             </div>
             <button
               onClick={retryFetch}

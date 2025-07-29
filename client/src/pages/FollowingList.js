@@ -13,7 +13,10 @@ const FollowingList = () => {
     const fetchFollowing = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(`/api/users/${username}`);
+        // Always fetch with both followers and following data included
+        const res = await axios.get(
+          `/api/users/${username}?includeFollowersData=true&includeFollowingData=true`
+        );
         setFollowing(res.data.user.following || []);
       } catch (err) {
         setError("Failed to fetch following");

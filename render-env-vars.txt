@@ -1,0 +1,22 @@
+# Render Environment Variables for DevMate
+
+# Essential Variables
+NODE_ENV=production
+PORT=10000
+
+# Redis (Copy INTERNAL URL from your Redis dashboard)
+# Example: redis://red-abcd1234:password123@hostname.render.com:6379
+REDIS_URL=redis://red-xxxxxxxxx:password@hostname.render.com:6379
+
+# Database
+MONGODB_URI=your_mongodb_connection_string
+
+# JWT Secret
+JWT_SECRET=your_super_secure_jwt_secret_production_key
+
+# CORS
+CLIENT_ORIGIN=https://your-netlify-app.netlify.app
+
+# Optional: Email
+EMAIL_USER=your_email@domain.com
+EMAIL_PASS=your_email_password

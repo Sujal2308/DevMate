@@ -159,17 +159,20 @@ The client will run on `http://localhost:3000`
 ## ⚡ Performance Optimizations
 
 ### Backend Optimizations
+
 - **Pagination**: Posts and user data are paginated to reduce payload size
 - **Selective Data Loading**: Only essential data is loaded initially
 - **Timeouts**: API calls have reasonable timeouts to prevent hanging
 
 ### Frontend Optimizations
+
 - **Lazy Loading**: Posts load incrementally with "Load More" buttons
 - **Optimized Auth Check**: Auth verification has timeouts to prevent blocking
 - **Loading Skeletons**: Quick visual feedback while data loads
 - **Mobile-First**: Optimized for mobile performance
 
 ### Deployment Notes
+
 - **Render Cold Starts**: If using Render's free tier, the backend may take 30-60 seconds to wake up after inactivity
 - **Keep-Alive**: Consider implementing a keep-alive ping or upgrading to a paid plan for faster response times
 

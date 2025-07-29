@@ -108,14 +108,18 @@ router.get("/:username", async (req, res) => {
         followersCount,
         followingCount,
         // Only include actual followers/following data if requested
-        ...(req.query.includeFollowersData === 'true' && {
+        ...(req.query.includeFollowersData === "true" && {
           followers: user.followers.map((u) => ({
             id: u._id,
+            _id: u._id,
             username: u.username,
             displayName: u.displayName,
           })),
+        }),
+        ...(req.query.includeFollowingData === "true" && {
           following: user.following.map((u) => ({
             id: u._id,
+            _id: u._id,
             username: u.username,
             displayName: u.displayName,
           })),
@@ -284,16 +288,37 @@ router.put("/:username/follow", auth, async (req, res) => {
   try {
     const userToFollow = await User.findOne({ username: req.params.username });
     const currentUser = await User.findById(req.user.id);
+    console.log(
+      "[FOLLOW API] userToFollow:",
+      userToFollow && userToFollow._id.toString(),
+      userToFollow && userToFollow.username
+    );
+    console.log(
+      "[FOLLOW API] currentUser:",
+      currentUser && currentUser._id.toString(),
+      currentUser && currentUser.username
+    );
+    console.log(
+      "[FOLLOW API] userToFollow.followers:",
+      userToFollow && userToFollow.followers.map((f) => f.toString())
+    );
+    console.log(
+      "[FOLLOW API] currentUser.following:",
+      currentUser && currentUser.following.map((f) => f.toString())
+    );
     if (!userToFollow)
       return res.status(404).json({ message: "User not found" });
     if (userToFollow._id.equals(currentUser._id))
       return res.status(400).json({ message: "Cannot follow yourself" });
-    if (userToFollow.followers.includes(currentUser._id))
+    if (userToFollow.followers.includes(currentUser._id)) {
+      console.log("[FOLLOW API] Already following");
       return res.status(400).json({ message: "Already following" });
+    }
     userToFollow.followers.push(currentUser._id);
     currentUser.following.push(userToFollow._id);
     await userToFollow.save();
     await currentUser.save();
+
     // Create notification for follow (if not self)
     const notification = await Notification.create({
       user: userToFollow._id,
@@ -301,6 +326,7 @@ router.put("/:username/follow", auth, async (req, res) => {
       fromUser: currentUser._id,
     });
     emitNotification(req.app, notification);
+
     // Send email if enabled
     if (
       userToFollow.notificationPreferences?.newFollower &&
@@ -321,7 +347,35 @@ router.put("/:username/follow", auth, async (req, res) => {
         console.error("Email send error (new follower):", e);
       }
     }
-    res.json({ message: "Followed successfully" });
+
+    // Return updated user data with followers populated
+    const updatedUser = await User.findOne({ username: req.params.username })
+      .select("-password")
+      .populate("followers", "username displayName")
+      .populate("following", "username displayName");
+
+    res.json({
+      message: "Followed successfully",
+      user: {
+        id: updatedUser._id,
+        username: updatedUser.username,
+        displayName: updatedUser.displayName,
+        followersCount: updatedUser.followers.length,
+        followingCount: updatedUser.following.length,
+        followers: updatedUser.followers.map((u) => ({
+          id: u._id,
+          _id: u._id,
+          username: u.username,
+          displayName: u.displayName,
+        })),
+        following: updatedUser.following.map((u) => ({
+          id: u._id,
+          _id: u._id,
+          username: u.username,
+          displayName: u.displayName,
+        })),
+      },
+    });
   } catch (error) {
     console.error("Follow error:", error);
     res.status(500).json({ message: "Server error" });
@@ -347,7 +401,35 @@ router.put("/:username/unfollow", auth, async (req, res) => {
     );
     await userToUnfollow.save();
     await currentUser.save();
-    res.json({ message: "Unfollowed successfully" });
+
+    // Return updated user data with followers populated
+    const updatedUser = await User.findOne({ username: req.params.username })
+      .select("-password")
+      .populate("followers", "username displayName")
+      .populate("following", "username displayName");
+
+    res.json({
+      message: "Unfollowed successfully",
+      user: {
+        id: updatedUser._id,
+        username: updatedUser.username,
+        displayName: updatedUser.displayName,
+        followersCount: updatedUser.followers.length,
+        followingCount: updatedUser.following.length,
+        followers: updatedUser.followers.map((u) => ({
+          id: u._id,
+          _id: u._id,
+          username: u.username,
+          displayName: u.displayName,
+        })),
+        following: updatedUser.following.map((u) => ({
+          id: u._id,
+          _id: u._id,
+          username: u.username,
+          displayName: u.displayName,
+        })),
+      },
+    });
   } catch (error) {
     console.error("Unfollow error:", error);
     res.status(500).json({ message: "Server error" });
@@ -498,7 +580,9 @@ router.get("/:username/posts", async (req, res) => {
 
     // If profile is private and requester is not owner or follower, restrict access
     if (user.isPrivate && !isOwner && !isFollower) {
-      return res.status(403).json({ message: "This user's posts are private." });
+      return res
+        .status(403)
+        .json({ message: "This user's posts are private." });
     }
 
     // Get pagination parameters
@@ -536,7 +620,7 @@ router.get("/:username/posts", async (req, res) => {
 router.get("/:username/:type(followers|following)", async (req, res) => {
   try {
     const { username, type } = req.params;
-    
+
     const user = await User.findOne({ username })
       .populate(type, "username displayName avatar")
       .select(`${type} isPrivate`);
