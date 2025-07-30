@@ -241,9 +241,34 @@ const Feed = () => {
         <div className="flex items-center gap-2">
           <Link
             to="/create-post"
-            className="hidden sm:inline font-bold text-base sm:text-lg px-5 py-2 rounded-full transition-all duration-300 shadow-lg bg-gradient-to-r from-amber-400 via-yellow-400 to-orange-400 text-[#222] focus:outline-none hover:scale-105 no-underline"
+            className="hidden sm:flex font-bold text-base sm:text-lg px-6 py-3 rounded-full transition-all duration-300 shadow-lg bg-navy-900 hover:bg-navy-800 text-white focus:outline-none transform no-underline items-center gap-2"
+            style={{ backgroundColor: '#1e3a8a', transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)' }}
+            onMouseEnter={(e) => {
+              e.target.style.backgroundColor = '#1e40af';
+              e.target.style.transform = 'scale(1.08) rotate(2deg)';
+              e.target.style.boxShadow = '0 25px 35px -5px rgba(30, 58, 138, 0.6), 0 15px 15px -5px rgba(30, 58, 138, 0.4)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.backgroundColor = '#1e3a8a';
+              e.target.style.transform = 'scale(1) rotate(0deg)';
+              e.target.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
+            }}
           >
-            Create 🖋️
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
+            Create
           </Link>
           {/* Mobile notification bell icon */}
           <Link
