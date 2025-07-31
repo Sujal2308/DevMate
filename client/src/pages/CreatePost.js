@@ -15,111 +15,6 @@ const CreatePost = () => {
 
   const navigate = useNavigate();
 
-  // Language templates
-  const languageTemplates = {
-    javascript: `// JavaScript Example
-function greetUser(name) {
-  return \`Hello, \${name}! Welcome to DevMate.\`;
-}
-
-console.log(greetUser('Developer'));`,
-
-    python: `# Python Example
-def greet_user(name):
-    return f"Hello, {name}! Welcome to DevMate."
-
-print(greet_user('Developer'))`,
-
-    java: `// Java Example
-public class Greeting {
-    public static String greetUser(String name) {
-        return "Hello, " + name + "! Welcome to DevMate.";
-    }
-    
-    public static void main(String[] args) {
-        System.out.println(greetUser("Developer"));
-    }
-}`,
-
-    cpp: `// C++ Example
-#include <iostream>
-#include <string>
-
-std::string greetUser(const std::string& name) {
-    return "Hello, " + name + "! Welcome to DevMate.";
-}
-
-int main() {
-    std::cout << greetUser("Developer") << std::endl;
-    return 0;
-}`,
-
-    react: `// React Component Example
-import React from 'react';
-
-const Greeting = ({ name }) => {
-  return (
-    <div className="greeting">
-      <h1>Hello, {name}! Welcome to DevMate.</h1>
-    </div>
-  );
-};
-
-export default Greeting;`,
-
-    html: `<!-- HTML Example -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevMate</title>
-</head>
-<body>
-    <h1>Hello, Developer! Welcome to DevMate.</h1>
-</body>
-</html>`,
-
-    css: `/* CSS Example */
-.greeting {
-  background: linear-gradient(45deg, #1d9bf0, #00ba7c);
-  color: white;
-  padding: 20px;
-  border-radius: 10px;
-  text-align: center;
-  font-family: 'Arial', sans-serif;
-}
-
-.greeting h1 {
-  margin: 0;
-  font-size: 2rem;
-}`,
-
-    sql: `-- SQL Example
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-INSERT INTO users (name, email) 
-VALUES ('Developer', 'dev@devmate.com');
-
-SELECT * FROM users WHERE name = 'Developer';`,
-
-    json: `{
-  "user": {
-    "name": "Developer",
-    "platform": "DevMate",
-    "skills": ["JavaScript", "React", "Node.js"],
-    "isActive": true,
-    "joinedDate": "2024-01-01"
-  },
-  "message": "Hello, Developer! Welcome to DevMate."
-}`,
-  };
-
   const languageOptions = [
     { value: "javascript", label: "🟨 JavaScript", color: "#f7df1e" },
     { value: "python", label: "🐍 Python", color: "#4B8BBE" },
@@ -143,13 +38,28 @@ SELECT * FROM users WHERE name = 'Developer';`,
   const handleLanguageSelect = (option) => {
     const language = option ? option.value : "";
     setSelectedLanguage(language);
-    if (language && languageTemplates[language]) {
+
+    // Add language comment when a language is selected
+    if (language) {
+      const languageComments = {
+        javascript: "// JavaScript",
+        python: "# Python",
+        java: "// Java",
+        cpp: "// C++",
+        react: "// React",
+        html: "<!-- HTML -->",
+        css: "/* CSS */",
+        sql: "-- SQL",
+        json: "// JSON",
+      };
+
+      const comment = languageComments[language] || `// ${language}`;
       setFormData({
         ...formData,
-        codeSnippet: languageTemplates[language],
+        codeSnippet: comment,
       });
-    } else if (language === "") {
-      // If user selects "Choose Language", clear the code snippet
+    } else {
+      // Clear code snippet if no language selected
       setFormData({
         ...formData,
         codeSnippet: "",
@@ -440,15 +350,30 @@ console.log("Welcome to DevMate!");`
             <button
               type="submit"
               disabled={loading || !formData.content.trim()}
-              className="btn-primary px-8 h-[38px] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center hover:scale-105 transform transition-all duration-200"
+              className="bg-blue-900 hover:bg-blue-800 text-white px-6 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-colors duration-200"
             >
               {loading ? (
                 <>
-                  <LoadingSpinner size="small" className="mr-2" />
+                  <LoadingSpinner size="small" />
                   Publishing...
                 </>
               ) : (
-                <>🚀 Publish Post</>
+                <>
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                    />
+                  </svg>
+                  Publish
+                </>
               )}
             </button>
           </div>
@@ -523,7 +448,7 @@ console.log("Welcome to DevMate!");`
                         </span>
                       </div>
                       <div className="p-4">
-                        <pre className="whitespace-pre-wrap">
+                        <pre className="whitespace-pre-wrap font-mono text-sm text-x-white">
                           {formData.codeSnippet}
                         </pre>
                       </div>

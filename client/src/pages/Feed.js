@@ -230,36 +230,27 @@ const Feed = () => {
 
   return (
     <div
-      className={`w-full max-w-2xl mx-auto py-2 sm:py-4 lg:py-8 px-3 sm:px-4 lg:px-4 pb-20 lg:pb-8 x-main${
+      className={`w-full max-w-2xl mx-auto py-2 sm:py-4 lg:py-6 px-4 sm:px-6 lg:px-8 pb-20 lg:pb-8 x-main${
         loading && posts.length === 0 ? " loading" : ""
       }`}
     >
-      <div className="flex flex-row justify-between items-center mb-4 sm:mb-6 lg:mb-8 gap-2 sm:gap-4 px-3 sm:px-0">
-        <h1 className="text-2xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-x-blue via-purple-500 to-x-green bg-[length:200%_auto] bg-clip-text text-transparent animate-color-cycle hover:animate-gradient-x hover:scale-110 transform transition-all duration-500 cursor-default drop-shadow-lg flex items-center">
+      <div className="flex flex-row justify-between items-center mb-4 sm:mb-6 lg:mb-8 gap-2 sm:gap-4">
+        <h1 className="text-xl sm:text-2xl font-mono font-bold text-x-white flex items-center gap-2 ml-4 sm:ml-6">
           <span>Feed</span>
+          <svg className="w-5 h-5 text-x-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+          </svg>
         </h1>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 sm:gap-3">
           <Link
             to="/create-post"
-            className="hidden sm:flex font-bold text-base sm:text-lg px-6 py-3 rounded-full transition-all duration-300 shadow-lg bg-navy-900 hover:bg-navy-800 text-white focus:outline-none transform no-underline items-center gap-2"
-            style={{ backgroundColor: '#1e3a8a', transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)' }}
-            onMouseEnter={(e) => {
-              e.target.style.backgroundColor = '#1e40af';
-              e.target.style.transform = 'scale(1.08) rotate(2deg)';
-              e.target.style.boxShadow = '0 25px 35px -5px rgba(30, 58, 138, 0.6), 0 15px 15px -5px rgba(30, 58, 138, 0.4)';
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.backgroundColor = '#1e3a8a';
-              e.target.style.transform = 'scale(1) rotate(0deg)';
-              e.target.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
-            }}
+            className="hidden sm:flex font-medium text-sm sm:text-base px-4 py-2 sm:px-5 sm:py-2 rounded-full transition-all duration-300 bg-blue-900 text-white focus:outline-none hover:bg-blue-800 no-underline items-center gap-2"
           >
             <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-5 h-5"
+              className="w-4 h-4"
               fill="none"
-              viewBox="0 0 24 24"
               stroke="currentColor"
+              viewBox="0 0 24 24"
             >
               <path
                 strokeLinecap="round"
@@ -273,11 +264,11 @@ const Feed = () => {
           {/* Mobile notification bell icon */}
           <Link
             to="/notifications"
-            className="inline sm:hidden p-2 transition-all duration-200 relative"
+            className="inline sm:hidden p-2 transition-all duration-200 relative mr-3"
             aria-label="Notifications"
             style={{
               color: hasUnread ? "#ef4444" : "#1d9bf0",
-              fontSize: 28,
+              fontSize: 24,
               filter: hasUnread ? "drop-shadow(0 0 8px #ef4444)" : "none",
               transition: "color 0.2s, filter 0.2s",
             }}
@@ -287,8 +278,8 @@ const Feed = () => {
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
-              width="28"
-              height="28"
+              width="24"
+              height="24"
             >
               <path
                 strokeLinecap="round"
@@ -325,8 +316,21 @@ const Feed = () => {
           </p>
           <Link
             to="/create-post"
-            className="btn-primary text-sm sm:text-base px-4 py-2 sm:px-6 sm:py-3"
+            className="inline-flex items-center gap-2 text-sm sm:text-base px-4 py-2 sm:px-6 sm:py-3 rounded-full bg-blue-900 text-white hover:bg-blue-800 transition-colors duration-300 no-underline"
           >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
             Create First Post
           </Link>
         </div>

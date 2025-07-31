@@ -4,6 +4,36 @@ import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
 import "../index.css"; // Import the CSS file for animations
 
+// Function to generate consistent colors for users
+const getUserColor = (userId, username) => {
+  const colors = [
+    "bg-blue-500",
+    "bg-green-500",
+    "bg-purple-500",
+    "bg-pink-500",
+    "bg-indigo-500",
+    "bg-red-500",
+    "bg-yellow-500",
+    "bg-teal-500",
+    "bg-orange-500",
+    "bg-cyan-500",
+    "bg-emerald-500",
+    "bg-violet-500",
+    "bg-rose-500",
+    "bg-sky-500",
+    "bg-amber-500",
+    "bg-lime-500",
+  ];
+
+  // Use userId or username to generate consistent color
+  const identifier = userId || username || "default";
+  let hash = 0;
+  for (let i = 0; i < identifier.length; i++) {
+    hash = identifier.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return colors[Math.abs(hash) % colors.length];
+};
+
 // Three dots icon component
 const ThreeDotsIcon = () => (
   <svg
@@ -113,7 +143,12 @@ const CommentItem = ({ comment, postId, onUpdate, formatDate }) => {
 
   return (
     <div className="flex space-x-3 items-start relative">
-      <div className="bg-x-blue text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">
+      <div
+        className={`${getUserColor(
+          comment.user?._id,
+          comment.user?.username
+        )} text-white w-8 h-8 rounded-full flex items-center justify-center text-sm shadow-lg`}
+      >
         {comment.user?.displayName?.charAt(0)?.toUpperCase() ||
           comment.user?.username?.charAt(0)?.toUpperCase() ||
           "?"}
@@ -329,7 +364,12 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
       {/* Post Header */}
       <div className="flex items-center justify-between mb-3 sm:mb-4">
         <div className="flex items-center flex-1 min-w-0">
-          <div className="bg-x-blue text-white w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0">
+          <div
+            className={`${getUserColor(
+              post.author?._id,
+              post.author?.username
+            )} text-white w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0 shadow-lg`}
+          >
             <span className="text-sm sm:text-base font-semibold">
               {post.author?.displayName?.charAt(0)?.toUpperCase() ||
                 post.author?.username?.charAt(0)?.toUpperCase() ||
@@ -710,7 +750,12 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
       {showCommentForm && (
         <div className="mt-4 pt-4 border-t border-x-border">
           <form onSubmit={handleComment} className="flex space-x-3 w-full">
-            <div className="bg-x-blue text-white w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0">
+            <div
+              className={`${getUserColor(
+                user?.id,
+                user?.username
+              )} text-white w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0 shadow-lg`}
+            >
               {user?.displayName?.charAt(0).toUpperCase() ||
                 user?.username?.charAt(0).toUpperCase()}
             </div>

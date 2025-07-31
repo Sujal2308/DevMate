@@ -212,65 +212,63 @@ const ShimmerEffect = ({ type = "feed" }) => {
   );
 
   const renderExploreShimmer = () => (
-    <div className="w-full max-w-7xl mx-auto py-4 lg:py-8 px-2 lg:px-6 space-y-8">
-      {/* Hero Section */}
-      <div className="mb-6 lg:mb-8">
+    <div className="w-full max-w-7xl mx-auto py-4 lg:py-8 px-2 lg:px-6 space-y-6">
+      {/* Minimal Hero Section */}
+      <div className="mb-4 lg:mb-6">
         <div
-          className={`h-8 w-64 rounded ${shimmerClass} mb-3 bg-x-dark/60 border border-x-border/30`}
+          className={`h-6 w-48 rounded ${shimmerClass} mb-2 bg-x-dark/40`}
         ></div>
-        <div
-          className={`h-4 w-96 rounded ${shimmerClass} bg-x-dark/40 border border-x-border/30`}
-        ></div>
+        <div className={`h-3 w-80 rounded ${shimmerClass} bg-x-dark/30`}></div>
       </div>
 
-      {/* Search and filters */}
-      <div className="bg-x-card border border-x-border/30 rounded-xl p-6 mb-8 space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {/* Minimal Search and filters */}
+      <div className="bg-x-dark/20 border border-x-border/20 rounded-lg p-4 mb-6 space-y-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div
-            className={`h-12 w-full rounded-lg ${shimmerClass} bg-x-dark/60 border border-x-border/30`}
+            className={`h-10 w-full rounded-md ${shimmerClass} bg-x-dark/40`}
           ></div>
           <div
-            className={`h-12 w-full rounded-lg ${shimmerClass} bg-x-dark/60 border border-x-border/30`}
+            className={`h-10 w-full rounded-md ${shimmerClass} bg-x-dark/40`}
           ></div>
           <div
-            className={`h-10 w-24 rounded-lg ${shimmerClass} bg-x-dark/60 border border-x-border/30`}
+            className={`h-10 w-20 rounded-md ${shimmerClass} bg-x-dark/40`}
           ></div>
         </div>
       </div>
 
-      {/* User cards grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Minimal User cards grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {[1, 2, 3, 4, 5, 6].map((item) => (
           <div
             key={item}
-            className="x-card space-y-4 bg-x-dark/80 border border-x-border/30"
+            className="bg-x-dark/20 border border-x-border/20 rounded-lg p-4 space-y-3"
           >
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3">
               <div
-                className={`w-16 h-16 rounded-full ${shimmerClass} bg-x-dark/60 border border-x-border/30`}
+                className={`w-12 h-12 rounded-xl ${shimmerClass} bg-x-dark/40`}
               ></div>
-              <div className="space-y-2">
+              <div className="space-y-1">
                 <div
-                  className={`h-5 w-32 rounded ${shimmerClass} bg-x-dark/40 border border-x-border/30`}
+                  className={`h-4 w-28 rounded ${shimmerClass} bg-x-dark/30`}
                 ></div>
                 <div
-                  className={`h-4 w-24 rounded ${shimmerClass} bg-x-dark/40 border border-x-border/30`}
+                  className={`h-3 w-20 rounded ${shimmerClass} bg-x-dark/25`}
                 ></div>
               </div>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-1">
               <div
-                className={`h-4 w-full rounded ${shimmerClass} bg-x-dark/40 border border-x-border/30`}
+                className={`h-3 w-full rounded ${shimmerClass} bg-x-dark/25`}
               ></div>
               <div
-                className={`h-4 w-3/4 rounded ${shimmerClass} bg-x-dark/40 border border-x-border/30`}
+                className={`h-3 w-2/3 rounded ${shimmerClass} bg-x-dark/25`}
               ></div>
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex gap-2">
               {[1, 2, 3].map((skill) => (
                 <div
                   key={skill}
-                  className={`h-6 w-16 rounded-full ${shimmerClass} bg-x-dark/60 border border-x-border/30`}
+                  className={`h-5 w-12 rounded-full ${shimmerClass} bg-x-dark/30`}
                 ></div>
               ))}
             </div>

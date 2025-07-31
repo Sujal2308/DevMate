@@ -40,6 +40,7 @@ const useWindowDimensions = () => {
 const Explore = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchLoading, setSearchLoading] = useState(false); // New search loading state
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
@@ -238,17 +239,35 @@ const Explore = () => {
     // Cancel any pending updates
     clearTimeout(debounceTimeout);
 
+    // If there's a search term, show search loading immediately
+    if (searchTerm.trim() !== "") {
+      setSearchLoading(true);
+    }
+
     // Set a longer debounce for input to minimize flickering
     debounceTimeout = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
+      // Keep search loading for a minimum of 1 second for better UX
+      setTimeout(() => {
+        setSearchLoading(false);
+      }, 1000);
     }, 500); // Increased debounce time for smoother experience
 
-    return () => clearTimeout(debounceTimeout);
+    return () => {
+      clearTimeout(debounceTimeout);
+      // Clear search loading if component unmounts or searchTerm changes
+      if (searchTerm.trim() === "") {
+        setSearchLoading(false);
+      }
+    };
   }, [searchTerm]);
 
   const fetchUsers = useCallback(async () => {
     try {
-      setLoading(true);
+      // Only set main loading if this is not a search operation
+      if (!searchLoading) {
+        setLoading(true);
+      }
       const params = new URLSearchParams();
       if (debouncedSearchTerm) params.append("search", debouncedSearchTerm);
       if (selectedSkill) params.append("skill", selectedSkill);
@@ -259,9 +278,11 @@ const Explore = () => {
       setError("Failed to fetch users");
       console.error("Fetch users error:", error);
     } finally {
-      setLoading(false);
+      if (!searchLoading) {
+        setLoading(false);
+      }
     }
-  }, [debouncedSearchTerm, selectedSkill]);
+  }, [debouncedSearchTerm, selectedSkill, searchLoading]);
 
   // Fetch users when search parameters change
   useEffect(() => {
@@ -290,10 +311,20 @@ const Explore = () => {
         rootContainerRef.current.offsetHeight + "px";
     }
 
+    // Show search loading when skill filter changes
+    setSearchLoading(true);
     setSelectedSkill(e.target.value);
+
+    // Keep search loading for a minimum of 1 second
+    setTimeout(() => {
+      setSearchLoading(false);
+    }, 1000);
   };
 
   const clearFilters = () => {
+    // Show search loading when clearing filters
+    setSearchLoading(true);
+
     // First, prevent any content jumping
     if (isMobile) {
       // Temporarily disable transitions during state changes
@@ -322,6 +353,11 @@ const Explore = () => {
       setSearchTerm("");
       setSelectedSkill("");
     }
+
+    // Keep search loading for a minimum of 1 second
+    setTimeout(() => {
+      setSearchLoading(false);
+    }, 1000);
   };
 
   return (
@@ -349,9 +385,22 @@ const Explore = () => {
               "height var(--transition-speed), opacity var(--transition-speed)",
           }}
         >
-          <h1 className="mt-4 text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-x-blue via-purple-500 to-x-green bg-[length:200%_auto] bg-clip-text text-transparent md:animate-color-cycle mb-1 lg:mb-2 explore-mobile-heading">
-            <span className="inline sm:hidden">Discover Devs</span>
-            <span className="hidden sm:inline">Explore Developers</span>
+          <h1
+            className="mt-4 text-lg sm:text-xl md:text-2xl font-medium text-x-white mb-1 lg:mb-2 explore-mobile-heading flex items-center gap-2"
+            style={{
+              fontFamily:
+                '"Fira Code", "Monaco", "Menlo", "Ubuntu Mono", "Consolas", "Courier New", monospace',
+            }}
+          >
+            <svg
+              className="w-5 h-5 sm:w-6 sm:h-6 text-x-blue"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M12 2L13.09 8.26L22 9L13.09 9.74L12 16L10.91 9.74L2 9L10.91 8.26L12 2Z" />
+            </svg>
+            <span className="inline sm:hidden">discover</span>
+            <span className="hidden sm:inline">explore</span>
           </h1>
           <p className="text-x-gray text-xs sm:text-sm lg:text-base max-w-2xl">
             Discover and connect with talented developers in the DevMate
@@ -538,7 +587,7 @@ const Explore = () => {
             willChange: "transform", // Hint to browser for optimization
           }}
         >
-          {loading ? (
+          {loading || searchLoading ? (
             <ShimmerEffect type="explore" />
           ) : error ? (
             <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-6 py-4 rounded-xl backdrop-blur-sm">
@@ -623,18 +672,18 @@ const Explore = () => {
                 {users.map((user) => (
                   <div
                     key={user._id}
-                    className="w-full card p-2 sm:p-3 lg:p-6 md:hover:shadow-xl md:hover:shadow-x-blue/20 md:hover:border-x-blue/30 md:transition-all md:duration-300 group bg-gradient-to-br from-x-dark/80 to-x-dark/40 md:backdrop-blur-sm backdrop-blur-none border border-x-border/30"
+                    className="w-full card p-2 sm:p-3 lg:p-6 hover:border-x-border/50 transition-colors duration-200 bg-gradient-to-br from-x-dark/80 to-x-dark/40 md:backdrop-blur-sm backdrop-blur-none border border-x-border/30"
                   >
                     <div className="w-full">
                       {/* Mobile Layout - Avatar and View Profile Button Horizontal */}
                       <div className="flex items-center justify-between sm:hidden mb-2">
                         <div className="flex items-center gap-3">
-                          <div className="bg-gradient-to-r from-x-blue to-purple-500 text-white w-12 h-12 rounded-2xl flex items-center justify-center text-lg font-bold shadow-lg md:group-hover:shadow-x-blue/30 md:transition-all md:duration-300">
+                          <div className="bg-gradient-to-r from-x-blue to-purple-500 text-white w-12 h-12 rounded-2xl flex items-center justify-center text-lg font-bold shadow-lg">
                             {user.displayName?.charAt(0).toUpperCase() ||
                               user.username.charAt(0).toUpperCase()}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h3 className="font-bold text-x-white text-base md:group-hover:text-x-blue md:transition-colors md:duration-200 mb-1">
+                            <h3 className="font-bold text-x-white text-base mb-1">
                               {user.displayName || user.username}
                             </h3>
                             <p className="text-xs text-x-gray">
@@ -648,7 +697,7 @@ const Explore = () => {
                               href={user.githubLink}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-x-gray md:hover:text-x-white md:transition-colors md:duration-200 p-2 rounded-lg md:hover:bg-x-dark/60"
+                              className="text-x-gray hover:text-x-white transition-colors duration-200 p-2 rounded-lg"
                               title="GitHub Profile"
                             >
                               <svg
@@ -666,7 +715,7 @@ const Explore = () => {
                           )}
                           <Link
                             to={`/profile/${user.username}`}
-                            className="btn-primary text-xs px-3 py-2 md:hover:scale-105 transform md:transition-all md:duration-200 whitespace-nowrap"
+                            className="btn-primary text-xs px-3 py-2 transition-colors duration-200 whitespace-nowrap"
                           >
                             View Profile
                           </Link>
@@ -677,13 +726,13 @@ const Explore = () => {
                       <div className="hidden sm:flex items-start justify-between gap-6 mb-4">
                         <div className="flex items-start gap-6 flex-1">
                           <div className="flex-shrink-0">
-                            <div className="bg-gradient-to-r from-x-blue to-purple-500 text-white w-16 h-16 rounded-2xl flex items-center justify-center text-xl font-bold shadow-lg md:group-hover:shadow-x-blue/30 md:transition-all md:duration-300">
+                            <div className="bg-gradient-to-r from-x-blue to-purple-500 text-white w-16 h-16 rounded-2xl flex items-center justify-center text-xl font-bold shadow-lg">
                               {user.displayName?.charAt(0).toUpperCase() ||
                                 user.username.charAt(0).toUpperCase()}
                             </div>
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h3 className="font-bold text-x-white text-xl md:group-hover:text-x-blue md:transition-colors md:duration-200 mb-1">
+                            <h3 className="font-bold text-x-white text-xl mb-1">
                               {user.displayName || user.username}
                             </h3>
                             <p className="text-base text-x-gray mb-3">
@@ -697,7 +746,7 @@ const Explore = () => {
                               href={user.githubLink}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-x-gray md:hover:text-x-white md:transition-colors md:duration-200 md:hover:scale-110 transform p-2 rounded-lg md:hover:bg-x-dark/60"
+                              className="text-x-gray hover:text-x-white transition-colors duration-200 p-2 rounded-lg"
                               title="GitHub Profile"
                             >
                               <svg
@@ -715,7 +764,7 @@ const Explore = () => {
                           )}
                           <Link
                             to={`/profile/${user.username}`}
-                            className="btn-primary text-base px-6 py-3 md:hover:scale-105 transform md:transition-all md:duration-200 whitespace-nowrap"
+                            className="btn-primary text-base px-6 py-3 transition-colors duration-200 whitespace-nowrap"
                           >
                             View Profile
                           </Link>
@@ -740,7 +789,7 @@ const Explore = () => {
                               {user.skills.slice(0, 8).map((skill, index) => (
                                 <span
                                   key={index}
-                                  className="bg-x-blue/20 text-x-blue border border-x-blue/30 px-3 py-1 rounded-full text-sm font-medium md:hover:bg-x-blue/30 md:transition-colors md:duration-200"
+                                  className="bg-x-blue/20 text-x-blue border border-x-blue/30 px-3 py-1 rounded-full text-sm font-medium hover:bg-x-blue/30 transition-colors duration-200"
                                 >
                                   {skill}
                                 </span>

@@ -52,11 +52,11 @@ html {
 
 /* Enhanced code snippet styling */
 .code-snippet {
-  background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
-  border: 1px solid #30363d;
+  background: linear-gradient(135deg, #0a0e13 0%, #0d1117 100%);
+  border: 1px solid #21262d;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
 }
 
 .code-snippet pre {
@@ -85,6 +85,26 @@ html {
   color: #d2a8ff;
 }
 
+/* Ensure all code elements use monospace fonts */
+code,
+pre,
+.code-snippet,
+.code-snippet pre,
+textarea[name="codeSnippet"],
+.font-mono {
+  font-family: "Fira Code", "Monaco", "Menlo", "Ubuntu Mono", "Consolas",
+    "Courier New", monospace !important;
+}
+
+/* Code syntax highlighting consistency */
+.code-snippet pre,
+pre.code,
+.code-block {
+  font-family: "Fira Code", "Monaco", "Menlo", "Ubuntu Mono", "Consolas",
+    "Courier New", monospace !important;
+  line-height: 1.5;
+}
+
 /* X App Custom Components */
 @layer components {
   .x-container {
@@ -101,30 +121,26 @@ html {
     padding: 1rem;
     position: fixed;
     top: 4rem; /* navbar height */
-    left: calc(
-      50vw - 320px - 40px - 256px
-    ); /* Position with proper gap from centered main content */
+    left: 1rem; /* Fixed left position for consistency */
     height: calc(100vh - 4rem);
     z-index: 30;
     flex-shrink: 0;
+    overflow-y: auto; /* Allow scrolling if needed */
+    border-right: 1px solid rgba(29, 155, 240, 0.2); /* Minimal blue border */
   }
 
   .x-main {
-    max-width: 40rem; /* 640px */
+    max-width: 42rem; /* 672px - reduced from 768px */
     width: 100%;
     position: relative;
-    margin: 0 auto;
-    margin-left: 420px; /* Push content more to right of sidebar */
+    margin: 0 auto; /* Center the content */
     box-sizing: border-box;
-    /* border-left: 2px solid #1d9bf0;  Remove this line */
-    /* border-right: 2px solid #1d9bf0;  Already removed */
-    box-shadow: -2px 0 8px rgba(29, 155, 240, 0.2),
-      2px 0 8px rgba(29, 155, 240, 0.2); /* Blue glow on both sides */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Minimal border */
+    border-radius: 8px; /* Subtle rounded corners */
     padding-left: 1rem;
     padding-right: 1rem;
     background: transparent;
     z-index: 10;
-    /* Ensure main content flows with document scroll - key fix! */
     overflow: visible !important;
     height: auto !important;
     min-height: 100vh; /* Ensure it takes full height */
@@ -305,6 +321,55 @@ html {
 
 .animate-color-cycle {
   animation: color-cycle 8s linear infinite;
+}
+
+/* Responsive layout for smaller desktop screens */
+/* Responsive breakpoints for better desktop support */
+@media (max-width: 1600px) {
+  .x-main {
+    max-width: 44rem; /* 704px */
+  }
+}
+
+@media (max-width: 1440px) {
+  .x-main {
+    max-width: 42rem; /* 672px */
+  }
+}
+
+/* Handle smaller laptops like 1366px screens */
+@media (max-width: 1366px) {
+  .x-sidebar {
+    width: 240px; /* Slightly smaller sidebar */
+    border-right: 1px solid rgba(29, 155, 240, 0.2); /* Keep minimal border */
+  }
+
+  .x-main {
+    max-width: 40rem; /* 640px for smaller screens */
+  }
+}
+
+@media (max-width: 1200px) {
+  .x-sidebar {
+    display: none;
+  }
+
+  .x-main {
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .x-main {
+    max-width: 100%;
+    margin-left: 0;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
 }
 
 /* Mobile optimization - ensure no jarring animations on page load */
@@ -488,6 +553,19 @@ html {
     transform: translateY(0) scale(1);
     opacity: 1;
   }
+}
+
+/* Floating Icon Bar - Center main content */
+.x-main {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+
+/* Hide old sidebar if it exists */
+.x-sidebar {
+  display: none !important;
 }
 
 /* Custom styling for language dropdown */
@@ -1244,61 +1322,20 @@ body::-webkit-scrollbar-thumb:hover {
   }
 }
 
-@media (max-width: 767px) {
-  .animated-gradient-border {
-    background: transparent !important;
-    background-color: transparent !important;
-  }
-
-  .card.search-control-panel {
-    border-radius: 0 !important;
-  }
-}
-
-/* Center the 'Search for developers' section on mobile */
-@media (max-width: 767px) {
-  .mobile-center-section {
-    min-height: 60vh;
-    display: flex !important;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-top: 0 !important;
-  }
-}
-
-/* Color change animation for + icon */
-@keyframes colorchange {
-  0% {
-    color: #3b82f6;
-  } /* blue-500 */
-  25% {
-    color: #10b981;
-  } /* green-500 */
-  50% {
-    color: #f59e42;
-  } /* orange-400 */
-  75% {
-    color: #ec4899;
-  } /* pink-500 */
-  100% {
-    color: #3b82f6;
-  } /* blue-500 */
-}
-
-.animate-colorchange {
-  animation: colorchange 2s linear infinite;
-}
-
-/* Inline desktop date of joining styling */
-.profile-joined-date-inline-desktop {
-  display: inline-block;
-  margin-left: 1rem;
-  vertical-align: middle;
-}
-
-@media (max-width: 768px) {
-  .profile-joined-date-inline-desktop {
-    display: none;
-  }
-}
+/* Profile avatar colors should always take precedence */
+.profile-avatar.bg-blue-500 { background: #3b82f6 !important; }
+.profile-avatar.bg-green-500 { background: #22c55e !important; }
+.profile-avatar.bg-purple-500 { background: #a855f7 !important; }
+.profile-avatar.bg-pink-500 { background: #ec4899 !important; }
+.profile-avatar.bg-indigo-500 { background: #6366f1 !important; }
+.profile-avatar.bg-red-500 { background: #ef4444 !important; }
+.profile-avatar.bg-yellow-500 { background: #eab308 !important; }
+.profile-avatar.bg-teal-500 { background: #14b8a6 !important; }
+.profile-avatar.bg-orange-500 { background: #f97316 !important; }
+.profile-avatar.bg-cyan-500 { background: #06b6d4 !important; }
+.profile-avatar.bg-emerald-500 { background: #10b981 !important; }
+.profile-avatar.bg-violet-500 { background: #8b5cf6 !important; }
+.profile-avatar.bg-rose-500 { background: #f43f5e !important; }
+.profile-avatar.bg-sky-500 { background: #0ea5e9 !important; }
+.profile-avatar.bg-amber-500 { background: #f59e0b !important; }
+.profile-avatar.bg-lime-500 { background: #84cc16 !important; }
