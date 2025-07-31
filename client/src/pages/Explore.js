@@ -386,14 +386,14 @@ const Explore = () => {
           }}
         >
           <h1
-            className="mt-4 text-lg sm:text-xl md:text-2xl font-medium text-x-white mb-1 lg:mb-2 explore-mobile-heading flex items-center gap-2"
+            className="mt-4 text-xl sm:text-2xl md:text-3xl font-bold text-x-white mb-1 lg:mb-2 explore-mobile-heading flex items-center gap-3"
             style={{
               fontFamily:
                 '"Fira Code", "Monaco", "Menlo", "Ubuntu Mono", "Consolas", "Courier New", monospace',
             }}
           >
             <svg
-              className="w-5 h-5 sm:w-6 sm:h-6 text-x-blue"
+              className="w-6 h-6 sm:w-7 sm:h-7 text-x-blue"
               fill="currentColor"
               viewBox="0 0 24 24"
             >

@@ -161,49 +161,49 @@ const ShimmerEffect = ({ type = "feed" }) => {
   );
 
   const renderPostDetailShimmer = () => (
-    <div className="max-w-2xl mx-auto py-8 px-4 space-y-6">
-      {/* Back button */}
-      <div className="mb-6">
-        <div className={`h-10 w-24 rounded ${shimmerClass}`}></div>
+    <div className="w-full max-w-2xl mx-auto py-4 sm:py-8 px-3 sm:px-4 pb-20 lg:pb-8 space-y-4 sm:space-y-6">
+      {/* Minimal Back button */}
+      <div className="mb-4 sm:mb-6">
+        <div className={`h-8 w-20 sm:w-24 rounded ${shimmerClass} bg-x-dark/40`}></div>
       </div>
 
-      {/* Post detail */}
-      <div className="x-card space-y-6">
-        {/* User info */}
+      {/* Minimal Post detail - matching PostCard layout */}
+      <div className="bg-x-dark/20 border border-x-border/20 rounded-lg p-4 sm:p-6 space-y-4 sm:space-y-6">
+        {/* Minimal User info */}
         <div className="flex items-center space-x-3">
-          <div className={`w-12 h-12 rounded-full ${shimmerClass}`}></div>
-          <div className="space-y-2">
-            <div className={`h-4 w-32 rounded ${shimmerClass}`}></div>
-            <div className={`h-3 w-24 rounded ${shimmerClass}`}></div>
+          <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl ${shimmerClass} bg-x-dark/40`}></div>
+          <div className="space-y-1 sm:space-y-2">
+            <div className={`h-3 sm:h-4 w-28 sm:w-32 rounded ${shimmerClass} bg-x-dark/30`}></div>
+            <div className={`h-2 sm:h-3 w-20 sm:w-24 rounded ${shimmerClass} bg-x-dark/25`}></div>
           </div>
         </div>
 
-        {/* Post content */}
-        <div className="space-y-4">
-          <div className={`h-4 w-full rounded ${shimmerClass}`}></div>
-          <div className={`h-4 w-full rounded ${shimmerClass}`}></div>
-          <div className={`h-4 w-3/4 rounded ${shimmerClass}`}></div>
-          <div className={`h-40 w-full rounded-lg ${shimmerClass}`}></div>
+        {/* Minimal Post content */}
+        <div className="space-y-2 sm:space-y-3">
+          <div className={`h-3 sm:h-4 w-full rounded ${shimmerClass} bg-x-dark/25`}></div>
+          <div className={`h-3 sm:h-4 w-4/5 rounded ${shimmerClass} bg-x-dark/25`}></div>
+          <div className={`h-3 sm:h-4 w-3/5 rounded ${shimmerClass} bg-x-dark/25`}></div>
+          <div className={`h-24 sm:h-32 w-full rounded-lg ${shimmerClass} bg-x-dark/30 mt-3 sm:mt-4`}></div>
         </div>
 
-        {/* Actions */}
-        <div className="flex items-center space-x-6">
-          <div className={`h-6 w-16 rounded ${shimmerClass}`}></div>
-          <div className={`h-6 w-20 rounded ${shimmerClass}`}></div>
+        {/* Minimal Actions */}
+        <div className="flex items-center space-x-4 sm:space-x-6 pt-2 sm:pt-4 border-t border-x-border">
+          <div className={`h-5 sm:h-6 w-12 sm:w-16 rounded ${shimmerClass} bg-x-dark/30`}></div>
+          <div className={`h-5 sm:h-6 w-16 sm:w-20 rounded ${shimmerClass} bg-x-dark/30`}></div>
         </div>
       </div>
 
-      {/* Comments section */}
-      <div className="space-y-4">
-        <div className={`h-6 w-24 rounded ${shimmerClass}`}></div>
+      {/* Minimal Comments section */}
+      <div className="space-y-3 sm:space-y-4">
+        <div className={`h-4 sm:h-6 w-20 sm:w-24 rounded ${shimmerClass} bg-x-dark/40`}></div>
         {[1, 2].map((comment) => (
           <div key={comment} className="flex space-x-3">
             <div
-              className={`w-8 h-8 rounded-full flex-shrink-0 ${shimmerClass}`}
+              className={`w-8 h-8 rounded-xl flex-shrink-0 ${shimmerClass} bg-x-dark/40`}
             ></div>
-            <div className="flex-1 space-y-2">
-              <div className={`h-4 w-full rounded ${shimmerClass}`}></div>
-              <div className={`h-4 w-2/3 rounded ${shimmerClass}`}></div>
+            <div className="flex-1 space-y-1 sm:space-y-2">
+              <div className={`h-3 sm:h-4 w-full rounded ${shimmerClass} bg-x-dark/25`}></div>
+              <div className={`h-3 sm:h-4 w-2/3 rounded ${shimmerClass} bg-x-dark/25`}></div>
             </div>
           </div>
         ))}

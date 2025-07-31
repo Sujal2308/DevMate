@@ -93,25 +93,30 @@ const CreatePost = () => {
   return (
     <div className="w-full max-w-4xl mx-auto py-2 sm:py-4 lg:py-8 px-3 sm:px-4 lg:px-6 pb-20 lg:pb-8">
       {/* Header Section */}
-      <div className="mb-4 sm:mb-6 lg:mb-8">
-        <h1 className="text-xl sm:text-xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-x-blue via-purple-500 to-x-green bg-[length:200%_auto] bg-clip-text text-transparent animate-color-cycle mb-2 lg:mb-3">
-          Create a Post{" "}
-          <span
-            role="img"
-            aria-label="notebook"
-            style={{
-              color: "initial",
-              background: "none",
-              WebkitBackgroundClip: "unset",
-              WebkitTextFillColor: "initial",
-              filter: "none",
-            }}
+      <div className="mb-4 sm:mb-6 lg:mb-8 ml-4 sm:ml-6">
+        <h1 
+          className="text-xl sm:text-2xl md:text-3xl font-bold text-x-white mb-2 flex items-center gap-3"
+          style={{
+            fontFamily: '"Fira Code", "Monaco", "Menlo", "Ubuntu Mono", "Consolas", "Courier New", monospace'
+          }}
+        >
+          <span>create</span>
+          <svg
+            className="w-6 h-6 sm:w-7 sm:h-7 text-x-blue"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
           >
-            📝
-          </span>
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+            />
+          </svg>
         </h1>
-        <p className="text-x-gray text-sm sm:text-base lg:text-base">
-          Share your thoughts, ideas, or code with the DevMate community.
+        <p className="text-x-gray text-sm sm:text-base">
+          Share your code and ideas with the community.
         </p>
       </div>
 
