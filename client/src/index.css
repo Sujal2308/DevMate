@@ -130,7 +130,7 @@ pre.code,
   }
 
   .x-main {
-    max-width: 42rem; /* 672px - reduced from 768px */
+    max-width: 112rem; /* 1792px - matches Edit Profile page */
     width: 100%;
     position: relative;
     margin: 0 auto; /* Center the content */
@@ -1321,21 +1321,3 @@ body::-webkit-scrollbar-thumb:hover {
     );
   }
 }
-
-/* Profile avatar colors should always take precedence */
-.profile-avatar.bg-blue-500 { background: #3b82f6 !important; }
-.profile-avatar.bg-green-500 { background: #22c55e !important; }
-.profile-avatar.bg-purple-500 { background: #a855f7 !important; }
-.profile-avatar.bg-pink-500 { background: #ec4899 !important; }
-.profile-avatar.bg-indigo-500 { background: #6366f1 !important; }
-.profile-avatar.bg-red-500 { background: #ef4444 !important; }
-.profile-avatar.bg-yellow-500 { background: #eab308 !important; }
-.profile-avatar.bg-teal-500 { background: #14b8a6 !important; }
-.profile-avatar.bg-orange-500 { background: #f97316 !important; }
-.profile-avatar.bg-cyan-500 { background: #06b6d4 !important; }
-.profile-avatar.bg-emerald-500 { background: #10b981 !important; }
-.profile-avatar.bg-violet-500 { background: #8b5cf6 !important; }
-.profile-avatar.bg-rose-500 { background: #f43f5e !important; }
-.profile-avatar.bg-sky-500 { background: #0ea5e9 !important; }
-.profile-avatar.bg-amber-500 { background: #f59e0b !important; }
-.profile-avatar.bg-lime-500 { background: #84cc16 !important; }

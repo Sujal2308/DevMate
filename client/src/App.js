@@ -21,6 +21,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
 import Sidebar from "./components/Sidebar";
 import Footer from "./components/Footer";
+import MinimalFooter from "./components/MinimalFooter";
 import BottomNav from "./components/BottomNav";
 import { useAuth } from "./contexts/AuthContext";
 import LogoutConfirm from "./pages/LogoutConfirm";
@@ -199,13 +200,7 @@ function AppContent() {
                     />
                     <Route path="*" element={<Navigate to="/feed" />} />
                   </Routes>
-                  {!(
-                    location.pathname === "/explore" ||
-                    location.pathname === "/notifications" ||
-                    /\/profile\/[^/]+\/(followers|following)/.test(
-                      location.pathname
-                    )
-                  ) && <Footer />}
+                  <MinimalFooter />
                 </main>
               </div>
               {/* <TrendingNews /> */}

@@ -3,8 +3,11 @@ import Select from "react-select";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { useAuth } from "../contexts/AuthContext";
 
 const CreatePost = () => {
+  const { user } = useAuth();
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
   const [formData, setFormData] = useState({
     content: "",
     codeSnippet: "",
@@ -12,6 +15,8 @@ const CreatePost = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState("");
+  const [showCancel, setShowCancel] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const navigate = useNavigate();
 
@@ -28,11 +33,19 @@ const CreatePost = () => {
   ];
 
   const handleChange = (e) => {
+    const value = e.target.value;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: value,
     });
     if (error) setError("");
+    if (e.target.name === "content") {
+      if (value.trim().length > 0) {
+        setShowCancel(true);
+      } else {
+        setShowCancel(false);
+      }
+    }
   };
 
   const handleLanguageSelect = (option) => {
@@ -94,10 +107,11 @@ const CreatePost = () => {
     <div className="w-full max-w-4xl mx-auto py-2 sm:py-4 lg:py-8 px-3 sm:px-4 lg:px-6 pb-20 lg:pb-8">
       {/* Header Section */}
       <div className="mb-4 sm:mb-6 lg:mb-8 ml-4 sm:ml-6">
-        <h1 
+        <h1
           className="text-xl sm:text-2xl md:text-3xl font-bold text-x-white mb-2 flex items-center gap-3"
           style={{
-            fontFamily: '"Fira Code", "Monaco", "Menlo", "Ubuntu Mono", "Consolas", "Courier New", monospace'
+            fontFamily:
+              '"Fira Code", "Monaco", "Menlo", "Ubuntu Mono", "Consolas", "Courier New", monospace',
           }}
         >
           <span>create</span>
@@ -344,42 +358,103 @@ console.log("Welcome to DevMate!");`
             )}
           </div>
 
-          <div className="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4">
-            <button
-              type="button"
-              onClick={() => navigate("/feed")}
-              className="btn-outline px-8 h-[38px] hover:scale-105 transform transition-all duration-200"
-            >
-              Cancel
-            </button>
+          <div className="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4 items-center">
+            {showCancel && (
+              <button
+                type="button"
+                onClick={() => {
+                  if (isMobile) {
+                    setShowConfirm(true);
+                    setTimeout(() => {
+                      const confirmBox =
+                        document.getElementById("cancel-confirm-box");
+                      if (confirmBox) {
+                        confirmBox.scrollIntoView({
+                          behavior: "smooth",
+                          block: "center",
+                        });
+                      }
+                    }, 100);
+                  } else {
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                    setFormData({ content: "", codeSnippet: "" });
+                    setShowCancel(false);
+                  }
+                }}
+                className="text-red-600 font-bold px-8 h-[38px] rounded-full transition-all duration-200 bg-transparent border-none hover:text-red-700"
+              >
+                Cancel
+              </button>
+            )}
+
+            {/* Confirmation message between Cancel and Publish */}
+            {showConfirm && isMobile && (
+              <div
+                id="cancel-confirm-box"
+                className="mx-4 flex flex-col items-center"
+              >
+                <div className="bg-x-dark rounded-xl p-4 shadow-xl text-center mb-2">
+                  <div className="mb-2 text-lg text-x-white font-semibold">
+                    Are you sure you want to cancel your post?
+                  </div>
+                  <div className="mb-4 text-x-gray">
+                    Your changes will be lost if you leave this page.
+                  </div>
+                  <div className="flex justify-center gap-4">
+                    <button
+                      className="px-8 py-3 bg-red-600 hover:bg-red-700 text-white text-base font-bold rounded-full flex items-center justify-center transition-all duration-200"
+                      onClick={() => {
+                        setFormData({ content: "", codeSnippet: "" });
+                        setShowCancel(false);
+                        setShowConfirm(false);
+                      }}
+                    >
+                      Discard All
+                    </button>
+                    <button
+                      className="px-8 py-3 bg-x-blue hover:bg-blue-800 text-white text-base font-bold rounded-full flex items-center justify-center transition-all duration-200"
+                      onClick={() => setShowConfirm(false)}
+                    >
+                      Back
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <button
               type="submit"
               disabled={loading || !formData.content.trim()}
-              className="bg-blue-900 hover:bg-blue-800 text-white px-6 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-colors duration-200"
+              className={`bg-black hover:bg-gray-900 text-white font-bold px-6 py-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-colors duration-200 min-h-[44px] h-[44px] ${
+                isMobile ? "w-full" : ""
+              }`}
+              style={{ lineHeight: "1.5", height: "44px" }}
             >
-              {loading ? (
-                <>
-                  <LoadingSpinner size="small" />
-                  Publishing...
-                </>
-              ) : (
-                <>
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                    />
-                  </svg>
-                  Publish
-                </>
-              )}
+              <span className="flex items-center justify-center w-full h-full">
+                {loading ? (
+                  <>
+                    <LoadingSpinner size="small" />
+                    <span className="ml-2">Publishing...</span>
+                  </>
+                ) : (
+                  <>
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                      />
+                    </svg>
+                    <span className="ml-2">Publish</span>
+                  </>
+                )}
+              </span>
             </button>
           </div>
         </form>
@@ -393,12 +468,14 @@ console.log("Welcome to DevMate!");`
               </h3>
               <div className="card p-6 bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/30">
                 <div className="flex items-center mb-6">
-                  <div className="bg-gradient-to-r from-x-blue to-purple-500 text-white w-12 h-12 rounded-2xl flex items-center justify-center text-lg font-bold mr-4">
-                    Y
+                  <div className="bg-black text-white w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold mr-4">
+                    {(user?.displayName || "Y").charAt(0).toUpperCase()}
                   </div>
                   <div>
-                    <p className="font-semibold text-x-white">Your Name</p>
-                    <p className="text-sm text-x-gray">@yourusername • now</p>
+                    <p className="font-semibold text-x-white">
+                      {user?.displayName || "Your Name"}
+                    </p>
+                    <p className="text-sm text-x-gray">now</p>
                   </div>
                 </div>
 

@@ -75,7 +75,7 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto py-6 px-4 lg:px-6 pb-24 sm:pb-6">
+    <div className="w-full max-w-7xl mx-auto py-6 px-4 sm:px-8 lg:px-12 xl:px-24 pb-24 sm:pb-6">
       {/* Header Section */}
       <div className="mb-8 text-center">
         <div className="bg-x-navy h-32 relative overflow-hidden mb-6">
@@ -348,7 +348,7 @@ const EditProfile = () => {
           <button
             type="button"
             onClick={() => navigate(`/profile/${user.username}`)}
-            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-none font-medium transition-all duration-200 flex items-center"
+            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full font-medium transition-all duration-200 flex items-center"
           >
             <svg
               className="w-5 h-5 mr-2"
@@ -368,7 +368,7 @@ const EditProfile = () => {
           <button
             type="submit"
             disabled={loading}
-            className="bg-green-500 hover:bg-green-600 disabled:bg-green-500/50 text-white px-6 py-2 rounded-none font-medium transition-all duration-200 disabled:cursor-not-allowed flex items-center min-h-[44px]"
+            className="bg-green-500 hover:bg-green-600 disabled:bg-green-500/50 text-white px-6 py-2 rounded-full font-medium transition-all duration-200 disabled:cursor-not-allowed flex items-center min-h-[44px]"
           >
             {loading ? (
               <>
