@@ -265,7 +265,7 @@ const Feed = () => {
 
           <div ref={loaderRef} className="h-4"></div>
 
-          {!hasMore && !showEndMessage && posts.length > 0 && (
+          {!loading && !hasMore && !showEndMessage && posts.length > 0 && (
             <div className="py-4 sm:py-6">
               <FakeFeedLoader />
             </div>
