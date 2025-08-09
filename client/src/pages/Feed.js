@@ -61,7 +61,7 @@ const Feed = () => {
         setLoading(false);
       }
     },
-    [retryCount]
+    []
   );
 
   const loadMore = useCallback(() => {
