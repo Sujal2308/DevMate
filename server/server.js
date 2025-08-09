@@ -68,14 +68,28 @@ app.use(cors());
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 
-// Rate limiting (apply to all requests)
+// Rate limiting (apply only to API routes, not static assets)
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 500, // Increased limit for development - limit each IP to 500 requests per windowMs
   standardHeaders: true,
   legacyHeaders: false,
+  skip: (req) => {
+    // Skip rate limiting for static assets and favicon
+    return req.url.startsWith('/static/') || 
+           req.url === '/favicon.ico' || 
+           req.url === '/manifest.json' ||
+           req.url.startsWith('/logo') ||
+           req.url.endsWith('.ico') ||
+           req.url.endsWith('.png') ||
+           req.url.endsWith('.jpg') ||
+           req.url.endsWith('.css') ||
+           req.url.endsWith('.js');
+  }
 });
-app.use(limiter);
+
+// Apply rate limiting to API routes only
+app.use('/api', limiter);
 
 // CORS
 app.use(
