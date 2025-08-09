@@ -86,7 +86,7 @@ const Feed = () => {
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [fetchPosts, forceRefresh]);
+  }, [fetchPosts, forceRefresh, posts.length, loading]);
 
   // Intersection observer effect
   useEffect(() => {
