@@ -800,7 +800,7 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
   );
 };
 
-export default PostCard;
+export default React.memo(PostCard);
 
 /* Add to your index.css:
 .animate-like-pop {

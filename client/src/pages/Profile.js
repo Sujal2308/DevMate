@@ -10,7 +10,7 @@ const Profile = () => {
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState("posts");
   const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage] = useState(2);
+  const [postsPerPage] = useState(8); // Increased from 2 to 8 for better mobile scrolling
   const [copied, setCopied] = useState(false);
   const [loadingMorePosts, setLoadingMorePosts] = useState(false);
   const [hasMorePosts, setHasMorePosts] = useState(true);
@@ -25,7 +25,7 @@ const Profile = () => {
         setLoading(true);
         // Fetch profile data with followers data to properly detect follow state
         const response = await axios.get(
-          `/api/users/${username}?limit=2&includeFollowersData=true`
+          `/api/users/${username}?limit=8&includeFollowersData=true`
         );
         setProfileData(response.data);
 
@@ -348,7 +348,13 @@ const Profile = () => {
   const showFullProfile = !isPrivate || isOwnProfile || isFollower;
 
   return (
-    <div className="max-w-6xl mx-auto py-8 px-4">
+    <div 
+      className="max-w-6xl mx-auto py-8 px-4" 
+      style={{ 
+        willChange: 'scroll-position',
+        transform: 'translateZ(0)'
+      }}
+    >
       {/* Hero Profile Section */}
       <div className="relative mb-8">
         {/* Cover */}
@@ -816,7 +822,7 @@ const Profile = () => {
 
           {/* Tab Content */}
           {activeTab === "posts" && (
-            <div className="bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/50 rounded-2xl p-6 mb-24 md:mb-8">
+            <div className="w-full max-w-2xl mx-auto bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/50 rounded-2xl px-2 py-2 sm:px-4 sm:py-4 md:p-6 mb-24 md:mb-8">
               <div className="flex items-center justify-start mb-6">
                 <svg
                   className="w-5 h-5 text-x-green mr-3"
@@ -844,7 +850,14 @@ const Profile = () => {
 
               {/* Posts grid */}
               {!loading && posts.length > 0 && (
-                <div className="grid grid-cols-1 gap-6">
+                <div 
+                  className="grid grid-cols-1 gap-6" 
+                  style={{ 
+                    willChange: 'scroll-position',
+                    transform: 'translateZ(0)',
+                    backfaceVisibility: 'hidden'
+                  }}
+                >
                   {currentPosts.map((post) => (
                     <PostCard
                       key={post._id}
