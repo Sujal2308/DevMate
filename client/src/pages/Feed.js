@@ -13,7 +13,9 @@ const Feed = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [showEndMessage, setShowEndMessage] = useState(false);
+  const [forceRefresh, setForceRefresh] = useState(0);
   const loaderRef = useRef(null);
+  const timeoutRef = useRef(null);
   const { hasUnread } = useNotification();
 
   const fetchPosts = useCallback(
@@ -52,6 +54,10 @@ const Feed = () => {
         console.error("Fetch posts error:", error);
       } finally {
         setLoading(false);
+        // Clear timeout when fetch completes
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
       }
     },
     []
@@ -66,7 +72,21 @@ const Feed = () => {
   // Initial fetch effect
   useEffect(() => {
     fetchPosts();
-  }, [fetchPosts]);
+    
+    // Set timeout to force refresh if posts aren't loaded after 3 seconds
+    timeoutRef.current = setTimeout(() => {
+      if (posts.length === 0 && loading) {
+        console.log("Force refreshing feed component after timeout");
+        setForceRefresh(prev => prev + 1);
+      }
+    }, 3000);
+    
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [fetchPosts, forceRefresh]);
 
   // Intersection observer effect
   useEffect(() => {
