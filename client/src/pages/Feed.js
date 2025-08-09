@@ -119,13 +119,6 @@ const Feed = () => {
     setPosts(posts.filter((post) => post._id !== deletedPostId));
   };
 
-  // Retry mechanism for failed loads
-  const retryFetch = useCallback(() => {
-    setError("");
-    setLoading(true);
-    fetchPosts(1);
-  }, [fetchPosts]);
-
   if ((loading || error) && posts.length === 0) {
     // Always show shimmer for loading or error and no posts
     return <ShimmerEffect type="feed" />;
