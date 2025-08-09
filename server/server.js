@@ -71,7 +71,7 @@ app.use(express.urlencoded({ extended: true }));
 // Rate limiting (apply to all requests)
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 200, // limit each IP to 200 requests per windowMs
+  max: 500, // Increased limit for development - limit each IP to 500 requests per windowMs
   standardHeaders: true,
   legacyHeaders: false,
 });

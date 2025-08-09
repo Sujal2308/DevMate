@@ -72,21 +72,26 @@ const Feed = () => {
   // Initial fetch effect
   useEffect(() => {
     fetchPosts();
-    
-    // Set timeout to force refresh if posts aren't loaded after 3 seconds
-    timeoutRef.current = setTimeout(() => {
-      if (posts.length === 0 && loading) {
-        console.log("Force refreshing feed component after timeout");
-        setForceRefresh(prev => prev + 1);
-      }
-    }, 3000);
+  }, [fetchPosts, forceRefresh]);
+
+  // Separate timeout effect to avoid dependency loop
+  useEffect(() => {
+    // Only set timeout if we have no posts and are loading
+    if (posts.length === 0 && loading) {
+      timeoutRef.current = setTimeout(() => {
+        if (posts.length === 0 && loading) {
+          console.log("Force refreshing feed component after timeout");
+          setForceRefresh(prev => prev + 1);
+        }
+      }, 3000);
+    }
     
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [fetchPosts, forceRefresh, posts.length, loading]);
+  }, [posts.length, loading]);
 
   // Intersection observer effect
   useEffect(() => {
