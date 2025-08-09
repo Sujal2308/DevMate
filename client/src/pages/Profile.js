@@ -471,18 +471,22 @@ const Profile = () => {
                 } mb-0 mr-6 z-20`}
               >
                 <div className="bg-gradient-to-r from-x-blue to-purple-500 text-white w-20 h-20 md:w-32 md:h-32 rounded-2xl md:rounded-3xl flex items-center justify-center text-2xl md:text-4xl font-bold border-4 border-x-dark shadow-2xl">
-                  {profileUser.displayName?.charAt(0).toUpperCase() ||
-                    profileUser.username.charAt(0).toUpperCase()}
+                  <div className="bg-black text-white w-20 h-20 md:w-32 md:h-32 rounded-2xl md:rounded-3xl flex items-center justify-center text-2xl md:text-4xl font-bold border-4 border-x-dark shadow-2xl">
+                    {profileUser.displayName?.charAt(0).toUpperCase() ||
+                      profileUser.username.charAt(0).toUpperCase()}
+                  </div>
                 </div>
               </div>
               {/* Name and Info */}
               <div
                 className={`text-left flex flex-col justify-start ${
-                  !isOwnProfile ? "mt-0 md:-mt-6" : ""
+                  isOwnProfile ? "mt-6 md:mt-0" : "mt-0 md:-mt-6"
                 }`}
               >
                 <h1 className="text-lg sm:text-2xl md:text-4xl font-bold text-x-white mb-2">
-                  {profileUser.displayName || profileUser.username}
+                  <span className="bg-gradient-to-r from-[#C0C0C0] via-[#E0E0E0] to-[#A9A9A9] bg-clip-text text-transparent">
+                    {profileUser.displayName || profileUser.username}
+                  </span>
                 </h1>
                 <div className="flex flex-row space-x-4 mb-2 items-center">
                   {/* On mobile, show follow button at left, completely hide username */}
@@ -968,10 +972,11 @@ const Profile = () => {
               </h3>
               <div className="text-left space-y-4">
                 {profileUser.bio && (
-                  <div>
-                    <span className="font-semibold text-x-gray">
-                      Description:
-                    </span>
+                  <div
+                    className={`text-left flex flex-col justify-start ${
+                      isOwnProfile ? "mt-2 md:mt-0" : "mt-2 md:mt-0"
+                    }`}
+                  >
                     <p className="text-x-white mt-1">{profileUser.bio}</p>
                   </div>
                 )}

@@ -53,28 +53,7 @@ const Feed = () => {
         );
         setPage(pageNum);
       } catch (error) {
-        if (error.message === "Posts fetch timeout") {
-          const funMessages = [
-            "🌙 Our servers are taking a quick power nap! They'll be back in a jiffy.",
-            "🚀 Houston, we have a... tiny delay! Mission control is on it.",
-            "☕ The server is brewing some fresh content for you. Worth the wait!",
-            "🎭 Our hamsters running the servers took a coffee break. They're back now!",
-            "🌟 Good things come to those who wait... including awesome posts!",
-            "🎪 The digital circus is setting up backstage. The show will begin shortly!",
-            "🎵 The server is composing a symphony of posts just for you.",
-            "🧙‍♂️ Our wizard is casting a spell to summon your feed... almost done!",
-          ];
-          const randomMessage =
-            funMessages[Math.floor(Math.random() * funMessages.length)];
-          setError(
-            randomMessage +
-              (retryCount > 0 ? ` (Attempt ${retryCount + 1})` : "")
-          );
-        } else {
-          setError(
-            "Oops! Something went wrong while fetching posts. Let's try again! 🔄"
-          );
-        }
+        setError("Unable to load posts. Please try again.");
         console.error("Fetch posts error:", error);
         // Release minimum loading on error too
         setMinLoading(false);
@@ -165,50 +144,26 @@ const Feed = () => {
     fetchPosts(1);
   }, [fetchPosts]);
 
-  if ((loading || error) && posts.length === 0 && minLoading) {
-    // Show shimmer for first 2s if loading or error and no posts
+  if ((loading || error) && posts.length === 0) {
+    // Always show shimmer for loading or error and no posts
     return <ShimmerEffect type="feed" />;
   }
 
-  // After 2s, if error and no posts, show error/info
+  // After 2s, if error and no posts, show simple error
   if (error && posts.length === 0 && !minLoading) {
     return (
       <div className="w-full max-w-2xl mx-auto py-2 sm:py-4 lg:py-8 px-3 sm:px-4 lg:px-4">
-        <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 text-blue-800 px-4 py-6 rounded-xl mb-4 sm:mb-6 text-sm sm:text-base flex flex-col items-center gap-4 animate-fade-in mt-8 max-w-xl mx-auto text-center">
-          <div className="text-4xl animate-bounce">
-            {error.includes("🌙")
-              ? "🌙"
-              : error.includes("🚀")
-              ? "🚀"
-              : error.includes("☕")
-              ? "☕"
-              : error.includes("🎭")
-              ? "🎭"
-              : error.includes("🌟")
-              ? "🌟"
-              : error.includes("🎪")
-              ? "🎪"
-              : error.includes("🎵")
-              ? "🎵"
-              : error.includes("🧙‍♂️")
-              ? "🧙‍♂️"
-              : "🔄"}
-          </div>
+        <div className="bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 text-red-800 px-4 py-6 rounded-xl mb-4 sm:mb-6 text-sm sm:text-base flex flex-col items-center gap-4 animate-fade-in mt-8 max-w-xl mx-auto text-center">
+          <div className="text-4xl">�</div>
           <div>
-            <h3 className="font-bold text-xl mb-3 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Hold On, Magic is Happening! ✨
-            </h3>
+            <h3 className="font-bold text-xl mb-3">Unable to Load Posts</h3>
             <p className="mb-4 leading-relaxed text-lg font-medium">{error}</p>
-            <div className="text-sm text-blue-600 mb-4 bg-blue-100 rounded-lg p-3">
-              💡 <strong>Pro Tip:</strong> Good things come to those who wait!
-              Our servers are just making sure everything is perfect for you.
-            </div>
             <button
               onClick={retryFetch}
-              className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-8 py-3 rounded-full font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2 mx-auto"
+              className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white px-8 py-3 rounded-full font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2 mx-auto"
             >
               <svg
-                className="w-5 h-5 animate-spin"
+                className="w-5 h-5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -220,7 +175,7 @@ const Feed = () => {
                   d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                 />
               </svg>
-              Let's Try Again! {retryCount > 0 && `(Round ${retryCount + 1})`}
+              Try Again
             </button>
           </div>
         </div>
