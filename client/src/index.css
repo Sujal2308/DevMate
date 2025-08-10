@@ -1321,3 +1321,14 @@ body::-webkit-scrollbar-thumb:hover {
     );
   }
 }
+
+/* Typewriter effect for Messages Coming Soon heading */
+.typewriter {
+  overflow: hidden;
+  white-space: nowrap;
+  animation: typing 2.5s steps(22, end) 1s 1 normal both;
+}
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}

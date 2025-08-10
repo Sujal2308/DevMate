@@ -231,7 +231,9 @@ const CommentItem = ({ comment, postId, onUpdate, formatDate }) => {
               </div>
             </div>
           ) : (
-            <p className="text-sm text-x-gray mt-1 font-poppins">{comment.text}</p>
+            <p className="text-sm text-x-gray mt-1 font-poppins">
+              {comment.text}
+            </p>
           )}
         </div>
 

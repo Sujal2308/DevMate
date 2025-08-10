@@ -246,7 +246,7 @@ const SettingPage = () => {
       </div>
 
       {/* Email Notifications */}
-      <div className="mb-8 p-6 bg-white/5 rounded-xl border border-gray-700">
+      <div className="mb-8 p-6 bg-white/5 rounded-xl">
         <div className="flex items-center mb-4">
           <svg
             className="w-5 h-5 text-blue-400 mr-2"
@@ -372,7 +372,7 @@ const SettingPage = () => {
       </div>
 
       {/* Account Privacy */}
-      <div className="mb-8 p-6 bg-white/5 rounded-xl border border-gray-700">
+      <div className="mb-8 p-6 bg-white/5 rounded-xl">
         <div className="flex items-center mb-4">
           <svg
             className="w-5 h-5 text-purple-400 mr-2"
@@ -439,7 +439,7 @@ const SettingPage = () => {
       </div>
 
       {/* Delete Account */}
-      <div className="p-6 bg-white/5 rounded-xl border border-gray-700 text-center">
+      <div className="p-6 bg-white/5 rounded-xl text-center">
         <button
           onClick={() => setShowDelete(true)}
           className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-red-600 to-pink-500 text-white font-semibold shadow-lg hover:from-red-700 hover:to-pink-600 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 font-mono"

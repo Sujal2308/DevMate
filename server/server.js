@@ -76,20 +76,22 @@ const limiter = rateLimit({
   legacyHeaders: false,
   skip: (req) => {
     // Skip rate limiting for static assets and favicon
-    return req.url.startsWith('/static/') || 
-           req.url === '/favicon.ico' || 
-           req.url === '/manifest.json' ||
-           req.url.startsWith('/logo') ||
-           req.url.endsWith('.ico') ||
-           req.url.endsWith('.png') ||
-           req.url.endsWith('.jpg') ||
-           req.url.endsWith('.css') ||
-           req.url.endsWith('.js');
-  }
+    return (
+      req.url.startsWith("/static/") ||
+      req.url === "/favicon.ico" ||
+      req.url === "/manifest.json" ||
+      req.url.startsWith("/logo") ||
+      req.url.endsWith(".ico") ||
+      req.url.endsWith(".png") ||
+      req.url.endsWith(".jpg") ||
+      req.url.endsWith(".css") ||
+      req.url.endsWith(".js")
+    );
+  },
 });
 
 // Apply rate limiting to API routes only
-app.use('/api', limiter);
+app.use("/api", limiter);
 
 // CORS
 app.use(

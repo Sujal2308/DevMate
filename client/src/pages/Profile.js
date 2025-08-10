@@ -348,11 +348,11 @@ const Profile = () => {
   const showFullProfile = !isPrivate || isOwnProfile || isFollower;
 
   return (
-    <div 
-      className="max-w-6xl mx-auto py-8 px-4" 
-      style={{ 
-        willChange: 'scroll-position',
-        transform: 'translateZ(0)'
+    <div
+      className="max-w-6xl mx-auto py-8 px-4"
+      style={{
+        willChange: "scroll-position",
+        transform: "translateZ(0)",
       }}
     >
       {/* Hero Profile Section */}
@@ -850,12 +850,12 @@ const Profile = () => {
 
               {/* Posts grid */}
               {!loading && posts.length > 0 && (
-                <div 
-                  className="grid grid-cols-1 gap-6" 
-                  style={{ 
-                    willChange: 'scroll-position',
-                    transform: 'translateZ(0)',
-                    backfaceVisibility: 'hidden'
+                <div
+                  className="grid grid-cols-1 gap-6"
+                  style={{
+                    willChange: "scroll-position",
+                    transform: "translateZ(0)",
+                    backfaceVisibility: "hidden",
                   }}
                 >
                   {currentPosts.map((post) => (

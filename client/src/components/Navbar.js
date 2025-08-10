@@ -212,6 +212,7 @@ const Navbar = () => {
                         onClick={(e) => {
                           e.preventDefault();
                           navigate("/logout-confirm");
+                          setMobileMenuOpen(false);
                           window.scrollTo({
                             top: 0,
                             left: 0,

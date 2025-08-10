@@ -2,29 +2,10 @@ import React from "react";
 
 const MessagesComingSoon = () => {
   return (
-    <div className="w-full max-w-lg mx-auto py-20 px-4 flex flex-col items-center justify-center min-h-screen">
-      <div className="bg-gradient-to-br from-x-dark via-x-darker to-x-black rounded-2xl shadow-2xl p-10 flex flex-col items-center justify-center border border-x-border/40 relative overflow-hidden w-full">
-        <div className="absolute inset-0 opacity-30 pointer-events-none select-none">
-          <svg
-            width="100%"
-            height="100%"
-            viewBox="0 0 400 200"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle cx="320" cy="40" r="80" fill="#2563eb" fillOpacity="0.15" />
-            <circle cx="80" cy="160" r="80" fill="#9333ea" fillOpacity="0.12" />
-            <circle
-              cx="200"
-              cy="100"
-              r="120"
-              fill="#22d3ee"
-              fillOpacity="0.08"
-            />
-          </svg>
-        </div>
+    <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
+      <div className="bg-x-dark rounded-2xl shadow-xl border border-x-border/40 px-6 py-8 w-full max-w-xs mx-auto flex flex-col items-center">
         <svg
-          className="w-20 h-20 mb-6 animate-bounce text-x-blue drop-shadow-lg"
+          className="w-10 h-10 mb-4 text-x-blue"
           fill="none"
           stroke="currentColor"
           strokeWidth="2"
@@ -35,12 +16,11 @@ const MessagesComingSoon = () => {
           <rect x="2" y="7" width="20" height="14" rx="4" />
           <path d="M2 7l10 7 10-7" />
         </svg>
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-x-white mb-2 text-center drop-shadow-lg">
-          Messages Feature Coming Soon!
-        </h1>
-        <p className="text-x-gray text-lg text-center max-w-md">
-          Real-time chat and messaging is on the way. Stay tuned for awesome
-          conversations!
+        <h2 className="text-lg font-bold text-x-white mb-2 text-center typewriter">
+          Messages Coming Soon!
+        </h2>
+        <p className="text-x-gray text-sm mb-2 text-center">
+          Real-time chat and messaging is on the way.
         </p>
       </div>
     </div>
@@ -48,3 +28,20 @@ const MessagesComingSoon = () => {
 };
 
 export default MessagesComingSoon;
+
+/* Add this to your CSS (e.g., index.css or MessagesComingSoon.module.css):
+.typewriter {
+  overflow: hidden;
+  border-right: .15em solid #22d3ee;
+  white-space: nowrap;
+  animation: typing 2.5s steps(22, end) 1s 1 normal both, blink-caret .75s step-end infinite;
+}
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: #22d3ee; }
+}
+*/

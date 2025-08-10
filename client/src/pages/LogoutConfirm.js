@@ -11,64 +11,47 @@ const LogoutConfirm = () => {
     navigate("/login");
   };
 
+  const handleCancel = () => {
+    navigate(-1);
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-x-dark to-red-900 px-2 sm:px-0">
-      <div className="bg-x-dark/90 border border-red-700 rounded-2xl shadow-2xl p-6 sm:p-10 flex flex-col items-center max-w-md w-full relative overflow-hidden">
-        <div className="absolute inset-0 opacity-20 pointer-events-none select-none">
-          <svg
-            width="100%"
-            height="100%"
-            viewBox="0 0 400 200"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle cx="320" cy="40" r="80" fill="#ef4444" fillOpacity="0.18" />
-            <circle cx="80" cy="160" r="80" fill="#991b1b" fillOpacity="0.12" />
-            <circle
-              cx="200"
-              cy="100"
-              r="120"
-              fill="#dc2626"
-              fillOpacity="0.08"
-            />
-          </svg>
-        </div>
+    <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
+      <div className="bg-x-dark rounded-2xl shadow-xl border border-red-500/30 px-6 py-8 w-full max-w-xs mx-auto flex flex-col items-center">
         <svg
-          className="w-16 h-16 mb-6 text-red-600 animate-pulse drop-shadow-lg"
+          className="w-8 h-8"
+          style={{ color: "#ff0000" }}
           fill="none"
           stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
           viewBox="0 0 24 24"
         >
-          <path d="M17 16l4-4m0 0l-4-4m4 4H7" />
-          <rect
-            x="3"
-            y="5"
-            width="8"
-            height="14"
-            rx="2"
-            fill="none"
-            stroke="currentColor"
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 11-6 0v-1m6 0H9"
           />
         </svg>
-        <h1 className="text-2xl sm:text-3xl font-bold text-red-500 mb-2 text-center drop-shadow-lg">
-          Are you sure you want to logout?
-        </h1>
-        <p className="text-x-gray text-center mb-8 max-w-xs">
+        <h2
+          className="text-lg font-bold mb-2 text-center"
+          style={{ color: "#ff0000" }}
+        >
+          Logout from DevMate?
+        </h2>
+        <p className="text-x-gray text-sm mb-6 text-center">
           You will need to log in again to access your account.
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
+        <div className="w-full flex flex-col gap-3">
           <button
-            onClick={() => navigate(-1)}
-            className="bg-x-dark border border-x-gray-700 text-x-white font-semibold py-2 px-6 rounded-lg transition hover:bg-x-gray/30 hover:border-x-gray-500"
+            className="w-full py-2 rounded-full bg-x-dark border border-x-border text-x-white font-bold"
+            onClick={handleCancel}
           >
             Cancel
           </button>
           <button
+            className="w-full py-2 rounded-full font-bold shadow text-white"
+            style={{ backgroundColor: "#ff0000" }}
             onClick={handleLogout}
-            className="bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white font-bold py-2 px-6 rounded-lg shadow-lg transition-all duration-200"
           >
             Logout
           </button>

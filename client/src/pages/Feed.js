@@ -18,50 +18,47 @@ const Feed = () => {
   const timeoutRef = useRef(null);
   const { hasUnread } = useNotification();
 
-  const fetchPosts = useCallback(
-    async (pageNum = 1) => {
-      try {
-        setLoading(true);
+  const fetchPosts = useCallback(async (pageNum = 1) => {
+    try {
+      setLoading(true);
 
-        // Increase timeout for initial load to handle Render cold starts
-        const timeoutDuration = pageNum === 1 ? 15000 : 8000; // 15s for first load, 8s for pagination
+      // Increase timeout for initial load to handle Render cold starts
+      const timeoutDuration = pageNum === 1 ? 15000 : 8000; // 15s for first load, 8s for pagination
 
-        const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(
-            () => reject(new Error("Posts fetch timeout")),
-            timeoutDuration
-          )
-        );
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(
+          () => reject(new Error("Posts fetch timeout")),
+          timeoutDuration
+        )
+      );
 
-        const postsPromise = axios.get(`/api/posts?page=${pageNum}&limit=10`);
+      const postsPromise = axios.get(`/api/posts?page=${pageNum}&limit=10`);
 
-        const response = await Promise.race([postsPromise, timeoutPromise]);
+      const response = await Promise.race([postsPromise, timeoutPromise]);
 
-        if (pageNum === 1) {
-          setPosts(response.data.posts);
-          setError(""); // Clear error on successful fetch
-        } else {
-          setPosts((prev) => [...prev, ...response.data.posts]);
-          setError(""); // Clear error on successful fetch
-        }
-
-        setHasMore(
-          response.data.pagination.current < response.data.pagination.pages
-        );
-        setPage(pageNum);
-      } catch (error) {
-        setError("Unable to load posts. Please try again.");
-        console.error("Fetch posts error:", error);
-      } finally {
-        setLoading(false);
-        // Clear timeout when fetch completes
-        if (timeoutRef.current) {
-          clearTimeout(timeoutRef.current);
-        }
+      if (pageNum === 1) {
+        setPosts(response.data.posts);
+        setError(""); // Clear error on successful fetch
+      } else {
+        setPosts((prev) => [...prev, ...response.data.posts]);
+        setError(""); // Clear error on successful fetch
       }
-    },
-    []
-  );
+
+      setHasMore(
+        response.data.pagination.current < response.data.pagination.pages
+      );
+      setPage(pageNum);
+    } catch (error) {
+      setError("Unable to load posts. Please try again.");
+      console.error("Fetch posts error:", error);
+    } finally {
+      setLoading(false);
+      // Clear timeout when fetch completes
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    }
+  }, []);
 
   const loadMore = useCallback(() => {
     if (!loading && hasMore) {
@@ -81,11 +78,11 @@ const Feed = () => {
       timeoutRef.current = setTimeout(() => {
         if (posts.length === 0 && loading) {
           console.log("Force refreshing feed component after timeout");
-          setForceRefresh(prev => prev + 1);
+          setForceRefresh((prev) => prev + 1);
         }
       }, 3000);
     }
-    
+
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
