@@ -9,6 +9,11 @@ on:
       - main
   workflow_dispatch:
 
+# Prevent multiple deployments from running simultaneously
+concurrency:
+  group: azure-deployment-devmate
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -69,4 +74,53 @@ jobs:
           app-name: 'DevMate'
           slot-name: 'Production'
           package: .
+        continue-on-error: true
+
+      - name: 'Retry deployment if failed'
+        if: steps.deploy-to-webapp.outcome == 'failure'
+        id: retry-deploy
+        run: |
+          echo "First deployment attempt failed, waiting 30 seconds before retry..."
+          sleep 30
+          echo "Retrying deployment..."
+        
+      - name: 'Deploy to Azure Web App - Retry 1'
+        if: steps.deploy-to-webapp.outcome == 'failure'
+        id: deploy-retry-1
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'DevMate'
+          slot-name: 'Production'
+          package: .
+        continue-on-error: true
+
+      - name: 'Final retry after longer wait'
+        if: steps.deploy-retry-1.outcome == 'failure'
+        id: final-retry-wait
+        run: |
+          echo "Second deployment attempt failed, waiting 60 seconds for final retry..."
+          sleep 60
+          echo "Attempting final deployment..."
+
+      - name: 'Deploy to Azure Web App - Final Retry'
+        if: steps.deploy-retry-1.outcome == 'failure'
+        id: deploy-final-retry
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'DevMate'
+          slot-name: 'Production'
+          package: .
+
+      - name: 'Check deployment status'
+        run: |
+          if [[ "${{ steps.deploy-to-webapp.outcome }}" == "success" ]]; then
+            echo "✅ Deployment succeeded on first attempt"
+          elif [[ "${{ steps.deploy-retry-1.outcome }}" == "success" ]]; then
+            echo "✅ Deployment succeeded on retry attempt"
+          elif [[ "${{ steps.deploy-final-retry.outcome }}" == "success" ]]; then
+            echo "✅ Deployment succeeded on final retry attempt"
+          else
+            echo "❌ All deployment attempts failed"
+            exit 1
+          fi
           
