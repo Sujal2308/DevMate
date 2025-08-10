@@ -138,7 +138,14 @@ app.get("/api/db-status", (req, res) => {
 });
 
 // Serve static files from React build
-app.use(express.static(path.join(__dirname, "../client/build")));
+app.use(express.static(path.join(__dirname, "client/build"), {
+  maxAge: process.env.NODE_ENV === 'production' ? '1d' : 0,
+  setHeaders: (res, path) => {
+    if (path.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    }
+  }
+}));
 
 // Serve React app for all non-API routes
 app.get("*", (req, res) => {
@@ -146,7 +153,7 @@ app.get("*", (req, res) => {
   if (req.path.startsWith("/api")) {
     return res.status(404).json({ message: "API route not found" });
   }
-  res.sendFile(path.join(__dirname, "../client/build", "index.html"));
+  res.sendFile(path.join(__dirname, "client/build", "index.html"));
 });
 
 // Error handling middleware
