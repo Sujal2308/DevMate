@@ -363,7 +363,7 @@ const Explore = () => {
   return (
     <div
       ref={rootContainerRef}
-      className={`w-full max-w-7xl mx-auto py-1 sm:py-2 lg:py-6 px-2 sm:px-3 lg:px-6 pb-16 lg:pb-8 explore-root-container`}
+      className={`w-full max-w-2xl mx-auto py-1 sm:py-2 lg:py-6 px-2 sm:px-3 lg:px-6 pb-16 lg:pb-8 explore-root-container bg-gradient-to-br from-x-dark/10 to-x-dark/5`}
       style={{
         minHeight: isMobile ? "100vh" : "auto",
         height: "auto",

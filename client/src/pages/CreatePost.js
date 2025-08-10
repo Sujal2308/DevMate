@@ -104,7 +104,7 @@ const CreatePost = () => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto py-2 sm:py-4 lg:py-8 px-3 sm:px-4 lg:px-6 pb-20 lg:pb-8">
+    <div className="w-full max-w-2xl mx-auto py-2 sm:py-4 lg:py-8 px-3 sm:px-4 lg:px-6 pb-20 lg:pb-8 bg-gradient-to-br from-x-dark/10 to-x-dark/5">
       {/* Header Section */}
       <div className="mb-4 sm:mb-6 lg:mb-8 ml-4 sm:ml-6">
         <h1

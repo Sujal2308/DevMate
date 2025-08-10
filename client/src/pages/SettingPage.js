@@ -136,7 +136,7 @@ const SettingPage = () => {
   };
 
   return (
-    <div className="max-w-xl mx-auto py-12 px-4 pb-32 sm:pb-12">
+    <div className="max-w-2xl mx-auto py-12 px-4 pb-32 sm:pb-12 bg-gradient-to-br from-x-dark/10 to-x-dark/5">
       <div className="flex flex-col items-center justify-center mb-8">
         <h2 className="text-3xl font-extrabold text-white tracking-tight drop-shadow-lg font-mono">
           Settings

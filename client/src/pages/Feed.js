@@ -148,7 +148,7 @@ const Feed = () => {
 
   return (
     <div
-      className={`w-full max-w-2xl mx-auto py-2 sm:py-4 lg:py-6 px-4 sm:px-6 lg:px-8 pb-20 lg:pb-8 x-main${
+      className={`w-full max-w-2xl mx-auto py-2 sm:py-4 lg:py-6 px-4 sm:px-6 lg:px-8 pb-20 lg:pb-8 x-main border-l border-r border-x-border/50 bg-gradient-to-br from-x-dark/10 to-x-dark/5${
         loading && posts.length === 0 ? " loading" : ""
       }`}
     >

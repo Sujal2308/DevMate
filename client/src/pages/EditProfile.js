@@ -75,7 +75,7 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto py-6 px-4 sm:px-8 lg:px-12 xl:px-24 pb-24 sm:pb-6">
+    <div className="w-full max-w-2xl mx-auto py-6 px-4 sm:px-8 lg:px-12 xl:px-24 pb-24 sm:pb-6 border-l border-r border-x-border/50 bg-gradient-to-br from-x-dark/10 to-x-dark/5">
       {/* Header Section */}
       <div className="mb-8 text-center">
         <div className="bg-x-navy h-32 relative overflow-hidden mb-6">

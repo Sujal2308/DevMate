@@ -228,7 +228,7 @@ const Profile = () => {
 
   if (loading) {
     return (
-      <div className="max-w-6xl mx-auto py-8 px-4">
+      <div className="max-w-2xl mx-auto py-8 px-4">
         {/* Quick loading skeleton for better perceived performance */}
         <div className="relative mb-8">
           {/* Cover skeleton */}
@@ -282,7 +282,7 @@ const Profile = () => {
 
   if (error || !profileData) {
     return (
-      <div className="max-w-6xl mx-auto py-8 px-4">
+      <div className="max-w-2xl mx-auto py-8 px-4">
         <div className="card p-12 text-center bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/30">
           <div className="bg-red-500/10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
             <svg
@@ -349,7 +349,7 @@ const Profile = () => {
 
   return (
     <div
-      className="max-w-6xl mx-auto py-8 px-4"
+      className="max-w-2xl mx-auto py-8 px-4 bg-gradient-to-br from-x-dark/10 to-x-dark/5"
       style={{
         willChange: "scroll-position",
         transform: "translateZ(0)",

@@ -191,7 +191,7 @@ const NotificationPage = () => {
   };
 
   return (
-    <div className="w-full px-2 sm:px-4 py-8 pb-32 sm:pb-12">
+    <div className="w-full max-w-2xl mx-auto px-2 sm:px-4 py-8 pb-32 sm:pb-12 bg-gradient-to-br from-x-dark/10 to-x-dark/5">
       <div className="flex items-center mb-6 relative">
         <svg
           className="w-7 h-7 text-blue-400 mr-3"
