@@ -350,6 +350,10 @@ const Profile = () => {
   return (
     <div
       className="max-w-2xl mx-auto py-8 px-4 bg-gradient-to-br from-x-dark/10 to-x-dark/5"
+      style={{
+        willChange: "scroll-position",
+        transform: "translateZ(0)",
+      }}
     >
       {/* Hero Profile Section */}
       <div className="relative mb-8">
@@ -848,6 +852,11 @@ const Profile = () => {
               {!loading && posts.length > 0 && (
                 <div
                   className="grid grid-cols-1 gap-6"
+                  style={{
+                    willChange: "scroll-position",
+                    transform: "translateZ(0)",
+                    backfaceVisibility: "hidden",
+                  }}
                 >
                   {currentPosts.map((post) => (
                     <PostCard

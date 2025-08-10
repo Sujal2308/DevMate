@@ -151,7 +151,14 @@ const Home = () => {
             <div className="flex-[2] lg:pr-4 text-center lg:text-left order-1 lg:order-1 w-full lg:pl-4 flex flex-col">
               <div className="mb-4">
                 <span className="inline-block px-4 py-2 bg-x-blue/10 text-x-blue rounded-full text-sm font-medium border border-x-blue/20">
-                  <span className="burning-fire-emoji" role="img" aria-label="fire">🔥</span> The Future of Developer Collaboration
+                  <span
+                    className="burning-fire-emoji"
+                    role="img"
+                    aria-label="fire"
+                  >
+                    🔥
+                  </span>{" "}
+                  The Future of Developer Collaboration
                 </span>
               </div>
               <h1 className="text-6xl xs:text-7xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight">
@@ -163,7 +170,10 @@ const Home = () => {
               </h1>
               <p className="text-base sm:text-xl lg:text-2xl text-x-gray mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
                 <span className="block sm:hidden">
-                  Join 10,000+ devs. Share code. Build. Grow.
+                  <span style={{ fontFamily: "monospace" }}>
+                    Join 10,000+ devs. Share code. Build. Grow. Discover new
+                    ideas. collab.
+                  </span>
                 </span>
                 <span className="hidden sm:inline">
                   Join thousands of developers sharing code, building projects,
@@ -175,7 +185,7 @@ const Home = () => {
               <div className="flex flex-row gap-2 justify-center sm:justify-start items-center mb-8 sm:mb-12 flex-wrap">
                 <Link
                   to="/register"
-                  className="bg-[#e63946] hover:bg-[#0d1333] text-white font-bold text-base px-4 py-2 rounded-full transition-all duration-300 transform hover:scale-105 shadow-xl min-w-[110px] flex items-center justify-center sm:bg-[#1a237e] sm:hover:bg-[#0d1333] sm:text-xl sm:px-12 sm:py-5 sm:min-w-[250px]"
+                  className="bg-[#e63946] hover:bg-[#0d1333] text-white font-bold text-base px-4 py-2 rounded-full transition-colors duration-200 shadow-xl min-w-[110px] flex items-center justify-center sm:bg-[#1a237e] sm:hover:bg-[#0d1333] sm:text-xl sm:px-12 sm:py-5 sm:min-w-[250px]"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -221,7 +231,7 @@ const Home = () => {
                 {/* Desktop: I'm Already In button */}
                 <Link
                   to="/login"
-                  className="border-2 border-x-blue text-x-blue hover:bg-x-blue hover:text-white font-bold text-xl px-12 py-5 rounded-full transition-all duration-300 transform hover:scale-105 min-w-[250px] backdrop-blur-sm flex items-center justify-center space-x-3 hidden sm:flex"
+                  className="border-2 border-x-blue text-x-blue hover:bg-x-blue hover:text-white font-bold text-xl px-12 py-5 rounded-full transition-colors duration-200 min-w-[250px] backdrop-blur-sm flex items-center justify-center space-x-3 hidden sm:flex group"
                 >
                   <span className="flex items-center space-x-2">
                     <svg
@@ -231,7 +241,6 @@ const Home = () => {
                       viewBox="0 0 24 24"
                       stroke="currentColor"
                       strokeWidth={2}
-                      style={{ marginRight: "4px" }}
                     >
                       <path
                         strokeLinecap="round"
@@ -248,8 +257,8 @@ const Home = () => {
               <div className="grid grid-cols-2 lg:grid-cols-2 gap-4 mb-10 max-w-2xl mx-auto lg:mx-0 order-2 lg:order-1">
                 {/* Instant Sharing */}
                 <div className="flex items-center space-x-3 p-4 bg-x-dark/30 rounded-lg border border-x-border/50">
-                  <div className="w-8 h-8 bg-x-blue rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-white text-sm font-bold">⚡</span>
+                  <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                    <span className="text-white text-xl font-bold">⚡</span>
                   </div>
                   <div className="text-left">
                     <h3 className="text-x-white font-medium lg:font-semibold">
@@ -262,8 +271,8 @@ const Home = () => {
                 </div>
                 {/* Global Network */}
                 <div className="flex items-center space-x-3 p-4 bg-x-dark/30 rounded-lg border border-x-border/50">
-                  <div className="w-8 h-8 bg-x-green rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-white text-sm font-bold">🌐</span>
+                  <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                    <span className="text-white text-xl font-bold">🌐</span>
                   </div>
                   <div className="text-left">
                     <h3 className="text-x-white font-medium lg:font-semibold">
@@ -276,8 +285,8 @@ const Home = () => {
                 </div>
                 {/* Grow Portfolio */}
                 <div className="flex items-center space-x-3 p-4 bg-x-dark/30 rounded-lg border border-x-border/50">
-                  <div className="w-8 h-8 bg-gradient-to-r from-x-blue to-x-green rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-white text-sm font-bold">📈</span>
+                  <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                    <span className="text-white text-xl font-bold">📈</span>
                   </div>
                   <div className="text-left">
                     <h3 className="text-x-white font-medium lg:font-semibold">
@@ -291,12 +300,13 @@ const Home = () => {
                 </div>
                 {/* Collaborate */}
                 <div className="flex items-center space-x-3 p-4 bg-x-dark/30 rounded-lg border border-x-border/50">
-                  <div className="w-8 h-8 bg-x-red rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-white text-sm font-bold">🤝</span>
+                  <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                    <span className="text-white text-xl font-bold">🤝</span>
                   </div>
                   <div className="text-left">
                     <h3 className="text-x-white font-medium lg:font-semibold">
-                      Collaborate
+                      <span className="block lg:hidden">Collab</span>
+                      <span className="hidden lg:block">Collaborate</span>
                     </h3>
                     <p className="hidden lg:block text-x-gray text-xs mt-1">
                       Work together with peers to create amazing things.
@@ -337,7 +347,8 @@ const Home = () => {
                     24/7
                   </span>
                   <span className="text-white text-xs font-semibold opacity-90 mt-1">
-                    Community Support
+                    <span className="sm:hidden">Support</span>
+                    <span className="hidden sm:inline">Community Support</span>
                   </span>
                 </div>
               </div> */}
@@ -464,7 +475,8 @@ const Home = () => {
             <div className="group hover:transform hover:scale-105 transition-all duration-300">
               <div className="text-3xl font-bold text-x-blue mb-2">24/7</div>
               <div className="text-x-gray group-hover:text-x-light-gray transition-colors">
-                Community Support
+                <span className="block sm:hidden">Support</span>
+                <span className="hidden sm:block">Community Support</span>
               </div>
             </div>
           </div>
@@ -473,27 +485,48 @@ const Home = () => {
 
       {/* Mast Footer */}
       <div className="border-t border-x-border bg-x-black w-full">
-        <div className="w-full px-8 lg:px-16 py-16">
+        <div className="w-full px-8 lg:px-16 py-16 md:py-16 py-8">
           {/* Main CTA Section */}
-          <div className="text-center mb-16">
+          <div className="text-center mb-16 md:mb-16 mb-8">
             <div className="mb-6">
               <span className="inline-block px-6 py-3 bg-gradient-to-r from-x-blue/20 to-x-green/20 text-x-blue rounded-full text-sm font-medium border border-x-blue/30">
                 ✨ Join the Revolution
               </span>
             </div>
-            <h2 className="text-4xl lg:text-5xl font-bold text-x-white mb-6 leading-tight">
+            <h2
+              className="text-4xl lg:text-5xl font-bold text-x-white mb-6 leading-tight text-center"
+              style={{ fontFamily: "Poppins, sans-serif" }}
+            >
               Ready to transform your
               <br />
-              <span className="animated-gradient-text">coding journey?</span>
+              <span
+                className="bg-gradient-to-r from-[#C0C0C0] via-[#E0E0E0] to-[#A9A9A9] bg-clip-text text-transparent"
+                style={{ fontFamily: "Poppins, sans-serif" }}
+              >
+                coding journey?
+              </span>
             </h2>
-            <p className="text-xl text-x-gray mb-10 max-w-2xl mx-auto">
-              Start sharing code and connecting with developers today. Your next
-              breakthrough is just one post away.
+            <p className="text-xl text-x-gray mb-10 max-w-2xl mx-auto text-center">
+              <span
+                className="block sm:hidden"
+                style={{ fontFamily: "monospace", textAlign: "left" }}
+              >
+                <span style={{ paddingLeft: "0.75em", display: "block" }}>
+                  Start sharing code and connecting with developers today.
+                </span>
+              </span>
+              <span
+                className="hidden sm:block"
+                style={{ fontFamily: "Poppins, sans-serif" }}
+              >
+                Start sharing code and connecting with developers today. Your
+                next breakthrough is just one post away.
+              </span>
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
               <Link
                 to="/register"
-                className="bg-x-blue hover:bg-x-blue-hover text-white font-bold text-xl px-12 py-5 rounded-full transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-blue-500/25 min-w-[250px] group flex items-center justify-center space-x-3"
+                className="bg-x-blue hover:bg-x-blue-hover text-white font-bold text-xl px-12 py-5 rounded-full transition-colors duration-200 shadow-2xl hover:shadow-blue-500/25 min-w-[250px] group flex items-center justify-center space-x-3"
               >
                 <span className="flex items-center space-x-2">
                   <svg
@@ -515,10 +548,9 @@ const Home = () => {
               </Link>
               <Link
                 to="/features"
-                className="border-2 border-x-blue text-x-blue hover:bg-x-blue hover:text-white font-bold text-xl px-12 py-5 rounded-full transition-all duration-300 transform hover:scale-105 min-w-[250px] backdrop-blur-sm flex items-center justify-center space-x-3"
+                className="border-2 border-x-blue text-x-blue hover:bg-x-blue-hover hover:text-white font-bold text-xl px-12 py-5 rounded-full transition-colors duration-200 min-w-[250px] backdrop-blur-sm flex items-center justify-center space-x-3 group"
               >
                 <span className="flex items-center space-x-2">
-                  {/* Explore Feature Logo (Compass Icon) */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-7 w-7 text-x-blue group-hover:text-white transition-colors"
@@ -551,91 +583,67 @@ const Home = () => {
 
           {/* Footer Content */}
           <div className="border-t border-x-border/50 pt-8 bg-x-black w-full">
-            {/* Mobile: Sleek, compact, stacked layout with only logo, description, socials, and 3 links below */}
+            {/* Mobile: Enhanced minimal footer */}
             <div className="block md:hidden">
-              <div className="flex flex-col items-center mb-4">
-                <div className="flex items-center space-x-2 mb-2">
-                  <div className="w-8 h-8 bg-gradient-to-r from-x-blue to-x-green rounded-full flex items-center justify-center">
+              <div className="flex flex-col items-center space-y-6 pb-0">
+                {/* Logo and name */}
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-gradient-to-r from-x-blue to-x-green rounded-xl flex items-center justify-center shadow-lg">
                     <span className="text-white font-bold text-base">D</span>
                   </div>
                   <span className="text-xl font-bold text-x-white">
                     DevMate
                   </span>
                 </div>
-                <p className="text-x-gray text-center text-sm mb-3 max-w-xs">
-                  The ultimate platform for developers to connect, share code,
-                  and build amazing projects together.
-                </p>
-                <div className="flex justify-center space-x-2 mb-3">
+
+                {/* Social icons */}
+                <div className="flex space-x-4">
                   <a
                     href="#contact"
-                    className="w-8 h-8 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all text-lg"
-                  >
-                    📧
-                  </a>
-                  <a
-                    href="#contact"
-                    className="w-8 h-8 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all text-lg"
+                    className="w-10 h-10 bg-gradient-to-br from-x-dark/80 to-x-dark/40 border border-x-border/30 rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all duration-200 text-lg backdrop-blur-sm"
                   >
                     🐙
                   </a>
                   <a
                     href="#contact"
-                    className="w-8 h-8 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all text-lg"
+                    className="w-10 h-10 bg-gradient-to-br from-x-dark/80 to-x-dark/40 border border-x-border/30 rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all duration-200 text-lg backdrop-blur-sm"
                   >
                     🐦
                   </a>
                   <a
                     href="#contact"
-                    className="w-8 h-8 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all text-lg"
+                    className="w-10 h-10 bg-gradient-to-br from-x-dark/80 to-x-dark/40 border border-x-border/30 rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all duration-200 text-lg backdrop-blur-sm"
                   >
                     💬
                   </a>
                 </div>
-                <div className="flex justify-center items-center space-x-0 mt-2 w-full max-w-xs mx-auto">
-                  <a
-                    href="#contact"
-                    className="text-x-gray hover:text-x-blue text-xs font-medium px-2"
-                  >
-                    Privacy
-                  </a>
-                  <span className="h-4 w-px bg-x-border mx-1"></span>
-                  <a
-                    href="#contact"
-                    className="text-x-gray hover:text-x-blue text-xs font-medium px-2"
-                  >
-                    Terms
-                  </a>
-                  <span className="h-4 w-px bg-x-border mx-1"></span>
-                  <a
-                    href="#contact"
-                    className="text-x-gray hover:text-x-blue text-xs font-medium px-2"
-                  >
-                    Help
-                  </a>
-                  <span className="h-4 w-px bg-x-border mx-1"></span>
-                  <a
-                    href="#contact"
-                    className="text-x-gray hover:text-x-blue text-xs font-medium px-2"
-                  >
-                    Guidelines
-                  </a>
-                  <span className="h-4 w-px bg-x-border mx-1"></span>
+
+                {/* Quick links */}
+                <div className="flex items-center space-x-6 text-sm">
                   <Link
                     to="/explore"
-                    className="text-x-gray hover:text-x-blue text-xs font-medium px-2"
+                    className="text-x-gray hover:text-x-blue transition-colors font-medium"
                   >
                     Explore
                   </Link>
+                  <span className="w-px h-4 bg-x-border"></span>
+                  <a
+                    href="#contact"
+                    className="text-x-gray hover:text-x-blue transition-colors font-medium"
+                  >
+                    Support
+                  </a>
+                  <span className="w-px h-4 bg-x-border"></span>
+                  <a
+                    href="#contact"
+                    className="text-x-gray hover:text-x-blue transition-colors font-medium"
+                  >
+                    Privacy
+                  </a>
                 </div>
-              </div>
-              {/* Mobile: Bottom bar with only All systems operational and copyright, no extra gap at end */}
-              <div className="flex flex-col items-center justify-center space-y-2 mt-4 text-xs border-t border-x-border pt-4 pb-0 !mb-0">
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-x-green rounded-full animate-pulse"></div>
-                  <span className="text-x-green">All systems operational</span>
-                </div>
-                <div className="text-x-gray text-xs text-center">
+
+                {/* Copyright */}
+                <div className="text-x-gray text-xs text-center border-t border-x-border/30 pt-4 w-full">
                   © 2025 DevMate. Made with{" "}
                   <span className="text-red-400">❤️</span> for developers.
                 </div>
