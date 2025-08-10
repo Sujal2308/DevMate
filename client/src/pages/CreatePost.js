@@ -471,8 +471,7 @@ console.log("Welcome to DevMate!");`
               <div className="card p-6 bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/30">
                 <div className="flex items-center mb-6">
                   <div className="bg-black text-white w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold mr-4">
-                    {(user?.displayName || "Y").charAt(0).toUpperCase()
-                  }
+                    {(user?.displayName || "Y").charAt(0).toUpperCase()}
                   </div>
                   <div>
                     <p className="font-semibold text-x-white">

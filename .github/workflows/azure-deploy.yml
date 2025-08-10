@@ -74,15 +74,15 @@ jobs:
           package: .
         continue-on-error: true
 
-      - name: 'Retry deployment if failed'
+      - name: "Retry deployment if failed"
         if: steps.deploy-to-webapp.outcome == 'failure'
         id: retry-deploy
         run: |
           echo "First deployment attempt failed, waiting 30 seconds before retry..."
           sleep 30
           echo "Retrying deployment..."
-        
-      - name: 'Deploy to Azure Web App - Retry 1'
+
+      - name: "Deploy to Azure Web App - Retry 1"
         if: steps.deploy-to-webapp.outcome == 'failure'
         id: deploy-retry-1
         uses: azure/webapps-deploy@v3
@@ -92,7 +92,7 @@ jobs:
           package: .
         continue-on-error: true
 
-      - name: 'Final retry after longer wait'
+      - name: "Final retry after longer wait"
         if: steps.deploy-retry-1.outcome == 'failure'
         id: final-retry-wait
         run: |
@@ -100,7 +100,7 @@ jobs:
           sleep 60
           echo "Attempting final deployment..."
 
-      - name: 'Deploy to Azure Web App - Final Retry'
+      - name: "Deploy to Azure Web App - Final Retry"
         if: steps.deploy-retry-1.outcome == 'failure'
         id: deploy-final-retry
         uses: azure/webapps-deploy@v3
@@ -109,7 +109,7 @@ jobs:
           slot-name: "Production"
           package: .
 
-      - name: 'Check deployment status'
+      - name: "Check deployment status"
         run: |
           if [[ "${{ steps.deploy-to-webapp.outcome }}" == "success" ]]; then
             echo "✅ Deployment succeeded on first attempt"

@@ -654,7 +654,7 @@ const Profile = () => {
                   {profileUser.skills.slice(0, 5).map((skill, index) => (
                     <span
                       key={index}
-                      className="bg-gradient-to-r from-x-blue/20 to-purple-500/20 border border-x-blue/30 text-x-blue px-3 py-1.5 rounded-full text-sm font-medium backdrop-blur-sm"
+                      className="bg-black text-[#C0C0C0] px-3 py-1.5 rounded-full text-sm font-medium backdrop-blur-sm"
                     >
                       {skill}
                     </span>

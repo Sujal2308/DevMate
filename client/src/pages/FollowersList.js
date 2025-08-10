@@ -24,14 +24,20 @@ const FollowersList = () => {
     fetchFollowers();
   }, [username]);
 
-  if (loading) return <ShimmerEffect type="profile" />;
+  if (loading) return <ShimmerEffect type="followers" />;
   if (error) return <div className="text-red-500 p-8">{error}</div>;
 
   return (
     <div className="w-full min-h-[60vh] py-10 px-2 sm:px-4 lg:px-8">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-3">
-          <h2 className="text-3xl font-extrabold text-x-white tracking-tight bg-gradient-to-r from-x-blue via-purple-400 to-x-green bg-clip-text text-transparent animate-color-cycle font-mono">
+          <h2
+            className="text-2xl sm:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-[#C0C0C0] via-[#E0E0E0] to-[#A9A9A9] bg-clip-text text-transparent font-mono"
+            style={{
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
             Followers
           </h2>
           {/* Logo after Followers text */}
@@ -64,9 +70,21 @@ const FollowersList = () => {
         </div>
         <Link
           to={`/profile/${username}`}
-          className="text-x-blue hover:underline text-base font-medium"
+          className="flex items-center justify-center w-8 h-8 rounded-full bg-x-dark/40 hover:bg-x-dark/60 transition-colors"
+          title="Back to Profile"
         >
-          Back to Profile
+          <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#C0C0C0"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
         </Link>
       </div>
       {followers.length === 0 ? (
@@ -80,17 +98,17 @@ const FollowersList = () => {
         </div>
       ) : (
         <>
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-3">
             {followers.map((follower) => (
               <div
                 key={follower._id}
-                className="bg-gradient-to-br from-x-dark/80 to-x-dark/40 border border-x-border/30 rounded-2xl p-4 flex items-center gap-5 shadow-lg hover:scale-[1.02] hover:shadow-xl transition-transform w-full relative"
+                className="bg-gradient-to-br from-x-dark/80 to-x-dark/40 border border-x-border/30 rounded-2xl p-2 flex items-center gap-3 shadow-lg hover:scale-[1.02] hover:shadow-xl transition-transform w-full relative min-h-[48px]"
               >
                 <Link
                   to={`/profile/${follower.username}`}
                   className="flex-shrink-0"
                 >
-                  <div className="bg-gradient-to-r from-x-blue to-purple-500 text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold shadow-md">
+                  <div className="bg-black text-white w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold shadow-md">
                     {follower.displayName?.charAt(0).toUpperCase() ||
                       follower.username.charAt(0).toUpperCase()}
                   </div>
@@ -98,23 +116,23 @@ const FollowersList = () => {
                 <div className="flex-1 min-w-0 flex flex-col items-start gap-0">
                   <Link
                     to={`/profile/${follower.username}`}
-                    className="text-xl font-semibold text-x-white hover:text-x-blue truncate block font-mono"
+                    className="text-base font-semibold text-x-white hover:text-x-blue truncate block font-mono"
                   >
                     {follower.displayName || follower.username}
                   </Link>
-                  <div className="text-x-gray text-sm truncate font-mono mt-1">
+                  <div className="text-x-gray text-xs truncate font-mono mt-1">
                     @{follower.username}
                   </div>
                 </div>
                 {/* Aeroplane logo on all devices, right side of card, clickable to messages page */}
                 <Link
                   to={`/messages/${follower.username}`}
-                  className="absolute right-6 top-1/2 -translate-y-1/2 flex items-center group"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center group"
                   title={`Message ${follower.displayName || follower.username}`}
                 >
                   <svg
-                    width="32"
-                    height="32"
+                    width="20"
+                    height="20"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="#38bdf8"

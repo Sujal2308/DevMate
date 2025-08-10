@@ -167,6 +167,14 @@ function AppContent() {
                       }
                     />
                     <Route
+                      path="/messages/:username"
+                      element={
+                        <ProtectedRoute>
+                          <MessagesComingSoon />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
                       path="/support"
                       element={
                         <ProtectedRoute>

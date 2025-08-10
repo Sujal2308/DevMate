@@ -1,4 +1,26 @@
-import React from "react";
+const renderUserListShimmer = () => (
+  <div className="w-full max-w-2xl mx-auto py-2 sm:py-4 lg:py-8 px-3 sm:px-4 lg:px-4 animate-fade-in">
+    <div className="flex items-center gap-3 mb-6">
+      <div className="h-6 w-24 rounded-lg bg-x-dark/40 animate-shimmer"></div>
+      <div className="h-8 w-8 rounded-full bg-x-dark/40 animate-shimmer"></div>
+    </div>
+    <div className="flex flex-col gap-3">
+      {[1, 2, 3, 4, 5].map((item) => (
+        <div
+          key={item}
+          className="bg-x-dark/20 rounded-2xl p-2 flex items-center gap-3 shadow-lg w-full min-h-[48px]"
+        >
+          <div className="bg-x-dark/40 w-10 h-10 rounded-full animate-shimmer"></div>
+          <div className="flex-1 min-w-0 flex flex-col items-start gap-0">
+            <div className="h-4 w-24 rounded bg-x-dark/30 animate-shimmer mb-1"></div>
+            <div className="h-3 w-16 rounded bg-x-dark/25 animate-shimmer"></div>
+          </div>
+          <div className="bg-x-dark/30 w-8 h-8 rounded-full animate-shimmer"></div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
 
 const ShimmerEffect = ({ type = "feed" }) => {
   // Shimmer animation class
@@ -311,6 +333,9 @@ const ShimmerEffect = ({ type = "feed" }) => {
       return renderPostDetailShimmer();
     case "explore":
       return renderExploreShimmer();
+    case "followers":
+    case "following":
+      return renderUserListShimmer();
     case "feed":
     default:
       return renderFeedShimmer();

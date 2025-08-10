@@ -112,7 +112,9 @@ const Feed = () => {
       // Auto-reload after 3 seconds
       autoReloadRef.current = setTimeout(() => {
         if (posts.length === 0 && loading && !autoReloadTriggered) {
-          console.log("Auto-reloading page due to persistent shimmer after 3 seconds");
+          console.log(
+            "Auto-reloading page due to persistent shimmer after 3 seconds"
+          );
           setAutoReloadTriggered(true);
           window.location.reload();
         }
@@ -217,7 +219,9 @@ const Feed = () => {
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 />
               </svg>
-              <span className="text-sm font-medium">Auto-refreshing feed...</span>
+              <span className="text-sm font-medium">
+                Auto-refreshing feed...
+              </span>
             </div>
           </div>
         )}
