@@ -108,13 +108,15 @@ const CreatePost = () => {
       {/* Header Section */}
       <div className="mb-4 sm:mb-6 lg:mb-8 ml-4 sm:ml-6">
         <h1
-          className="text-xl sm:text-2xl md:text-3xl font-bold text-x-white mb-2 flex items-center gap-3"
+          className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 flex items-center gap-3"
           style={{
             fontFamily:
               '"Fira Code", "Monaco", "Menlo", "Ubuntu Mono", "Consolas", "Courier New", monospace',
           }}
         >
-          <span>create</span>
+          <span className="bg-gradient-to-r from-[#C0C0C0] via-[#E0E0E0] to-[#A9A9A9] bg-clip-text text-transparent">
+            create
+          </span>
           <svg
             className="w-6 h-6 sm:w-7 sm:h-7 text-x-blue"
             fill="none"
@@ -163,9 +165,9 @@ const CreatePost = () => {
           <div className="mb-6">
             <label
               htmlFor="content"
-              className="block text-sm font-medium text-x-white mb-3"
+              className="block text-sm font-bold text-x-white mb-3"
             >
-              💭 What's on your mind? *
+              What's on your mind? *
             </label>
             <textarea
               id="content"
@@ -394,15 +396,15 @@ console.log("Welcome to DevMate!");`
                 className="mx-4 flex flex-col items-center"
               >
                 <div className="bg-x-dark rounded-xl p-4 shadow-xl text-center mb-2">
-                  <div className="mb-2 text-lg text-x-white font-semibold">
+                  <div className="mb-2 text-base text-x-white font-normal">
                     Are you sure you want to cancel your post?
                   </div>
-                  <div className="mb-4 text-x-gray">
+                  <div className="mb-4 text-sm text-x-gray">
                     Your changes will be lost if you leave this page.
                   </div>
                   <div className="flex justify-center gap-4">
                     <button
-                      className="px-8 py-3 bg-red-600 hover:bg-red-700 text-white text-base font-bold rounded-full flex items-center justify-center transition-all duration-200"
+                      className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-bold rounded-full flex items-center justify-center transition-all duration-200"
                       onClick={() => {
                         setFormData({ content: "", codeSnippet: "" });
                         setShowCancel(false);
@@ -412,7 +414,7 @@ console.log("Welcome to DevMate!");`
                       Discard All
                     </button>
                     <button
-                      className="px-8 py-3 bg-x-blue hover:bg-blue-800 text-white text-base font-bold rounded-full flex items-center justify-center transition-all duration-200"
+                      className="px-5 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-bold rounded-full flex items-center justify-center transition-all duration-200"
                       onClick={() => setShowConfirm(false)}
                     >
                       Back
@@ -469,7 +471,8 @@ console.log("Welcome to DevMate!");`
               <div className="card p-6 bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/30">
                 <div className="flex items-center mb-6">
                   <div className="bg-black text-white w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold mr-4">
-                    {(user?.displayName || "Y").charAt(0).toUpperCase()}
+                    {(user?.displayName || "Y").charAt(0).toUpperCase()
+                  }
                   </div>
                   <div>
                     <p className="font-semibold text-x-white">
