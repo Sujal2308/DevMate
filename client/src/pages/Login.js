@@ -8,6 +8,7 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -53,7 +54,15 @@ const Login = () => {
         <div className="mb-4 flex justify-center">
           <Link
             to="/"
-            className="text-x-blue hover:text-x-blue-hover font-semibold text-sm flex items-center gap-1 bg-x-dark/40 px-3 py-1.5 rounded-full border border-x-blue/20 shadow-sm transition-colors duration-200"
+            className="font-semibold text-sm flex items-center gap-1 bg-black px-3 py-1.5 rounded-full border border-x-blue/20 shadow-sm transition-colors duration-200"
+            style={{
+              background: 'black',
+              color: 'transparent',
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundImage: 'linear-gradient(90deg, #C0C0C0, #F8F8F8, #C0C0C0)'
+            }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -62,6 +71,7 @@ const Login = () => {
               viewBox="0 0 24 24"
               stroke="currentColor"
               strokeWidth={2}
+              style={{ color: '#C0C0C0' }}
             >
               <path
                 strokeLinecap="round"
@@ -78,8 +88,8 @@ const Login = () => {
           {/* Header */}
           <div className="text-center">
             <div className="flex justify-center mb-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-x-blue to-x-green rounded-xl flex items-center justify-center shadow-md shadow-x-blue/20">
-                <span className="text-white font-bold text-lg">D</span>
+              <div className="w-14 h-14 bg-x-blue rounded-full flex items-center justify-center shadow-md">
+                <span className="text-white font-bold text-xl">D</span>
               </div>
             </div>
             <h1 className="text-2xl font-bold text-x-white mb-1">
@@ -93,10 +103,28 @@ const Login = () => {
               <span className="text-x-gray text-sm">New here?</span>
               <Link
                 to="/register"
-                className="text-x-blue hover:text-x-blue-hover font-medium transition-colors"
+                className="font-medium transition-colors animate-gradient-text"
+                style={{
+                  background: 'linear-gradient(90deg, #A259FF, #C0C0C0, #A259FF, #F8F8F8)',
+                  backgroundSize: '200% 200%',
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  color: 'transparent',
+                  WebkitTextFillColor: 'transparent',
+                  animation: 'gradientText 2s linear infinite'
+                }}
               >
                 Create account
               </Link>
+              <style>
+                {`
+                  @keyframes gradientText {
+                    0% { background-position: 0% 50%; }
+                    50% { background-position: 100% 50%; }
+                    100% { background-position: 0% 50%; }
+                  }
+                `}
+              </style>
             </div>
           </div>
 
@@ -143,7 +171,7 @@ const Login = () => {
                 />
               </div>
 
-              <div>
+              <div className="relative">
                 <label
                   htmlFor="password"
                   className="block text-sm font-medium text-x-white mb-1"
@@ -153,7 +181,7 @@ const Login = () => {
                 <input
                   id="password"
                   name="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   autoComplete="current-password"
                   required
                   className="w-full px-3 py-2.5 bg-x-black/50 border border-x-border/30 rounded-lg text-x-white placeholder-x-gray focus:outline-none focus:ring-2 focus:ring-x-blue/50 focus:border-x-blue transition-all duration-200"
@@ -161,6 +189,14 @@ const Login = () => {
                   value={formData.password}
                   onChange={handleChange}
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-3 top-9 text-xs focus:outline-none bg-black px-2 py-1 rounded text-white"
+                  tabIndex={-1}
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </button>
                 <div className="text-right mt-1">
                   <a
                     href="/forgot-password"

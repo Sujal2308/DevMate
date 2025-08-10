@@ -10,6 +10,7 @@ const Register = () => {
     password: "",
     confirmPassword: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
 
@@ -80,7 +81,10 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-x-black via-x-dark to-x-black flex items-center justify-center py-8 px-4 sm:px-6 lg:px-8">
+    <div
+      className="min-h-screen bg-gradient-to-br from-x-black via-x-dark to-x-black flex items-center justify-center py-8 px-4 sm:px-6 lg:px-8"
+      style={{ fontFamily: "Poppins, sans-serif" }}
+    >
       {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-x-blue/3 rounded-full blur-3xl"></div>
@@ -93,8 +97,8 @@ const Register = () => {
           {/* Header */}
           <div className="text-center">
             <div className="flex justify-center mb-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-x-green to-x-blue rounded-xl flex items-center justify-center shadow-md shadow-x-green/20">
-                <span className="text-white font-bold text-lg">D</span>
+              <div className="w-14 h-14 bg-x-blue rounded-full flex items-center justify-center shadow-md">
+                <span className="text-white font-bold text-xl">D</span>
               </div>
             </div>
             <h1 className="text-2xl font-bold text-x-white mb-1">
@@ -193,7 +197,7 @@ const Register = () => {
             </div>
 
             {/* Password */}
-            <div>
+            <div className="relative">
               <label
                 htmlFor="password"
                 className="block text-sm font-medium text-x-white mb-1"
@@ -203,7 +207,7 @@ const Register = () => {
               <input
                 id="password"
                 name="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 required
                 value={formData.password}
                 onChange={handleChange}
@@ -214,6 +218,14 @@ const Register = () => {
                 }`}
                 placeholder="Create a password"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-9 text-xs focus:outline-none bg-black px-2 py-1 rounded text-white"
+                tabIndex={-1}
+              >
+                {showPassword ? "Hide" : "Show"}
+              </button>
               {errors.password && (
                 <p className="mt-1 text-xs text-red-400">{errors.password}</p>
               )}
@@ -251,7 +263,7 @@ const Register = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-x-green to-x-blue text-white font-semibold py-2.5 px-4 rounded-lg transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg hover:shadow-x-green/25 flex items-center justify-center"
+              className="w-full bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 text-white font-semibold py-2.5 px-4 rounded-lg transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg hover:shadow-blue-500/25 flex items-center justify-center"
             >
               {loading ? (
                 <>

@@ -138,14 +138,16 @@ app.get("/api/db-status", (req, res) => {
 });
 
 // Serve static files from React build
-app.use(express.static(path.join(__dirname, "client/build"), {
-  maxAge: process.env.NODE_ENV === 'production' ? '1d' : 0,
-  setHeaders: (res, path) => {
-    if (path.endsWith('.html')) {
-      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-    }
-  }
-}));
+app.use(
+  express.static(path.join(__dirname, "client/build"), {
+    maxAge: process.env.NODE_ENV === "production" ? "1d" : 0,
+    setHeaders: (res, path) => {
+      if (path.endsWith(".html")) {
+        res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+      }
+    },
+  })
+);
 
 // Serve React app for all non-API routes
 app.get("*", (req, res) => {
