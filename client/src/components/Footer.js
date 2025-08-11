@@ -30,10 +30,13 @@ const Footer = () => {
               <span>All systems operational</span>
             </div>
             <span>•</span>
+            <div className="w-8 h-8 bg-x-blue rounded-full flex items-center justify-center shadow-md">
+              <span className="text-white font-bold text-lg">D</span>
+            </div>
             <span>© 2025 DevMate</span>
             <span>•</span>
             <span>Made with ❤️ in India</span>
-          </div>{" "}
+          </div>
         </div>
       </footer>
     </div>

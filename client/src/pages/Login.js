@@ -56,12 +56,13 @@ const Login = () => {
             to="/"
             className="font-semibold text-sm flex items-center gap-1 bg-black px-3 py-1.5 rounded-full border border-x-blue/20 shadow-sm transition-colors duration-200"
             style={{
-              background: 'black',
-              color: 'transparent',
-              backgroundClip: 'text',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundImage: 'linear-gradient(90deg, #C0C0C0, #F8F8F8, #C0C0C0)'
+              background: "black",
+              color: "transparent",
+              backgroundClip: "text",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundImage:
+                "linear-gradient(90deg, #C0C0C0, #F8F8F8, #C0C0C0)",
             }}
           >
             <svg
@@ -71,7 +72,7 @@ const Login = () => {
               viewBox="0 0 24 24"
               stroke="currentColor"
               strokeWidth={2}
-              style={{ color: '#C0C0C0' }}
+              style={{ color: "#C0C0C0" }}
             >
               <path
                 strokeLinecap="round"
@@ -105,13 +106,14 @@ const Login = () => {
                 to="/register"
                 className="font-medium transition-colors animate-gradient-text"
                 style={{
-                  background: 'linear-gradient(90deg, #A259FF, #C0C0C0, #A259FF, #F8F8F8)',
-                  backgroundSize: '200% 200%',
-                  backgroundClip: 'text',
-                  WebkitBackgroundClip: 'text',
-                  color: 'transparent',
-                  WebkitTextFillColor: 'transparent',
-                  animation: 'gradientText 2s linear infinite'
+                  background:
+                    "linear-gradient(90deg, #A259FF, #C0C0C0, #A259FF, #F8F8F8)",
+                  backgroundSize: "200% 200%",
+                  backgroundClip: "text",
+                  WebkitBackgroundClip: "text",
+                  color: "transparent",
+                  WebkitTextFillColor: "transparent",
+                  animation: "gradientText 2s linear infinite",
                 }}
               >
                 Create account

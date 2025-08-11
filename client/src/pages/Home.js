@@ -1,6 +1,34 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+// Modal state for bug report
+const useReportModal = () => {
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [bugText, setBugText] = useState("");
+  const handleReportSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await fetch("/api/report-bug", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bug: bugText }),
+      });
+      alert("Thank you for reporting the bug!");
+    } catch {
+      alert("Failed to submit bug report. Please try again later.");
+    }
+    setShowReportModal(false);
+    setBugText("");
+  };
+  return {
+    showReportModal,
+    setShowReportModal,
+    bugText,
+    setBugText,
+    handleReportSubmit,
+  };
+};
+
 // Suppress ResizeObserver loop error in development (optional)
 if (typeof window !== "undefined") {
   const realConsoleError = window.console.error;
@@ -138,8 +166,58 @@ const FloatingContactButton = () => {
 };
 
 const Home = () => {
+  const {
+    showReportModal,
+    setShowReportModal,
+    bugText,
+    setBugText,
+    handleReportSubmit,
+  } = useReportModal();
   return (
-    <div className="min-h-screen bg-x-black text-x-white flex flex-col w-full">
+    <div
+      className={`min-h-screen bg-x-black text-x-white flex flex-col w-full ${
+        showReportModal ? "overflow-hidden" : ""
+      }`}
+    >
+      {showReportModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="bg-x-dark rounded-xl shadow-xl p-6 w-80 max-w-full flex flex-col items-center">
+            <h2
+              className="text-lg font-bold text-x-white mb-3"
+              style={{ fontFamily: "monospace", color: "silver" }}
+            >
+              Report a Bug
+            </h2>
+            <form
+              onSubmit={handleReportSubmit}
+              className="w-full flex flex-col"
+            >
+              <textarea
+                className="w-full h-24 p-2 rounded bg-x-black text-x-white border border-x-border mb-3 text-xs font-mono"
+                placeholder="Describe the bug..."
+                value={bugText}
+                onChange={(e) => setBugText(e.target.value)}
+                required
+              />
+              <button
+                type="submit"
+                className="bg-x-blue text-white rounded py-2 font-bold"
+              >
+                Submit
+              </button>
+              <div className="mt-6 flex justify-center">
+                <button
+                  type="button"
+                  className="text-xs font-bold text-x-gray hover:text-x-blue"
+                  onClick={() => setShowReportModal(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
       {/* Hero Section */}
       <div className="relative flex-1 pt-16 sm:pt-20 pb-8 sm:pb-12 overflow-visible flex items-center w-full">
         {/* Background Pattern */}
@@ -587,59 +665,73 @@ const Home = () => {
             <div className="block md:hidden">
               <div className="flex flex-col items-center space-y-6 pb-0">
                 {/* Logo and name */}
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-gradient-to-r from-x-blue to-x-green rounded-xl flex items-center justify-center shadow-lg">
-                    <span className="text-white font-bold text-base">D</span>
+                <div className="flex flex-col w-full mb-2">
+                  <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-8 h-8 bg-x-blue rounded-full flex items-center justify-center shadow-md">
+                        <span className="text-white font-bold text-sm">D</span>
+                      </div>
+                      <span className="text-xl font-bold text-x-white">
+                        DevMate
+                      </span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span
+                        role="img"
+                        aria-label="sparkles"
+                        className="text-2xl"
+                      >
+                        🧑‍💻
+                      </span>
+                      <span
+                        role="img"
+                        aria-label="flamingo"
+                        className="text-2xl"
+                      >
+                        🦩
+                      </span>
+                      <span role="img" aria-label="chat" className="text-2xl">
+                        💬
+                      </span>
+                    </div>
                   </div>
-                  <span className="text-xl font-bold text-x-white">
-                    DevMate
+                  <span
+                    className="mt-3 text-xs pl-2"
+                    style={{
+                      color: "silver",
+                      fontFamily: "monospace",
+                      letterSpacing: "0.03em",
+                    }}
+                  >
+                    Built for coders. Designed for inspiration.
                   </span>
                 </div>
 
-                {/* Social icons */}
-                <div className="flex space-x-4">
-                  <a
-                    href="#contact"
-                    className="w-10 h-10 bg-gradient-to-br from-x-dark/80 to-x-dark/40 border border-x-border/30 rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all duration-200 text-lg backdrop-blur-sm"
-                  >
-                    🐙
-                  </a>
-                  <a
-                    href="#contact"
-                    className="w-10 h-10 bg-gradient-to-br from-x-dark/80 to-x-dark/40 border border-x-border/30 rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all duration-200 text-lg backdrop-blur-sm"
-                  >
-                    🐦
-                  </a>
-                  <a
-                    href="#contact"
-                    className="w-10 h-10 bg-gradient-to-br from-x-dark/80 to-x-dark/40 border border-x-border/30 rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all duration-200 text-lg backdrop-blur-sm"
-                  >
-                    💬
-                  </a>
-                </div>
+                {/* Social icons removed as requested */}
 
                 {/* Quick links */}
                 <div className="flex items-center space-x-6 text-sm">
                   <Link
-                    to="/explore"
+                    to="/features"
                     className="text-x-gray hover:text-x-blue transition-colors font-medium"
                   >
                     Explore
                   </Link>
                   <span className="w-px h-4 bg-x-border"></span>
-                  <a
-                    href="#contact"
+                  <Link
+                    to="/support"
                     className="text-x-gray hover:text-x-blue transition-colors font-medium"
                   >
                     Support
-                  </a>
+                  </Link>
                   <span className="w-px h-4 bg-x-border"></span>
-                  <a
-                    href="#contact"
-                    className="text-x-gray hover:text-x-blue transition-colors font-medium"
+                  <button
+                    type="button"
+                    className="text-x-gray hover:text-x-blue transition-colors font-medium bg-transparent border-none p-0"
+                    onClick={() => setShowReportModal(true)}
                   >
-                    Privacy
-                  </a>
+                    Report
+                  </button>
                 </div>
 
                 {/* Copyright */}
@@ -654,8 +746,8 @@ const Home = () => {
               {/* Brand, Description, Socials (col-span-2 on md+) */}
               <div className="md:col-span-2 flex flex-col items-start md:items-start">
                 <div className="flex items-center space-x-3 mb-3">
-                  <div className="w-10 h-10 bg-gradient-to-r from-x-blue to-x-green rounded-full flex items-center justify-center">
-                    <span className="text-white font-bold text-lg">D</span>
+                  <div className="w-8 h-8 bg-x-blue rounded-full flex items-center justify-center shadow-md">
+                    <span className="text-white font-bold text-sm">D</span>
                   </div>
                   <span className="text-2xl font-bold text-x-white">
                     DevMate
