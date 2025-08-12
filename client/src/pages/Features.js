@@ -455,229 +455,327 @@ const Features = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-x-border bg-x-black">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          {/* Mobile: Sleek, compact, stacked layout with only logo, description, socials, and 3 links below */}
-          <div className="block md:hidden">
-            <div className="flex flex-col items-center mb-4">
-              <div className="flex items-center space-x-2 mb-2">
-                <div className="w-8 h-8 bg-gradient-to-r from-x-blue to-x-green rounded-full flex items-center justify-center">
-                  <span className="text-white font-bold text-base">D</span>
-                </div>
-                <span className="text-xl font-bold text-x-white">DevMate</span>
-              </div>
-              <p className="text-x-gray text-center text-sm mb-3 max-w-xs">
-                The ultimate platform for developers to connect, share code, and
-                build amazing projects together.
-              </p>
-              <div className="flex justify-center space-x-2 mb-3">
-                <a
-                  href="mailto:contact@devmate.com"
-                  className="w-8 h-8 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all text-lg"
-                >
-                  📧
-                </a>
-                <a
-                  href="https://github.com"
-                  className="w-8 h-8 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all text-lg"
-                >
-                  🐙
-                </a>
-                <a
-                  href="https://twitter.com"
-                  className="w-8 h-8 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all text-lg"
-                >
-                  🐦
-                </a>
-                <a
-                  href="https://discord.com"
-                  className="w-8 h-8 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all text-lg"
-                >
-                  💬
-                </a>
-              </div>
-              <div className="flex justify-center items-center space-x-0 mt-2 w-full max-w-xs mx-auto">
-                <a
-                  href="https://linkedin.com"
-                  className="text-x-gray hover:text-x-blue text-xs font-medium px-2"
-                >
-                  Privacy
-                </a>
-                <span className="h-4 w-px bg-x-border mx-1"></span>
-                <a
-                  href="#contact"
-                  className="text-x-gray hover:text-x-blue text-xs font-medium px-2"
-                >
-                  Terms
-                </a>
-                <span className="h-4 w-px bg-x-border mx-1"></span>
-                <a
-                  href="#contact"
-                  className="text-x-gray hover:text-x-blue text-xs font-medium px-2"
-                >
-                  Help
-                </a>
-                <span className="h-4 w-px bg-x-border mx-1"></span>
-                <a
-                  href="#contact"
-                  className="text-x-gray hover:text-x-blue text-xs font-medium px-2"
-                >
-                  Guidelines
-                </a>
-                <span className="h-4 w-px bg-x-border mx-1"></span>
-                <Link
-                  to="/explore"
-                  className="text-x-gray hover:text-x-blue text-xs font-medium px-2"
-                >
-                  Explore
-                </Link>
-              </div>
+      {/* Home Page Footer */}
+      <div className="border-t border-x-border bg-x-black w-full">
+        <div className="w-full px-8 lg:px-16 py-16 md:py-16 py-8">
+          {/* Main CTA Section */}
+          <div className="text-center mb-16 md:mb-16 mb-8">
+            <div className="mb-6">
+              <span className="inline-block px-6 py-3 bg-gradient-to-r from-x-blue/20 to-x-green/20 text-x-blue rounded-full text-sm font-medium border border-x-blue/30">
+                ✨ Join the Revolution
+              </span>
             </div>
-            {/* Mobile: Bottom bar with only All systems operational and copyright */}
-            <div className="flex flex-col items-center justify-center space-y-2 mt-4 text-xs border-t border-x-border pt-4">
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-x-green rounded-full animate-pulse"></div>
-                <span className="text-x-green">All systems operational</span>
-              </div>
-              <div className="text-x-gray text-xs text-center">
-                © 2025 DevMate. Made with{" "}
-                <span className="text-red-400">❤️</span> for developers.
-              </div>
+            <h2
+              className="text-4xl lg:text-5xl font-bold text-x-white mb-6 leading-tight text-center"
+              style={{ fontFamily: "Poppins, sans-serif" }}
+            >
+              Ready to transform your
+              <br />
+              <span
+                className="bg-gradient-to-r from-[#C0C0C0] via-[#E0E0E0] to-[#A9A9A9] bg-clip-text text-transparent"
+                style={{ fontFamily: "Poppins, sans-serif" }}
+              >
+                coding journey?
+              </span>
+            </h2>
+            <p className="text-xl text-x-gray mb-10 max-w-2xl mx-auto text-center">
+              <span
+                className="block sm:hidden"
+                style={{ fontFamily: "monospace", textAlign: "left" }}
+              >
+                <span style={{ paddingLeft: "0.75em", display: "block" }}>
+                  Start sharing code and connecting with developers today.
+                </span>
+              </span>
+              <span
+                className="hidden sm:block"
+                style={{ fontFamily: "Poppins, sans-serif" }}
+              >
+                Start sharing code and connecting with developers today. Your
+                next breakthrough is just one post away.
+              </span>
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+              <Link
+                to="/register"
+                className="bg-x-blue hover:bg-x-blue-hover text-white font-bold text-xl px-12 py-5 rounded-full transition-colors duration-200 shadow-2xl hover:shadow-blue-500/25 min-w-[250px] group flex items-center justify-center space-x-3"
+              >
+                <span className="flex items-center space-x-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-7 w-7 text-white"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 4v16m8-8H4"
+                    />
+                  </svg>
+                  <span>Get Started Free</span>
+                </span>
+              </Link>
+              <Link
+                to="/features"
+                className="border-2 border-x-blue text-x-blue hover:bg-x-blue-hover hover:text-white font-bold text-xl px-12 py-5 rounded-full transition-colors duration-200 min-w-[250px] backdrop-blur-sm flex items-center justify-center space-x-3 group"
+              >
+                <span className="flex items-center space-x-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-7 w-7 text-x-blue group-hover:text-white transition-colors"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    style={{ marginRight: "4px" }}
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      fill="none"
+                    />
+                    <path
+                      d="M15.5 8.5l-2.5 6-6 2.5 2.5-6 6-2.5z"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      fill="none"
+                    />
+                  </svg>
+                  <span>Explore Features</span>
+                </span>
+              </Link>
             </div>
           </div>
-          {/* Desktop Footer (unchanged) */}
-          <div className="hidden md:grid grid-cols-4 gap-8 mb-8">
-            {/* Brand */}
-            <div className="md:col-span-2">
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="w-10 h-10 bg-gradient-to-r from-x-blue to-x-green rounded-full flex items-center justify-center">
-                  <span className="text-white font-bold text-lg">D</span>
-                </div>
-                <span className="text-2xl font-bold text-x-white">DevMate</span>
-              </div>
-              <p className="text-x-gray mb-4 max-w-md">
-                The ultimate platform for developers to connect, share code, and
-                build amazing projects together.
-              </p>
-              <div className="flex space-x-3">
-                <a
-                  href="#contact"
-                  className="w-9 h-9 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all"
-                >
-                  📧
-                </a>
-                <a
-                  href="#contact"
-                  className="w-9 h-9 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all"
-                >
-                  🐙
-                </a>
-                <a
-                  href="#contact"
-                  className="w-9 h-9 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all"
-                >
-                  🐦
-                </a>
-              </div>
-            </div>
-            {/* Platform Links */}
-            <div>
-              <h3 className="text-x-white font-semibold mb-4">Platform</h3>
-              <ul className="space-y-3">
-                <li>
-                  <Link
-                    to="/feed"
-                    className="text-x-gray hover:text-x-blue transition-colors"
+
+          {/* Footer Content */}
+          <div className="border-t border-x-border/50 pt-8 bg-x-black w-full">
+            {/* Mobile: Enhanced minimal footer */}
+            <div className="block md:hidden">
+              <div className="flex flex-col items-center space-y-6 pb-0">
+                {/* Logo and name */}
+                <div className="flex flex-col w-full mb-2">
+                  <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-8 h-8 bg-x-blue rounded-full flex items-center justify-center shadow-md">
+                        <span className="text-white font-bold text-sm">D</span>
+                      </div>
+                      <span className="text-xl font-bold text-x-white">
+                        DevMate
+                      </span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span
+                        role="img"
+                        aria-label="sparkles"
+                        className="text-2xl"
+                      >
+                        🧑‍💻
+                      </span>
+                      <span
+                        role="img"
+                        aria-label="flamingo"
+                        className="text-2xl"
+                      >
+                        🦩
+                      </span>
+                      <span role="img" aria-label="chat" className="text-2xl">
+                        💬
+                      </span>
+                    </div>
+                  </div>
+                  <span
+                    className="mt-3 text-xs pl-2"
+                    style={{
+                      color: "silver",
+                      fontFamily: "monospace",
+                      letterSpacing: "0.03em",
+                    }}
                   >
-                    Feed
-                  </Link>
-                </li>
-                <li>
+                    Built for coders. Designed for inspiration.
+                  </span>
+                </div>
+
+                {/* Quick links */}
+                <div className="flex items-center space-x-6 text-sm">
                   <Link
-                    to="/explore"
-                    className="text-x-gray hover:text-x-blue transition-colors"
+                    to="/features"
+                    className="text-x-gray hover:text-x-blue transition-colors font-medium"
                   >
                     Explore
                   </Link>
-                </li>
-                <li>
+                  <span className="w-px h-4 bg-x-border"></span>
                   <Link
-                    to="/create"
-                    className="text-x-gray hover:text-x-blue transition-colors"
+                    to="/support"
+                    className="text-x-gray hover:text-x-blue transition-colors font-medium"
                   >
-                    Create Post
+                    Support
                   </Link>
-                </li>
-                <li>
+                  <span className="w-px h-4 bg-x-border"></span>
+                  <button
+                    type="button"
+                    className="text-x-gray hover:text-x-blue transition-colors font-medium bg-transparent border-none p-0"
+                  >
+                    Report
+                  </button>
+                </div>
+
+                {/* Copyright */}
+                <div className="text-x-gray text-xs text-center border-t border-x-border/30 pt-4 w-full">
+                  © 2025 DevMate. Made with{" "}
+                  <span className="text-red-400">❤️</span> for developers.
+                </div>
+              </div>
+            </div>
+            {/* Desktop: original grid layout, unchanged */}
+            <div className="hidden md:grid grid-cols-4 gap-8 mb-12">
+              {/* Brand, Description, Socials (col-span-2 on md+) */}
+              <div className="md:col-span-2 flex flex-col items-start md:items-start">
+                <div className="flex items-center space-x-3 mb-3">
+                  <div className="w-8 h-8 bg-x-blue rounded-full flex items-center justify-center shadow-md">
+                    <span className="text-white font-bold text-sm">D</span>
+                  </div>
+                  <span className="text-2xl font-bold text-x-white">
+                    DevMate
+                  </span>
+                </div>
+                <p className="text-x-gray mb-4 max-w-md">
+                  The ultimate platform for developers to connect, share code,
+                  and build amazing projects together. Join our growing
+                  community of passionate coders.
+                </p>
+                <div className="flex space-x-3 mt-2">
                   <a
                     href="#contact"
-                    className="text-x-gray hover:text-x-blue transition-colors"
+                    className="w-9 h-9 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all text-xl"
                   >
-                    Trending
+                    📧
                   </a>
-                </li>
-              </ul>
+                  <a
+                    href="#contact"
+                    className="w-9 h-9 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all text-xl"
+                  >
+                    🐙
+                  </a>
+                  <a
+                    href="#contact"
+                    className="w-9 h-9 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all text-xl"
+                  >
+                    🐦
+                  </a>
+                  <a
+                    href="#contact"
+                    className="w-9 h-9 bg-x-dark border border-x-border rounded-full flex items-center justify-center text-x-gray hover:text-x-blue hover:border-x-blue transition-all text-xl"
+                  >
+                    💬
+                  </a>
+                </div>
+              </div>
+
+              {/* Platform Links */}
+              <div className="flex flex-col items-start">
+                <h3 className="text-x-white font-semibold mb-4">Platform</h3>
+                <ul className="space-y-3">
+                  <li>
+                    <Link
+                      to="/feed"
+                      className="text-x-gray hover:text-x-blue transition-colors"
+                    >
+                      Feed
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/explore"
+                      className="text-x-gray hover:text-x-blue transition-colors"
+                    >
+                      Explore
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/create"
+                      className="text-x-gray hover:text-x-blue transition-colors"
+                    >
+                      Create Post
+                    </Link>
+                  </li>
+                  <li>
+                    <a
+                      href="#contact"
+                      className="text-x-gray hover:text-x-blue transition-colors"
+                    >
+                      Trending
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Community Links */}
+              <div className="flex flex-col items-start">
+                <h3 className="text-x-white font-semibold mb-4">Community</h3>
+                <ul className="space-y-3">
+                  <li>
+                    <a
+                      href="#contact"
+                      className="text-x-gray hover:text-x-blue transition-colors"
+                    >
+                      Guidelines
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#contact"
+                      className="text-x-gray hover:text-x-blue transition-colors"
+                    >
+                      Help Center
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#contact"
+                      className="text-x-gray hover:text-x-blue transition-colors"
+                    >
+                      Privacy
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#contact"
+                      className="text-x-gray hover:text-x-blue transition-colors"
+                    >
+                      Terms
+                    </a>
+                  </li>
+                </ul>
+              </div>
             </div>
 
-            {/* Community Links */}
-            <div>
-              <h3 className="text-x-white font-semibold mb-4">Community</h3>
-              <ul className="space-y-3">
-                <li>
-                  <a
-                    href="#contact"
-                    className="text-x-gray hover:text-x-blue transition-colors"
-                  >
-                    Guidelines
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#contact"
-                    className="text-x-gray hover:text-x-blue transition-colors"
-                  >
-                    Help Center
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#contact"
-                    className="text-x-gray hover:text-x-blue transition-colors"
-                  >
-                    Privacy
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#contact"
-                    className="text-x-gray hover:text-x-blue transition-colors"
-                  >
-                    Terms
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          {/* Bottom Bar (desktop only) */}
-          <div className="border-t border-x-border pt-6 hidden md:flex md:flex-row justify-between items-center">
-            <div className="text-x-gray text-sm mb-2 md:mb-0">
-              © 2025 DevMate. Made with <span className="text-red-400">❤️</span>{" "}
-              for developers.
-            </div>
-            <div className="flex items-center space-x-6 text-sm">
-              <span className="text-x-gray">
-                Powered by passion & coffee ☕
-              </span>
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-x-green rounded-full animate-pulse"></div>
-                <span className="text-x-green">All systems operational</span>
+            {/* Bottom Bar */}
+            <div className="border-t border-x-border/30 pt-6 flex flex-col md:flex-row justify-center md:justify-between items-center text-center">
+              {/* Only show on desktop */}
+              <div className="hidden md:block text-x-gray text-xs mb-2 md:mb-0">
+                © 2025 DevMate. Made with{" "}
+                <span className="text-red-400">❤️</span> for developers.
+              </div>
+              <div className="hidden md:flex flex-col md:flex-row items-center space-y-1 md:space-y-0 md:space-x-6 text-xs">
+                <span className="text-x-gray">
+                  Powered by passion & coffee ☕
+                </span>
+                <div className="flex items-center justify-center space-x-2 mt-1 md:mt-0">
+                  <div className="w-2 h-2 bg-x-green rounded-full animate-pulse"></div>
+                  <span className="text-x-green">All systems operational</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </footer>
+      </div>
 
       {/* Custom CSS for animations */}
       <style jsx>{`
