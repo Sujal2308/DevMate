@@ -3,26 +3,7 @@ import { Link } from "react-router-dom";
 
 // Feature Card Component with hover animations
 const FeatureCard = ({ icon, title, description, details, delay = 0 }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
   const cardRef = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setTimeout(() => setIsVisible(true), delay);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (cardRef.current) {
-      observer.observe(cardRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, [delay]);
 
   return (
     <div
@@ -208,11 +189,8 @@ const InteractiveDemo = () => {
 
 // Main Features Component
 const Features = () => {
-  const [isLoaded, setIsLoaded] = useState(false);
-
   useEffect(() => {
     window.scrollTo(0, 0);
-    setIsLoaded(true);
   }, []);
 
   const features = [
