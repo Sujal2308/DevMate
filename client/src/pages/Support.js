@@ -11,7 +11,12 @@ const FAQItem = ({ question, answer, isOpen, onToggle }) => {
         onClick={onToggle}
         className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-x-darker transition-colors duration-200"
       >
-        <h3 className="text-lg font-semibold text-x-white pr-4">{question}</h3>
+        <h3
+          className="text-lg text-x-white pr-4"
+          style={{ fontFamily: "Poppins, sans-serif" }}
+        >
+          {question}
+        </h3>
         <svg
           className={`w-5 h-5 text-x-blue transform transition-transform duration-200 flex-shrink-0 ${
             isOpen ? "rotate-180" : ""
@@ -34,7 +39,12 @@ const FAQItem = ({ question, answer, isOpen, onToggle }) => {
           isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
         } overflow-hidden`}
       >
-        <div className="px-6 pb-4 text-x-gray leading-relaxed">{answer}</div>
+        <div
+          className="px-6 pb-4 text-x-gray leading-relaxed"
+          style={{ fontFamily: "Poppins, sans-serif" }}
+        >
+          {answer}
+        </div>
       </div>
     </div>
   );
@@ -249,7 +259,7 @@ const ContactForm = () => {
       <button
         type="submit"
         disabled={isSubmitting}
-        className={`w-full px-6 py-3 bg-gradient-to-r from-x-blue to-x-green text-white font-semibold rounded-lg transition-all duration-300 ${
+        className={`w-full px-6 py-3 bg-purple-600 text-white font-semibold rounded-lg transition-all duration-300 ${
           isSubmitting
             ? "opacity-70 cursor-not-allowed"
             : "hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
@@ -275,7 +285,7 @@ const GuidelineItem = ({ icon, title, description, tips }) => {
   return (
     <div className="bg-x-dark border border-x-border rounded-xl p-6 hover:border-x-blue/50 transition-all duration-300">
       <div className="flex items-start space-x-4">
-        <div className="w-12 h-12 bg-gradient-to-r from-x-blue to-x-green rounded-full flex items-center justify-center text-2xl flex-shrink-0">
+        <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center text-2xl flex-shrink-0 border-4 border-purple-500">
           {icon}
         </div>
         <div className="flex-1">
@@ -494,37 +504,24 @@ const Support = () => {
               <span className="help-you-animated">Help You?</span>
             </span>
           </h1>
-          <p className="text-xl md:text-2xl text-x-gray mb-8 max-w-3xl mx-auto leading-relaxed">
+          <p
+            className="text-xl md:text-2xl text-x-gray mb-8 max-w-3xl mx-auto leading-relaxed"
+            style={{ fontFamily: "Poppins, sans-serif" }}
+          >
             Get the support you need to make the most of DevMate. Find answers,
             get help, and learn about our community guidelines.
           </p>
 
           {/* Quick Contact Options */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <a
-              href="mailto:support@devmate.com"
-              className="flex flex-col items-center sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-2 px-6 py-3 bg-x-dark border border-x-border rounded-lg hover:border-x-blue hover:bg-x-darker transition-all duration-300 text-center"
-            >
-              <svg
-                className="w-5 h-5 text-x-blue mb-1 sm:mb-0"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                />
-              </svg>
+            <div className="flex flex-row items-center px-6 py-3 bg-x-dark border border-x-border rounded-lg text-center">
               <span className="w-full text-center font-mono md:font-normal">
                 support@devmate.com
               </span>
-            </a>
+            </div>
             <button
               onClick={goToContactSection}
-              className="px-6 py-3 bg-[#0a1747] md:bg-gradient-to-r md:from-x-blue md:to-x-green text-white font-semibold rounded-lg hover:shadow-lg hover:scale-105 transition-all duration-300"
+              className="px-6 py-3 bg-[#0a1747] md:bg-[#0a1747] text-white font-semibold rounded-lg hover:shadow-lg hover:scale-105 transition-all duration-300"
             >
               Contact Support
             </button>
@@ -563,12 +560,20 @@ const Support = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* FAQ Section */}
           {activeSection === "faq" && (
-            <div className="max-w-4xl mx-auto">
+            <div id="faq-section" className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="text-4xl font-bold text-x-white mb-4 font-mono">
+                <h2
+                  className="text-4xl font-bold mb-4"
+                  style={{
+                    fontFamily: "Poppins, sans-serif",
+                    background: "linear-gradient(90deg, #C0C0C0, #ECECEC)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                  }}
+                >
                   Frequently Asked Questions
                 </h2>
-                <p className="text-xl text-x-gray">
+                <p className="text-xl text-x-gray font-mono">
                   Find quick answers to common questions about DevMate
                 </p>
               </div>
@@ -593,7 +598,8 @@ const Support = () => {
                 </p>
                 <button
                   onClick={goToContactSection}
-                  className="px-6 py-3 bg-gradient-to-r from-x-blue to-x-green text-white font-semibold rounded-lg hover:shadow-lg hover:scale-105 transition-all duration-300"
+                  className="px-6 py-3 bg-[tomato] text-white font-semibold rounded-lg hover:shadow-lg hover:scale-105 transition-all duration-300"
+                  style={{ fontFamily: "Poppins, sans-serif" }}
                 >
                   Contact Support
                 </button>
@@ -603,9 +609,21 @@ const Support = () => {
 
           {/* Contact Section */}
           {activeSection === "contact" && (
-            <div ref={contactSectionRef} className="max-w-4xl mx-auto">
+            <div
+              id="contact-section"
+              ref={contactSectionRef}
+              className="max-w-4xl mx-auto"
+            >
               <div className="text-center mb-12">
-                <h2 className="text-4xl font-bold text-x-white mb-4">
+                <h2
+                  className="text-4xl font-bold mb-4"
+                  style={{
+                    fontFamily: "Poppins, sans-serif",
+                    background: "linear-gradient(90deg, #C0C0C0, #ECECEC)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                  }}
+                >
                   Contact Support
                 </h2>
                 <p className="text-xl text-x-gray">
@@ -615,42 +633,45 @@ const Support = () => {
 
               <div className="grid md:grid-cols-3 gap-4 mb-8 sm:gap-6">
                 {/* Email Support Card */}
-                <div className="bg-x-dark/70 border border-x-border rounded-lg p-4 sm:p-6 min-h-[90px] flex flex-row sm:flex-col items-center sm:items-center text-left sm:text-center backdrop-blur-md">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-x-blue to-x-green rounded-full flex items-center justify-center mr-4 sm:mr-0 mb-0 sm:mb-4">
-                    <svg
-                      className="w-6 h-6 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                      />
-                    </svg>
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-base sm:text-lg font-semibold text-x-white mb-1 sm:mb-2">
-                      Email Support
-                    </h3>
-                    <p className="text-x-gray text-xs sm:text-sm mb-2 sm:mb-3">
-                      Get help via email
-                    </p>
-                    <a
-                      href="mailto:support@devmate.com"
-                      className="text-x-blue hover:underline text-xs sm:text-base"
-                    >
-                      support@devmate.com
-                    </a>
+                <div className="bg-x-dark/70 border border-x-border rounded-lg p-4 sm:p-6 min-h-[90px] flex flex-col sm:items-center sm:text-center text-left backdrop-blur-md">
+                  <div className="flex flex-row items-center sm:flex-col sm:items-center w-full">
+                    <div className="w-12 h-12 sm:w-10 sm:h-10 bg-black rounded-full flex items-center justify-center mr-3 sm:mr-0 sm:mb-4">
+                      <svg
+                        className="w-6 h-6 text-purple-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <div
+                        className="text-white text-lg sm:text-xl font-bold mb-1"
+                        style={{ fontFamily: "Poppins, sans-serif" }}
+                      >
+                        Send an email on
+                      </div>
+                      <a
+                        href="mailto:support@devmate.com"
+                        className="text-x-blue hover:underline text-base font-mono"
+                        style={{ fontFamily: "Poppins, monospace" }}
+                      >
+                        support@devmate.com
+                      </a>
+                    </div>
                   </div>
                 </div>
                 {/* Response Time Card */}
                 <div className="bg-x-dark/70 border border-x-border rounded-lg p-4 sm:p-6 min-h-[90px] flex flex-row sm:flex-col items-center sm:items-center text-left sm:text-center backdrop-blur-md">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-x-blue to-x-green rounded-full flex items-center justify-center mr-4 sm:mr-0 mb-0 sm:mb-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-black rounded-full flex items-center justify-center mr-4 sm:mr-0 mb-0 sm:mb-4">
                     <svg
-                      className="w-6 h-6 text-white"
+                      className="w-6 h-6 text-purple-500"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -677,9 +698,9 @@ const Support = () => {
                 </div>
                 {/* Location Card */}
                 <div className="bg-x-dark/70 border border-x-border rounded-lg p-4 sm:p-6 min-h-[90px] flex flex-row sm:flex-col items-center sm:items-center text-left sm:text-center backdrop-blur-md">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-x-blue to-x-green rounded-full flex items-center justify-center mr-4 sm:mr-0 mb-0 sm:mb-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-black rounded-full flex items-center justify-center mr-4 sm:mr-0 mb-0 sm:mb-4">
                     <svg
-                      className="w-6 h-6 text-white"
+                      className="w-6 h-6 text-purple-500"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -723,14 +744,24 @@ const Support = () => {
 
           {/* Guidelines Section */}
           {activeSection === "guidelines" && (
-            <div className="max-w-5xl mx-auto">
+            <div id="guidelines-section" className="max-w-5xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="text-4xl font-bold text-x-white mb-4">
+                <h2
+                  className="text-4xl font-bold mb-4"
+                  style={{
+                    fontFamily: "Poppins, sans-serif",
+                    background: "linear-gradient(90deg, #C0C0C0, #ECECEC)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                  }}
+                >
                   Community Guidelines
                 </h2>
-                <p className="text-xl text-x-gray">
-                  Learn about our community standards and best practices for
-                  engaging on DevMate
+                <p className="text-xl text-x-gray font-mono block">
+                  <span className="block sm:inline">
+                    Learn about our community standards and best practices for
+                  </span>
+                  <span className="block sm:inline">engaging on DevMate</span>
                 </p>
               </div>
 
@@ -750,14 +781,14 @@ const Support = () => {
                 <h3 className="text-2xl font-bold text-x-white mb-4">
                   Have Questions About Our Guidelines?
                 </h3>
-                <p className="text-x-gray mb-6">
+                <p className="text-x-gray mb-6 font-mono">
                   If you're unsure about whether content is appropriate or have
                   questions about our community standards, don't hesitate to
                   reach out.
                 </p>
                 <button
                   onClick={goToContactSection}
-                  className="px-6 py-3 bg-gradient-to-r from-x-blue to-x-green text-white font-semibold rounded-lg hover:shadow-lg hover:scale-105 transition-all duration-300"
+                  className="px-6 py-3 bg-amber-500 text-white font-semibold rounded-lg hover:shadow-lg hover:scale-105 transition-all duration-300"
                 >
                   Ask a Question
                 </button>
@@ -767,8 +798,8 @@ const Support = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-x-border bg-x-black">
+      {/* Desktop Footer */}
+      <footer className="border-t border-x-border bg-x-black hidden md:block">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             {/* Brand */}
@@ -846,6 +877,74 @@ const Support = () => {
           </div>
         </div>
       </footer>
+
+      {/* Mobile Footer: Home page style only */}
+      <div
+        className="border-t border-x-border/50 pt-8 bg-x-black w-full block md:hidden px-4 pb-8"
+        style={{ minHeight: "180px" }}
+      >
+        <div className="flex flex-col items-center space-y-6 pb-0 h-full">
+          {/* Logo and name */}
+          <div className="flex flex-col w-full mb-2">
+            <div className="flex items-center justify-between w-full">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-x-blue rounded-full flex items-center justify-center shadow-md">
+                  <span className="text-white font-bold text-sm">D</span>
+                </div>
+                <span className="text-xl font-bold text-x-white">DevMate</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <span role="img" aria-label="sparkles" className="text-2xl">
+                  🧑‍💻
+                </span>
+                <span role="img" aria-label="flamingo" className="text-2xl">
+                  🦩
+                </span>
+                <span role="img" aria-label="chat" className="text-2xl">
+                  💬
+                </span>
+              </div>
+            </div>
+            <span
+              className="mt-3 text-xs pl-2"
+              style={{
+                color: "silver",
+                fontFamily: "monospace",
+                letterSpacing: "0.03em",
+              }}
+            >
+              Built for coders. Designed for inspiration.
+            </span>
+            <div className="flex flex-row justify-center items-center space-x-6 mt-10 mb-4">
+              <a
+                href="#faq-section"
+                className="text-x-gray text-sm font-medium hover:underline"
+              >
+                FAQ
+              </a>
+              <span className="h-4 w-px bg-x-border mx-3"></span>
+              <a
+                href="#contact-section"
+                className="text-x-gray text-sm font-medium hover:underline"
+              >
+                Contact
+              </a>
+              <span className="h-4 w-px bg-x-border mx-3"></span>
+              <a
+                href="#guidelines-section"
+                className="text-x-gray text-sm font-medium hover:underline"
+              >
+                Guidelines
+              </a>
+            </div>
+          </div>
+          {/* Copyright */}
+          <div className="text-x-gray text-xs text-center border-t border-x-border/30 pt-2 mb-6 w-full">
+            © 2025 DevMate. Made with <span className="text-red-400">❤️</span>{" "}
+            for developers.
+          </div>
+        </div>
+      </div>
 
       {/* Custom CSS for animations */}
       <style jsx>{`

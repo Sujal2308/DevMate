@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
 // Feature Card Component with hover animations
@@ -27,62 +27,27 @@ const FeatureCard = ({ icon, title, description, details, delay = 0 }) => {
   return (
     <div
       ref={cardRef}
-      className={`group relative bg-x-dark border border-x-border rounded-2xl p-8 transition-all duration-700 transform hover:scale-105 hover:shadow-2xl hover:shadow-x-blue/20 ${
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-      } max-w-md w-full mx-auto`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      className="bg-x-dark border border-x-border rounded-2xl p-8 max-w-md w-full mx-auto"
     >
-      {/* Animated Background Gradient */}
-      <div className="absolute inset-0 bg-x-dark rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
       {/* Icon */}
-      <div className="relative mb-6">
-        <div
-          className={`w-16 h-16 bg-purple-500 rounded-xl flex items-center justify-center text-2xl transform transition-transform duration-300 ${
-            isHovered ? "rotate-12 scale-110" : ""
-          }`}
-        >
+      <div className="mb-6">
+        <div className="w-16 h-16 bg-purple-500 rounded-xl flex items-center justify-center text-2xl">
           {icon}
         </div>
-        {/* Floating particles around icon */}
-        {isHovered && (
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute -top-2 -right-2 w-3 h-3 bg-x-blue rounded-full animate-ping"></div>
-            <div
-              className="absolute -bottom-2 -left-2 w-2 h-2 bg-x-green rounded-full animate-ping"
-              style={{ animationDelay: "300ms" }}
-            ></div>
-          </div>
-        )}
       </div>
-
       {/* Content */}
-      <div className="relative z-10">
-        <h3 className="text-xl font-bold text-x-white mb-3 group-hover:text-x-blue transition-colors duration-300">
-          {title}
-        </h3>
+      <div>
+        <h3 className="text-xl font-bold text-x-white mb-3">{title}</h3>
         <p className="text-x-gray mb-4 leading-relaxed">{description}</p>
-
-        {/* Expandable Details */}
-        <div
-          className={`overflow-hidden transition-all duration-500 ${
-            isHovered ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
-          }`}
-        >
-          <ul className="text-sm text-x-gray space-y-2">
-            {details?.map((detail, index) => (
-              <li key={index} className="flex items-center">
-                <span className="w-1.5 h-1.5 bg-x-blue rounded-full mr-3"></span>
-                {detail}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <ul className="text-sm text-x-gray space-y-2">
+          {details?.map((detail, index) => (
+            <li key={index} className="flex items-center">
+              <span className="w-1.5 h-1.5 bg-x-blue rounded-full mr-3"></span>
+              {detail}
+            </li>
+          ))}
+        </ul>
       </div>
-
-      {/* Hover Border Effect */}
-      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-x-blue via-x-green to-x-blue opacity-0 group-hover:opacity-20 transition-opacity duration-500 -z-10 blur-xl"></div>
     </div>
   );
 };
@@ -246,7 +211,6 @@ const Features = () => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    // Scroll to top when component mounts
     window.scrollTo(0, 0);
     setIsLoaded(true);
   }, []);
@@ -265,7 +229,7 @@ const Features = () => {
       ],
     },
     {
-      icon: "🚀",
+      icon: "⚡",
       title: "Performance Optimized",
       description:
         "Lightning-fast performance with optimized algorithms and modern architecture for the best user experience.",
@@ -374,103 +338,64 @@ const Features = () => {
         </Link>
       </div>
 
-      {/* Hero Section */}
-      <section className="relative mt-8 pt-10 pb-16 overflow-hidden">
-        {/* Animated Background - Glowing Effect */}
-        <div className="absolute inset-0 pointer-events-none z-0">
-          <div className="absolute top-0 left-0 w-72 h-72 bg-blue-400/20 rounded-full mix-blend-multiply filter blur-2xl opacity-60 animate-blob"></div>
-          <div className="absolute top-0 right-0 w-72 h-72 bg-green-400/20 rounded-full mix-blend-multiply filter blur-2xl opacity-60 animate-blob animation-delay-2000"></div>
-          <div className="absolute -bottom-8 left-20 w-72 h-72 bg-purple-500/20 rounded-full mix-blend-multiply filter blur-2xl opacity-60 animate-blob animation-delay-4000"></div>
-        </div>
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div
-            className={`text-center transform transition-all duration-1000 ${
-              isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
-            }`}
-          >
-            <h1 className="text-3xl xs:text-4xl md:text-7xl font-bold text-x-white mb-6 flex flex-wrap items-center justify-center gap-3">
-              <span>Elevate Your</span>
-              <span className="help-you-animated relative no-underline">
-                Workflow
-              </span>
-            </h1>
-            <p className="text-base xs:text-lg md:text-2xl text-x-gray mb-8 max-w-3xl mx-auto leading-relaxed">
-              Discover the tools and features that make DevMate the ultimate
-              platform for developers to connect, collaborate, and create
-              amazing things together.
-            </p>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center w-full items-center">
-              <Link
-                to="/register"
-                className="w-full sm:w-auto px-8 py-4 bg-[#1a237e] hover:bg-[#0d1333] text-white font-semibold rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-300 flex items-center gap-2 justify-center"
+      {/* Hero Section - Centered, no scroll down */}
+      <section className="flex items-center justify-center min-h-[70vh] w-full mt-16">
+        <div className="text-center w-full">
+          <h1 className="text-3xl xs:text-4xl md:text-7xl font-bold text-x-white mb-6 flex flex-wrap items-center justify-center gap-3">
+            <span>Elevate Your</span>
+            <span className="help-you-animated relative no-underline text-[#ffa726]">
+              Workflow
+            </span>
+          </h1>
+          <p className="text-base xs:text-lg md:text-2xl text-x-gray mb-8 max-w-3xl mx-auto leading-relaxed">
+            Discover the tools and features that make DevMate the ultimate
+            platform for developers to connect, collaborate, and create amazing
+            things together.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center w-full items-center">
+            <Link
+              to="/register"
+              className="w-full sm:w-auto px-8 py-4 bg-[#1a237e] hover:bg-[#0d1333] text-white font-semibold rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-300 flex items-center gap-2 justify-center"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                className="w-6 h-6 text-white"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                  className="w-6 h-6 text-white"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M16.5 8.25V6.75A2.25 2.25 0 0 0 14.25 4.5h-4.5A2.25 2.25 0 0 0 7.5 6.75v1.5m9 0v8.25A2.25 2.25 0 0 1 14.25 18.75h-4.5A2.25 2.25 0 0 1 7.5 16.5V8.25m9 0H7.5"
-                  />
-                </svg>
-                Get Started Free
-              </Link>
-              <Link
-                to="/explore"
-                className="w-full sm:w-auto px-8 py-4 bg-x-dark text-x-white font-semibold rounded-xl border-2 border-x-border hover:border-x-blue hover:text-x-blue transition-all duration-300 flex items-center gap-2 justify-center"
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M16.5 8.25V6.75A2.25 2.25 0 0 0 14.25 4.5h-4.5A2.25 2.25 0 0 0 7.5 6.75v1.5m9 0v8.25A2.25 2.25 0 0 1 14.25 18.75h-4.5A2.25 2.25 0 0 1 7.5 16.5V8.25m9 0H7.5"
+                />
+              </svg>
+              Get Started Free
+            </Link>
+            <Link
+              to="/explore"
+              className="w-full sm:w-auto px-8 py-4 bg-x-dark text-x-white font-semibold rounded-xl border-2 border-x-border hover:border-x-blue hover:text-x-blue transition-all duration-300 flex items-center gap-2 justify-center"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                className="w-6 h-6 text-x-blue"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                  className="w-6 h-6 text-x-blue"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 4.5v15m7.5-7.5h-15"
-                  />
-                </svg>
-                Explore Platform
-              </Link>
-            </div>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 4.5v15m7.5-7.5h-15"
+                />
+              </svg>
+              Explore Platform
+            </Link>
           </div>
         </div>
       </section>
-
-      {/* Animated Scroll Down Logo - with extra space from top */}
-      <div className="flex justify-center mt-12 mb-8 z-10 relative">
-        <div className="scroll-down-bounce flex flex-col items-center">
-          <div className="w-12 h-12 bg-gradient-to-br from-x-blue via-x-green to-purple-500 rounded-full flex items-center justify-center shadow-xl">
-            <svg
-              className="w-7 h-7 text-white"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 5v14m0 0l-5-5m5 5l5-5"
-              />
-            </svg>
-          </div>
-          <span className="mt-2 text-xs text-x-gray font-semibold tracking-wide">
-            Scroll Down
-          </span>
-        </div>
-      </div>
 
       {/* Features Grid */}
       <section className="py-8 md:py-14 relative mt-4 md:mt-10">
@@ -479,7 +404,7 @@ const Features = () => {
             <h2 className="text-2xl xs:text-3xl md:text-5xl font-bold text-x-white mb-4 xs:mb-6">
               Everything You Need
             </h2>
-            <p className="text-base xs:text-lg md:text-xl text-x-gray max-w-3xl mx-auto">
+            <p className="text-base xs:text-lg md:text-xl text-x-gray max-w-3xl mx-auto font-mono">
               From smart code sharing to global networking, DevMate provides all
               the tools you need to succeed as a developer.
             </p>
@@ -501,21 +426,22 @@ const Features = () => {
       </section>
 
       {/* Interactive Demo Section */}
-      <section
-        className="py-16 xs:py-20"
-        style={{ backgroundColor: "#142850" }}
-      >
+      <section className="py-16 xs:py-20 bg-x-darker">
         <div className="max-w-7xl mx-auto px-2 xs:px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10 xs:mb-16">
-            <h2 className="text-2xl xs:text-3xl md:text-5xl font-bold text-x-white mb-4 xs:mb-6">
-              See{" "}
-              <span>
-                <span className="text-x-blue text-3xl xs:text-5xl md:text-6xl align-middle">
-                  D
-                </span>
-                <span className="align-middle">evMate</span>
-              </span>{" "}
-              in Action
+            <h2 className="text-2xl xs:text-3xl md:text-5xl font-bold mb-4 xs:mb-6">
+              <span
+                style={{
+                  background:
+                    "linear-gradient(90deg, #e0e0e0, #bdbdbd, #f5f5f5)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  color: "transparent",
+                }}
+              >
+                See DevMate in Action
+              </span>
             </h2>
             <p className="text-base xs:text-lg md:text-xl text-x-gray max-w-3xl mx-auto">
               Experience the power of DevMate with our interactive
