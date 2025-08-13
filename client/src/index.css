@@ -206,31 +206,6 @@ pre.code,
     animation-delay: 1s;
   }
 
-  /* Disable animations on mobile for better scrolling performance */
-  @media (max-width: 768px) {
-    .animate-float,
-    .animate-float-delayed,
-    .animate-float-slow {
-      animation: none;
-      transform: none;
-    }
-
-    /* Improve mobile scrolling performance */
-    .x-card {
-      will-change: auto;
-      transform: translateZ(0);
-    }
-
-    /* Reduce motion for users who prefer it */
-    @media (prefers-reduced-motion: reduce) {
-      * {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-      }
-    }
-  }
-
   .animate-like-pop {
     animation: like-pop 0.6s cubic-bezier(0.23, 1, 0.32, 1);
   }
@@ -325,10 +300,10 @@ pre.code,
 @keyframes float {
   0%,
   100% {
-    transform: translate3d(0, 0px, 0) rotate(0deg);
+    transform: translateY(0px) rotate(0deg);
   }
   50% {
-    transform: translate3d(0, -10px, 0) rotate(1deg);
+    transform: translateY(-10px) rotate(1deg);
   }
 }
 

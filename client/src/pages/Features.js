@@ -326,14 +326,19 @@ const Features = () => {
             </span>
           </h1>
           <p className="text-base xs:text-lg md:text-2xl text-x-gray mb-8 max-w-3xl mx-auto leading-relaxed">
-            Discover the tools and features that make DevMate the ultimate
-            platform for developers to connect, collaborate, and create amazing
-            things together.
+            <span className="block w-10/12 mx-auto md:w-full md:text-center" style={{ fontFamily: 'monospace' }}>
+              Discover the tools and features that make DevMate the ultimate
+              platform for developers to{" "}
+              <span className="text-x-blue font-semibold">connect</span>,{" "}
+              <span className="text-x-blue font-semibold">collaborate</span>,
+              and <span className="text-x-blue font-semibold">create</span>{" "}
+              amazing things together.
+            </span>
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center w-full items-center">
             <Link
               to="/register"
-              className="w-full sm:w-auto px-8 py-4 bg-[#1a237e] hover:bg-[#0d1333] text-white font-semibold rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-300 flex items-center gap-2 justify-center"
+              className="w-9/12 sm:w-auto px-8 py-4 bg-[#1a237e] hover:bg-[#0d1333] text-white font-semibold rounded-full hover:shadow-lg hover:scale-105 transition-all duration-300 flex items-center gap-2 justify-center"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -353,7 +358,7 @@ const Features = () => {
             </Link>
             <Link
               to="/explore"
-              className="w-full sm:w-auto px-8 py-4 bg-x-dark text-x-white font-semibold rounded-xl border-2 border-x-border hover:border-x-blue hover:text-x-blue transition-all duration-300 flex items-center gap-2 justify-center"
+              className="w-9/12 sm:w-auto px-8 py-4 bg-x-dark text-x-white font-semibold rounded-full border-2 border-x-border hover:border-x-blue hover:text-x-blue transition-all duration-300 flex items-center gap-2 justify-center"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
