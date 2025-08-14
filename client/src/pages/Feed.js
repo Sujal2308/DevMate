@@ -5,9 +5,16 @@ import ShimmerEffect from "../components/ShimmerEffect";
 import PostCard from "../components/PostCard";
 import FakeFeedLoader from "../components/FakeFeedLoader";
 import { useNotification } from "../contexts/NotificationContext";
+import { useAuth } from "../contexts/AuthContext";
+import MinimalMessageModal from "../components/MinimalMessageModal";
 
 const Feed = () => {
+  const { isAuthenticated } = useAuth();
   const [posts, setPosts] = useState([]);
+  const [showLoadModal, setShowLoadModal] = useState(() => {
+  // Only show modal if user is authenticated and hasn't seen it yet
+  return isAuthenticated && !localStorage.getItem('feedModalShown');
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [page, setPage] = useState(1);
@@ -76,8 +83,11 @@ const Feed = () => {
 
   // Initial fetch effect
   useEffect(() => {
-    fetchPosts();
-  }, [fetchPosts, forceRefresh]);
+    if (!showLoadModal) {
+      fetchPosts();
+      localStorage.setItem('feedModalShown', 'true');
+    }
+  }, [fetchPosts, forceRefresh, showLoadModal]);
 
   // Separate timeout effect to avoid dependency loop
   useEffect(() => {
@@ -199,6 +209,10 @@ const Feed = () => {
     // Always show shimmer for loading or error and no posts
     return (
       <div className="relative">
+        <MinimalMessageModal
+          visible={showLoadModal}
+          onLoadPosts={() => setShowLoadModal(false)}
+        />
         <ShimmerEffect type="feed" />
         {showAutoReloadMessage && (
           <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg">
