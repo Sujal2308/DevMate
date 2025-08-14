@@ -4,19 +4,21 @@ import axios from "axios";
 import ShimmerEffect from "../components/ShimmerEffect";
 import PostCard from "../components/PostCard";
 import FakeFeedLoader from "../components/FakeFeedLoader";
+import MinimalMessageModal from "../components/MinimalMessageModal";
 import { useNotification } from "../contexts/NotificationContext";
+import { useAuth } from "../contexts/AuthContext";
 
 const Feed = () => {
   const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // Changed to false initially
   const [error, setError] = useState("");
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [showEndMessage, setShowEndMessage] = useState(false);
-  const [forceRefresh, setForceRefresh] = useState(0);
+  const [showModal, setShowModal] = useState(false);
   const loaderRef = useRef(null);
-  const timeoutRef = useRef(null);
   const { hasUnread } = useNotification();
+  const { user } = useAuth();
 
   const fetchPosts = useCallback(async (pageNum = 1) => {
     try {
@@ -53,10 +55,6 @@ const Feed = () => {
       console.error("Fetch posts error:", error);
     } finally {
       setLoading(false);
-      // Clear timeout when fetch completes
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
     }
   }, []);
 
@@ -66,31 +64,18 @@ const Feed = () => {
     }
   }, [loading, hasMore, page, fetchPosts]);
 
-  // Initial fetch effect
+  // Check if user should see modal on each login session
   useEffect(() => {
-    fetchPosts();
-  }, [fetchPosts, forceRefresh]);
-
-  // Separate timeout effect to avoid dependency loop
-  useEffect(() => {
-    // Only set timeout if we have no posts and are loading
-    if (posts.length === 0 && loading) {
-      timeoutRef.current = setTimeout(() => {
-        if (posts.length === 0 && loading) {
-          console.log("Force refreshing feed component after timeout");
-          setForceRefresh((prev) => prev + 1);
-        }
-      }, 3000);
-    }
-
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
+    if (user) {
+      const hasSeenFeedModalThisSession = sessionStorage.getItem('hasSeenFeedModal');
+      if (!hasSeenFeedModalThisSession) {
+        setShowModal(true);
+      } else {
+        // Auto-fetch posts if user has seen modal in this session
+        fetchPosts();
       }
-    };
-  }, [posts.length, loading]);
-
-
+    }
+  }, [user, fetchPosts]);
 
   // Intersection observer effect
   useEffect(() => {
@@ -141,6 +126,17 @@ const Feed = () => {
 
   const handlePostDelete = (deletedPostId) => {
     setPosts(posts.filter((post) => post._id !== deletedPostId));
+  };
+
+  const handleModalReload = () => {
+    sessionStorage.setItem('hasSeenFeedModal', 'true');
+    setShowModal(false);
+    fetchPosts();
+  };
+
+  const handleModalClose = () => {
+    sessionStorage.setItem('hasSeenFeedModal', 'true');
+    setShowModal(false);
   };
 
   if ((loading || error) && posts.length === 0) {
@@ -283,6 +279,12 @@ const Feed = () => {
           )}
         </div>
       )}
+      
+      <MinimalMessageModal 
+        isOpen={showModal}
+        onClose={handleModalClose}
+        onReload={handleModalReload}
+      />
     </div>
   );
 };
