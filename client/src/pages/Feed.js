@@ -5,27 +5,17 @@ import ShimmerEffect from "../components/ShimmerEffect";
 import PostCard from "../components/PostCard";
 import FakeFeedLoader from "../components/FakeFeedLoader";
 import { useNotification } from "../contexts/NotificationContext";
-import { useAuth } from "../contexts/AuthContext";
-import MinimalMessageModal from "../components/MinimalMessageModal";
 
 const Feed = () => {
-  const { isAuthenticated } = useAuth();
   const [posts, setPosts] = useState([]);
-  const [showLoadModal, setShowLoadModal] = useState(() => {
-  // Only show modal if user is authenticated and hasn't seen it yet
-  return isAuthenticated && !localStorage.getItem('feedModalShown');
-  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [showEndMessage, setShowEndMessage] = useState(false);
   const [forceRefresh, setForceRefresh] = useState(0);
-  const [autoReloadTriggered, setAutoReloadTriggered] = useState(false);
-  const [showAutoReloadMessage, setShowAutoReloadMessage] = useState(false);
   const loaderRef = useRef(null);
   const timeoutRef = useRef(null);
-  const autoReloadRef = useRef(null);
   const { hasUnread } = useNotification();
 
   const fetchPosts = useCallback(async (pageNum = 1) => {
@@ -63,14 +53,9 @@ const Feed = () => {
       console.error("Fetch posts error:", error);
     } finally {
       setLoading(false);
-      setShowAutoReloadMessage(false); // Reset auto-reload message
       // Clear timeout when fetch completes
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
-      }
-      // Clear auto-reload timeout when fetch completes
-      if (autoReloadRef.current) {
-        clearTimeout(autoReloadRef.current);
       }
     }
   }, []);
@@ -83,11 +68,8 @@ const Feed = () => {
 
   // Initial fetch effect
   useEffect(() => {
-    if (!showLoadModal) {
-      fetchPosts();
-      localStorage.setItem('feedModalShown', 'true');
-    }
-  }, [fetchPosts, forceRefresh, showLoadModal]);
+    fetchPosts();
+  }, [fetchPosts, forceRefresh]);
 
   // Separate timeout effect to avoid dependency loop
   useEffect(() => {
@@ -108,42 +90,7 @@ const Feed = () => {
     };
   }, [posts.length, loading]);
 
-  // Auto-reload effect - triggers page reload if shimmer persists after 3 seconds
-  useEffect(() => {
-    // Only trigger auto-reload if we're still loading with no posts and haven't already triggered it
-    if (posts.length === 0 && loading && !autoReloadTriggered) {
-      // Show message after 2 seconds
-      const messageTimeout = setTimeout(() => {
-        if (posts.length === 0 && loading && !autoReloadTriggered) {
-          setShowAutoReloadMessage(true);
-        }
-      }, 2000);
 
-      // Auto-reload after 3 seconds
-      autoReloadRef.current = setTimeout(() => {
-        if (posts.length === 0 && loading && !autoReloadTriggered) {
-          console.log(
-            "Auto-reloading page due to persistent shimmer after 3 seconds"
-          );
-          setAutoReloadTriggered(true);
-          window.location.reload();
-        }
-      }, 3000);
-
-      return () => {
-        clearTimeout(messageTimeout);
-        if (autoReloadRef.current) {
-          clearTimeout(autoReloadRef.current);
-        }
-      };
-    }
-
-    return () => {
-      if (autoReloadRef.current) {
-        clearTimeout(autoReloadRef.current);
-      }
-    };
-  }, [posts.length, loading, autoReloadTriggered]);
 
   // Intersection observer effect
   useEffect(() => {
@@ -186,15 +133,6 @@ const Feed = () => {
     };
   }, [loading, posts.length]);
 
-  // Cleanup effect for auto-reload timeout on component unmount
-  useEffect(() => {
-    return () => {
-      if (autoReloadRef.current) {
-        clearTimeout(autoReloadRef.current);
-      }
-    };
-  }, []);
-
   const handlePostUpdate = (updatedPost) => {
     setPosts(
       posts.map((post) => (post._id === updatedPost._id ? updatedPost : post))
@@ -209,36 +147,7 @@ const Feed = () => {
     // Always show shimmer for loading or error and no posts
     return (
       <div className="relative">
-        <MinimalMessageModal
-          visible={showLoadModal}
-          onLoadPosts={() => setShowLoadModal(false)}
-        />
         <ShimmerEffect type="feed" />
-        {showAutoReloadMessage && (
-          <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg">
-            <div className="flex items-center gap-2">
-              <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                  fill="none"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                />
-              </svg>
-              <span className="text-sm font-medium">
-                Auto-refreshing feed...
-              </span>
-            </div>
-          </div>
-        )}
       </div>
     );
   }
