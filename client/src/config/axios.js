@@ -1,16 +1,16 @@
 // Configure axios base URL for production
 import axios from "axios";
 
-// Get the current hostname for Azure deployment
+// Get the API base URL from environment variable or fallback
 const getBaseURL = () => {
   // For Azure deployment where frontend and backend are served from same domain
   if (window.location.hostname.includes(".azurewebsites.net")) {
     return ""; // Use relative URLs when on Azure
   }
 
-  // For Netlify or other external deployments
+  // Use environment variable for production deployment (Netlify, Vercel, etc.)
   if (process.env.NODE_ENV === "production") {
-    return "https://devmate-3k45.onrender.com"; // Your Render backend
+    return process.env.REACT_APP_API_URL || "https://devmate-fghed0fgatfwd3ga.centralindia-01.azurewebsites.net";
   }
 
   // For local development
