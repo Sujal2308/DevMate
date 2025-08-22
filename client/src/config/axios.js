@@ -8,12 +8,12 @@ const getBaseURL = () => {
     return ""; // Use relative URLs when on Azure
   }
 
-  // Check if we're on the production domain
+  // Check if we're on the production domain - use relative URLs for Netlify proxy
   if (window.location.hostname === "devmate.dev" || window.location.hostname.includes("devmate.dev")) {
-    return process.env.REACT_APP_API_URL || "https://devmate-fghed0fgatfwd3ga.centralindia-01.azurewebsites.net";
+    return ""; // Use relative URLs - Netlify will proxy to Azure backend
   }
 
-  // Use environment variable for other production deployments (Netlify, Vercel, etc.)
+  // Use environment variable for other production deployments (Vercel, etc.)
   if (process.env.NODE_ENV === "production") {
     return process.env.REACT_APP_API_URL || "https://devmate-fghed0fgatfwd3ga.centralindia-01.azurewebsites.net";
   }

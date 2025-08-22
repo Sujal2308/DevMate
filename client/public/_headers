@@ -1,2 +1,8 @@
 /*
-  Content-Security-Policy: default-src 'self'; connect-src 'self' https://devmate-fghed0fgatfwd3ga.centralindia-01.azurewebsites.net http://localhost:8080 http://localhost:3000 http://localhost:3001; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Content-Security-Policy: default-src 'self'; connect-src 'self' https://devmate-fghed0fgatfwd3ga.centralindia-01.azurewebsites.net https: http: ws: wss:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https: data:; img-src 'self' data: https: http:; font-src 'self' data: https:;
+
+/api/*
+  Content-Security-Policy: default-src 'self'; connect-src 'self' https://devmate-fghed0fgatfwd3ga.centralindia-01.azurewebsites.net https: http:;
