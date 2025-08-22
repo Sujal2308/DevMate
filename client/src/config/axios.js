@@ -8,7 +8,12 @@ const getBaseURL = () => {
     return ""; // Use relative URLs when on Azure
   }
 
-  // Use environment variable for production deployment (Netlify, Vercel, etc.)
+  // Check if we're on the production domain
+  if (window.location.hostname === "devmate.dev" || window.location.hostname.includes("devmate.dev")) {
+    return process.env.REACT_APP_API_URL || "https://devmate-fghed0fgatfwd3ga.centralindia-01.azurewebsites.net";
+  }
+
+  // Use environment variable for other production deployments (Netlify, Vercel, etc.)
   if (process.env.NODE_ENV === "production") {
     return process.env.REACT_APP_API_URL || "https://devmate-fghed0fgatfwd3ga.centralindia-01.azurewebsites.net";
   }
@@ -20,6 +25,9 @@ const getBaseURL = () => {
 const API_BASE_URL = getBaseURL();
 axios.defaults.baseURL = API_BASE_URL;
 
+console.log("Current hostname:", window.location.hostname);
+console.log("NODE_ENV:", process.env.NODE_ENV);
+console.log("REACT_APP_API_URL:", process.env.REACT_APP_API_URL);
 console.log("Axios configured with base URL:", API_BASE_URL);
 
 export default axios;
