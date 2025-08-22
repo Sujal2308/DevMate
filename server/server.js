@@ -97,8 +97,10 @@ app.use("/api", limiter);
 app.use(
   cors({
     origin: [
+      "https://devmate.dev",
       "https://strong-arithmetic-3b534a.netlify.app",
       "http://localhost:3000",
+      "http://localhost:3001",
     ],
     credentials: true,
   })

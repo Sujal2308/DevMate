@@ -67,7 +67,8 @@ const Feed = () => {
   // Check if user should see modal on each login session
   useEffect(() => {
     if (user) {
-      const hasSeenFeedModalThisSession = sessionStorage.getItem('hasSeenFeedModal');
+      const hasSeenFeedModalThisSession =
+        sessionStorage.getItem("hasSeenFeedModal");
       if (!hasSeenFeedModalThisSession) {
         setShowModal(true);
       } else {
@@ -129,13 +130,13 @@ const Feed = () => {
   };
 
   const handleModalReload = () => {
-    sessionStorage.setItem('hasSeenFeedModal', 'true');
+    sessionStorage.setItem("hasSeenFeedModal", "true");
     setShowModal(false);
     fetchPosts();
   };
 
   const handleModalClose = () => {
-    sessionStorage.setItem('hasSeenFeedModal', 'true');
+    sessionStorage.setItem("hasSeenFeedModal", "true");
     setShowModal(false);
   };
 
@@ -279,8 +280,8 @@ const Feed = () => {
           )}
         </div>
       )}
-      
-      <MinimalMessageModal 
+
+      <MinimalMessageModal
         isOpen={showModal}
         onClose={handleModalClose}
         onReload={handleModalReload}
