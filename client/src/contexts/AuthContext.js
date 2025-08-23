@@ -112,14 +112,11 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (username, email, password) => {
     try {
-      console.log("Attempting registration for:", username, email);
       const response = await axios.post("/api/auth/register", {
         username,
         email,
         password,
       });
-      console.log("Registration response:", response.data);
-      
       const { token: newToken, user: userData } = response.data;
 
       localStorage.setItem("token", newToken);
@@ -128,9 +125,6 @@ export const AuthProvider = ({ children }) => {
 
       return { success: true };
     } catch (error) {
-      console.error("Registration error:", error);
-      console.error("Error response:", error.response);
-      
       let errorMessage = "Registration failed";
 
       if (error.response?.status === 503) {
@@ -141,9 +135,6 @@ export const AuthProvider = ({ children }) => {
           "Database connection required. Please start MongoDB service.";
       } else if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
-      } else if (error.response?.data?.errors && Array.isArray(error.response.data.errors)) {
-        // Handle validation errors
-        errorMessage = error.response.data.errors.map(err => err.msg).join(", ");
       }
 
       return {

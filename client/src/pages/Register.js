@@ -71,19 +71,10 @@ const Register = () => {
     setErrors({});
 
     try {
-      const result = await register(formData.username, formData.email, formData.password);
-      
-      if (result.success) {
-        // Registration successful, navigate to feed
-        navigate("/feed");
-      } else {
-        // Registration failed, show error
-        setErrors({ general: result.error || "Registration failed" });
-      }
+      await register(formData.username, formData.email, formData.password);
+      navigate("/feed");
     } catch (error) {
-      // Handle unexpected errors
-      console.error("Registration error:", error);
-      setErrors({ general: error.message || "An unexpected error occurred" });
+      setErrors({ general: error.message });
     } finally {
       setLoading(false);
     }
