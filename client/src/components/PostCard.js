@@ -261,6 +261,7 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [likeAnimating, setLikeAnimating] = useState(false); // For like button animation
   const [copied, setCopied] = useState(false); // Copy feedback state
+  const [showFullCode, setShowFullCode] = useState(false); // For code expansion
 
   React.useEffect(() => {
     if (user && post?.author?.followers) {
@@ -519,7 +520,7 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
       {/* Post Content */}
       <div className="mb-4 space-y-4">
         {/* Text Content with Visual Identity */}
-        <div className="bg-x-dark/15 border border-x-border/20 rounded-lg p-4">
+  <div className="bg-x-dark/15 rounded-lg p-4">
           <div className="flex items-center mb-3">
             <svg
               className="w-3.5 h-3.5 text-x-blue mr-2"
@@ -610,9 +611,46 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
               </button>
             </div>
             <div className="p-3 sm:p-4">
-              <pre className="whitespace-pre-wrap text-sm sm:text-base font-mono text-x-white overflow-x-auto leading-relaxed">
-                {post.codeSnippet}
+              <pre className={`whitespace-pre-wrap text-sm sm:text-base font-mono text-x-white overflow-x-auto leading-relaxed ${!showFullCode && post.codeSnippet && post.codeSnippet.split('\n').length > 15 ? 'max-h-80 overflow-hidden' : ''}`}>
+                {showFullCode || !post.codeSnippet || post.codeSnippet.split('\n').length <= 15 
+                  ? post.codeSnippet 
+                  : post.codeSnippet.split('\n').slice(0, 15).join('\n') + '\n...'}
               </pre>
+              {post.codeSnippet && post.codeSnippet.split('\n').length > 15 && (
+                <div className="text-center mt-3 flex justify-center items-center">
+                  <button
+                    onClick={() => {
+                      if (showFullCode) {
+                        // Scroll to the button when collapsing
+                        setTimeout(() => {
+                          const button = document.activeElement;
+                          if (button) {
+                            button.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                          }
+                        }, 100);
+                      }
+                      setShowFullCode(!showFullCode);
+                    }}
+                    className="text-sm text-gray-300 hover:text-gray-200 font-medium transition-colors flex items-center justify-center py-2 font-poppins"
+                  >
+                    {showFullCode ? (
+                      <>
+                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                        </svg>
+                        Show less code
+                      </>
+                    ) : (
+                      <>
+                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                        View full code ({post.codeSnippet.split('\n').length} lines)
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         )}

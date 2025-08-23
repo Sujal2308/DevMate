@@ -6,6 +6,7 @@ const FloatingPostButton = () => {
   const { user } = useAuth();
   const location = useLocation();
   const [isVisible, setIsVisible] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Only show on specific pages when user is logged in
   const showOnPages = ["/feed", "/explore", "/profile", "/post"];
@@ -17,12 +18,20 @@ const FloatingPostButton = () => {
 
   // Handle scroll to show/hide button
   useEffect(() => {
+    // Small delay to prevent initial flash
+    const initTimeout = setTimeout(() => {
+      setIsInitialized(true);
+    }, 100);
+
     const handleScroll = () => {
       const scrollTop =
         window.pageYOffset || document.documentElement.scrollTop;
       // Show button after scrolling 150px down
       setIsVisible(scrollTop > 150);
     };
+
+    // Initial check
+    handleScroll();
 
     // Throttle scroll events for better performance
     let timeoutId;
@@ -35,6 +44,7 @@ const FloatingPostButton = () => {
 
     window.addEventListener("scroll", throttledHandleScroll, { passive: true });
     return () => {
+      clearTimeout(initTimeout);
       window.removeEventListener("scroll", throttledHandleScroll);
       if (timeoutId) {
         clearTimeout(timeoutId);
@@ -42,8 +52,8 @@ const FloatingPostButton = () => {
     };
   }, []);
 
-  // Don't show on create-post page itself
-  if (!shouldShow || location.pathname === "/create-post") {
+  // Don't show on create-post page itself or before initialization
+  if (!shouldShow || location.pathname === "/create-post" || !isInitialized) {
     return null;
   }
 

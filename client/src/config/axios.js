@@ -4,12 +4,12 @@ import axios from "axios";
 // Get the current hostname for deployment
 const getBaseURL = () => {
   const hostname = window.location.hostname;
-  
+
   // For devmate.dev (Netlify) - use relative URLs to leverage proxy
   if (hostname === "devmate.dev") {
     return ""; // Netlify will proxy /api/* to Azure backend
   }
-  
+
   // For Azure deployment where frontend and backend are served from same domain
   if (hostname.includes(".azurewebsites.net")) {
     return ""; // Use relative URLs when on Azure
@@ -17,7 +17,10 @@ const getBaseURL = () => {
 
   // For production deployments
   if (process.env.NODE_ENV === "production") {
-    return process.env.REACT_APP_API_URL || "https://devmate-fghed0fgatfwd3ga.centralindia-01.azurewebsites.net";
+    return (
+      process.env.REACT_APP_API_URL ||
+      "https://devmate-fghed0fgatfwd3ga.centralindia-01.azurewebsites.net"
+    );
   }
 
   // For local development

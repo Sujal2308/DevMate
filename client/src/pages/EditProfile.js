@@ -53,12 +53,15 @@ const EditProfile = () => {
       setLoading(true);
       setError("");
 
-      const response = await axios.put(`/api/users/${user.id}`, {
+      const payload = {
         displayName: formData.displayName.trim(),
         bio: formData.bio.trim(),
         skills: formData.skills,
-        githubLink: formData.githubLink.trim(),
-      });
+      };
+      if (formData.githubLink.trim()) {
+        payload.githubLink = formData.githubLink.trim();
+      }
+      const response = await axios.put(`/api/users/${user.id}`, payload);
 
       updateUser(response.data);
       setSuccess("Profile updated successfully!");
@@ -242,28 +245,31 @@ const EditProfile = () => {
             </div>
 
             {/* Add new skill */}
-            <div className="flex gap-3 mb-4">
-              <input
-                type="text"
-                value={newSkill}
-                onChange={(e) => setNewSkill(e.target.value)}
-                className="flex-1 p-3 bg-x-black/50 border border-x-border/30 text-x-white placeholder-x-gray rounded-xl focus:ring-2 focus:ring-x-green focus:border-x-green transition-all duration-200"
-                placeholder="Add a skill (e.g., JavaScript, React)"
-                maxLength="30"
-                onKeyPress={(e) => {
-                  if (e.key === "Enter") {
-                    handleAddSkill(e);
-                  }
-                }}
-              />
-              <button
-                type="button"
-                onClick={handleAddSkill}
-                disabled={!newSkill.trim()}
-                className="bg-x-green hover:bg-x-green/80 disabled:bg-x-green/30 text-white px-4 py-3 rounded-xl font-medium transition-all duration-200 disabled:cursor-not-allowed"
-              >
-                Add
-              </button>
+            <div className="flex items-center gap-2 mb-4 w-full">
+              <div className="flex-1 flex items-center bg-x-black/50 border border-x-border/30 rounded-full overflow-hidden">
+                <input
+                  type="text"
+                  value={newSkill}
+                  onChange={(e) => setNewSkill(e.target.value)}
+                  className="w-full p-3 bg-transparent text-x-white placeholder-x-gray border-none outline-none rounded-full"
+                  placeholder="Add a skill (e.g., JavaScript, React)"
+                  maxLength="30"
+                  onKeyPress={(e) => {
+                    if (e.key === "Enter") {
+                      handleAddSkill(e);
+                    }
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={handleAddSkill}
+                  disabled={!newSkill.trim()}
+                  className="h-full px-6 py-0 bg-x-green hover:bg-x-green/80 disabled:bg-x-green/30 text-white font-medium transition-all duration-200 disabled:cursor-not-allowed rounded-full ml-2"
+                  style={{ minHeight: "48px" }}
+                >
+                  Add
+                </button>
+              </div>
             </div>
 
             {/* Skills list */}
