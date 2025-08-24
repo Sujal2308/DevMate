@@ -35,16 +35,11 @@ const MinimalMessageModal = ({ isOpen, onClose, onReload }) => {
 
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-2">
             <button
+              type="button"
+              className="flex-1 bg-[#ff6347] text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-[#e5533c] transition-colors"
               onClick={onReload}
-              className="flex-1 bg-tomato-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-tomato-700 transition-colors"
             >
               Load Posts
-            </button>
-            <button
-              onClick={onClose}
-              className="flex-1 bg-transparent text-gray-400 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-700 transition-colors"
-            >
-              Cancel
             </button>
           </div>
         </div>
