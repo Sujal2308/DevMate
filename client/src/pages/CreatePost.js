@@ -30,6 +30,7 @@ const CreatePost = () => {
     { value: "css", label: "🎨 CSS", color: "#563d7c" },
     { value: "sql", label: "🗄️ SQL", color: "#336791" },
     { value: "json", label: "📋 JSON", color: "#f4a460" },
+    { value: "other", label: "Other", color: "#C0C0C0" }, // Final option
   ];
 
   const handleChange = (e) => {
@@ -64,6 +65,7 @@ const CreatePost = () => {
         css: "/* CSS */",
         sql: "-- SQL",
         json: "// JSON",
+        other: "// mention your language",
       };
 
       const comment = languageComments[language] || `// ${language}`;
@@ -115,7 +117,7 @@ const CreatePost = () => {
           }}
         >
           <span className="bg-gradient-to-r from-[#C0C0C0] via-[#E0E0E0] to-[#A9A9A9] bg-clip-text text-transparent">
-            create
+            Create
           </span>
           <svg
             className="w-6 h-6 sm:w-7 sm:h-7 text-x-blue"

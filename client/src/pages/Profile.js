@@ -944,10 +944,12 @@ const Profile = () => {
 
               {/* Show end message when no more posts */}
               {!hasMorePosts && posts.length > 0 && (
-                <div className="mt-6 text-center">
-                  <p className="text-x-gray text-sm">
-                    🎉 You've seen all posts from {profileUser.username}!
-                  </p>
+                <div className="mt-6 flex items-center justify-center">
+                  <div className="flex-1 border-t border-dotted border-x-gray mx-2" />
+                  <span className="text-x-gray text-sm px-3 whitespace-nowrap">
+                    end of post
+                  </span>
+                  <div className="flex-1 border-t border-dotted border-x-gray mx-2" />
                 </div>
               )}
             </div>

@@ -5,12 +5,12 @@ const MinimalMessageModal = ({ isOpen, onClose, onReload }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
+      <div className="bg-x-dark/90 rounded-lg p-6 max-w-md w-full mx-4 shadow-xl border border-x-border">
         <div className="text-center">
           <div className="mb-4">
-            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100">
+            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-x-dark/70">
               <svg
-                className="h-6 w-6 text-blue-600"
+                className="h-6 w-6 text-x-blue"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -36,7 +36,7 @@ const MinimalMessageModal = ({ isOpen, onClose, onReload }) => {
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-2">
             <button
               onClick={onReload}
-              className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
+              className="flex-1 bg-tomato-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-tomato-700 transition-colors"
             >
               Load Posts
             </button>
