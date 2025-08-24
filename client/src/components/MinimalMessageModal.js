@@ -25,8 +25,8 @@ const MinimalMessageModal = ({ isOpen, onClose, onReload }) => {
             </div>
           </div>
 
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
-            Welcome to your Feed!
+          <h3 className="text-lg font-medium text-white mb-2">
+            Welcome to Feed
           </h3>
 
           <p className="text-sm text-gray-500 mb-6">
@@ -42,7 +42,7 @@ const MinimalMessageModal = ({ isOpen, onClose, onReload }) => {
             </button>
             <button
               onClick={onClose}
-              className="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-200 transition-colors"
+              className="flex-1 bg-transparent text-gray-400 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-700 transition-colors"
             >
               Cancel
             </button>
