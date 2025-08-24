@@ -125,7 +125,7 @@ const BottomNav = () => {
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               fill="currentColor"
-              className="w-6 h-6 animate-colorchange"
+              className="w-6 h-6 text-x-blue animate-colorchange"
             >
               <path
                 fillRule="evenodd"
@@ -190,7 +190,7 @@ const BottomNav = () => {
           onClick={(e) => handleNavClick(`/profile/${user?.username}`, e)}
         >
           {isActive(`/profile/${user?.username}`) ? (
-            <div className="w-6 h-6 rounded-full border-2 border-x-blue flex items-center justify-center overflow-hidden bg-gradient-to-r from-x-blue to-x-green">
+            <div className="w-6 h-6 rounded-full border-2 border-x-blue flex items-center justify-center overflow-hidden bg-x-blue">
               <span className="text-white text-xs font-bold">
                 {user.displayName?.[0] || user.username?.[0]}
               </span>

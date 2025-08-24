@@ -135,7 +135,7 @@ const Navbar = () => {
                 {/* User Menu - Desktop */}
                 <div className="hidden md:flex items-center space-x-4">
                   <Link to={`/profile/${user.username}`} className="group">
-                    <div className="w-9 h-9 bg-gradient-to-r from-x-blue to-x-green rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
+                    <div className="w-9 h-9 bg-[#003366] rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
                       <span className="text-white font-bold text-sm">
                         {user.displayName?.[0] || user.username?.[0]}
                       </span>
@@ -172,7 +172,7 @@ const Navbar = () => {
                         />
                       </svg>
                     ) : (
-                      <div className="w-8 h-8 bg-gradient-to-r from-x-blue to-x-green rounded-full flex items-center justify-center transition-transform shadow-lg">
+                      <div className="w-8 h-8 bg-[#003366] rounded-full flex items-center justify-center transition-transform shadow-lg">
                         <span className="text-white font-bold text-xs">
                           {user.displayName?.[0] || user.username?.[0]}
                         </span>

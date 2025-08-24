@@ -476,8 +476,8 @@ const Profile = () => {
                   isOwnProfile ? "mt-1 md:-mt-10" : "-mt-2 md:-mt-12" // move avatar higher for other users on mobile
                 } mb-0 mr-6 z-20`}
               >
-                <div className="bg-gradient-to-r from-x-blue to-purple-500 text-white w-20 h-20 md:w-32 md:h-32 rounded-2xl md:rounded-3xl flex items-center justify-center text-2xl md:text-4xl font-bold border-4 border-x-dark shadow-2xl">
-                  <div className="bg-black text-white w-20 h-20 md:w-32 md:h-32 rounded-2xl md:rounded-3xl flex items-center justify-center text-2xl md:text-4xl font-bold border-4 border-x-dark shadow-2xl">
+                <div className="bg-gradient-to-r from-x-blue to-purple-500 text-white w-20 h-20 md:w-32 md:h-32 rounded-full md:rounded-3xl flex items-center justify-center text-2xl md:text-4xl font-bold border-4 border-x-dark shadow-2xl">
+                  <div className="bg-black text-white w-20 h-20 md:w-32 md:h-32 rounded-full md:rounded-3xl flex items-center justify-center text-2xl md:text-4xl font-bold border-4 border-x-dark shadow-2xl">
                     {profileUser.displayName?.charAt(0).toUpperCase() ||
                       profileUser.username.charAt(0).toUpperCase()}
                   </div>
