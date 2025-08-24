@@ -709,7 +709,7 @@ const Explore = () => {
                           <div className="flex items-center gap-2">
                             <Link
                               to={`/profile/${user.username}`}
-                              className="text-xs px-3 py-2 transition-colors duration-200 whitespace-nowrap bg-[#ff6347] text-white rounded-full hover:bg-[#e5533c]"
+                              className="text-xs px-3 py-2 transition-colors duration-200 whitespace-nowrap bg-[#ff6347] text-white hover:bg-[#e5533c] rounded border border-x-border shadow-md"
                               onClick={(e) => e.stopPropagation()}
                             >
                               View Profile
