@@ -27,8 +27,9 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-20 p-6 bg-x-dark rounded-xl shadow-lg">
-      <h2 className="text-2xl font-bold mb-4 text-x-white">Forgot Password</h2>
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="max-w-md w-full p-6 bg-x-dark rounded-xl shadow-lg">
+        <h2 className="text-2xl font-bold mb-4 text-x-white">Forgot Password</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label htmlFor="email" className="block text-x-gray mb-1">
@@ -54,6 +55,7 @@ const ForgotPassword = () => {
       </form>
       {message && <p className="text-green-400 mt-4">{message}</p>}
       {error && <p className="text-red-400 mt-4">{error}</p>}
+      </div>
     </div>
   );
 };

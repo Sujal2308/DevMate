@@ -261,9 +261,8 @@ function AppContent() {
               element={
                 <div className="flex justify-center items-center min-h-screen px-4">
                   <div className="w-full max-w-md">
-                    <PublicRoute>
-                      <ResetPassword />
-                    </PublicRoute>
+                    {/* Removed PublicRoute to allow both logged-in and logged-out users to access */}
+                    <ResetPassword />
                   </div>
                 </div>
               }

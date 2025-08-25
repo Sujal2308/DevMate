@@ -1,23 +1,26 @@
-const nodemailer = require("nodemailer");
 
-// Configure your SMTP or service here
-const transporter = nodemailer.createTransport({
-  service: process.env.EMAIL_SERVICE || "gmail", // e.g., 'gmail'
-  auth: {
-    user: process.env.EMAIL_USER, // your email
-    pass: process.env.EMAIL_PASS, // your email password or app password
-  },
-});
+const { Resend } = require("resend");
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-async function sendEmail({ to, subject, text, html }) {
-  const mailOptions = {
-    from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
-    to,
-    subject,
-    text,
-    html,
-  };
-  return transporter.sendMail(mailOptions);
+async function sendEmail({ to, subject, text, html, from }) {
+  const fromAddress = from || process.env.EMAIL_FROM || "noreply@devmate.dev";
+  try {
+    const { data, error } = await resend.emails.send({
+      from: fromAddress,
+      to: [to],
+      subject,
+      text,
+      html,
+    });
+    if (error) {
+      console.error("Resend error:", error);
+      throw error;
+    }
+    return data;
+  } catch (err) {
+    console.error("Failed to send email:", err);
+    throw err;
+  }
 }
 
 // Send email notification for new message (if enabled)
