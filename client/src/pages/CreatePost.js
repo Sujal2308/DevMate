@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { useAuth } from "../contexts/AuthContext";
+import "../styles/animated-gradient.css";
 
 const CreatePost = () => {
   const { user } = useAuth();
@@ -167,9 +168,9 @@ const CreatePost = () => {
           <div className="mb-6">
             <label
               htmlFor="content"
-              className="block text-sm font-bold text-x-white mb-3"
+              className="block text-sm font-bold mb-3"
             >
-              What's on your mind? *
+              <span className="animated-gradient-text">What's on your mind? *</span>
             </label>
             <textarea
               id="content"
@@ -429,7 +430,7 @@ console.log("Welcome to DevMate!");`
             <button
               type="submit"
               disabled={loading || !formData.content.trim()}
-              className={`bg-black hover:bg-gray-900 text-white font-bold px-6 py-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-colors duration-200 min-h-[44px] h-[44px] ${
+              className={`bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-colors duration-200 min-h-[44px] h-[44px] ${
                 isMobile ? "w-full" : ""
               }`}
               style={{ lineHeight: "1.5", height: "44px" }}
@@ -473,7 +474,8 @@ console.log("Welcome to DevMate!");`
               <div className="card p-6 bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/30">
                 <div className="flex items-center mb-6">
                   <div className="bg-black text-white w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold mr-4">
-                    {(user?.displayName || "Y").charAt(0).toUpperCase()}
+                    {(user?.displayName || "Y").charAt(0).toUpperCase()
+                  }
                   </div>
                   <div>
                     <p className="font-semibold text-x-white">
