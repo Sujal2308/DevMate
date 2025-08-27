@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
+import ShareModal from "./ShareModal";
 import "../index.css"; // Import the CSS file for animations
 
 // Function to generate consistent colors for users
@@ -262,6 +263,7 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
   const [likeAnimating, setLikeAnimating] = useState(false); // For like button animation
   const [copied, setCopied] = useState(false); // Copy feedback state
   const [showFullCode, setShowFullCode] = useState(false); // For code expansion
+  const [showShareModal, setShowShareModal] = useState(false); // For share modal
 
   React.useEffect(() => {
     if (user && post?.author?.followers) {
@@ -692,14 +694,14 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
 
         <button
           onClick={handleToggleComments}
-          className="flex items-center space-x-1 sm:space-x-2 text-sm text-x-gray hover:text-x-blue transition-colors"
+            className="flex items-center space-x-1 sm:space-x-2 text-sm text-x-gray hover:text-purple-500 transition-colors"
         >
-          <svg
-            className="w-4 h-4 sm:w-5 sm:h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+            <svg
+              className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -715,6 +717,26 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
           <span className="text-x-white font-medium sm:hidden">
             {post.comments.filter((c) => !c.deleted).length}
           </span>
+        </button>
+
+        <button
+          onClick={() => setShowShareModal(true)}
+            className="flex items-center space-x-1 sm:space-x-2 text-sm text-x-gray hover:text-purple-500 transition-colors"
+        >
+            <svg
+              className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"
+            />
+          </svg>
+          <span className="text-x-white font-medium hidden sm:inline">Share</span>
         </button>
 
         <Link
@@ -836,6 +858,13 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
           </form>
         </div>
       )}
+
+      {/* Share Modal */}
+      <ShareModal 
+        isOpen={showShareModal}
+        onClose={() => setShowShareModal(false)}
+        postId={post._id}
+      />
     </div>
   );
 };
