@@ -522,7 +522,7 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
       {/* Post Content */}
       <div className="mb-4 space-y-4">
         {/* Text Content with Visual Identity */}
-  <div className="bg-x-dark/15 rounded-lg p-4">
+        <div className="bg-x-dark/15 rounded-lg p-4">
           <div className="flex items-center mb-3">
             <svg
               className="w-3.5 h-3.5 text-x-blue mr-2"
@@ -613,12 +613,23 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
               </button>
             </div>
             <div className="p-3 sm:p-4">
-              <pre className={`whitespace-pre-wrap text-sm sm:text-base font-mono text-x-white overflow-x-auto leading-relaxed ${!showFullCode && post.codeSnippet && post.codeSnippet.split('\n').length > 15 ? 'max-h-80 overflow-hidden' : ''}`}>
-                {showFullCode || !post.codeSnippet || post.codeSnippet.split('\n').length <= 15 
-                  ? post.codeSnippet 
-                  : post.codeSnippet.split('\n').slice(0, 15).join('\n') + '\n...'}
+              <pre
+                className={`whitespace-pre-wrap text-sm sm:text-base font-mono text-x-white overflow-x-auto leading-relaxed ${
+                  !showFullCode &&
+                  post.codeSnippet &&
+                  post.codeSnippet.split("\n").length > 15
+                    ? "max-h-80 overflow-hidden"
+                    : ""
+                }`}
+              >
+                {showFullCode ||
+                !post.codeSnippet ||
+                post.codeSnippet.split("\n").length <= 15
+                  ? post.codeSnippet
+                  : post.codeSnippet.split("\n").slice(0, 15).join("\n") +
+                    "\n..."}
               </pre>
-              {post.codeSnippet && post.codeSnippet.split('\n').length > 15 && (
+              {post.codeSnippet && post.codeSnippet.split("\n").length > 15 && (
                 <div className="text-center mt-3 flex justify-center items-center">
                   <button
                     onClick={() => {
@@ -627,7 +638,10 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
                         setTimeout(() => {
                           const button = document.activeElement;
                           if (button) {
-                            button.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            button.scrollIntoView({
+                              behavior: "smooth",
+                              block: "center",
+                            });
                           }
                         }, 100);
                       }
@@ -637,17 +651,38 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
                   >
                     {showFullCode ? (
                       <>
-                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                        <svg
+                          className="w-4 h-4 mr-1"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 15l7-7 7 7"
+                          />
                         </svg>
                         Show less code
                       </>
                     ) : (
                       <>
-                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        <svg
+                          className="w-4 h-4 mr-1"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 9l-7 7-7-7"
+                          />
                         </svg>
-                        View full code ({post.codeSnippet.split('\n').length} lines)
+                        View full code ({post.codeSnippet.split("\n").length}{" "}
+                        lines)
                       </>
                     )}
                   </button>
@@ -694,14 +729,14 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
 
         <button
           onClick={handleToggleComments}
-            className="flex items-center space-x-1 sm:space-x-2 text-sm text-x-gray hover:text-purple-500 transition-colors"
+          className="flex items-center space-x-1 sm:space-x-2 text-sm text-x-gray hover:text-purple-500 transition-colors"
         >
-            <svg
-              className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+          <svg
+            className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -721,14 +756,14 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
 
         <button
           onClick={() => setShowShareModal(true)}
-            className="flex items-center space-x-1 sm:space-x-2 text-sm text-x-gray hover:text-purple-500 transition-colors"
+          className="flex items-center space-x-1 sm:space-x-2 text-sm text-x-gray hover:text-purple-500 transition-colors"
         >
-            <svg
-              className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+          <svg
+            className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -736,7 +771,9 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
               d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"
             />
           </svg>
-          <span className="text-x-white font-medium hidden sm:inline">Share</span>
+          <span className="text-x-white font-medium hidden sm:inline">
+            Share
+          </span>
         </button>
 
         <Link
@@ -860,7 +897,7 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
       )}
 
       {/* Share Modal */}
-      <ShareModal 
+      <ShareModal
         isOpen={showShareModal}
         onClose={() => setShowShareModal(false)}
         postId={post._id}
