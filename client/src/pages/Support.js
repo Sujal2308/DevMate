@@ -514,11 +514,14 @@ const Support = () => {
 
           {/* Quick Contact Options */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <div className="flex flex-row items-center px-6 py-3 bg-x-dark border border-x-border rounded-lg text-center">
-              <span className="w-full text-center font-mono md:font-normal">
-                support@devmate.com
+            <a
+              href="mailto:support@devmate.dev"
+              className="flex flex-row items-center px-6 py-3 bg-x-dark border border-x-border rounded-lg text-center hover:bg-x-darker transition-colors duration-200"
+            >
+              <span className="w-full text-center font-mono md:font-normal text-x-blue hover:text-x-blue-hover">
+                support@devmate.dev
               </span>
-            </div>
+            </a>
             <button
               onClick={goToContactSection}
               className="px-6 py-3 bg-[#0a1747] md:bg-[#0a1747] text-white font-semibold rounded-lg hover:shadow-lg hover:scale-105 transition-all duration-300"
@@ -662,7 +665,7 @@ const Support = () => {
                         className="text-x-blue hover:underline text-base font-mono"
                         style={{ fontFamily: "Poppins, monospace" }}
                       >
-                        support@devmate.com
+                        support@devmate.dev
                       </a>
                     </div>
                   </div>
@@ -853,10 +856,10 @@ const Support = () => {
               <ul className="space-y-3">
                 <li>
                   <a
-                    href="mailto:support@devmate.com"
+                    href="mailto:support@devmate.dev"
                     className="text-x-gray hover:text-x-blue transition-colors"
                   >
-                    support@devmate.com
+                    support@devmate.dev
                   </a>
                 </li>
                 <li className="text-x-gray">24/7 Support</li>
