@@ -42,7 +42,7 @@ const Login = () => {
   };
 
   return (
-  <div className="min-h-screen bg-gradient-to-br from-x-black via-x-dark to-x-black flex items-start sm:items-center justify-center py-8 sm:py-8 px-4 sm:px-6 lg:px-8 overflow-hidden">
+  <div className="min-h-screen bg-gradient-to-br from-x-black via-x-dark to-x-black flex items-start sm:items-center justify-center py-20 sm:py-8 px-4 sm:px-6 lg:px-8 overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-x-blue/3 rounded-full blur-3xl"></div>
