@@ -82,7 +82,7 @@ const Register = () => {
 
   return (
     <div
-      className="min-h-screen bg-gradient-to-br from-x-black via-x-dark to-x-black flex items-center justify-center py-8 px-4 sm:px-6 lg:px-8"
+      className="min-h-screen bg-gradient-to-br from-x-black via-x-dark to-x-black flex items-start justify-center py-2 px-4 sm:px-6 lg:px-8 relative"
       style={{ fontFamily: "Poppins, sans-serif" }}
     >
       {/* Background Effects */}
@@ -93,7 +93,30 @@ const Register = () => {
 
       <div className="relative max-w-md w-full">
         {/* Main Card */}
-        <div className="bg-x-dark/60 backdrop-blur-md border border-x-border/30 rounded-xl shadow-lg shadow-x-black/30 p-6 space-y-5">
+        <div className="bg-x-dark/60 backdrop-blur-md border border-x-border/30 rounded-xl shadow-lg shadow-x-black/30 p-6 space-y-5 relative">
+          {/* Arrow Back Button (top left inside card) */}
+          <div className="absolute top-4 left-4 z-10">
+            <Link
+              to="/"
+              className="flex items-center justify-center"
+              aria-label="Back"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 text-x-gray hover:text-x-blue transition-colors duration-200"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+            </Link>
+          </div>
           {/* Header */}
           <div className="text-center">
             <div className="flex justify-center mb-4">
@@ -113,9 +136,28 @@ const Register = () => {
               </span>
               <Link
                 to="/login"
-                className="text-x-blue hover:text-x-blue-hover font-medium transition-colors"
+                className="font-medium transition-colors animate-gradient-text"
+                style={{
+                  background:
+                    "linear-gradient(90deg, #A259FF, #C0C0C0, #A259FF, #F8F8F8)",
+                  backgroundSize: "200% 200%",
+                  backgroundClip: "text",
+                  WebkitBackgroundClip: "text",
+                  color: "transparent",
+                  WebkitTextFillColor: "transparent",
+                  animation: "gradientText 2s linear infinite",
+                }}
               >
                 Sign in
+                <style>
+                  {`
+                    @keyframes gradientText {
+                      0% { background-position: 0% 50%; }
+                      50% { background-position: 100% 50%; }
+                      100% { background-position: 0% 50%; }
+                    }
+                  `}
+                </style>
               </Link>
             </div>
           </div>

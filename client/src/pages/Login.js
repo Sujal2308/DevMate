@@ -42,7 +42,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-x-black via-x-dark to-x-black flex items-center justify-center py-8 px-4 sm:px-6 lg:px-8">
+  <div className="min-h-screen bg-gradient-to-br from-x-black via-x-dark to-x-black flex items-center sm:items-center justify-center py-8 sm:py-8 px-4 sm:px-6 lg:px-8 overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-x-blue/3 rounded-full blur-3xl"></div>
@@ -50,37 +50,27 @@ const Login = () => {
       </div>
 
       <div className="relative max-w-md w-full">
-        {/* Back to Home Button */}
-        <div className="mb-4 flex justify-center">
+        {/* Arrow Back Button (top left) */}
+        <div className="absolute top-4 left-4 z-10">
           <Link
             to="/"
-            className="font-semibold text-sm flex items-center gap-1 bg-black px-3 py-1.5 rounded-full border border-x-blue/20 shadow-sm transition-colors duration-200"
-            style={{
-              background: "black",
-              color: "transparent",
-              backgroundClip: "text",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundImage:
-                "linear-gradient(90deg, #C0C0C0, #F8F8F8, #C0C0C0)",
-            }}
+            className="bg-x-dark/80 hover:bg-x-dark/90 border border-x-border/30 rounded-full p-2 shadow transition-colors duration-200 flex items-center justify-center"
+            aria-label="Back"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4 mr-1"
+              className="h-6 w-6"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
               strokeWidth={2}
-              style={{ color: "#C0C0C0" }}
             >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                d="M3 12l7-7m0 0l7 7m-7-7v18"
+                d="M15 19l-7-7 7-7"
               />
             </svg>
-            Back to Home
           </Link>
         </div>
 

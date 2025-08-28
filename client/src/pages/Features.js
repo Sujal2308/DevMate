@@ -12,7 +12,7 @@ const FeatureCard = ({ icon, title, description, details, delay = 0 }) => {
     >
       {/* Icon */}
       <div className="mb-6">
-        <div className="w-16 h-16 bg-purple-500 rounded-xl flex items-center justify-center text-2xl">
+        <div className="w-16 h-16 bg-[#1a237e] rounded-xl flex items-center justify-center text-2xl">
           {icon}
         </div>
       </div>
@@ -318,22 +318,26 @@ const Features = () => {
 
       {/* Hero Section - Centered, no scroll down */}
       <section className="flex items-center justify-center min-h-[70vh] w-full mt-16">
-        <div className="text-center w-full">
+  <div className="text-center w-full">
           <h1 className="text-3xl xs:text-4xl md:text-7xl font-bold text-x-white mb-6 flex flex-wrap items-center justify-center gap-3">
-            <span>Elevate Your</span>
-            <span className="help-you-animated relative no-underline text-[#ffa726]">
-              Workflow
+            <span style={{ fontFamily: 'Poppins, sans-serif' }}>What We</span>
+            <span className="help-you-animated relative no-underline text-[#ffa726]" style={{ fontFamily: 'Poppins, sans-serif' }}>
+              Offer
             </span>
           </h1>
           <p className="text-base xs:text-lg md:text-2xl text-x-gray mb-8 max-w-3xl mx-auto leading-relaxed">
-            Discover the tools and features that make DevMate the ultimate
-            platform for developers to connect, collaborate, and create amazing
-            things together.
+            <span className="block max-w-xs mx-auto sm:max-w-3xl">
+              <span style={{ fontFamily: 'monospace' }}>
+                <span style={{ display: 'block', textAlign: 'left', fontFamily: 'monospace' }}>
+                  Discover the tools and features that make DevMate the ultimate platform for developers to connect, collaborate, and create amazing things together.
+                </span>
+              </span>
+            </span>
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center w-full items-center">
             <Link
               to="/register"
-              className="w-full sm:w-auto px-8 py-4 bg-[#1a237e] hover:bg-[#0d1333] text-white font-semibold rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-300 flex items-center gap-2 justify-center"
+              className="w-full max-w-xs sm:w-auto px-8 py-4 bg-[#1a237e] hover:bg-[#0d1333] text-white font-semibold rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-300 flex items-center gap-2 justify-center"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -353,7 +357,7 @@ const Features = () => {
             </Link>
             <Link
               to="/explore"
-              className="w-full sm:w-auto px-8 py-4 bg-x-dark text-x-white font-semibold rounded-xl border-2 border-x-border hover:border-x-blue hover:text-x-blue transition-all duration-300 flex items-center gap-2 justify-center"
+              className="w-full max-w-xs sm:w-auto px-8 py-4 bg-x-dark text-x-white font-semibold rounded-xl border-2 border-x-border hover:border-x-blue hover:text-x-blue transition-all duration-300 flex items-center gap-2 justify-center"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -383,8 +387,9 @@ const Features = () => {
               Everything You Need
             </h2>
             <p className="text-base xs:text-lg md:text-xl text-x-gray max-w-3xl mx-auto font-mono">
-              From smart code sharing to global networking, DevMate provides all
-              the tools you need to succeed as a developer.
+              <span style={{ display: 'block', textAlign: 'left', fontFamily: 'monospace', marginLeft: '1.5rem' }}>
+                From smart code sharing to global networking, DevMate provides all the tools you need to succeed as a developer.
+              </span>
             </p>
           </div>
 
