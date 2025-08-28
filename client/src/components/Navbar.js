@@ -234,7 +234,7 @@ const Navbar = () => {
                 <div className="hidden md:flex items-center space-x-3">
                   <Link
                     to="/features"
-                    className="text-x-gray hover:text-x-white transition-colors font-medium mr-4 animated-gradient-text"
+                    className="text-x-gray hover:text-x-white transition-colors font-medium mr-4"
                   >
                     <span className="relative z-10">
                       <span className="rainbow-text">Features</span>

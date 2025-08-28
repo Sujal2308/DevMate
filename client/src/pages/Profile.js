@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
 import PostCard from "../components/PostCard";
+import UpdateProfilePrompt from "../components/UpdateProfilePrompt";
 
 const Profile = () => {
   const [profileData, setProfileData] = useState(null);
@@ -14,6 +15,7 @@ const Profile = () => {
   const [copied, setCopied] = useState(false);
   const [loadingMorePosts, setLoadingMorePosts] = useState(false);
   const [hasMorePosts, setHasMorePosts] = useState(true);
+  const [showUpdatePrompt, setShowUpdatePrompt] = useState(false);
   const { username } = useParams();
   const { user } = useAuth();
 
@@ -43,6 +45,24 @@ const Profile = () => {
 
     fetchProfile();
   }, [username]);
+
+  // Check if we should show the update profile prompt
+  useEffect(() => {
+    if (profileData && isOwnProfile && profileData.user) {
+      const profileUser = profileData.user;
+      // Show prompt if user hasn't completed their profile
+      // (profileCompleted is false or doesn't exist) and they haven't manually dismissed it
+      const shouldShow = !profileUser.profileCompleted && 
+                        localStorage.getItem(`hideUpdatePrompt_${user.id}`) !== 'true';
+      setShowUpdatePrompt(shouldShow);
+    }
+  }, [profileData, isOwnProfile, user]);
+
+  const handleDismissPrompt = () => {
+    setShowUpdatePrompt(false);
+    // Save to localStorage so it doesn't show again until they update their profile
+    localStorage.setItem(`hideUpdatePrompt_${user.id}`, 'true');
+  };
 
   const handlePostDelete = (deletedPostId) => {
     setProfileData((prev) => {
@@ -228,7 +248,7 @@ const Profile = () => {
 
   if (loading) {
     return (
-      <div className="max-w-2xl mx-auto py-8 px-4">
+  <div className="max-w-2xl mx-auto py-8 px-4">
         {/* Quick loading skeleton for better perceived performance */}
         <div className="relative mb-8">
           {/* Cover skeleton */}
@@ -718,6 +738,14 @@ const Profile = () => {
       {/* Only show rest if not private, or if owner/follower */}
       {showFullProfile ? (
         <>
+          {/* Update Profile Prompt - Show for new users who haven't completed their profile */}
+          {showUpdatePrompt && (
+            <UpdateProfilePrompt 
+              user={profileUser} 
+              onDismiss={handleDismissPrompt}
+            />
+          )}
+
           {/* Profile Metrics Card */}
           <div className="bg-gradient-to-br from-x-dark/70 to-x-dark/40 backdrop-blur-sm border border-x-border/40 p-4 mb-8">
             <h3 className="text-lg font-bold mb-4 flex items-center gap-2 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-gradient-x font-mono">
@@ -781,8 +809,6 @@ const Profile = () => {
               </div>
             </div>
           </div>
-
-          {/* Tabs: Posts, Activity, About */}
           <div className="mb-8">
             <div className="border-b border-x-border/30">
               <nav className="flex justify-start space-x-8">

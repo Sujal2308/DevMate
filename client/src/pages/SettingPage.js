@@ -29,14 +29,12 @@ const SettingPage = () => {
 
   useEffect(() => {
     if (showDelete && deleteDialogRef.current) {
-      if (window.innerWidth <= 640) {
-        setTimeout(() => {
-          deleteDialogRef.current.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-          });
-        }, 50);
-      }
+      setTimeout(() => {
+        deleteDialogRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }, 50);
     }
   }, [showDelete]);
 
@@ -136,7 +134,7 @@ const SettingPage = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto py-12 px-4 pb-32 sm:pb-12 bg-gradient-to-br from-x-dark/10 to-x-dark/5">
+  <div className="max-w-lg mx-auto py-12 px-4 pb-32 sm:pb-12 bg-gradient-to-br from-x-dark/10 to-x-dark/5">
       <div className="flex flex-col items-center justify-center mb-8">
         <h2
           className="text-3xl font-extrabold tracking-tight drop-shadow-lg"
@@ -402,20 +400,18 @@ const SettingPage = () => {
           </svg>
           <h3 className="font-semibold text-lg">Account Privacy</h3>
         </div>
-        <div className="flex items-center justify-between bg-gray-900/60 rounded-lg px-0 py-3">
-          <div className="flex flex-col">
-            <span className="text-xs text-gray-400 hidden md:inline font-mono">
-              Choose who can see your profile and posts
-            </span>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="text-sm font-medium font-mono text-gray-400 mr-6 ml-2">
+        <div className="bg-gray-900/60 rounded-lg px-4 py-4 flex flex-col gap-3">
+          <span className="text-xs text-gray-400 font-mono mb-2">
+            Choose who can see your profile and posts
+          </span>
+          <div className="flex items-center gap-3 md:gap-8">
+            <span className="text-sm font-medium font-mono text-gray-400">
               Visibility
             </span>
             <span
               className={`text-sm font-medium font-mono ${
                 !isPrivate ? "text-blue-400" : "text-gray-400"
-              }`}
+              } md:ml-6`}
             >
               Public
             </span>
@@ -435,7 +431,7 @@ const SettingPage = () => {
             <span
               className={`text-sm font-medium font-mono ${
                 isPrivate ? "text-purple-400" : "text-gray-400"
-              } mr-4`}
+              }`}
             >
               Private
             </span>

@@ -155,7 +155,7 @@ router.put(
       .withMessage("Bio must be less than 500 characters"),
     body("skills").optional().isArray().withMessage("Skills must be an array"),
     body("githubLink")
-      .optional()
+      .optional({ checkFalsy: true })
       .isURL()
       .withMessage("GitHub link must be a valid URL"),
   ],
@@ -177,7 +177,13 @@ router.put(
       if (displayName !== undefined) updateData.displayName = displayName;
       if (bio !== undefined) updateData.bio = bio;
       if (skills !== undefined) updateData.skills = skills;
-      if (githubLink !== undefined) updateData.githubLink = githubLink;
+      if (githubLink !== undefined) {
+        // Handle empty GitHub link - set to empty string if cleared
+        updateData.githubLink = githubLink || "";
+      }
+
+      // Mark profile as completed when any field is updated
+      updateData.profileCompleted = true;
 
       const user = await User.findByIdAndUpdate(req.params.id, updateData, {
         new: true,
