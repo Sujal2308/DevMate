@@ -1,3 +1,35 @@
+# Unnecessary files to ignore
+check-login-debug.js
+check-redis-env.js
+debug-sociallinks.js
+test-login.js
+test-redis-connection.js
+test-resend-email.js
+test-all-emails.js
+test-email-quick.js
+test-forgot-password.js
+test-reset-domain.js
+test-service.js
+test-working-reset.js
+redis-url-tester.js
+deploy-azure.ps1
+deploy-azure.sh
+test-render-deployment.sh
+AZURE_ENV_UPDATE.md
+AZURE_RESTART_GUIDE.md
+DOMAIN_SETUP_GUIDE.md
+EMAIL_FIX_GUIDE.md
+FINAL_GOOGLE_SETUP.md
+FIX_GOOGLE_CLOUD_CONSOLE.md
+GOOGLE_CORS_FIX.md
+GOOGLE_OAUTH_SETUP.md
+LOCALHOST_GOOGLE_SETUP.md
+MONGODB_SETUP.md
+PASSWORD_RESET_FIX.md
+RESEND_SETUP_GUIDE.md
+SETUP.md
+PRODUCTION_ENV_VARS.txt
+render-env-vars.txt
 # Node
 node_modules/
 .env

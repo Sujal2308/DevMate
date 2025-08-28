@@ -172,7 +172,9 @@ router.post("/forgot-password", async (req, res) => {
     await user.save();
     // Send email
     const resetUrl = `${
-      process.env.FRONTEND_URL || process.env.CLIENT_ORIGIN || "http://localhost:3000"
+      process.env.FRONTEND_URL ||
+      process.env.CLIENT_ORIGIN ||
+      "http://localhost:3000"
     }/reset-password?token=${token}`;
 
     // Create beautiful HTML email template
@@ -300,13 +302,40 @@ DevMate - Where Developers Connect & Grow
 Visit us at: https://devmate.dev
     `.trim();
 
-    await sendEmail({
-      to: user.email,
-      subject: "🔐 Reset Your DevMate Password",
-      text: plainTextMessage,
-      html: htmlTemplate,
-    });
-    res.json({ message: "Password reset email sent." });
+    try {
+      console.log("Attempting to send password reset email to:", user.email);
+      console.log("Using EMAIL_FROM:", process.env.EMAIL_FROM);
+      console.log(
+        "RESEND_API_KEY set:",
+        process.env.RESEND_API_KEY ? "Yes" : "No"
+      );
+
+      await sendEmail({
+        to: user.email,
+        subject: "🔐 Reset Your DevMate Password",
+        text: plainTextMessage,
+        html: htmlTemplate,
+      });
+
+      console.log("Password reset email sent successfully to:", user.email);
+      res.json({ message: "Password reset email sent." });
+    } catch (emailError) {
+      console.error("Email sending failed:", emailError);
+      console.error("Email error details:", {
+        message: emailError.message,
+        stack: emailError.stack,
+        code: emailError.code,
+      });
+
+      // Still save the reset token even if email fails
+      res.status(500).json({
+        message: "Failed to send reset email. Please try again later.",
+        error:
+          process.env.NODE_ENV === "development"
+            ? emailError.message
+            : undefined,
+      });
+    }
   } catch (err) {
     console.error("Forgot password error:", err);
     res.status(500).json({ message: "Server error" });

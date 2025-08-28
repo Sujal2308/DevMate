@@ -138,6 +138,74 @@ app.get("/api/db-status", (req, res) => {
   });
 });
 
+// Debug environment variables (for troubleshooting)
+app.get("/api/debug/env", (req, res) => {
+  const envVars = {
+    EMAIL_FROM: process.env.EMAIL_FROM,
+    EMAIL_SERVICE: process.env.EMAIL_SERVICE,
+    RESEND_API_KEY: process.env.RESEND_API_KEY ? "Set" : "Not set",
+    NODE_ENV: process.env.NODE_ENV,
+    EMAIL_USER: process.env.EMAIL_USER ? "Set (Should be removed)" : "Not set",
+    EMAIL_PASS: process.env.EMAIL_PASS ? "Set (Should be removed)" : "Not set",
+  };
+
+  res.json({
+    message: "Environment Variables Check",
+    variables: envVars,
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// Test forgot password email functionality
+app.post("/api/test-forgot-email", async (req, res) => {
+  const { sendEmail } = require("./utils/email");
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ message: "Email is required" });
+  }
+
+  try {
+    console.log("=== Testing Forgot Password Email ===");
+    console.log("Target email:", email);
+
+    const testResetUrl = `${
+      process.env.CLIENT_ORIGIN || "https://devmate.dev"
+    }/reset-password?token=test-token-12345`;
+
+    const htmlTemplate = `
+    <h2>🧪 TEST EMAIL - Password Reset Request</h2>
+    <p>This is a test of the forgot password email functionality.</p>
+    <p>Reset URL: <a href="${testResetUrl}">${testResetUrl}</a></p>
+    <p>Environment: ${process.env.NODE_ENV}</p>
+    <p>FROM Address: ${process.env.EMAIL_FROM}</p>`;
+
+    const result = await sendEmail({
+      to: email,
+      subject: "🧪 TEST: DevMate Password Reset",
+      text: `TEST: Reset URL: ${testResetUrl}`,
+      html: htmlTemplate,
+    });
+
+    res.json({
+      success: true,
+      message: "Test email sent successfully",
+      emailId: result.id,
+      environment: {
+        EMAIL_FROM: process.env.EMAIL_FROM,
+        RESEND_API_KEY_SET: !!process.env.RESEND_API_KEY,
+      },
+    });
+  } catch (error) {
+    console.error("Test email failed:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to send test email",
+      error: error.message,
+    });
+  }
+});
+
 // Serve static files from React build
 app.use(
   express.static(path.join(__dirname, "client/build"), {

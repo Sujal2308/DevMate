@@ -438,7 +438,7 @@ const Home = () => {
                 {/* Floating Cards */}
                 <div className="space-y-6 max-w-sm mx-auto lg:mx-0 pb-8">
                   {/* Code Snippet Card */}
-                  <div className="x-card transform rotate-2 hover:rotate-0 transition-transform duration-300 animate-float">
+                  <div className="x-card transform rotate-2 hover:rotate-0 transition-transform duration-300 animate-float select-none">
                     <div className="flex items-center space-x-2 mb-3">
                       <div className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center">
                         <span className="text-white text-xs font-bold">JS</span>
@@ -472,9 +472,9 @@ const Home = () => {
                   </div>
 
                   {/* Profile Card */}
-                  <div className="x-card transform -rotate-1 hover:rotate-0 transition-transform duration-300 animate-float-delayed">
+                  <div className="x-card transform -rotate-1 hover:rotate-0 transition-transform duration-300 animate-float-delayed select-none">
                     <div className="flex items-center space-x-3">
-                      <div className="w-12 h-12 bg-[tomato] rounded-full flex items-center justify-center">
+                      <div className="w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center">
                         <span className="text-white font-bold">A</span>
                       </div>
                       <div>
@@ -496,7 +496,7 @@ const Home = () => {
                   </div>
 
                   {/* Stats Card */}
-                  <div className="x-card transform rotate-1 hover:rotate-0 transition-transform duration-300 animate-float-slow">
+                  <div className="x-card transform rotate-1 hover:rotate-0 transition-transform duration-300 animate-float-slow select-none">
                     <p className="text-x-white font-bold mb-2">
                       🔥 Trending Today
                     </p>

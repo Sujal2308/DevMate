@@ -82,7 +82,7 @@ const Register = () => {
 
   return (
     <div
-      className="min-h-screen bg-gradient-to-br from-x-black via-x-dark to-x-black flex items-start justify-center py-2 px-4 sm:px-6 lg:px-8 relative"
+      className="h-screen bg-gradient-to-br from-x-black via-x-dark to-x-black flex items-center justify-center py-4 px-4 sm:px-6 lg:px-8 relative overflow-hidden"
       style={{ fontFamily: "Poppins, sans-serif" }}
     >
       {/* Background Effects */}

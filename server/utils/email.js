@@ -1,24 +1,69 @@
-
 const { Resend } = require("resend");
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 async function sendEmail({ to, subject, text, html, from }) {
-  const fromAddress = from || process.env.EMAIL_FROM || "noreply@devmate.dev";
+  let fromAddress = from || process.env.EMAIL_FROM || "noreply@devmate.dev";
+
+  console.log("Email send attempt:", {
+    to,
+    from: fromAddress,
+    subject,
+    resendKeySet: !!process.env.RESEND_API_KEY,
+    nodeEnv: process.env.NODE_ENV,
+  });
+
   try {
-    const { data, error } = await resend.emails.send({
-      from: fromAddress,
-      to: [to],
-      subject,
-      text,
-      html,
-    });
-    if (error) {
-      console.error("Resend error:", error);
-      throw error;
+    // Check if Resend API key is available
+    if (!process.env.RESEND_API_KEY) {
+      throw new Error("RESEND_API_KEY not set in environment variables");
     }
+
+    // Try with the configured FROM address first
+    let emailResult;
+    try {
+      emailResult = await resend.emails.send({
+        from: fromAddress,
+        to: [to],
+        subject,
+        text,
+        html,
+      });
+    } catch (domainError) {
+      console.log(
+        "Primary FROM address failed, trying fallback...",
+        domainError
+      );
+
+      // Fallback to a verified domain if the primary fails
+      const fallbackFrom = "onboarding@resend.dev"; // Resend's default verified domain
+      console.log("Using fallback FROM address:", fallbackFrom);
+
+      emailResult = await resend.emails.send({
+        from: fallbackFrom,
+        to: [to],
+        subject,
+        text,
+        html,
+      });
+    }
+
+    const { data, error } = emailResult;
+
+    if (error) {
+      console.error("Resend API error:", error);
+      throw new Error(`Resend API error: ${JSON.stringify(error)}`);
+    }
+
+    console.log("Email sent successfully:", data);
     return data;
   } catch (err) {
-    console.error("Failed to send email:", err);
+    console.error("Email send failure:", {
+      error: err.message,
+      stack: err.stack,
+      to,
+      from: fromAddress,
+      subject,
+    });
     throw err;
   }
 }
