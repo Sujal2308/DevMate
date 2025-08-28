@@ -138,10 +138,23 @@ const SettingPage = () => {
   return (
     <div className="max-w-2xl mx-auto py-12 px-4 pb-32 sm:pb-12 bg-gradient-to-br from-x-dark/10 to-x-dark/5">
       <div className="flex flex-col items-center justify-center mb-8">
-        <h2 className="text-3xl font-extrabold text-white tracking-tight drop-shadow-lg font-mono">
+        <h2
+          className="text-3xl font-extrabold tracking-tight drop-shadow-lg"
+          style={{
+            fontFamily: "Poppins, sans-serif",
+            color: "#fff",
+          }}
+        >
           Settings
         </h2>
-        <p className="mt-2 text-sm text-blue-300 font-mono text-center max-w-md">
+        <p
+          className="mt-2 text-sm text-left max-w-md mr-4 ml-4"
+          style={{
+            color: "#6b7280",
+            whiteSpace: "pre-line",
+            fontFamily: "Poppins, sans-serif",
+          }}
+        >
           Tip: Keep your account secure and notifications relevant. You can
           always update your preferences here for a better experience!
         </p>
@@ -389,16 +402,16 @@ const SettingPage = () => {
           </svg>
           <h3 className="font-semibold text-lg">Account Privacy</h3>
         </div>
-        <div className="flex items-center justify-between bg-gray-900/60 rounded-lg px-4 py-3">
+        <div className="flex items-center justify-between bg-gray-900/60 rounded-lg px-0 py-3">
           <div className="flex flex-col">
-            <span className="font-medium text-white font-mono">
-              Profile Visibility
-            </span>
             <span className="text-xs text-gray-400 hidden md:inline font-mono">
               Choose who can see your profile and posts
             </span>
           </div>
           <div className="flex items-center gap-3">
+            <span className="text-sm font-medium font-mono text-gray-400 mr-6 ml-2">
+              Visibility
+            </span>
             <span
               className={`text-sm font-medium font-mono ${
                 !isPrivate ? "text-blue-400" : "text-gray-400"
@@ -422,7 +435,7 @@ const SettingPage = () => {
             <span
               className={`text-sm font-medium font-mono ${
                 isPrivate ? "text-purple-400" : "text-gray-400"
-              }`}
+              } mr-4`}
             >
               Private
             </span>

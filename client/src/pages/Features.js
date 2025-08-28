@@ -318,18 +318,29 @@ const Features = () => {
 
       {/* Hero Section - Centered, no scroll down */}
       <section className="flex items-center justify-center min-h-[70vh] w-full mt-16">
-  <div className="text-center w-full">
+        <div className="text-center w-full">
           <h1 className="text-3xl xs:text-4xl md:text-7xl font-bold text-x-white mb-6 flex flex-wrap items-center justify-center gap-3">
-            <span style={{ fontFamily: 'Poppins, sans-serif' }}>What We</span>
-            <span className="help-you-animated relative no-underline text-[#ffa726]" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            <span style={{ fontFamily: "Poppins, sans-serif" }}>What We</span>
+            <span
+              className="help-you-animated relative no-underline text-[#ffa726]"
+              style={{ fontFamily: "Poppins, sans-serif" }}
+            >
               Offer
             </span>
           </h1>
           <p className="text-base xs:text-lg md:text-2xl text-x-gray mb-8 max-w-3xl mx-auto leading-relaxed">
             <span className="block max-w-xs mx-auto sm:max-w-3xl">
-              <span style={{ fontFamily: 'monospace' }}>
-                <span style={{ display: 'block', textAlign: 'left', fontFamily: 'monospace' }}>
-                  Discover the tools and features that make DevMate the ultimate platform for developers to connect, collaborate, and create amazing things together.
+              <span style={{ fontFamily: "monospace" }}>
+                <span
+                  style={{
+                    display: "block",
+                    textAlign: "left",
+                    fontFamily: "monospace",
+                  }}
+                >
+                  Discover the tools and features that make DevMate the ultimate
+                  platform for developers to connect, collaborate, and create
+                  amazing things together.
                 </span>
               </span>
             </span>
@@ -387,8 +398,16 @@ const Features = () => {
               Everything You Need
             </h2>
             <p className="text-base xs:text-lg md:text-xl text-x-gray max-w-3xl mx-auto font-mono">
-              <span style={{ display: 'block', textAlign: 'left', fontFamily: 'monospace', marginLeft: '1.5rem' }}>
-                From smart code sharing to global networking, DevMate provides all the tools you need to succeed as a developer.
+              <span
+                style={{
+                  display: "block",
+                  textAlign: "left",
+                  fontFamily: "monospace",
+                  marginLeft: "1.5rem",
+                }}
+              >
+                From smart code sharing to global networking, DevMate provides
+                all the tools you need to succeed as a developer.
               </span>
             </p>
           </div>
