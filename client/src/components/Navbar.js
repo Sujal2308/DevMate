@@ -61,7 +61,7 @@ const Navbar = () => {
             <div className="w-8 h-8 bg-x-blue rounded-full flex items-center justify-center group-hover:bg-x-blue-hover transition-colors">
               <span className="text-white font-bold text-sm">D</span>
             </div>
-            <span className="text-2xl font-bold text-x-white group-hover:text-x-blue transition-colors">
+            <span className="text-2xl font-bold text-x-white transition-colors">
               DevMate
             </span>
           </Link>
