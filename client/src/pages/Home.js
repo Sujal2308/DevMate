@@ -626,7 +626,7 @@ const Home = () => {
               </Link>
               <Link
                 to="/features"
-                className="border-2 border-x-blue text-x-blue hover:bg-x-blue-hover hover:text-white font-bold text-xl px-12 py-5 rounded-full transition-colors duration-200 min-w-[250px] backdrop-blur-sm flex items-center justify-center space-x-3 group"
+                className="border-2 border-x-blue text-x-blue hover:bg-x-blue-hover hover:text-white font-bold text-xl px-10 py-5 rounded-full transition-colors duration-200 min-w-[250px] backdrop-blur-sm flex items-center justify-center space-x-3 group box-border"
               >
                 <span className="flex items-center space-x-2">
                   <svg
