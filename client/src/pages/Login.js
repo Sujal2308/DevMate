@@ -42,7 +42,7 @@ const Login = () => {
   };
 
   return (
-  <div className="min-h-screen bg-gradient-to-br from-x-black via-x-dark to-x-black flex items-center sm:items-center justify-center py-8 sm:py-8 px-4 sm:px-6 lg:px-8 overflow-hidden">
+  <div className="min-h-screen bg-gradient-to-br from-x-black via-x-dark to-x-black flex items-start sm:items-center justify-center py-2 sm:py-8 px-4 sm:px-6 lg:px-8 overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-x-blue/3 rounded-full blur-3xl"></div>
@@ -54,12 +54,12 @@ const Login = () => {
         <div className="absolute top-4 left-4 z-10">
           <Link
             to="/"
-            className="bg-x-dark/80 hover:bg-x-dark/90 border border-x-border/30 rounded-full p-2 shadow transition-colors duration-200 flex items-center justify-center"
+            className="flex items-center justify-center"
             aria-label="Back"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
+              className="h-6 w-6 text-x-gray hover:text-x-blue transition-colors duration-200"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
