@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 const News = () => {
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [, setError] = useState(null);
 
   // For now, using a mock API. You can replace this with actual dev news APIs like:
   // - Dev.to API: https://dev.to/api/articles
@@ -18,13 +18,13 @@ const News = () => {
     try {
       setLoading(true);
       setError(null);
-      
+
       // Try multiple API sources for better reliability
       const apiSources = [
         // Dev.to API - most reliable for dev news
-        'https://dev.to/api/articles?per_page=20&top=7',
-        'https://dev.to/api/articles?per_page=20&tag=javascript',
-        'https://dev.to/api/articles?per_page=20&tag=programming'
+        "https://dev.to/api/articles?per_page=20&top=7",
+        "https://dev.to/api/articles?per_page=20&tag=javascript",
+        "https://dev.to/api/articles?per_page=20&tag=programming",
       ];
 
       let articles = [];
@@ -34,11 +34,11 @@ const News = () => {
       for (const apiUrl of apiSources) {
         try {
           const response = await fetch(apiUrl, {
-            method: 'GET',
+            method: "GET",
             headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            }
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
           });
 
           if (!response.ok) {
@@ -46,21 +46,26 @@ const News = () => {
           }
 
           articles = await response.json();
-          
+
           if (articles && articles.length > 0) {
             // Transform the data to ensure consistent structure
-            const transformedArticles = articles.slice(0, 20).map(article => ({
-              id: article.id,
-              title: article.title,
-              description: article.description || article.body_text?.substring(0, 200) + '...' || 'No description available',
-              url: article.url,
-              published_at: article.published_at,
-              user: { name: article.user?.name || 'Anonymous' },
-              tag_list: article.tag_list || [],
-              public_reactions_count: article.public_reactions_count || 0,
-              comments_count: article.comments_count || 0
-            }));
-            
+            const transformedArticles = articles
+              .slice(0, 20)
+              .map((article) => ({
+                id: article.id,
+                title: article.title,
+                description:
+                  article.description ||
+                  article.body_text?.substring(0, 200) + "..." ||
+                  "No description available",
+                url: article.url,
+                published_at: article.published_at,
+                user: { name: article.user?.name || "Anonymous" },
+                tag_list: article.tag_list || [],
+                public_reactions_count: article.public_reactions_count || 0,
+                comments_count: article.comments_count || 0,
+              }));
+
             setNews(transformedArticles);
             setError(null);
             return; // Success, exit the function
@@ -73,17 +78,17 @@ const News = () => {
       }
 
       // If all API sources failed, throw the last error
-      throw lastError || new Error('All news sources failed');
-
+      throw lastError || new Error("All news sources failed");
     } catch (err) {
-      console.error('Error fetching news:', err);
-      
+      console.error("Error fetching news:", err);
+
       // Enhanced fallback data with more articles
       const fallbackArticles = [
         {
           id: 1,
           title: "The Future of JavaScript: What's Coming in 2025",
-          description: "Explore the latest JavaScript features and frameworks that are shaping the future of web development, including new syntax improvements and performance optimizations.",
+          description:
+            "Explore the latest JavaScript features and frameworks that are shaping the future of web development, including new syntax improvements and performance optimizations.",
           url: "https://dev.to",
           published_at: "2025-11-03T10:00:00Z",
           user: { name: "Dev Community" },
@@ -94,7 +99,8 @@ const News = () => {
         {
           id: 2,
           title: "React 19: Revolutionary Changes for Developers",
-          description: "Deep dive into React 19's new features including the compiler, concurrent features, and improved developer experience that will change how we build apps.",
+          description:
+            "Deep dive into React 19's new features including the compiler, concurrent features, and improved developer experience that will change how we build apps.",
           url: "https://dev.to",
           published_at: "2025-11-02T14:30:00Z",
           user: { name: "React Team" },
@@ -105,7 +111,8 @@ const News = () => {
         {
           id: 3,
           title: "AI-Powered Development: Tools That Actually Help",
-          description: "A comprehensive review of AI coding assistants and how they're changing the development workflow, making developers more productive than ever.",
+          description:
+            "A comprehensive review of AI coding assistants and how they're changing the development workflow, making developers more productive than ever.",
           url: "https://dev.to",
           published_at: "2025-11-01T09:15:00Z",
           user: { name: "AI Weekly" },
@@ -116,7 +123,8 @@ const News = () => {
         {
           id: 4,
           title: "TypeScript 5.0: New Features and Breaking Changes",
-          description: "Exploring TypeScript 5.0's latest features, performance improvements, and what developers need to know about the breaking changes.",
+          description:
+            "Exploring TypeScript 5.0's latest features, performance improvements, and what developers need to know about the breaking changes.",
           url: "https://dev.to",
           published_at: "2025-10-31T16:20:00Z",
           user: { name: "TypeScript Team" },
@@ -127,7 +135,8 @@ const News = () => {
         {
           id: 5,
           title: "Docker Best Practices for 2025",
-          description: "Learn the latest Docker best practices for containerizing applications, including security, performance, and deployment strategies.",
+          description:
+            "Learn the latest Docker best practices for containerizing applications, including security, performance, and deployment strategies.",
           url: "https://dev.to",
           published_at: "2025-10-30T11:45:00Z",
           user: { name: "DevOps Weekly" },
@@ -138,7 +147,8 @@ const News = () => {
         {
           id: 6,
           title: "Web Performance Optimization in 2025",
-          description: "Latest techniques for optimizing web performance, including Core Web Vitals, image optimization, and modern loading strategies.",
+          description:
+            "Latest techniques for optimizing web performance, including Core Web Vitals, image optimization, and modern loading strategies.",
           url: "https://dev.to",
           published_at: "2025-10-29T08:30:00Z",
           user: { name: "Web Performance" },
@@ -149,7 +159,8 @@ const News = () => {
         {
           id: 7,
           title: "GraphQL vs REST: Making the Right Choice",
-          description: "Comparing GraphQL and REST APIs in 2025, discussing when to use each approach and the latest developments in API design.",
+          description:
+            "Comparing GraphQL and REST APIs in 2025, discussing when to use each approach and the latest developments in API design.",
           url: "https://dev.to",
           published_at: "2025-10-28T13:15:00Z",
           user: { name: "API Design" },
@@ -160,14 +171,15 @@ const News = () => {
         {
           id: 8,
           title: "CSS Grid vs Flexbox: A 2025 Perspective",
-          description: "Understanding when to use CSS Grid vs Flexbox in modern web development, with practical examples and use cases.",
+          description:
+            "Understanding when to use CSS Grid vs Flexbox in modern web development, with practical examples and use cases.",
           url: "https://dev.to",
           published_at: "2025-10-27T15:45:00Z",
           user: { name: "CSS Masters" },
           tag_list: ["css", "frontend", "webdev"],
           public_reactions_count: 71,
           comments_count: 24,
-        }
+        },
       ];
 
       setNews(fallbackArticles);
