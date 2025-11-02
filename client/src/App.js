@@ -36,6 +36,7 @@ import FollowersList from "./pages/FollowersList";
 import FollowingList from "./pages/FollowingList"; // Import FollowingList
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import News from "./pages/News"; // Import News page
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -203,6 +204,14 @@ function AppContent() {
                       element={
                         <ProtectedRoute>
                           <FollowingList />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/news"
+                      element={
+                        <ProtectedRoute>
+                          <News />
                         </ProtectedRoute>
                       }
                     />

@@ -130,6 +130,22 @@ const Navbar = () => {
                       }`}
                     ></div>
                   </Link>
+                  <Link
+                    to="/news"
+                    className={`relative text-x-white hover:text-x-blue transition-all duration-200 font-medium group ${
+                      location.pathname === "/news" ? "text-x-blue" : ""
+                    }`}
+                    onClick={(e) => handleNavClick("/news", e)}
+                  >
+                    <span>News</span>
+                    <div
+                      className={`absolute bottom-0 left-0 h-0.5 bg-x-blue transition-all duration-200 ${
+                        location.pathname === "/news"
+                          ? "w-full"
+                          : "w-0 group-hover:w-full"
+                      }`}
+                    ></div>
+                  </Link>
                 </div>
 
                 {/* User Menu - Desktop */}
@@ -207,6 +223,20 @@ const Navbar = () => {
                         onClick={(e) => handleNavClick("/settings", e)}
                       >
                         Settings
+                      </Link>
+                      <Link
+                        to="/news"
+                        className={`px-4 py-3 hover:bg-x-darker transition-colors text-left flex items-center justify-between ${
+                          location.pathname === "/news"
+                            ? "text-x-blue border-l-2 border-x-blue"
+                            : "text-x-white"
+                        }`}
+                        onClick={(e) => handleNavClick("/news", e)}
+                      >
+                        <span>News</span>
+                        <span className="bg-x-blue text-white text-xs px-2 py-1 rounded-full font-semibold">
+                          NEW
+                        </span>
                       </Link>
                       <button
                         onClick={(e) => {
