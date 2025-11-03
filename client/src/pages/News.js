@@ -89,7 +89,7 @@ const News = () => {
           title: "The Future of JavaScript: What's Coming in 2025",
           description:
             "Explore the latest JavaScript features and frameworks that are shaping the future of web development, including new syntax improvements and performance optimizations.",
-          url: "https://dev.to/javascript/the-future-of-javascript-whats-coming-in-2025",
+          url: "https://dev.to/t/javascript",
           published_at: "2025-11-03T10:00:00Z",
           user: { name: "Dev Community" },
           tag_list: ["javascript", "webdev", "programming"],
@@ -101,7 +101,7 @@ const News = () => {
           title: "React 19: Revolutionary Changes for Developers",
           description:
             "Deep dive into React 19's new features including the compiler, concurrent features, and improved developer experience that will change how we build apps.",
-          url: "https://dev.to/react/react-19-revolutionary-changes-for-developers",
+          url: "https://dev.to/t/react",
           published_at: "2025-11-02T14:30:00Z",
           user: { name: "React Team" },
           tag_list: ["react", "frontend", "javascript"],
@@ -113,7 +113,7 @@ const News = () => {
           title: "AI-Powered Development: Tools That Actually Help",
           description:
             "A comprehensive review of AI coding assistants and how they're changing the development workflow, making developers more productive than ever.",
-          url: "https://dev.to/ai/ai-powered-development-tools-that-actually-help",
+          url: "https://dev.to/t/ai",
           published_at: "2025-11-01T09:15:00Z",
           user: { name: "AI Weekly" },
           tag_list: ["ai", "development", "tools"],
@@ -125,7 +125,7 @@ const News = () => {
           title: "TypeScript 5.0: New Features and Breaking Changes",
           description:
             "Exploring TypeScript 5.0's latest features, performance improvements, and what developers need to know about the breaking changes.",
-          url: "https://dev.to/typescript/typescript-5-new-features-and-breaking-changes",
+          url: "https://dev.to/t/typescript",
           published_at: "2025-10-31T16:20:00Z",
           user: { name: "TypeScript Team" },
           tag_list: ["typescript", "javascript", "programming"],
@@ -137,7 +137,7 @@ const News = () => {
           title: "Docker Best Practices for 2025",
           description:
             "Learn the latest Docker best practices for containerizing applications, including security, performance, and deployment strategies.",
-          url: "https://dev.to/docker/docker-best-practices-for-2025",
+          url: "https://dev.to/t/docker",
           published_at: "2025-10-30T11:45:00Z",
           user: { name: "DevOps Weekly" },
           tag_list: ["docker", "devops", "containers"],
@@ -149,7 +149,7 @@ const News = () => {
           title: "Web Performance Optimization in 2025",
           description:
             "Latest techniques for optimizing web performance, including Core Web Vitals, image optimization, and modern loading strategies.",
-          url: "https://dev.to/webperf/web-performance-optimization-in-2025",
+          url: "https://dev.to/t/performance",
           published_at: "2025-10-29T08:30:00Z",
           user: { name: "Web Performance" },
           tag_list: ["performance", "webdev", "optimization"],
@@ -161,7 +161,7 @@ const News = () => {
           title: "GraphQL vs REST: Making the Right Choice",
           description:
             "Comparing GraphQL and REST APIs in 2025, discussing when to use each approach and the latest developments in API design.",
-          url: "https://dev.to/api/graphql-vs-rest-making-the-right-choice",
+          url: "https://dev.to/t/api",
           published_at: "2025-10-28T13:15:00Z",
           user: { name: "API Design" },
           tag_list: ["graphql", "rest", "api"],
@@ -173,7 +173,7 @@ const News = () => {
           title: "CSS Grid vs Flexbox: A 2025 Perspective",
           description:
             "Understanding when to use CSS Grid vs Flexbox in modern web development, with practical examples and use cases.",
-          url: "https://dev.to/css/css-grid-vs-flexbox-a-2025-perspective",
+          url: "https://dev.to/t/css",
           published_at: "2025-10-27T15:45:00Z",
           user: { name: "CSS Masters" },
           tag_list: ["css", "frontend", "webdev"],
@@ -230,14 +230,14 @@ const News = () => {
   }
 
   return (
-    <div className="min-h-screen bg-x-black text-x-white">
+    <div className="min-h-screen bg-x-black text-x-white font-sans">
       <div className="max-w-4xl mx-auto p-4 md:p-6">
         {/* Header */}
         <div className="mb-6 md:mb-8">
-          <h1 className="text-2xl md:text-4xl font-bold text-x-white mb-2">
-            📰 Developer News
+          <h1 className="text-xl md:text-2xl font-bold text-red-500 mb-2 font-sans">
+            Developer News
           </h1>
-          <p className="text-x-gray text-base md:text-lg">
+          <p className="text-x-gray text-sm md:text-base">
             Stay updated with the latest trends in development and technology
           </p>
         </div>
@@ -255,10 +255,10 @@ const News = () => {
               {/* Article Header */}
               <div className="flex items-start justify-between mb-3 md:mb-4">
                 <div className="flex-1">
-                  <h2 className="text-lg md:text-xl font-semibold text-x-white group-hover:text-x-blue transition-colors mb-2 line-clamp-2">
+                  <h2 className="text-base md:text-lg font-semibold text-x-white group-hover:text-x-blue transition-colors mb-2 line-clamp-2">
                     {article.title}
                   </h2>
-                  <p className="text-x-gray text-sm md:text-base mb-3 line-clamp-3">
+                  <p className="text-x-gray text-xs md:text-sm mb-3 line-clamp-3">
                     {article.description}
                   </p>
                 </div>
