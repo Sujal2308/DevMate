@@ -89,7 +89,7 @@ const News = () => {
           title: "The Future of JavaScript: What's Coming in 2025",
           description:
             "Explore the latest JavaScript features and frameworks that are shaping the future of web development, including new syntax improvements and performance optimizations.",
-          url: "https://dev.to",
+          url: "https://dev.to/javascript/the-future-of-javascript-whats-coming-in-2025",
           published_at: "2025-11-03T10:00:00Z",
           user: { name: "Dev Community" },
           tag_list: ["javascript", "webdev", "programming"],
@@ -101,7 +101,7 @@ const News = () => {
           title: "React 19: Revolutionary Changes for Developers",
           description:
             "Deep dive into React 19's new features including the compiler, concurrent features, and improved developer experience that will change how we build apps.",
-          url: "https://dev.to",
+          url: "https://dev.to/react/react-19-revolutionary-changes-for-developers",
           published_at: "2025-11-02T14:30:00Z",
           user: { name: "React Team" },
           tag_list: ["react", "frontend", "javascript"],
@@ -113,7 +113,7 @@ const News = () => {
           title: "AI-Powered Development: Tools That Actually Help",
           description:
             "A comprehensive review of AI coding assistants and how they're changing the development workflow, making developers more productive than ever.",
-          url: "https://dev.to",
+          url: "https://dev.to/ai/ai-powered-development-tools-that-actually-help",
           published_at: "2025-11-01T09:15:00Z",
           user: { name: "AI Weekly" },
           tag_list: ["ai", "development", "tools"],
@@ -125,7 +125,7 @@ const News = () => {
           title: "TypeScript 5.0: New Features and Breaking Changes",
           description:
             "Exploring TypeScript 5.0's latest features, performance improvements, and what developers need to know about the breaking changes.",
-          url: "https://dev.to",
+          url: "https://dev.to/typescript/typescript-5-new-features-and-breaking-changes",
           published_at: "2025-10-31T16:20:00Z",
           user: { name: "TypeScript Team" },
           tag_list: ["typescript", "javascript", "programming"],
@@ -137,7 +137,7 @@ const News = () => {
           title: "Docker Best Practices for 2025",
           description:
             "Learn the latest Docker best practices for containerizing applications, including security, performance, and deployment strategies.",
-          url: "https://dev.to",
+          url: "https://dev.to/docker/docker-best-practices-for-2025",
           published_at: "2025-10-30T11:45:00Z",
           user: { name: "DevOps Weekly" },
           tag_list: ["docker", "devops", "containers"],
@@ -149,7 +149,7 @@ const News = () => {
           title: "Web Performance Optimization in 2025",
           description:
             "Latest techniques for optimizing web performance, including Core Web Vitals, image optimization, and modern loading strategies.",
-          url: "https://dev.to",
+          url: "https://dev.to/webperf/web-performance-optimization-in-2025",
           published_at: "2025-10-29T08:30:00Z",
           user: { name: "Web Performance" },
           tag_list: ["performance", "webdev", "optimization"],
@@ -161,7 +161,7 @@ const News = () => {
           title: "GraphQL vs REST: Making the Right Choice",
           description:
             "Comparing GraphQL and REST APIs in 2025, discussing when to use each approach and the latest developments in API design.",
-          url: "https://dev.to",
+          url: "https://dev.to/api/graphql-vs-rest-making-the-right-choice",
           published_at: "2025-10-28T13:15:00Z",
           user: { name: "API Design" },
           tag_list: ["graphql", "rest", "api"],
@@ -173,7 +173,7 @@ const News = () => {
           title: "CSS Grid vs Flexbox: A 2025 Perspective",
           description:
             "Understanding when to use CSS Grid vs Flexbox in modern web development, with practical examples and use cases.",
-          url: "https://dev.to",
+          url: "https://dev.to/css/css-grid-vs-flexbox-a-2025-perspective",
           published_at: "2025-10-27T15:45:00Z",
           user: { name: "CSS Masters" },
           tag_list: ["css", "frontend", "webdev"],
