@@ -1,6 +1,6 @@
 # DevMate - Developer Community Platform
 
-A full-stack MERN application that connects developers, allows them to share code snippets, and build a community around coding and collaboration.
+It is a social platform designed for developers across different domains to post their work , share experiences, post a bug to assist help from community, connect with other  developers of same field , stay up to date with tech and consume the content.
 
 ## 🚀 Features
 
