@@ -10,7 +10,7 @@ import { useAuth } from "../contexts/AuthContext";
 
 const Feed = () => {
   const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -138,6 +138,7 @@ const Feed = () => {
   const handleModalClose = () => {
     sessionStorage.setItem("hasSeenFeedModal", "true");
     setShowModal(false);
+    setLoading(false);
   };
 
   if ((loading || error) && posts.length === 0) {
