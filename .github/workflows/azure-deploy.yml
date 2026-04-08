@@ -42,9 +42,7 @@ jobs:
           cp -r ../client/build/* client/build/
 
       - name: Zip artifact for deployment
-        run: |
-          cd server
-          zip -r ../release.zip .
+        run: zip -r release.zip server/ client/ package.json -x "*/node_modules/*"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
