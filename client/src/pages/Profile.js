@@ -4,6 +4,7 @@ import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
 import PostCard from "../components/PostCard";
 import UpdateProfilePrompt from "../components/UpdateProfilePrompt";
+import SavedPostsList from "../components/SavedPostsList";
 
 const Profile = () => {
   const [profileData, setProfileData] = useState(null);
@@ -16,6 +17,7 @@ const Profile = () => {
   const [loadingMorePosts, setLoadingMorePosts] = useState(false);
   const [hasMorePosts, setHasMorePosts] = useState(true);
   const [showUpdatePrompt, setShowUpdatePrompt] = useState(false);
+  const [viewingSavedPosts, setViewingSavedPosts] = useState(false);
   const { username } = useParams();
   const { user } = useAuth();
 
@@ -981,6 +983,9 @@ const Profile = () => {
             </div>
           )}
           {activeTab === "activity" && (
+            viewingSavedPosts ? (
+              <SavedPostsList onBack={() => setViewingSavedPosts(false)} />
+             ) : (
             <div className="card p-8 bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/20 text-center mb-8">
               <div className="bg-x-blue/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg
@@ -1004,7 +1009,22 @@ const Profile = () => {
                 Activity tracking coming soon! This will show recent likes,
                 comments, and interactions.
               </p>
+              {isOwnProfile && (
+                <div className="mt-8 pt-6 border-t border-x-border/20">
+                  <h4 className="text-lg font-bold text-x-white mb-4">Your Private Bookmarks</h4>
+                  <button
+                    onClick={() => setViewingSavedPosts(true)}
+                    className="inline-flex items-center px-6 py-3 bg-x-blue text-white rounded-full font-semibold transition-colors hover:bg-x-green"
+                  >
+                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                    </svg>
+                    View Saved Posts
+                  </button>
+                </div>
+              )}
             </div>
+            )
           )}
           {activeTab === "about" && profileUser && (
             <div className="card p-8 bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/20 mb-8">

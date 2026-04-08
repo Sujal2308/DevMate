@@ -264,12 +264,20 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
   const [copied, setCopied] = useState(false); // Copy feedback state
   const [showFullCode, setShowFullCode] = useState(false); // For code expansion
   const [showShareModal, setShowShareModal] = useState(false); // For share modal
+  const [isSaved, setIsSaved] = useState(false);
+  const [saveAnimating, setSaveAnimating] = useState(false);
 
   React.useEffect(() => {
     if (user && post?.author?.followers) {
       // Check if user is following this author
     }
   }, [post?.author?.followers, user]);
+
+  React.useEffect(() => {
+    if (user?.savedPosts) {
+      setIsSaved(user.savedPosts.includes(post?._id));
+    }
+  }, [user?.savedPosts, post?._id]);
 
   // Safety check for post data (after ALL hooks)
   if (!post || !post.author) {
@@ -280,6 +288,22 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
 
   const isLiked = post.likes?.some((like) => like.user === user?.id);
   const isAuthor = post.author?._id === user?.id;
+
+  const handleSave = async () => {
+    if (!user) return;
+    setSaveAnimating(true);
+    try {
+      const response = await axios.put(`/api/users/save/${post._id}`);
+      setIsSaved(response.data.savedPosts.includes(post._id));
+      if (user) {
+         user.savedPosts = response.data.savedPosts;
+      }
+    } catch (error) {
+      console.error("Save error:", error);
+    } finally {
+      setTimeout(() => setSaveAnimating(false), 600);
+    }
+  };
 
   const handleLike = async () => {
     setLikeAnimating(true);
@@ -773,6 +797,35 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
           </svg>
           <span className="text-x-white font-medium hidden sm:inline">
             Share
+          </span>
+        </button>
+
+        <button
+          onClick={handleSave}
+          className={`flex items-center space-x-1 sm:space-x-2 text-sm ${
+            isSaved ? "text-x-green" : "text-x-gray hover:text-x-green"
+          } transition-colors relative`}
+          style={{ outline: "none" }}
+        >
+          <span className="relative flex items-center justify-center">
+            <svg
+              className={`w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 ${
+                saveAnimating ? "scale-125 animate-like-pop" : ""
+              }`}
+              fill={isSaved ? "currentColor" : "none"}
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+            </svg>
+            {saveAnimating && (
+              <span className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <span className="block w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-green-400/30 animate-like-burst"></span>
+              </span>
+            )}
+          </span>
+          <span className="text-x-white font-medium hidden sm:inline">
+            {isSaved ? "Saved" : "Save"}
           </span>
         </button>
 

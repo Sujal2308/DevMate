@@ -77,6 +77,7 @@ router.post(
           username: user.username,
           email: user.email,
           displayName: user.displayName,
+          savedPosts: user.savedPosts || [],
         },
       });
     } catch (error) {
@@ -130,6 +131,7 @@ router.post(
           username: user.username,
           email: user.email,
           displayName: user.displayName,
+          savedPosts: user.savedPosts || [],
         },
       });
     } catch (error) {
@@ -150,6 +152,7 @@ router.get("/me", auth, async (req, res) => {
       bio: req.user.bio,
       skills: req.user.skills,
       githubLink: req.user.githubLink,
+      savedPosts: req.user.savedPosts || [],
     });
   } catch (error) {
     console.error("Get user error:", error);

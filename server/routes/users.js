@@ -9,6 +9,48 @@ const emitNotification = require("../utils/notify");
 const { sendEmail } = require("../utils/email");
 
 const router = express.Router();
+// Get all saved posts
+router.get("/saved/posts", auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).populate({
+      path: "savedPosts",
+      populate: [
+        { path: "author", select: "username displayName" },
+        { path: "comments.user", select: "username displayName" }
+      ]
+    });
+    // Reverse to show newest saves first
+    const posts = user.savedPosts ? user.savedPosts.reverse() : [];
+    res.json({ posts });
+  } catch (error) {
+    console.error("Get saved posts error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Save or unsave a post
+router.put("/save/:postId", auth, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.postId);
+    if (!post) return res.status(404).json({ message: "Post not found" });
+
+    const user = await User.findById(req.user._id);
+
+    const isSaved = user.savedPosts && user.savedPosts.includes(req.params.postId);
+    if (isSaved) {
+      user.savedPosts = user.savedPosts.filter(id => id.toString() !== req.params.postId);
+    } else {
+      if (!user.savedPosts) user.savedPosts = [];
+      user.savedPosts.push(req.params.postId);
+    }
+    await user.save();
+    
+    res.json({ message: isSaved ? "Post unsaved" : "Post saved", savedPosts: user.savedPosts });
+  } catch (error) {
+    console.error("Save post error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 // Get user by username
 router.get("/:username", async (req, res) => {
