@@ -9,9 +9,7 @@ const TrendingNews = () => {
     const fetchTrendingNews = async () => {
       try {
         setLoading(true);
-        const response = await fetch(
-          "https://dev.to/api/articles?per_page=8&top=7"
-        );
+        const response = await fetch("/api/news/trending");
         if (!response.ok) throw new Error("Failed to fetch articles");
         const data = await response.json();
         setArticles(data);

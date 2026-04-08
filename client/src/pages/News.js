@@ -19,66 +19,26 @@ const News = () => {
       setLoading(true);
       setError(null);
 
-      // Try multiple API sources for better reliability
-      const apiSources = [
-        // Dev.to API - most reliable for dev news
-        "https://dev.to/api/articles?per_page=20&top=7",
-        "https://dev.to/api/articles?per_page=20&tag=javascript",
-        "https://dev.to/api/articles?per_page=20&tag=programming",
-      ];
+      const response = await fetch("/api/news", {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
 
-      let articles = [];
-      let lastError = null;
-
-      // Try each API source until one works
-      for (const apiUrl of apiSources) {
-        try {
-          const response = await fetch(apiUrl, {
-            method: "GET",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-          });
-
-          if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-          }
-
-          articles = await response.json();
-
-          if (articles && articles.length > 0) {
-            // Transform the data to ensure consistent structure
-            const transformedArticles = articles
-              .slice(0, 20)
-              .map((article) => ({
-                id: article.id,
-                title: article.title,
-                description:
-                  article.description ||
-                  article.body_text?.substring(0, 200) + "..." ||
-                  "No description available",
-                url: article.url,
-                published_at: article.published_at,
-                user: { name: article.user?.name || "Anonymous" },
-                tag_list: article.tag_list || [],
-                public_reactions_count: article.public_reactions_count || 0,
-                comments_count: article.comments_count || 0,
-              }));
-
-            setNews(transformedArticles);
-            setError(null);
-            return; // Success, exit the function
-          }
-        } catch (err) {
-          lastError = err;
-          console.warn(`Failed to fetch from ${apiUrl}:`, err);
-          continue; // Try next API source
-        }
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 
-      // If all API sources failed, throw the last error
-      throw lastError || new Error("All news sources failed");
+      const articles = await response.json();
+
+      if (articles && articles.length > 0) {
+        setNews(articles);
+        setError(null);
+        return;
+      }
+      throw new Error("No news found via backend proxy");
     } catch (err) {
       console.error("Error fetching news:", err);
 
