@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { TextRotate } from "../components/ui/text-rotate";
 
 // Modal state for bug report
 const useReportModal = () => {
@@ -239,12 +240,24 @@ const Home = () => {
                   The Future of Developer Collaboration
                 </span>
               </div>
-              <h1 className="text-6xl xs:text-7xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight">
-                <span className="text-x-white">Connect.</span>
-                <br />
-                <span className="text-x-blue">Code.</span>
-                <br />
-                <span className="text-x-white">Create.</span>
+              <h1 className="text-6xl xs:text-7xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-2 lg:mb-2 leading-tight flex flex-col md:flex-row items-center lg:items-start lg:justify-start justify-center text-center lg:text-left h-[180px] sm:h-[120px] lg:h-[90px] xl:h-[110px] overflow-hidden">
+                <span className="text-x-white md:mr-4 whitespace-nowrap">It's time to</span>
+                <TextRotate
+                  texts={[
+                    "Connect.",
+                    "Code.",
+                    "Create."
+                  ]}
+                  mainClassName="text-x-blue px-2 bg-x-blue/10 overflow-hidden py-1 justify-center lg:justify-start rounded-lg mt-2 md:mt-0 shadow-lg border border-x-blue/20"
+                  staggerFrom={"last"}
+                  initial={{ y: "100%" }}
+                  animate={{ y: 0 }}
+                  exit={{ y: "-120%" }}
+                  staggerDuration={0.025}
+                  splitLevelClassName="overflow-hidden pb-1"
+                  transition={{ type: "spring", damping: 30, stiffness: 400 }}
+                  rotationInterval={2500}
+                />
               </h1>
               <p className="text-base sm:text-xl lg:text-2xl text-x-gray mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
                 <span className="block sm:hidden">
@@ -432,90 +445,14 @@ const Home = () => {
               </div> */}
             </div>
 
-            {/* Right Content - Code Preview */}
-            <div className="flex-[1] order-2 lg:order-2 w-full max-w-sm lg:max-w-lg lg:flex-shrink-0">
-              <div className="relative">
-                {/* Floating Cards */}
-                <div className="space-y-6 max-w-sm mx-auto lg:mx-0 pb-8">
-                  {/* Code Snippet Card */}
-                  <div className="x-card transform rotate-2 hover:rotate-0 transition-transform duration-300 animate-float select-none">
-                    <div className="flex items-center space-x-2 mb-3">
-                      <div className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center">
-                        <span className="text-white text-xs font-bold">JS</span>
-                      </div>
-                      <div>
-                        <p className="text-x-white font-bold">@dev_sarah</p>
-                        <p className="text-x-gray text-sm">2 hours ago</p>
-                      </div>
-                    </div>
-                    <p className="text-x-white mb-3">
-                      Just built this cool React hook! 🚀
-                    </p>
-                    <div className="bg-x-darker rounded-lg p-2 sm:p-3 overflow-hidden">
-                      <pre className="text-x-blue text-xs sm:text-sm overflow-x-auto whitespace-pre-wrap break-words leading-relaxed">
-                        {`const useLocalStorage = (key, initial) => {
-  const [value, setValue] = useState(initial);
-  // Magic happens here ✨
-}`}
-                      </pre>
-                    </div>
-                    <div className="flex items-center space-x-4 mt-3 text-x-gray">
-                      <span className="flex items-center space-x-1">
-                        <span>💬</span>
-                        <span>12</span>
-                      </span>
-                      <span className="flex items-center space-x-1">
-                        <span>❤️</span>
-                        <span>45</span>
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Profile Card */}
-                  <div className="x-card transform -rotate-1 hover:rotate-0 transition-transform duration-300 animate-float-delayed select-none">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center">
-                        <span className="text-white font-bold">A</span>
-                      </div>
-                      <div>
-                        <p className="text-x-white font-bold">Alex Chen</p>
-                        {/* Show description only on desktop/laptop */}
-                        <p className="hidden lg:block text-x-gray">
-                          Full Stack Developer
-                        </p>
-                        <div className="flex space-x-2 mt-1">
-                          <span className="bg-x-blue/20 text-x-blue px-2 py-1 rounded text-xs">
-                            React
-                          </span>
-                          <span className="bg-x-green/20 text-x-green px-2 py-1 rounded text-xs">
-                            Node.js
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Stats Card */}
-                  <div className="x-card transform rotate-1 hover:rotate-0 transition-transform duration-300 animate-float-slow select-none">
-                    <p className="text-x-white font-bold mb-2">
-                      🔥 Trending Today
-                    </p>
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span className="text-x-blue">#ReactJS</span>
-                        <span className="text-x-gray">1.2k posts</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-x-blue">#JavaScript</span>
-                        <span className="text-x-gray">987 posts</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-x-blue">#WebDev</span>
-                        <span className="text-x-gray">756 posts</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+            {/* Right Content - Hero Image */}
+            <div className="flex-[1] order-2 lg:order-2 w-full max-w-lg lg:max-w-2xl lg:flex-shrink-0">
+              <div className="relative w-full mx-auto lg:mx-0 pb-8 lg:pb-0 transform scale-110 lg:scale-125 origin-center lg:origin-right mt-8 lg:-mt-24 xl:-mt-28">
+                <img 
+                  src="/Group Chat-pana.svg" 
+                  alt="Group Chat Illustration" 
+                  className="w-full h-auto drop-shadow-2xl"
+                />
               </div>
             </div>
           </div>
