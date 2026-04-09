@@ -6,8 +6,8 @@ const connectDB = async () => {
     // Use MONGODB_URI (Atlas format) or MONGO_URI (local format)
     let mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
 
-    // If username and password are provided, create authenticated URI
-    if (process.env.MONGO_USERNAME && process.env.MONGO_PASSWORD) {
+    // If username and password are provided and no URI is available, construct a local URI (fallback only)
+    if (process.env.MONGO_USERNAME && process.env.MONGO_PASSWORD && !mongoUri) {
       const username = encodeURIComponent(process.env.MONGO_USERNAME);
       const password = encodeURIComponent(process.env.MONGO_PASSWORD);
       mongoUri = `mongodb://${username}:${password}@localhost:27017/devmate`;
