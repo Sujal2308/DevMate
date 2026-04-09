@@ -24,8 +24,8 @@ const Feed = () => {
     try {
       setLoading(true);
 
-      // Increase timeout for initial load to handle Render cold starts
-      const timeoutDuration = pageNum === 1 ? 15000 : 8000; // 15s for first load, 8s for pagination
+      // Increase timeout for initial load to handle Azure cold starts
+      const timeoutDuration = pageNum === 1 ? 30000 : 8000; // 30s for first load, 8s for pagination
 
       const timeoutPromise = new Promise((_, reject) =>
         setTimeout(
@@ -141,11 +141,28 @@ const Feed = () => {
     setLoading(false);
   };
 
-  if ((loading || error) && posts.length === 0) {
-    // Always show shimmer for loading or error and no posts
+  if (loading && posts.length === 0) {
     return (
       <div className="relative">
         <ShimmerEffect type="feed" />
+      </div>
+    );
+  }
+
+  if (error && posts.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 px-4 text-center">
+        <svg className="w-16 h-16 text-red-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+        <h3 className="text-xl font-bold text-x-white mb-2">Oops! Something went wrong</h3>
+        <p className="text-x-gray mb-6 max-w-md">{error}</p>
+        <button 
+          onClick={() => fetchPosts(1)}
+          className="bg-x-blue text-white px-6 py-2 rounded-full hover:bg-x-blue/90 transition-colors"
+        >
+          Try Again
+        </button>
       </div>
     );
   }
