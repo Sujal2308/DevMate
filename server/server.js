@@ -79,8 +79,17 @@ app.use(
       "https://devmate-app.netlify.app",
       "https://strong-arithmetic-3b534a.netlify.app",
       "http://localhost:3000",
-    ],
+    ].filter(Boolean), // Remove any undefined values
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "X-Requested-With",
+      "Accept",
+      "Origin",
+    ],
+    optionsSuccessStatus: 200, // Some legacy browsers choke on 204
   })
 );
 app.use(express.json({ limit: "10mb" }));
