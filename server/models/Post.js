@@ -16,6 +16,15 @@ const postSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    mediaUrl: {
+      type: String,
+      default: "",
+    },
+    mediaType: {
+      type: String,
+      enum: ["image", "pdf", ""],
+      default: "",
+    },
     likes: [
       {
         user: {

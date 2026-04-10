@@ -13,7 +13,10 @@ const connectDB = async () => {
       mongoUri = `mongodb://${username}:${password}@localhost:27017/devmate`;
     }
 
-    const conn = await mongoose.connect(mongoUri);
+    const conn = await mongoose.connect(mongoUri, {
+      connectTimeoutMS: 30000,
+      socketTimeoutMS: 45000,
+    });
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
     console.log(`📊 Database: ${conn.connection.name}`);
     return true;

@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
 import ShareModal from "./ShareModal";
+import PdfCarousel from "./PdfCarousel";
+import ImageLightboxModal from "./ImageLightboxModal";
 import "../index.css"; // Import the CSS file for animations
 
 // Function to generate consistent colors for users
@@ -254,6 +256,7 @@ const CommentItem = ({ comment, postId, onUpdate, formatDate }) => {
 const PostCard = ({ post, onUpdate, onDelete }) => {
   const { user } = useAuth();
   const [showCommentForm, setShowCommentForm] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [visibleCommentsCount, setVisibleCommentsCount] = useState(3);
   const [newComment, setNewComment] = useState("");
@@ -569,6 +572,40 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
             {post.content}
           </p>
         </div>
+
+        {/* Media Section */}
+        {post.mediaUrl && (
+          <div className="media-section w-full mt-2 mb-4">
+            {post.mediaType === "pdf" ? (
+              <PdfCarousel url={post.mediaUrl} />
+            ) : (
+              <div 
+                className="bg-x-dark/20 border border-x-border/30 rounded-xl overflow-hidden cursor-pointer group relative"
+                onClick={() => setLightboxOpen(true)}
+              >
+                <img 
+                  src={post.mediaUrl} 
+                  alt="Post Attachment" 
+                  className="w-full h-auto object-contain max-h-[500px] transition-opacity group-hover:opacity-80" 
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 flex items-center justify-center transition-colors pointer-events-none">
+                  <svg className="w-10 h-10 text-white opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                  </svg>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Lightbox Modal */}
+        {lightboxOpen && post.mediaType === "image" && (
+          <ImageLightboxModal 
+            imageUrl={post.mediaUrl} 
+            onClose={() => setLightboxOpen(false)} 
+          />
+        )}
 
         {/* Code Section with Enhanced Visual Identity */}
         {post.codeSnippet && (

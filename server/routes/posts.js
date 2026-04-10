@@ -1,3 +1,4 @@
+// Trigger Nodemon Restart
 const express = require("express");
 const { body, validationResult } = require("express-validator");
 const Post = require("../models/Post");
@@ -5,6 +6,7 @@ const Notification = require("../models/Notification");
 const auth = require("../middleware/auth");
 const emitNotification = require("../utils/notify");
 const { sendEmail } = require("../utils/email");
+const { upload } = require("../config/cloudinary");
 
 const router = express.Router();
 
@@ -12,6 +14,7 @@ const router = express.Router();
 router.post(
   "/",
   auth,
+  upload.single("media"),
   [
     body("content")
       .isLength({ min: 1, max: 2000 })
@@ -29,11 +32,21 @@ router.post(
       }
 
       const { content, codeSnippet } = req.body;
+      
+      let mediaUrl = "";
+      let mediaType = "";
+      
+      if (req.file) {
+        mediaUrl = req.file.path;
+        mediaType = req.file.mimetype === "application/pdf" ? "pdf" : "image";
+      }
 
       const post = new Post({
         author: req.user._id,
         content,
         codeSnippet: codeSnippet || "",
+        mediaUrl,
+        mediaType,
       });
 
       await post.save();

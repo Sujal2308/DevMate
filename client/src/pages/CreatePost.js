@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { useAuth } from "../contexts/AuthContext";
+import PdfCarousel from "../components/PdfCarousel";
 import "../styles/animated-gradient.css";
 
 const CreatePost = () => {
@@ -13,6 +14,8 @@ const CreatePost = () => {
     content: "",
     codeSnippet: "",
   });
+  const [media, setMedia] = useState(null);
+  const [mediaPreview, setMediaPreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState("");
@@ -44,9 +47,27 @@ const CreatePost = () => {
     if (e.target.name === "content") {
       if (value.trim().length > 0) {
         setShowCancel(true);
-      } else {
+      } else if (!media) {
         setShowCancel(false);
       }
+    }
+  };
+
+  const handleMediaChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        setError("File size should not exceed 5MB");
+        return;
+      }
+      if (error) setError("");
+      setMedia(file);
+      if (file.type.startsWith("image/")) {
+        setMediaPreview(URL.createObjectURL(file));
+      } else if (file.type === "application/pdf") {
+        setMediaPreview("PDF_DOCUMENT");
+      }
+      setShowCancel(true);
     }
   };
 
@@ -93,14 +114,27 @@ const CreatePost = () => {
 
     try {
       setLoading(true);
-      await axios.post("/api/posts", {
-        content: formData.content.trim(),
-        codeSnippet: formData.codeSnippet.trim(),
-      });
+      
+      const payload = new FormData();
+      payload.append("content", formData.content.trim());
+      if (formData.codeSnippet.trim()) {
+        payload.append("codeSnippet", formData.codeSnippet.trim());
+      }
+      if (media) {
+        payload.append("media", media);
+      }
+
+      await axios.post("/api/posts", payload);
 
       navigate("/feed");
     } catch (error) {
-      setError(error.response?.data?.message || "Failed to create post");
+      console.error(error);
+      const apiError = error.response?.data;
+      if (apiError?.errors?.length > 0) {
+        setError(apiError.errors[0].msg);
+      } else {
+        setError(apiError?.message || "Failed to create post");
+      }
     } finally {
       setLoading(false);
     }
@@ -208,6 +242,40 @@ const CreatePost = () => {
                 </span>
               </div>
             </div>
+          </div>
+
+          <div className="mb-6 bg-x-dark/20 p-4 border border-x-border/30 rounded-xl">
+            <label className="block text-sm font-bold mb-3">
+              <span className="animated-gradient-text">Add Media (Optional)</span>
+            </label>
+            <input 
+              type="file" 
+              accept="image/*,application/pdf"
+              onChange={handleMediaChange}
+              className="text-sm font-mono text-x-gray file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-x-blue file:text-white hover:file:bg-x-blue-hover cursor-pointer w-full"
+            />
+            {mediaPreview && (
+              <div className="mt-4 relative inline-block">
+                {mediaPreview === "PDF_DOCUMENT" ? (
+                  <div className="p-4 bg-x-dark/50 border border-x-border rounded-xl flex items-center space-x-3">
+                    <span className="text-3xl">📄</span>
+                    <div>
+                      <p className="font-semibold text-x-white">{media.name}</p>
+                      <p className="text-xs text-x-gray">{(media.size / 1024 / 1024).toFixed(2)} MB - PDF Document</p>
+                    </div>
+                  </div>
+                ) : (
+                  <img src={mediaPreview} alt="Preview" className="max-w-full h-auto max-h-64 rounded-xl border border-x-border" />
+                )}
+                <button
+                  type="button"
+                  onClick={() => { setMedia(null); setMediaPreview(null); }}
+                  className="absolute -top-3 -right-3 bg-red-600 hover:bg-red-700 text-white w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shadow-lg"
+                >
+                  X
+                </button>
+              </div>
+            )}
           </div>
 
           <div className="mb-8 border-t border-x-border/30 pt-6">
@@ -383,6 +451,8 @@ console.log("Welcome to DevMate!");`
                   } else {
                     window.scrollTo({ top: 0, behavior: "smooth" });
                     setFormData({ content: "", codeSnippet: "" });
+                    setMedia(null);
+                    setMediaPreview(null);
                     setShowCancel(false);
                   }
                 }}
@@ -410,6 +480,8 @@ console.log("Welcome to DevMate!");`
                       className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-bold rounded-full flex items-center justify-center transition-all duration-200"
                       onClick={() => {
                         setFormData({ content: "", codeSnippet: "" });
+                        setMedia(null);
+                        setMediaPreview(null);
                         setShowCancel(false);
                         setShowConfirm(false);
                       }}
@@ -466,7 +538,7 @@ console.log("Welcome to DevMate!");`
 
         {/* Enhanced Preview Section with Clear Visual Distinction */}
         <div className="space-y-6">
-          {formData.content && (
+          {(formData.content || mediaPreview) && (
             <div>
               <h3 className="text-lg font-semibold text-x-white mb-4 flex items-center">
                 👀 Live Preview
@@ -487,29 +559,44 @@ console.log("Welcome to DevMate!");`
 
                 <div className="space-y-6">
                   {/* Text Content Section with Clear Visual Identity */}
-                  <div className="bg-x-dark/20 border border-x-border/30 rounded-xl p-5">
-                    <div className="flex items-center mb-3">
-                      <svg
-                        className="w-4 h-4 text-x-blue mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                        />
-                      </svg>
-                      <span className="text-xs font-semibold text-x-blue uppercase tracking-wide">
-                        Post Text
-                      </span>
+                  {formData.content && (
+                    <div className="bg-x-dark/20 border border-x-border/30 rounded-xl p-5">
+                      <div className="flex items-center mb-3">
+                        <svg
+                          className="w-4 h-4 text-x-blue mr-2"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                          />
+                        </svg>
+                        <span className="text-xs font-semibold text-x-blue uppercase tracking-wide">
+                          Post Text
+                        </span>
+                      </div>
+                      <p className="text-x-white text-base leading-relaxed whitespace-pre-wrap">
+                        {formData.content}
+                      </p>
                     </div>
-                    <p className="text-x-white text-base leading-relaxed whitespace-pre-wrap">
-                      {formData.content}
-                    </p>
-                  </div>
+                  )}
+
+                  {/* Media Preview Section */}
+                  {mediaPreview && (
+                    <div className="w-full mt-4">
+                      {mediaPreview === "PDF_DOCUMENT" ? (
+                        <PdfCarousel file={media} />
+                      ) : (
+                        <div className="bg-x-dark/20 border border-x-border/30 rounded-xl overflow-hidden">
+                          <img src={mediaPreview} alt="Post Attachment Preview" className="w-full h-auto object-contain max-h-[500px]" />
+                        </div>
+                      )}
+                    </div>
+                  )}
 
                   {/* Code Section with Distinct Styling */}
                   {formData.codeSnippet && (
@@ -585,7 +672,7 @@ console.log("Welcome to DevMate!");`
             </div>
           )}
 
-          {!formData.content && (
+          {!(formData.content || mediaPreview) && (
             <div className="card p-8 bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/20 text-center">
               <div className="bg-x-blue/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg

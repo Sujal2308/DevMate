@@ -10,6 +10,14 @@ const path = require("path");
 // Load environment variables
 require("dotenv").config();
 
+// Fail-safe for unhandled exceptions
+process.on("uncaughtException", (err) => {
+  console.error("FATAL ERROR (Uncaught Exception):", err);
+});
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("FATAL ERROR (Unhandled Rejection):", reason);
+});
+
 // Global variable to track DB connection status
 let isDBConnected = false;
 
@@ -98,6 +106,7 @@ app.use(
   cors({
     origin: [
       "https://strong-arithmetic-3b534a.netlify.app",
+      "https://devmate.dev",
       "http://localhost:3000",
     ],
     credentials: true,
@@ -225,7 +234,25 @@ app.get("*", (req, res) => {
   if (req.path.startsWith("/api")) {
     return res.status(404).json({ message: "API route not found" });
   }
-  res.sendFile(path.join(__dirname, "client/build", "index.html"));
+
+  const buildPath = path.join(__dirname, "client/build", "index.html");
+  if (require("fs").existsSync(buildPath)) {
+    res.sendFile(buildPath);
+  } else {
+    // Fail-safe response for production troubleshooting
+    res.status(200).send(`
+      <div style="font-family: sans-serif; padding: 40px; text-align: center; background: #0f172a; color: white; height: 100vh;">
+        <h1>🚀 Server is ALIVE!</h1>
+        <p>But the React build folder was not found in the expected location.</p>
+        <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 8px; display: inline-block; text-align: left; margin-top: 20px;">
+          <strong>Debug Info:</strong><br/>
+          Current Dir: <code>${__dirname}</code><br/>
+          Expected Build Path: <code>${buildPath}</code>
+        </div>
+        <p style="margin-top: 20px; color: #94a3b8;">This confirms your Backend and Environment Variables are working!</p>
+      </div>
+    `);
+  }
 });
 
 // Error handling middleware
