@@ -10,6 +10,17 @@ const path = require("path");
 // Load environment variables
 require("dotenv").config();
 
+// Startup Check: Verify critical environment variables
+const requiredVars = ["MONGODB_URI", "JWT_SECRET", "CLIENT_ORIGIN"];
+console.log("🛠️ Starting Production Environment Check...");
+requiredVars.forEach((v) => {
+  if (!process.env[v]) {
+    console.warn(`⚠️ WARNING: Missing environment variable: ${v}`);
+  } else {
+    console.log(`✅ ${v} is set`);
+  }
+});
+
 // Fail-safe for unhandled exceptions
 process.on("uncaughtException", (err) => {
   console.error("FATAL ERROR (Uncaught Exception):", err);
@@ -79,12 +90,29 @@ const checkDBConnection = (req, res, next) => {
 // Middleware
 app.use(
   cors({
-    origin: [
-      process.env.CLIENT_ORIGIN,
-      "https://devmate-app.netlify.app",
-      "https://strong-arithmetic-3b534a.netlify.app",
-      "http://localhost:3000",
-    ].filter(Boolean),
+    origin: (origin, callback) => {
+      // Log origin for debugging (only in Render logs)
+      if (origin) console.log(`📡 CORS Request from origin: ${origin}`);
+
+      const allowedOrigins = [
+        process.env.CLIENT_ORIGIN,
+        "https://devmate-app.netlify.app",
+        "https://strong-arithmetic-3b534a.netlify.app",
+        "http://localhost:3000",
+      ];
+
+      // Allow if origin is in whitelist or ends with .netlify.app
+      if (
+        !origin ||
+        allowedOrigins.includes(origin) ||
+        origin.endsWith(".netlify.app")
+      ) {
+        callback(null, true);
+      } else {
+        console.warn(`🛑 CORS Blocked origin: ${origin}`);
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allowedHeaders: [
