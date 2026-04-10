@@ -18,7 +18,7 @@ const getBaseURL = () => {
   // For production deployments
   if (process.env.NODE_ENV === "production") {
     return (
-      process.env.REACT_APP_API_URL || "https://devmate-server.onrender.com"
+      process.env.REACT_APP_API_URL || "https://devmate-9oiu.onrender.com"
     );
   }
 
@@ -28,6 +28,7 @@ const getBaseURL = () => {
 
 const API_BASE_URL = getBaseURL();
 axios.defaults.baseURL = API_BASE_URL;
+axios.defaults.withCredentials = true; // Essential for cross-origin auth (Netlify <-> Render)
 
 console.log("Axios configured with base URL:", API_BASE_URL);
 console.log("Current hostname:", window.location.hostname);
