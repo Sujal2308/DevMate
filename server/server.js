@@ -36,8 +36,14 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_ORIGIN || "*", // Restrict in production
+    origin: [
+      process.env.CLIENT_ORIGIN,
+      "https://devmate-app.netlify.app",
+      "https://strong-arithmetic-3b534a.netlify.app",
+      "http://localhost:3000",
+    ].filter(Boolean),
     methods: ["GET", "POST"],
+    credentials: true,
   },
 });
 
@@ -72,19 +78,13 @@ const checkDBConnection = (req, res, next) => {
 
 // Middleware
 app.use(
-  helmet({
-    contentSecurityPolicy: false,
-    crossOriginResourcePolicy: { policy: "cross-origin" },
-  })
-);
-app.use(
   cors({
     origin: [
       process.env.CLIENT_ORIGIN,
       "https://devmate-app.netlify.app",
       "https://strong-arithmetic-3b534a.netlify.app",
       "http://localhost:3000",
-    ].filter(Boolean), // Remove any undefined values
+    ].filter(Boolean),
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allowedHeaders: [
@@ -94,7 +94,7 @@ app.use(
       "Accept",
       "Origin",
     ],
-    optionsSuccessStatus: 200, // Some legacy browsers choke on 204
+    optionsSuccessStatus: 200,
   })
 );
 app.use(express.json({ limit: "10mb" }));
