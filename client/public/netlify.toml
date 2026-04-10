@@ -2,12 +2,11 @@
   publish = "build"
 
 [[redirects]]
-  from = "/api/*"
-  to = "https://devmate-fghed0fgatfwd3ga.centralindia-01.azurewebsites.net/api/:splat"
+  from = "/*"
+  to = "/index.html"
   status = 200
-  force = true
 
 [[headers]]
   for = "/*"
   [headers.values]
-    Content-Security-Policy = "default-src 'self'; connect-src 'self' https://devmate-fghed0fgatfwd3ga.centralindia-01.azurewebsites.net; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:;"
+    Content-Security-Policy = "default-src 'self'; connect-src 'self' https://devmate-9oiu.onrender.com wss://devmate-9oiu.onrender.com; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:;"
