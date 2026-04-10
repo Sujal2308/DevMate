@@ -18,8 +18,7 @@ const getBaseURL = () => {
   // For production deployments
   if (process.env.NODE_ENV === "production") {
     return (
-      process.env.REACT_APP_API_URL ||
-      "https://devmate-fghed0fgatfwd3ga.centralindia-01.azurewebsites.net"
+      process.env.REACT_APP_API_URL || "https://devmate-server.onrender.com"
     );
   }
 
