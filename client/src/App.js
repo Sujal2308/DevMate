@@ -56,16 +56,9 @@ function AppContent() {
   const [showSplash, setShowSplash] = useState(true);
   const location = useLocation();
 
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
-
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 640);
-    window.addEventListener("resize", handleResize);
     const timer = setTimeout(() => setShowSplash(false), 2000);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      clearTimeout(timer);
-    };
+    return () => clearTimeout(timer);
   }, []);
 
   const showBranding = !(location.pathname === "/explore" || location.pathname === "/feed" || location.pathname === "/");
