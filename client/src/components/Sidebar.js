@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 
 const Sidebar = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const location = useLocation();
 
   const navItems = [
@@ -179,6 +179,35 @@ const Sidebar = () => {
             );
           })}
         </div>
+      </div>
+
+      {/* Logout Button - Bottom Left (Desktop Only) */}
+      <div className="hidden lg:flex fixed left-4 bottom-8 z-50">
+        <button
+          onClick={logout}
+          className="p-3 rounded-xl bg-black/90 backdrop-blur-md border border-x-border/30 text-x-gray hover:text-red-500 hover:bg-red-500/10 transition-all duration-300 shadow-2xl group relative"
+          title="Logout"
+        >
+          <div className="flex items-center justify-center">
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+              />
+            </svg>
+          </div>
+
+          <div className="absolute left-full ml-3 top-1/2 transform -translate-y-1/2 bg-black/90 text-white text-sm px-2 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
+            Logout
+          </div>
+        </button>
       </div>
     </>
   );

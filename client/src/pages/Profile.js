@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
 import PostCard from "../components/PostCard";
@@ -19,7 +19,21 @@ const Profile = () => {
   const [showUpdatePrompt, setShowUpdatePrompt] = useState(false);
   const [viewingSavedPosts, setViewingSavedPosts] = useState(false);
   const { username } = useParams();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  // Handle clicking outside of menu to close it
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const isOwnProfile = user?.username === username;
 
@@ -380,7 +394,7 @@ const Profile = () => {
       {/* Hero Profile Section */}
       <div className="relative mb-8">
         {/* Cover */}
-        <div className="h-40 md:h-64 bg-gradient-to-r from-cyan-500 via-indigo-500 to-fuchsia-500 relative overflow-hidden">
+        <div className="h-40 md:h-64 bg-gradient-to-r from-cyan-500 via-indigo-500 to-fuchsia-500 relative z-20">
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
           {/* Username at bottom right on mobile only */}
           <div className="absolute bottom-2 right-2 sm:hidden flex items-center text-xs text-x-white font-mono">
@@ -435,27 +449,62 @@ const Profile = () => {
               )}
             </button>
           </div>
-          <div className="absolute top-4 right-4">
+          <div className="absolute top-4 right-4 z-50" ref={menuRef}>
             {isOwnProfile && (
-              <Link
-                to="/edit-profile"
-                className="bg-x-white/10 backdrop-blur-sm hover:bg-x-white/20 text-white px-4 py-2 rounded-xl font-medium transition-all duration-200 flex items-center"
-              >
-                <svg
-                  className="w-4 h-4 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+              <div className="relative">
+                <button
+                  onClick={() => setMenuOpen(!menuOpen)}
+                  className="p-2 transition-all duration-300 group active:scale-95 flex flex-col items-end justify-center gap-1.5 h-10 w-10"
+                  aria-label="Profile Menu"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                  />
-                </svg>
-                <span>Edit Profile</span>
-              </Link>
+                  <span className={`block h-0.5 bg-white transition-all duration-300 rounded-full ${menuOpen ? 'w-6 rotate-45 translate-y-2' : 'w-6'}`}></span>
+                  <span className={`block h-0.5 bg-white transition-all duration-300 rounded-full ${menuOpen ? 'w-6 opacity-0' : 'w-4'}`}></span>
+                  <span className={`block h-0.5 bg-white transition-all duration-300 rounded-full ${menuOpen ? 'w-6 -rotate-45 -translate-y-2' : 'w-5'}`}></span>
+                </button>
+
+                {/* Dropdown Menu */}
+                {menuOpen && (
+                  <div className="absolute right-0 mt-2 w-56 bg-x-dark/95 backdrop-blur-xl border border-x-border/50 rounded-2xl shadow-3xl z-[100] py-2 animate-fade-in origin-top-right overflow-hidden shadow-black/50">
+                    <Link
+                      to="/edit-profile"
+                      className="flex items-center space-x-3 px-4 py-3 text-sm text-x-white hover:bg-x-blue/10 transition-colors group"
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      <svg className="w-4 h-4 text-x-blue group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
+                      <span className="font-medium">Edit Profile</span>
+                    </Link>
+                    
+                    <Link
+                      to="/settings"
+                      className="flex items-center space-x-3 px-4 py-3 text-sm text-x-white hover:bg-x-blue/10 transition-colors group"
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      <svg className="w-4 h-4 text-x-blue group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      <span className="font-medium">Settings</span>
+                    </Link>
+
+                    <div className="h-[1px] bg-x-border/30 my-1 mx-2"></div>
+
+                    <button
+                      onClick={() => {
+                        setMenuOpen(false);
+                        logout();
+                      }}
+                      className="flex items-center space-x-3 w-full px-4 py-3 text-sm text-red-400 hover:bg-red-400/10 transition-colors group"
+                    >
+                      <svg className="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                      </svg>
+                      <span className="font-medium">Logout</span>
+                    </button>
+                  </div>
+                )}
+              </div>
             )}
           </div>
           {/* Date of Joining on Mobile and on Desktop for other users */}
