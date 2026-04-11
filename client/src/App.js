@@ -302,9 +302,12 @@ function AppContent() {
       {showBranding && (
         <div 
           className="hidden lg:block fixed bottom-4 right-4 z-[9999] pointer-events-none select-none opacity-80"
-          style={{ textShadow: '0 0 10px rgba(29, 155, 240, 0.5)' }}
+          style={{ 
+            textShadow: '0 0 10px rgba(29, 155, 240, 0.5)',
+            fontFamily: "'Lobster', sans-serif" 
+          }}
         >
-          <span className="lobster-regular text-2xl sm:text-3xl text-x-blue">
+          <span className="text-2xl sm:text-3xl text-x-blue">
             DevMate
           </span>
         </div>

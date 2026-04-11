@@ -19,6 +19,7 @@ module.exports = {
       fontFamily: {
         x: ["Helvetica Neue", "Arial", "sans-serif"],
         poppins: ["Poppins", "sans-serif"],
+        lobster: ["Lobster", "sans-serif"],
       },
       maxWidth: {
         "x-main": "40rem", // 640px, matches new .x-main
