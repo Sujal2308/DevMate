@@ -61,7 +61,7 @@ function AppContent() {
     return () => clearTimeout(timer);
   }, []);
 
-  const showBranding = !(location.pathname === "/explore" || location.pathname === "/feed" || location.pathname === "/");
+  const showBranding = true; // Visibility is now handled by Tailwind responsive classes (hidden sm:block)
 
   if (showSplash) {
     return <SplashScreen />;
@@ -290,7 +290,7 @@ function AppContent() {
       )}
       {/* Puzzle Icon - Top Left (Above Sidebar) */}
       {showBranding && (
-        <div className="fixed top-6 left-6 z-[9999] pointer-events-none select-none">
+        <div className="hidden lg:block fixed top-6 left-6 z-[9999] pointer-events-none select-none">
           <img 
             src="/icons/puzzle.png" 
             alt="Puzzle" 
@@ -301,7 +301,7 @@ function AppContent() {
       {/* DevMate Watermark - Bottom Right */}
       {showBranding && (
         <div 
-          className="fixed bottom-4 right-4 z-[9999] pointer-events-none select-none opacity-80"
+          className="hidden lg:block fixed bottom-4 right-4 z-[9999] pointer-events-none select-none opacity-80"
           style={{ textShadow: '0 0 10px rgba(29, 155, 240, 0.5)' }}
         >
           <span className="lobster-regular text-2xl sm:text-3xl text-x-blue">

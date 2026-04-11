@@ -187,7 +187,7 @@ const Feed = () => {
     >
       <div className="flex flex-row justify-between items-center mb-4 sm:mb-6 lg:mb-8 gap-2 sm:gap-4">
         {/* Mobile Branded Header */}
-        <h1 className="flex sm:hidden items-center gap-2">
+        <h1 className="flex sm:hidden items-center gap-2 ml-3">
           <img 
             src="/icons/puzzle.png" 
             alt="DevMate" 
