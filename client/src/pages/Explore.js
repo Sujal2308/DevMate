@@ -44,7 +44,6 @@ const Explore = () => {
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
-  const [selectedSkill, setSelectedSkill] = useState("");
 
   // Use the custom hook for dimensions
   const { width: windowWidth } = useWindowDimensions();
@@ -67,9 +66,9 @@ const Explore = () => {
 
   // Function to determine if we should show results - memoized
   const shouldShowResults = useMemo(() => {
-    // Only show results if search/filter is active (for both mobile and desktop)
-    return debouncedSearchTerm.trim() !== "" || selectedSkill !== "";
-  }, [debouncedSearchTerm, selectedSkill]);
+    // Only show results if search is active (for both mobile and desktop)
+    return debouncedSearchTerm.trim() !== "";
+  }, [debouncedSearchTerm]);
 
   // Use Layout Effect to ensure DOM measurements are accurate
   useLayoutEffect(() => {
@@ -160,7 +159,7 @@ const Explore = () => {
 
       // Add event listeners to search and skill input fields directly
       const searchInput = document.getElementById("search");
-      const skillInput = document.getElementById("skill");
+      const skillInput = null; // Removed skill dropdown
 
       if (searchInput) {
         searchInput.addEventListener("focus", handleFocusInput);
@@ -224,15 +223,7 @@ const Explore = () => {
         rootContainerRef.current.style.willChange = "auto";
       }
 
-      // Only auto-focus for selected skill, not for search text
-      // This prevents keyboard from reappearing when user wants to see results
-      if (selectedSkill && !searchTerm) {
-        setTimeout(() => {
-          if (searchInputRef.current) {
-            searchInputRef.current.focus();
-          }
-        }, 100);
-      }
+      // No auto-focus logic needed for skills anymore
     }
   };
 
@@ -273,7 +264,6 @@ const Explore = () => {
       }
       const params = new URLSearchParams();
       if (debouncedSearchTerm) params.append("search", debouncedSearchTerm);
-      if (selectedSkill) params.append("skill", selectedSkill);
 
       const response = await axios.get(`/api/users?${params.toString()}`);
       setUsers(response.data);
@@ -285,15 +275,14 @@ const Explore = () => {
         setLoading(false);
       }
     }
-  }, [debouncedSearchTerm, selectedSkill, searchLoading]);
+  }, [debouncedSearchTerm, searchLoading]);
 
   // Fetch users when search parameters change
   useEffect(() => {
     fetchUsers();
   }, [fetchUsers]);
 
-  // Get all unique skills from users for filter dropdown
-  const allSkills = [...new Set(users.flatMap((user) => user.skills))].sort();
+  // Skills filter logic removed
 
   // Optimized search handler with RAF for performance
   const handleSearchChange = (e) => {
@@ -307,22 +296,7 @@ const Explore = () => {
     }
   };
 
-  const handleSkillChange = (e) => {
-    // Apply the same stability technique for skill changes
-    if (isMobile && rootContainerRef.current) {
-      rootContainerRef.current.style.height =
-        rootContainerRef.current.offsetHeight + "px";
-    }
-
-    // Show search loading when skill filter changes
-    setSearchLoading(true);
-    setSelectedSkill(e.target.value);
-
-    // Keep search loading for a minimum of 1 second
-    setTimeout(() => {
-      setSearchLoading(false);
-    }, 1000);
-  };
+  // handleSkillChange removed
 
   const clearFilters = () => {
     // Show search loading when clearing filters
@@ -338,10 +312,9 @@ const Explore = () => {
         rootContainerRef.current.style.height = `${rootContainerRef.current.offsetHeight}px`;
       }
 
-      // Use requestAnimationFrame to batch multiple state updates
+      // Use requestAnimationFrame to batch state update
       requestAnimationFrame(() => {
         setSearchTerm("");
-        setSelectedSkill("");
 
         // After a short delay, restore transitions
         setTimeout(() => {
@@ -354,7 +327,6 @@ const Explore = () => {
     } else {
       // Desktop behavior remains simple
       setSearchTerm("");
-      setSelectedSkill("");
     }
 
     // Keep search loading for a minimum of 1 second
@@ -389,23 +361,18 @@ const Explore = () => {
           }}
         >
           <h1
-            className="mt-4 text-xl sm:text-2xl md:text-3xl font-bold text-x-white mb-1 lg:mb-2 explore-mobile-heading flex items-center gap-3"
+            className="mt-4 text-xl sm:text-2xl md:text-3xl font-bold flex items-center gap-3 explore-mobile-heading"
             style={{
               fontFamily:
                 '"Fira Code", "Monaco", "Menlo", "Ubuntu Mono", "Consolas", "Courier New", monospace',
             }}
           >
-            <svg
-              className="w-6 h-6 sm:w-7 sm:h-7 text-x-blue"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M12 2L13.09 8.26L22 9L13.09 9.74L12 16L10.91 9.74L2 9L10.91 8.26L12 2Z" />
-            </svg>
-            <span className="inline sm:hidden">discover</span>
-            <span className="hidden sm:inline bg-gradient-to-r from-[#C0C0C0] via-[#E0E0E0] to-[#A9A9A9] bg-clip-text text-transparent">
-              explore
-            </span>
+            <span className="text-x-white font-bold">explore</span>
+            <img
+              src="/icons/friend.png"
+              alt="Friend"
+              className="w-8 h-8 sm:w-10 sm:h-10 object-contain"
+            />
           </h1>
           <p className="text-x-gray text-xs sm:text-sm lg:text-base max-w-2xl">
             Discover and connect with talented developers in the DevMate
@@ -506,54 +473,6 @@ const Explore = () => {
                     </svg>
                   </button>
                 </div>
-                {/* Skill dropdown row (moved below search bar) */}
-                {!isMobile && allSkills.length > 0 && (
-                  <div className="mt-2 w-full flex items-center">
-                    <select
-                      id="skill"
-                      value={selectedSkill}
-                      onChange={handleSkillChange}
-                      className="skill-dropdown bg-x-dark border border-x-border text-x-white focus:outline-none focus:border-x-blue transition-colors min-w-[120px] shadow-md px-3 py-2 h-10"
-                      style={{
-                        backgroundImage:
-                          "url(\"data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 8L10 12L14 8' stroke='%23e7e9ea' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\")",
-                        backgroundRepeat: "no-repeat",
-                        backgroundPosition: "right 0.75rem center",
-                        backgroundSize: "1.1em",
-                        appearance: "none",
-                        borderRadius: 0,
-                      }}
-                    >
-                      <option value="">All Skills</option>
-                      {allSkills.map((skill) => (
-                        <option
-                          key={skill}
-                          value={skill}
-                          className="dropdown-option"
-                        >
-                          {skill}
-                        </option>
-                      ))}
-                    </select>
-                    {/* Clear filter button for desktop only */}
-                    {(searchTerm || selectedSkill) && (
-                      <button
-                        onClick={clearFilters}
-                        className="ml-4 px-2 py-2 bg-transparent border-none text-x-blue hover:text-x-green transition-colors text-base font-mono font-semibold shadow-none focus:outline-none focus:underline flex items-center gap-1"
-                        style={{
-                          boxShadow: "none",
-                          background: "none",
-                          border: "none",
-                        }}
-                      >
-                        <span>Clear</span>
-                        <span role="img" aria-label="sparkles">
-                          ✨
-                        </span>
-                      </button>
-                    )}
-                  </div>
-                )}
               </div>
             </div>
           </div>
@@ -613,36 +532,26 @@ const Explore = () => {
             </div>
           ) : users.length === 0 || !shouldShowResults ? (
             <div
-              className={`text-center py-3 min-h-[120px] flex flex-col items-center justify-center${
-                isMobile ? " mt-8 mobile-center-section" : ""
+              className={`text-center py-6 sm:py-10 flex flex-col items-center justify-center${
+                isMobile ? " mt-4 mobile-center-section" : ""
               }`}
             >
-              <div className="bg-x-blue/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
-                <svg
-                  className="w-8 h-8 text-x-blue"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                  />
-                </svg>
+              <div className="mb-6 transform hover:scale-105 transition-transform duration-300">
+                <img
+                  src="/Team work-pana.svg"
+                  alt="Search for developers"
+                  className="w-48 h-48 sm:w-64 sm:h-64 object-contain drop-shadow-2xl"
+                />
               </div>
-              <h3 className="text-lg font-semibold text-x-white mb-1">
-                {(debouncedSearchTerm || selectedSkill) && users.length === 0
+              <h3 className="text-xl sm:text-2xl font-bold text-x-white mb-3">
+                {debouncedSearchTerm && users.length === 0
                   ? "No developers found"
-                  : "Search for developers"}
+                  : "Find Your Perfect Team"}
               </h3>
-              <p className="text-x-gray text-xs sm:text-sm max-w-md mx-auto">
-                {users.length === 0 && (debouncedSearchTerm || selectedSkill)
-                  ? "Try adjusting your search criteria or clear the filters."
-                  : users.length === 0
-                  ? "No developers have joined yet. Be the first to connect!"
-                  : "Enter a search term or select a skill to find developers."}
+              <p className="text-x-gray text-sm sm:text-base max-w-md mx-auto px-4">
+                {users.length === 0 && debouncedSearchTerm
+                  ? "Try adjusting your search criteria or explore other keywords."
+                  : "Search for developers by name or username to start collaborating on your next big project!"}
               </p>
             </div>
           ) : (
@@ -658,12 +567,6 @@ const Explore = () => {
                       <span className="text-x-blue">
                         {" "}
                         matching "{debouncedSearchTerm}"
-                      </span>
-                    )}
-                    {selectedSkill && (
-                      <span className="text-x-green">
-                        {" "}
-                        with skill "{selectedSkill}"
                       </span>
                     )}
                   </p>

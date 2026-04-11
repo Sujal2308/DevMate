@@ -260,69 +260,25 @@ const ShimmerEffect = ({ type = "feed" }) => {
   );
 
   const renderExploreShimmer = () => (
-    <div className="w-full max-w-7xl mx-auto py-4 lg:py-8 px-2 lg:px-6 space-y-6">
-      {/* Minimal Hero Section */}
-      <div className="mb-4 lg:mb-6">
+    <div className="w-full space-y-3 mt-2">
+      {[1, 2, 3, 4, 5].map((item) => (
         <div
-          className={`h-6 w-48 rounded ${shimmerClass} mb-2 bg-x-dark/40`}
-        ></div>
-        <div className={`h-3 w-80 rounded ${shimmerClass} bg-x-dark/30`}></div>
-      </div>
-
-      {/* Minimal Search and filters */}
-      <div className="bg-x-dark/20 border border-x-border/20 rounded-lg p-4 mb-6 space-y-3">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div
-            className={`h-10 w-full rounded-md ${shimmerClass} bg-x-dark/40`}
-          ></div>
-          <div
-            className={`h-10 w-full rounded-md ${shimmerClass} bg-x-dark/40`}
-          ></div>
-          <div
-            className={`h-10 w-20 rounded-md ${shimmerClass} bg-x-dark/40`}
-          ></div>
-        </div>
-      </div>
-
-      {/* Minimal User cards grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {[1, 2, 3, 4, 5, 6].map((item) => (
-          <div
-            key={item}
-            className="bg-x-dark/20 border border-x-border/20 rounded-lg p-4 space-y-3"
-          >
-            <div className="flex items-center space-x-3">
-              <div
-                className={`w-12 h-12 rounded-xl ${shimmerClass} bg-x-dark/40`}
-              ></div>
-              <div className="space-y-1">
-                <div
-                  className={`h-4 w-28 rounded ${shimmerClass} bg-x-dark/30`}
-                ></div>
-                <div
-                  className={`h-3 w-20 rounded ${shimmerClass} bg-x-dark/25`}
-                ></div>
-              </div>
-            </div>
-            <div className="space-y-1">
-              <div
-                className={`h-3 w-full rounded ${shimmerClass} bg-x-dark/25`}
-              ></div>
-              <div
-                className={`h-3 w-2/3 rounded ${shimmerClass} bg-x-dark/25`}
-              ></div>
-            </div>
-            <div className="flex gap-2">
-              {[1, 2, 3].map((skill) => (
-                <div
-                  key={skill}
-                  className={`h-5 w-12 rounded-full ${shimmerClass} bg-x-dark/30`}
-                ></div>
-              ))}
+          key={item}
+          className="bg-x-dark/20 border border-x-border/20 rounded-xl p-3 sm:p-4 flex items-center justify-between gap-4"
+          style={{ animationDelay: `${item * 0.07}s` }}
+        >
+          {/* Avatar + name/username */}
+          <div className="flex items-center gap-3 flex-1 min-w-0">
+            <div className={`w-12 h-12 rounded-2xl flex-shrink-0 ${shimmerClass} bg-x-dark/40`}></div>
+            <div className="flex flex-col gap-2 flex-1 min-w-0">
+              <div className={`h-4 w-32 rounded ${shimmerClass} bg-x-dark/35`}></div>
+              <div className={`h-3 w-20 rounded ${shimmerClass} bg-x-dark/25`}></div>
             </div>
           </div>
-        ))}
-      </div>
+          {/* Button placeholder */}
+          <div className={`h-9 w-24 rounded-full flex-shrink-0 ${shimmerClass} bg-x-dark/35`}></div>
+        </div>
+      ))}
     </div>
   );
 
