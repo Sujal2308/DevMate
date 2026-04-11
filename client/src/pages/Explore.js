@@ -298,42 +298,6 @@ const Explore = () => {
 
   // handleSkillChange removed
 
-  const clearFilters = () => {
-    // Show search loading when clearing filters
-    setSearchLoading(true);
-
-    // First, prevent any content jumping
-    if (isMobile) {
-      // Temporarily disable transitions during state changes
-      document.documentElement.style.setProperty("--transition-speed", "0s");
-
-      // Lock the container height to prevent jumps
-      if (rootContainerRef.current) {
-        rootContainerRef.current.style.height = `${rootContainerRef.current.offsetHeight}px`;
-      }
-
-      // Use requestAnimationFrame to batch state update
-      requestAnimationFrame(() => {
-        setSearchTerm("");
-
-        // After a short delay, restore transitions
-        setTimeout(() => {
-          document.documentElement.style.setProperty(
-            "--transition-speed",
-            "0.3s"
-          );
-        }, 100);
-      });
-    } else {
-      // Desktop behavior remains simple
-      setSearchTerm("");
-    }
-
-    // Keep search loading for a minimum of 1 second
-    setTimeout(() => {
-      setSearchLoading(false);
-    }, 1000);
-  };
 
   return (
     <div
