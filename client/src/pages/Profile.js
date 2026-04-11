@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
 import PostCard from "../components/PostCard";
@@ -20,7 +20,6 @@ const Profile = () => {
   const [viewingSavedPosts, setViewingSavedPosts] = useState(false);
   const { username } = useParams();
   const { user, logout } = useAuth();
-  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
