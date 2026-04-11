@@ -91,13 +91,8 @@ const checkDBConnection = (req, res, next) => {
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Log origin for debugging (only in Render logs)
-      if (origin) {
-        console.log(`📡 CORS Request from origin: ${origin}`);
-        console.log(`🔗 Netlify Check: ${origin.endsWith(".netlify.app")}`);
-      } else {
-        console.log("📡 CORS Request with NO Origin header");
-      }
+      // Log only on blocks (handled below)
+
 
       const allowedOrigins = [
         process.env.CLIENT_ORIGIN,

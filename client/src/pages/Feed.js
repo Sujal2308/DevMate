@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import ShimmerEffect from "../components/ShimmerEffect";
 import PostCard from "../components/PostCard";
@@ -19,6 +19,7 @@ const Feed = () => {
   const loaderRef = useRef(null);
   const { hasUnread } = useNotification();
   const { user } = useAuth();
+  const location = useLocation();
 
   const fetchPosts = useCallback(async (pageNum = 1) => {
     try {
@@ -206,21 +207,44 @@ const Feed = () => {
           Feed
         </h1>
         <div className="flex items-center gap-2 sm:gap-3">
-          {/* Mobile notification bell icon - now at extreme left */}
+          {/* Mobile news icon */}
+          <Link
+            to="/news"
+            className={`inline sm:hidden p-2 transition-all duration-200 ${
+              location.pathname === "/news" ? "text-x-blue" : "text-white"
+            }`}
+            aria-label="News"
+          >
+            <svg
+              className="w-6 h-6"
+              fill={location.pathname === "/news" ? "currentColor" : "none"}
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
+              />
+            </svg>
+          </Link>
+          {/* Mobile notification bell icon */}
           <Link
             to="/notifications"
-            className="inline sm:hidden p-2 ml-3 mr-3 transition-all duration-200 relative"
+            className={`inline sm:hidden p-2 mr-3 transition-all duration-200 relative ${
+              location.pathname === "/notifications" ? "text-x-blue" : (hasUnread ? "text-x-red" : "text-white")
+            }`}
             aria-label="Notifications"
             style={{
-              color: hasUnread ? "#ef4444" : "#1d9bf0",
               fontSize: 24,
-              filter: hasUnread ? "drop-shadow(0 0 8px #ef4444)" : "none",
+              filter: (hasUnread && location.pathname !== "/notifications") ? "drop-shadow(0 0 8px #F91880)" : "none",
               transition: "color 0.2s, filter 0.2s",
             }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              fill="none"
+              fill={location.pathname === "/notifications" ? "currentColor" : "none"}
               viewBox="0 0 24 24"
               stroke="currentColor"
               width="24"
