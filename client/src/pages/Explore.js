@@ -325,7 +325,7 @@ const Explore = () => {
           }}
         >
           <h1
-            className="mt-4 text-xl sm:text-2xl md:text-3xl font-bold flex items-center gap-3 explore-mobile-heading"
+            className="hidden sm:flex mt-4 text-xl sm:text-2xl md:text-3xl font-bold items-center gap-3 explore-mobile-heading"
             style={{
               fontFamily:
                 '"Fira Code", "Monaco", "Menlo", "Ubuntu Mono", "Consolas", "Courier New", monospace',

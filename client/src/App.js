@@ -7,7 +7,6 @@ import {
 } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { NotificationProvider } from "./contexts/NotificationContext";
-import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -57,10 +56,19 @@ function AppContent() {
   const [showSplash, setShowSplash] = useState(true);
   const location = useLocation();
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
+
   useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 640);
+    window.addEventListener("resize", handleResize);
     const timer = setTimeout(() => setShowSplash(false), 2000);
-    return () => clearTimeout(timer);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      clearTimeout(timer);
+    };
   }, []);
+
+  const showBranding = !(location.pathname === "/explore" || location.pathname === "/feed" || location.pathname === "/");
 
   if (showSplash) {
     return <SplashScreen />;
@@ -75,13 +83,12 @@ function AppContent() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-x-black text-x-white">
+    <div className="min-h-screen flex flex-col bg-x-black text-x-white relative">
       <ScrollToTop />
-      <Navbar />
       {user ? (
         // Logged in layout - Responsive 3-column
         <>
-          <div className="flex-1 flex flex-col pt-16">
+          <div className="flex-1 flex flex-col">
             <div className="x-container flex-1 flex">
               <Sidebar />
               <div className="flex flex-col flex-1">
@@ -226,7 +233,7 @@ function AppContent() {
         </>
       ) : (
         // Not logged in layout - full width
-        <div className="w-full pt-16 flex-1 flex flex-col">
+        <div className="w-full flex-1 flex flex-col">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route
@@ -286,6 +293,27 @@ function AppContent() {
           {!["/", "/support", "/features"].includes(location.pathname) && (
             <Footer />
           )}
+        </div>
+      )}
+      {/* Puzzle Icon - Top Left (Above Sidebar) */}
+      {showBranding && (
+        <div className="fixed top-6 left-6 z-[9999] pointer-events-none select-none">
+          <img 
+            src="/icons/puzzle.png" 
+            alt="Puzzle" 
+            className="w-10 h-10 sm:w-12 sm:h-12 object-contain opacity-90 drop-shadow-lg"
+          />
+        </div>
+      )}
+      {/* DevMate Watermark - Bottom Right */}
+      {showBranding && (
+        <div 
+          className="fixed bottom-4 right-4 z-[9999] pointer-events-none select-none opacity-80"
+          style={{ textShadow: '0 0 10px rgba(29, 155, 240, 0.5)' }}
+        >
+          <span className="lobster-regular text-2xl sm:text-3xl text-x-blue">
+            DevMate
+          </span>
         </div>
       )}
       {/* Global Floating Post Button for Mobile */}

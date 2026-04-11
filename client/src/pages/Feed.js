@@ -186,8 +186,21 @@ const Feed = () => {
       }`}
     >
       <div className="flex flex-row justify-between items-center mb-4 sm:mb-6 lg:mb-8 gap-2 sm:gap-4">
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-[#C0C0C0] via-[#E0E0E0] to-[#A9A9A9] bg-clip-text text-transparent ml-5 sm:ml-4 lg:ml-6 flex items-center">
-          <span>Feed</span>
+        {/* Mobile Branded Header */}
+        <h1 className="flex sm:hidden items-center gap-2">
+          <img 
+            src="/icons/puzzle.png" 
+            alt="DevMate" 
+            className="w-8 h-8 object-contain"
+          />
+          <span className="lobster-regular text-2xl text-x-white">
+            DevMate
+          </span>
+        </h1>
+
+        {/* Desktop Title */}
+        <h1 className="hidden sm:block text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-[#C0C0C0] via-[#E0E0E0] to-[#A9A9A9] bg-clip-text text-transparent ml-4 lg:ml-6">
+          Feed
         </h1>
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Mobile notification bell icon - now at extreme left */}
