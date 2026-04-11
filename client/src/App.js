@@ -61,7 +61,8 @@ function AppContent() {
     return () => clearTimeout(timer);
   }, []);
 
-  const showBranding = true; // Visibility is now handled by Tailwind responsive classes (hidden sm:block)
+  const isHomePage = location.pathname === "/" || location.pathname === "";
+  const showBranding = !isHomePage; // Hide global watermark specifically on the landing page
 
   if (showSplash) {
     return <SplashScreen />;

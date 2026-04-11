@@ -176,10 +176,24 @@ const Home = () => {
   } = useReportModal();
   return (
     <div
-      className={`min-h-screen bg-x-black text-x-white flex flex-col w-full ${
+      className={`min-h-screen bg-x-black text-x-white flex flex-col w-full relative ${
         showReportModal ? "overflow-hidden" : ""
       }`}
     >
+      {/* Mobile & Desktop Branding Badge */}
+      <div className="flex absolute top-8 left-8 sm:top-12 sm:left-12 lg:top-16 lg:left-24 z-50 items-center gap-3">
+        <img 
+          src="/icons/puzzle.png" 
+          alt="DevMate" 
+          className="w-10 h-10 object-contain"
+        />
+        <span 
+          className="text-4xl text-x-white tracking-tight"
+          style={{ fontFamily: "'Lobster', sans-serif", textShadow: "0 4px 15px rgba(0,0,0,0.6)" }}
+        >
+          DevMate
+        </span>
+      </div>
       {showReportModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
           <div className="bg-x-dark rounded-xl shadow-xl p-6 w-80 max-w-full flex flex-col items-center">
@@ -220,7 +234,7 @@ const Home = () => {
         </div>
       )}
       {/* Hero Section */}
-      <div className="relative flex-1 pt-16 sm:pt-20 pb-8 sm:pb-12 overflow-visible flex items-center w-full">
+      <div className="relative flex-1 pt-32 lg:pt-36 sm:pt-20 pb-8 sm:pb-12 overflow-visible flex items-center w-full">
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-gradient-to-br from-x-blue/5 to-x-black w-full"></div>
 
@@ -228,18 +242,6 @@ const Home = () => {
           <div className="flex flex-col lg:flex-row items-center justify-between py-4 lg:py-8 gap-3 lg:gap-4 w-full min-h-full px-8 lg:px-16">
             {/* Left Content - Redesigned */}
             <div className="flex-[2] lg:pr-4 text-center lg:text-left order-1 lg:order-1 w-full lg:pl-4 flex flex-col">
-              <div className="mb-4">
-                <span className="inline-block px-4 py-2 bg-x-blue/10 text-x-blue rounded-full text-sm font-medium border border-x-blue/20">
-                  <span
-                    className="burning-fire-emoji"
-                    role="img"
-                    aria-label="fire"
-                  >
-                    🔥
-                  </span>{" "}
-                  The Future of Developer Collaboration
-                </span>
-              </div>
               <h1 className="text-6xl xs:text-7xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-2 lg:mb-2 leading-tight flex flex-col md:flex-row items-center lg:items-start lg:justify-start justify-center text-center lg:text-left h-[180px] sm:h-[120px] lg:h-[90px] xl:h-[110px] overflow-hidden">
                 <span className="text-x-white md:mr-4 whitespace-nowrap">It's time to</span>
                 <TextRotate
