@@ -61,8 +61,8 @@ function AppContent() {
     return () => clearTimeout(timer);
   }, []);
 
-  const isHomePage = location.pathname === "/" || location.pathname === "";
-  const showBranding = !isHomePage; // Hide global watermark specifically on the landing page
+  const isHomePage = location.pathname === "/" || location.pathname === "" || location.pathname === "/login" || location.pathname === "/register";
+  const showBranding = !isHomePage; // Hide global watermark on landing, login and register pages
 
   if (showSplash) {
     return <SplashScreen />;
@@ -233,25 +233,17 @@ function AppContent() {
             <Route
               path="/login"
               element={
-                <div className="flex justify-center items-center min-h-screen px-4">
-                  <div className="w-full max-w-md">
-                    <PublicRoute>
-                      <Login />
-                    </PublicRoute>
-                  </div>
-                </div>
+                <PublicRoute>
+                  <Login />
+                </PublicRoute>
               }
             />
             <Route
               path="/register"
               element={
-                <div className="flex justify-center items-center min-h-screen px-4">
-                  <div className="w-full max-w-md">
-                    <PublicRoute>
-                      <Register />
-                    </PublicRoute>
-                  </div>
-                </div>
+                <PublicRoute>
+                  <Register />
+                </PublicRoute>
               }
             />
             <Route
@@ -284,7 +276,7 @@ function AppContent() {
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
           {/* Only show Footer if not on '/', '/support', or '/features' on desktop */}
-          {!["/", "/support", "/features"].includes(location.pathname) && (
+          {!["/", "/login", "/register", "/support", "/features"].includes(location.pathname) && (
             <Footer />
           )}
         </div>

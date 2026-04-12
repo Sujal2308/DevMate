@@ -18,58 +18,29 @@ const Register = () => {
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-    // Clear errors when user starts typing
-    if (errors[e.target.name]) {
-      setErrors({
-        ...errors,
-        [e.target.name]: "",
-      });
-    }
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (errors[e.target.name]) setErrors({ ...errors, [e.target.name]: "" });
   };
 
   const validateForm = () => {
     const newErrors = {};
-
-    if (!formData.username.trim()) {
-      newErrors.username = "Username is required";
-    } else if (formData.username.length < 3) {
-      newErrors.username = "Username must be at least 3 characters";
-    }
-
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email";
-    }
-
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
-    }
-
-    if (formData.password !== formData.confirmPassword) {
+    if (!formData.username.trim()) newErrors.username = "Username is required";
+    else if (formData.username.length < 3) newErrors.username = "At least 3 characters";
+    if (!formData.email.trim()) newErrors.email = "Email is required";
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "Enter a valid email";
+    if (!formData.password) newErrors.password = "Password is required";
+    else if (formData.password.length < 6) newErrors.password = "At least 6 characters";
+    if (formData.password !== formData.confirmPassword)
       newErrors.confirmPassword = "Passwords do not match";
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!validateForm()) {
-      return;
-    }
-
+    if (!validateForm()) return;
     setLoading(true);
     setErrors({});
-
     try {
       await register(formData.username, formData.email, formData.password);
       navigate("/feed");
@@ -81,249 +52,348 @@ const Register = () => {
   };
 
   return (
-    <div
-      className="h-screen bg-gradient-to-br from-x-black via-x-dark to-x-black flex items-center justify-center py-4 px-4 sm:px-6 lg:px-8 relative overflow-hidden"
-      style={{ fontFamily: "Poppins, sans-serif" }}
-    >
-      {/* Background Effects */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-x-blue/3 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 left-1/4 w-64 h-64 bg-x-green/3 rounded-full blur-3xl"></div>
-      </div>
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Lobster&family=Space+Grotesk:wght@500;700;800&display=swap');
 
-      <div className="relative max-w-md w-full">
-        {/* Main Card */}
-        <div className="bg-x-dark/60 backdrop-blur-md border border-x-border/30 rounded-xl shadow-lg shadow-x-black/30 p-6 space-y-5 relative">
-          {/* Arrow Back Button (top left inside card) */}
-          <div className="absolute top-4 left-4 z-10">
-            <Link
-              to="/"
-              className="flex items-center justify-center"
-              aria-label="Back"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6 text-x-gray hover:text-x-blue transition-colors duration-200"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-            </Link>
+        *,*::before,*::after { box-sizing: border-box; }
+
+        .rp-root {
+          display: flex;
+          height: 100vh;
+          width: 100%;
+          overflow: hidden;
+          background: #080810;
+          font-family: 'Inter', 'Segoe UI', sans-serif;
+          position: relative;
+        }
+
+        /* ── blobs ── */
+        .rp-blob {
+          position: absolute;
+          border-radius: 50%;
+          filter: blur(110px);
+          pointer-events: none;
+          z-index: 0;
+        }
+        .rp-blob-1 { width: 520px; height: 520px; top: -160px; left: -120px; background: rgba(88,101,242,0.12); }
+        .rp-blob-2 { width: 420px; height: 420px; bottom: -120px; right: -100px; background: rgba(87,242,135,0.07); }
+
+        /* ── Left panel ── */
+        .rp-left {
+          display: none;
+          flex: 1;
+          position: relative;
+          z-index: 1;
+          background: #000000;
+          border-right: 1px solid rgba(255,255,255,0.08);
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 2rem;
+          padding: 3rem 2.5rem;
+          overflow: hidden;
+        }
+
+        .rp-left-brand {
+          position: absolute;
+          top: 1.5rem;
+          left: 2rem;
+          display: flex;
+          align-items: center;
+          gap: 0.6rem;
+          z-index: 10;
+        }
+        .rp-puzzle { width: 32px; height: 32px; object-fit: contain; }
+        .rp-brand-text {
+          font-family: 'Lobster', cursive;
+          font-size: 2.2rem;
+          color: #ffffff;
+        }
+
+        .rp-illustration {
+          width: 110%;
+          max-width: 520px;
+          height: auto;
+          position: relative;
+          z-index: 2;
+        }
+        .rp-tagline {
+          font-size: 0.88rem;
+          color: rgba(255,255,255,0.38);
+          text-align: center;
+          letter-spacing: 0.04em;
+          line-height: 1.7;
+          position: relative;
+          z-index: 2;
+          padding: 0 1rem;
+        }
+
+        /* ── Right panel ── */
+        .rp-right {
+          width: 100%;
+          position: relative;
+          z-index: 1;
+          background: #ffffff;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 5rem 1.5rem 2rem;
+          overflow-y: auto;
+        }
+
+        /* back button */
+        .rp-back {
+          position: absolute;
+          top: 1.5rem;
+          left: 2rem;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: rgba(0,0,0,0.05);
+          color: rgba(0,0,0,0.6);
+          text-decoration: none;
+          transition: all 0.2s;
+          z-index: 10;
+        }
+        .rp-back:hover { background: rgba(0,0,0,0.1); color: #000; transform: translateX(-2px); }
+
+        /* form card */
+        .rp-card {
+          width: 100%;
+          max-width: 400px;
+          display: flex;
+          flex-direction: column;
+          gap: 1.2rem;
+        }
+
+        .rp-heading { display: flex; flex-direction: column; gap: 0.3rem; }
+        .rp-title {
+          margin: 0;
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: 2.2rem;
+          font-weight: 800;
+          color: #111111;
+          letter-spacing: -0.04em;
+          line-height: 1.1;
+        }
+        .rp-sub { margin: 0; font-size: 0.875rem; color: rgba(0,0,0,0.45); }
+        .rp-sub-accent { color: #2563eb; font-weight: 600; }
+
+        /* general error */
+        .rp-error {
+          display: flex;
+          align-items: flex-start;
+          gap: 0.5rem;
+          background: rgba(239,68,68,0.07);
+          border: 1px solid rgba(239,68,68,0.2);
+          border-radius: 0;
+          padding: 0.6rem 0.8rem;
+          color: #dc2626;
+          font-size: 0.82rem;
+        }
+
+        /* form */
+        .rp-form { display: flex; flex-direction: column; gap: 0.9rem; }
+        .rp-field { display: flex; flex-direction: column; gap: 0.35rem; }
+        .rp-label { font-size: 0.8rem; font-weight: 600; color: rgba(0,0,0,0.55); letter-spacing: 0.03em; }
+        .rp-input {
+          width: 100%;
+          padding: 0.68rem 1rem;
+          background: #000000;
+          border: 1px solid #333333;
+          border-radius: 0;
+          color: #ffffff;
+          font-size: 0.9rem;
+          outline: none;
+          transition: border-color 0.2s;
+        }
+        .rp-input::placeholder { color: rgba(255,255,255,0.28); }
+        .rp-input:focus { border-color: #2563eb; box-shadow: none; }
+        .rp-input.rp-input-err { border-color: #dc2626; }
+        .rp-field-err { font-size: 0.75rem; color: #dc2626; margin: 0; }
+
+        .rp-input-wrap { position: relative; }
+        .rp-eye {
+          position: absolute; right: 0.8rem; top: 50%; transform: translateY(-50%);
+          background: none; border: none; cursor: pointer;
+          color: rgba(255,255,255,0.35); display: flex; align-items: center; padding: 0;
+          transition: color 0.2s;
+        }
+        .rp-eye:hover { color: rgba(255,255,255,0.8); }
+
+        .rp-submit {
+          width: 100%; padding: 0.78rem;
+          background: #2563eb; border: none; border-radius: 0;
+          color: #fff; font-size: 0.95rem; font-weight: 700; cursor: pointer;
+          transition: background-color 0.2s, opacity 0.2s;
+          display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+          box-shadow: none; margin-top: 0.2rem;
+        }
+        .rp-submit:hover:not(:disabled) { background-color: #1d4ed8; }
+        .rp-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .rp-login-link { font-size: 0.82rem; color: rgba(0,0,0,0.4); text-align: center; margin: 0; }
+        .rp-login-anchor { color: #2563eb; font-weight: 600; text-decoration: none; transition: color 0.2s; }
+        .rp-login-anchor:hover { color: #1d4ed8; }
+
+        /* mobile logo */
+        .rp-mobile-logo {
+          display: none;
+          position: absolute;
+          top: 1rem;
+          right: 1rem;
+          z-index: 10;
+        }
+        .rp-mobile-logo img {
+          width: 44px;
+          height: 44px;
+          object-fit: contain;
+        }
+
+        /* ── Desktop ── */
+        @media (min-width: 768px) {
+          .rp-left { display: flex; flex: 1; }
+          .rp-right { flex: 1; padding: 5rem 3.5rem 2rem; }
+        }
+
+        /* ── Mobile ── */
+        @media (max-width: 767px) {
+          .rp-back { left: 0.75rem; top: 1rem; }
+          .rp-mobile-logo { display: flex; }
+        }
+      `}</style>
+
+      <div className="rp-root">
+        <div className="rp-blob rp-blob-1" />
+        <div className="rp-blob rp-blob-2" />
+
+        {/* ── Left ── */}
+        <div className="rp-left">
+          <div className="rp-left-brand">
+            <img src="/icons/puzzle.png" alt="DevMate" className="rp-puzzle" />
+            <span className="rp-brand-text">DevMate</span>
           </div>
-          {/* Header */}
-          <div className="text-center">
-            <div className="flex justify-center mb-4">
-              <div className="w-14 h-14 bg-x-blue rounded-full flex items-center justify-center shadow-md">
-                <span className="text-white font-bold text-xl">D</span>
-              </div>
-            </div>
-            <h1 className="text-2xl font-bold text-x-white mb-1">
-              Join DevMate
-            </h1>
-            <p className="text-sm text-x-gray">
-              Connect with developers worldwide
-            </p>
-            <div className="mt-3 flex items-center justify-center space-x-2">
-              <span className="text-x-gray text-sm">
-                Already have an account?
-              </span>
-              <Link
-                to="/login"
-                className="font-medium transition-colors animate-gradient-text"
-                style={{
-                  background:
-                    "linear-gradient(90deg, #A259FF, #C0C0C0, #A259FF, #F8F8F8)",
-                  backgroundSize: "200% 200%",
-                  backgroundClip: "text",
-                  WebkitBackgroundClip: "text",
-                  color: "transparent",
-                  WebkitTextFillColor: "transparent",
-                  animation: "gradientText 2s linear infinite",
-                }}
-              >
-                Sign in
-                <style>
-                  {`
-                    @keyframes gradientText {
-                      0% { background-position: 0% 50%; }
-                      50% { background-position: 100% 50%; }
-                      100% { background-position: 0% 50%; }
-                    }
-                  `}
-                </style>
-              </Link>
-            </div>
+          <img
+            src="/Tablet login-pana.svg"
+            alt="Tablet login illustration"
+            className="rp-illustration"
+          />
+          <p className="rp-tagline">Build your profile. Join the community.</p>
+        </div>
+
+        {/* ── Right ── */}
+        <div className="rp-right">
+          <Link to="/" className="rp-back" aria-label="Back to home">
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+          </Link>
+
+          {/* Mobile-only puzzle logo */}
+          <div className="rp-mobile-logo">
+            <img src="/icons/puzzle.png" alt="DevMate" />
           </div>
 
-          {/* Error Display */}
-          {errors.general && (
-            <div className="bg-red-500/8 border border-red-500/15 text-red-400 px-3 py-2 rounded-lg">
-              <div className="flex items-center space-x-2">
-                <svg
-                  className="w-4 h-4 flex-shrink-0"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                    clipRule="evenodd"
-                  />
+          <div className="rp-card">
+            <div className="rp-heading">
+              <h1 className="rp-title">Create account</h1>
+              <p className="rp-sub">
+                Join thousands of devs on{" "}
+                <span className="rp-sub-accent">DevMate</span>
+              </p>
+            </div>
+
+            {errors.general && (
+              <div className="rp-error">
+                <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20" style={{flexShrink:0,marginTop:1}}>
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                 </svg>
-                <p className="text-sm font-medium">{errors.general}</p>
+                <p style={{margin:0}}>{errors.general}</p>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Registration Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Username */}
-            <div>
-              <label
-                htmlFor="username"
-                className="block text-sm font-medium text-x-white mb-1"
-              >
-                Username
-              </label>
-              <input
-                id="username"
-                name="username"
-                type="text"
-                required
-                value={formData.username}
-                onChange={handleChange}
-                className={`w-full px-3 py-2.5 bg-x-black/50 border rounded-lg text-x-white placeholder-x-gray focus:outline-none focus:ring-2 transition-all duration-200 ${
-                  errors.username
-                    ? "border-red-500/50 focus:ring-red-500/50 focus:border-red-500"
-                    : "border-x-border/30 focus:ring-x-blue/50 focus:border-x-blue"
-                }`}
-                placeholder="Choose a username"
-              />
-              {errors.username && (
-                <p className="mt-1 text-xs text-red-400">{errors.username}</p>
-              )}
-            </div>
+            <form onSubmit={handleSubmit} className="rp-form">
+              {/* Username */}
+              <div className="rp-field">
+                <label htmlFor="username" className="rp-label">Username</label>
+                <input id="username" name="username" type="text" required
+                  className={`rp-input${errors.username ? " rp-input-err" : ""}`}
+                  placeholder="Choose a username"
+                  value={formData.username} onChange={handleChange} />
+                {errors.username && <p className="rp-field-err">{errors.username}</p>}
+              </div>
 
-            {/* Email */}
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-x-white mb-1"
-              >
-                Email Address
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                value={formData.email}
-                onChange={handleChange}
-                className={`w-full px-3 py-2.5 bg-x-black/50 border rounded-lg text-x-white placeholder-x-gray focus:outline-none focus:ring-2 transition-all duration-200 ${
-                  errors.email
-                    ? "border-red-500/50 focus:ring-red-500/50 focus:border-red-500"
-                    : "border-x-border/30 focus:ring-x-blue/50 focus:border-x-blue"
-                }`}
-                placeholder="Enter your email"
-              />
-              {errors.email && (
-                <p className="mt-1 text-xs text-red-400">{errors.email}</p>
-              )}
-            </div>
+              {/* Email */}
+              <div className="rp-field">
+                <label htmlFor="email" className="rp-label">Email</label>
+                <input id="email" name="email" type="email" required
+                  className={`rp-input${errors.email ? " rp-input-err" : ""}`}
+                  placeholder="you@example.com"
+                  value={formData.email} onChange={handleChange} />
+                {errors.email && <p className="rp-field-err">{errors.email}</p>}
+              </div>
 
-            {/* Password */}
-            <div className="relative">
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-x-white mb-1"
-              >
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type={showPassword ? "text" : "password"}
-                required
-                value={formData.password}
-                onChange={handleChange}
-                className={`w-full px-3 py-2.5 bg-x-black/50 border rounded-lg text-x-white placeholder-x-gray focus:outline-none focus:ring-2 transition-all duration-200 ${
-                  errors.password
-                    ? "border-red-500/50 focus:ring-red-500/50 focus:border-red-500"
-                    : "border-x-border/30 focus:ring-x-blue/50 focus:border-x-blue"
-                }`}
-                placeholder="Create a password"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-3 top-9 text-xs focus:outline-none bg-black px-2 py-1 rounded text-white"
-                tabIndex={-1}
-              >
-                {showPassword ? "Hide" : "Show"}
+              {/* Password */}
+              <div className="rp-field">
+                <label htmlFor="password" className="rp-label">Password</label>
+                <div className="rp-input-wrap">
+                  <input id="password" name="password"
+                    type={showPassword ? "text" : "password"} required
+                    className={`rp-input${errors.password ? " rp-input-err" : ""}`}
+                    placeholder="Min. 6 characters"
+                    value={formData.password} onChange={handleChange}
+                    style={{paddingRight:"2.5rem"}} />
+                  <button type="button" className="rp-eye" tabIndex={-1}
+                    onClick={() => setShowPassword(p => !p)}>
+                    {showPassword ? (
+                      <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                      </svg>
+                    ) : (
+                      <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+                {errors.password && <p className="rp-field-err">{errors.password}</p>}
+              </div>
+
+              {/* Confirm Password */}
+              <div className="rp-field">
+                <label htmlFor="confirmPassword" className="rp-label">Confirm Password</label>
+                <input id="confirmPassword" name="confirmPassword" type="password" required
+                  className={`rp-input${errors.confirmPassword ? " rp-input-err" : ""}`}
+                  placeholder="Repeat password"
+                  value={formData.confirmPassword} onChange={handleChange} />
+                {errors.confirmPassword && <p className="rp-field-err">{errors.confirmPassword}</p>}
+              </div>
+
+              <button type="submit" disabled={loading} className="rp-submit">
+                {loading ? (
+                  <>
+                    <LoadingSpinner size="small" compact={true} />
+                    Creating account...
+                  </>
+                ) : "Create Account"}
               </button>
-              {errors.password && (
-                <p className="mt-1 text-xs text-red-400">{errors.password}</p>
-              )}
-            </div>
+            </form>
 
-            {/* Confirm Password */}
-            <div>
-              <label
-                htmlFor="confirmPassword"
-                className="block text-sm font-medium text-x-white mb-1"
-              >
-                Confirm Password
-              </label>
-              <input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                required
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                className={`w-full px-3 py-2.5 bg-x-black/50 border rounded-lg text-x-white placeholder-x-gray focus:outline-none focus:ring-2 transition-all duration-200 ${
-                  errors.confirmPassword
-                    ? "border-red-500/50 focus:ring-red-500/50 focus:border-red-500"
-                    : "border-x-border/30 focus:ring-x-blue/50 focus:border-x-blue"
-                }`}
-                placeholder="Confirm your password"
-              />
-              {errors.confirmPassword && (
-                <p className="mt-1 text-xs text-red-400">
-                  {errors.confirmPassword}
-                </p>
-              )}
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 text-white font-semibold py-2.5 px-4 rounded-lg transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg hover:shadow-blue-500/25 flex items-center justify-center"
-            >
-              {loading ? (
-                <>
-                  <LoadingSpinner
-                    size="small"
-                    className="mr-2"
-                    compact={true}
-                  />
-                  Creating account...
-                </>
-              ) : (
-                "Create Account"
-              )}
-            </button>
-          </form>
+            <p className="rp-login-link">
+              Already have an account?{" "}
+              <Link to="/login" className="rp-login-anchor">Sign in</Link>
+            </p>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
