@@ -63,38 +63,6 @@ const CreatePost = () => {
     }
   };
 
-  const handleLanguageSelect = (option) => {
-    const language = option ? option.value : "";
-    setSelectedLanguage(language);
-
-    // Add language comment when a language is selected
-    if (language) {
-      const languageComments = {
-        javascript: "// JavaScript",
-        python: "# Python",
-        java: "// Java",
-        cpp: "// C++",
-        react: "// React",
-        html: "<!-- HTML -->",
-        css: "/* CSS */",
-        sql: "-- SQL",
-        json: "// JSON",
-        other: "// mention your language",
-      };
-
-      const comment = languageComments[language] || `// ${language}`;
-      setFormData({
-        ...formData,
-        codeSnippet: comment,
-      });
-    } else {
-      // Clear code snippet if no language selected
-      setFormData({
-        ...formData,
-        codeSnippet: "",
-      });
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
