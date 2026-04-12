@@ -607,149 +607,68 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
           />
         )}
 
-        {/* Code Section with Enhanced Visual Identity */}
+        {/* Code Section with Expandable Toggle */}
         {post.codeSnippet && (
-          <div className="code-snippet relative bg-x-dark/80 border border-x-border/40 rounded-lg overflow-hidden">
-            {/* Language label */}
-            {post.codeLanguage && (
-              <div className="absolute top-2 right-2 sm:right-4 bg-x-dark/80 text-x-blue text-xs font-semibold px-2 py-0.5 rounded shadow-sm z-10 select-none border border-x-blue/30">
-                {post.codeLanguage}
-              </div>
-            )}
-            <div className="flex items-center justify-between bg-x-dark/60 px-3 sm:px-4 py-2 border-b border-x-border/30">
-              <div className="flex items-center space-x-2">
-                <div className="flex space-x-1">
-                  <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-red-500/60"></div>
-                  <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-yellow-500/60"></div>
-                  <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-green-500/60"></div>
+          <div className="code-snippet relative bg-black border border-x-border/40 rounded-none overflow-hidden transition-all duration-300">
+            {/* Toggle Header */}
+            <button
+              onClick={() => setShowFullCode(!showFullCode)}
+              className="w-full flex items-center justify-between bg-[#080808] px-4 py-3 hover:bg-[#121212] transition-all group"
+            >
+              <div className="flex items-center space-x-3">
+                <div className="flex space-x-1.5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-red-500/80"></div>
+                  <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80"></div>
+                  <div className="w-2.5 h-2.5 rounded-full bg-green-500/80"></div>
                 </div>
-                <span className="text-xs text-x-gray font-mono">💻</span>
-              </div>
-              {/* Copy Button */}
-              <button
-                onClick={(e) => {
-                  if (navigator && navigator.clipboard) {
-                    navigator.clipboard.writeText(post.codeSnippet);
-                    setCopied(true);
-                    setTimeout(() => setCopied(false), 1200);
-                  }
-                  // Remove focus ring after click
-                  e.currentTarget.blur();
-                }}
-                title="Copy code"
-                className="copy-btn p-1 rounded hover:bg-x-blue/20 focus:outline-none focus:ring-2 focus:ring-x-blue transition-all group flex items-center"
-              >
-                <svg
-                  className="w-4 h-4 sm:w-5 sm:h-5 text-x-gray group-hover:text-x-blue transition-colors"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.2"
-                  viewBox="0 0 24 24"
-                >
-                  <rect
-                    x="9"
-                    y="9"
-                    width="13"
-                    height="13"
-                    rx="2"
-                    stroke="currentColor"
-                    strokeWidth="2.2"
-                  />
-                  <rect
-                    x="3"
-                    y="3"
-                    width="13"
-                    height="13"
-                    rx="2"
-                    stroke="currentColor"
-                    strokeWidth="2.2"
-                  />
-                </svg>
-                {/* Copied message */}
-                {copied && (
-                  <span className="ml-2 text-xs text-x-blue font-semibold animate-fade-in-out select-none">
-                    Copied!
+                <div className="flex items-center space-x-2 text-x-gray group-hover:text-x-white transition-colors">
+                  <span className="text-sm font-mono opacity-80 decoration-x-blue underline-offset-4 decoration-2">
+                    {showFullCode ? "Hide Code Snippet" : "View Code Snippet"}
                   </span>
-                )}
-              </button>
-            </div>
-            <div className="p-3 sm:p-4">
-              <pre
-                className={`whitespace-pre-wrap text-sm sm:text-base font-mono text-x-white overflow-x-auto leading-relaxed ${
-                  !showFullCode &&
-                  post.codeSnippet &&
-                  post.codeSnippet.split("\n").length > 15
-                    ? "max-h-80 overflow-hidden"
-                    : ""
-                }`}
-              >
-                {showFullCode ||
-                !post.codeSnippet ||
-                post.codeSnippet.split("\n").length <= 15
-                  ? post.codeSnippet
-                  : post.codeSnippet.split("\n").slice(0, 15).join("\n") +
-                    "\n..."}
-              </pre>
-              {post.codeSnippet && post.codeSnippet.split("\n").length > 15 && (
-                <div className="text-center mt-3 flex justify-center items-center">
+                  {post.codeLanguage && (
+                    <span className="px-2 py-0.5 rounded-none bg-x-blue/10 border border-x-blue/30 text-[10px] text-x-blue font-bold uppercase tracking-wider">
+                      {post.codeLanguage}
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div className={`p-1.5 rounded-none bg-x-dark group-hover:bg-x-blue/20 transition-all ${showFullCode ? 'rotate-180' : ''}`}>
+                <svg className="w-4 h-4 text-x-gray group-hover:text-x-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </button>
+
+            {/* Code Content */}
+            {showFullCode && (
+              <div className="animate-fade-in border-t border-x-border/30">
+                <div className="flex items-center justify-end bg-x-dark/40 px-4 py-2 border-b border-x-border/20">
                   <button
-                    onClick={() => {
-                      if (showFullCode) {
-                        // Scroll to the button when collapsing
-                        setTimeout(() => {
-                          const button = document.activeElement;
-                          if (button) {
-                            button.scrollIntoView({
-                              behavior: "smooth",
-                              block: "center",
-                            });
-                          }
-                        }, 100);
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (navigator && navigator.clipboard) {
+                        navigator.clipboard.writeText(post.codeSnippet);
+                        setCopied(true);
+                        setTimeout(() => setCopied(false), 1500);
                       }
-                      setShowFullCode(!showFullCode);
                     }}
-                    className="text-sm text-gray-300 hover:text-gray-200 font-medium transition-colors flex items-center justify-center py-2 font-poppins"
+                    className="flex items-center space-x-2 px-3 py-1.5 rounded-none hover:bg-x-blue/20 text-x-gray hover:text-x-blue transition-all"
                   >
-                    {showFullCode ? (
-                      <>
-                        <svg
-                          className="w-4 h-4 mr-1"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M5 15l7-7 7 7"
-                          />
-                        </svg>
-                        Show less code
-                      </>
-                    ) : (
-                      <>
-                        <svg
-                          className="w-4 h-4 mr-1"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M19 9l-7 7-7-7"
-                          />
-                        </svg>
-                        View full code ({post.codeSnippet.split("\n").length}{" "}
-                        lines)
-                      </>
-                    )}
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                    </svg>
+                    <span className="text-xs font-bold uppercase tracking-tight">
+                      {copied ? "Copied!" : "Copy"}
+                    </span>
                   </button>
                 </div>
-              )}
-            </div>
+                <div className="p-4 overflow-x-auto bg-[#0d0d17]/50">
+                  <pre className="text-sm sm:text-base font-mono text-x-white leading-relaxed">
+                    {post.codeSnippet}
+                  </pre>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
