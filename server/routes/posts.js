@@ -23,6 +23,14 @@ router.post(
       .optional()
       .isLength({ max: 5000 })
       .withMessage("Code snippet must be less than 5000 characters"),
+    body("repoUrl")
+      .optional()
+      .isLength({ max: 500 })
+      .withMessage("Repository URL is too long"),
+    body("repoTitle")
+      .optional()
+      .isLength({ max: 100 })
+      .withMessage("Repository title must be less than 100 characters"),
   ],
   async (req, res) => {
     try {
@@ -31,7 +39,7 @@ router.post(
         return res.status(400).json({ errors: errors.array() });
       }
 
-      const { content, codeSnippet } = req.body;
+      const { content, codeSnippet, repoUrl, repoTitle } = req.body;
       
       let mediaUrl = "";
       let mediaType = "";
@@ -47,6 +55,8 @@ router.post(
         codeSnippet: codeSnippet || "",
         mediaUrl,
         mediaType,
+        repoUrl: repoUrl || "",
+        repoTitle: repoTitle || "",
       });
 
       await post.save();

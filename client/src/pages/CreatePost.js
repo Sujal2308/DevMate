@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Select from "react-select";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import LoadingSpinner from "../components/LoadingSpinner";
@@ -13,6 +12,8 @@ const CreatePost = () => {
   const [formData, setFormData] = useState({
     content: "",
     codeSnippet: "",
+    repoUrl: "",
+    repoTitle: "",
   });
   const [media, setMedia] = useState(null);
   const [mediaPreview, setMediaPreview] = useState(null);
@@ -21,30 +22,21 @@ const CreatePost = () => {
   const [selectedLanguage, setSelectedLanguage] = useState("");
   const [showCancel, setShowCancel] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [showRepoInput, setShowRepoInput] = useState(false);
 
   const navigate = useNavigate();
 
-  const languageOptions = [
-    { value: "javascript", label: "🟨 JavaScript", color: "#f7df1e" },
-    { value: "python", label: "🐍 Python", color: "#4B8BBE" },
-    { value: "java", label: "☕ Java", color: "#b07219" },
-    { value: "cpp", label: "⚡ C++", color: "#00599C" },
-    { value: "react", label: "⚛️ React", color: "#61dafb" },
-    { value: "html", label: "🌐 HTML", color: "#e34c26" },
-    { value: "css", label: "🎨 CSS", color: "#563d7c" },
-    { value: "sql", label: "🗄️ SQL", color: "#336791" },
-    { value: "json", label: "📋 JSON", color: "#f4a460" },
-    { value: "other", label: "Other", color: "#C0C0C0" }, // Final option
-  ];
 
   const handleChange = (e) => {
-    const value = e.target.value;
-    setFormData({
-      ...formData,
-      [e.target.name]: value,
-    });
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    
     if (error) setError("");
-    if (e.target.name === "content") {
+    
+    if (name === "content") {
       if (value.trim().length > 0) {
         setShowCancel(true);
       } else if (!media) {
@@ -123,6 +115,10 @@ const CreatePost = () => {
       if (media) {
         payload.append("media", media);
       }
+      if (formData.repoUrl.trim()) {
+        payload.append("repoUrl", formData.repoUrl.trim());
+        payload.append("repoTitle", formData.repoTitle.trim());
+      }
 
       await axios.post("/api/posts", payload);
 
@@ -196,14 +192,23 @@ const CreatePost = () => {
               htmlFor="content"
               className="block text-sm font-bold mb-3"
             >
-              <span className="animated-gradient-text">What's on your mind? *</span>
+              <span 
+                className="text-xl tracking-tight" 
+                style={{ 
+                  color: "#A855F7",
+                  fontFamily: "'Space Grotesk', sans-serif",
+                  fontWeight: 700 
+                }}
+              >
+                What's on your mind? *
+              </span>
             </label>
             <textarea
               id="content"
               name="content"
               rows="8"
               required
-              className="w-full p-6 bg-x-black/60 border border-x-border text-x-white placeholder-x-gray rounded-xl resize-none focus:ring-2 focus:ring-x-blue focus:border-x-blue transition-colors text-lg leading-relaxed font-mono placeholder:font-mono"
+              className="w-full p-6 bg-[#000000] border border-x-border text-x-white placeholder-x-gray rounded-xl resize-none focus:ring-2 focus:ring-x-blue focus:border-x-blue transition-colors text-lg leading-relaxed font-mono placeholder:font-mono"
               placeholder={
                 "• Share your thoughts, ideas, experiences, or questions with the DevMate community...\n• Pro tip: You can add code snippets below to enhance your post!"
               }
@@ -211,162 +216,155 @@ const CreatePost = () => {
               onChange={handleChange}
               maxLength="2000"
             />
-            <div className="flex justify-between items-center mt-3">
-              <span className="text-xs text-x-gray font-mono">
-                📝 {formData.content.length}/2000 characters
-              </span>
-              <div className="flex items-center space-x-1">
-                <div
-                  className={`w-2 h-2 rounded-full ${
-                    formData.content.length > 1800
-                      ? "bg-red-500"
-                      : formData.content.length > 1600
-                      ? "bg-yellow-500"
-                      : "bg-x-blue"
-                  }`}
-                ></div>
-                <span className="text-xs text-x-gray font-mono">
-                  {formData.content.length > 1800
-                    ? "Almost full"
-                    : formData.content.length > 1600
-                    ? "Getting long"
-                    : "Good"}
+          </div>
+
+          <div className="flex flex-row gap-3 mb-6">
+            {/* Add Media Section */}
+            <div className="flex-1">
+              <label className="flex flex-col items-center justify-center p-4 bg-[#000000] border-2 border-dashed border-x-border/50 rounded-2xl cursor-pointer hover:bg-x-dark/50 hover:border-x-blue/50 transition-all group h-full">
+                <input 
+                  type="file" 
+                  accept="image/*,application/pdf"
+                  onChange={handleMediaChange}
+                  className="hidden"
+                />
+                <img 
+                  src="/icons/image-gallery.png" 
+                  alt="Upload Media" 
+                  className="w-10 h-10 mb-2 transition-transform group-hover:scale-110"
+                />
+                <span 
+                  className="text-sm font-bold tracking-tight text-center" 
+                  style={{ 
+                    color: "#A855F7",
+                    fontFamily: "'Space Grotesk', sans-serif"
+                  }}
+                >
+                  Media
+                </span>
+              </label>
+            </div>
+
+            {/* Add Code Section */}
+            <div className="flex-1">
+              <div 
+                onClick={() => {
+                  if (!formData.codeSnippet) {
+                    setFormData({ ...formData, codeSnippet: "// Write your code here..." });
+                    setSelectedLanguage("other");
+                  } else {
+                    setFormData({ ...formData, codeSnippet: "" });
+                    setSelectedLanguage("");
+                  }
+                }}
+                className="flex flex-col items-center justify-center p-4 bg-[#000000] border-2 border-dashed border-x-border/50 rounded-2xl cursor-pointer hover:bg-x-dark/50 hover:border-x-blue/50 transition-all group h-full"
+              >
+                <img 
+                  src="/icons/code.png" 
+                  alt="Add Code" 
+                  className="w-10 h-10 mb-2 transition-transform group-hover:scale-110"
+                />
+                <span 
+                  className="text-sm font-bold tracking-tight text-center" 
+                  style={{ 
+                    color: "#A855F7",
+                    fontFamily: "'Space Grotesk', sans-serif"
+                  }}
+                >
+                  {formData.codeSnippet ? "Code" : "Code"}
+                </span>
+              </div>
+            </div>
+
+            {/* Add Repo Section */}
+            <div className="flex-1">
+              <div 
+                onClick={() => {
+                  setShowRepoInput(!showRepoInput);
+                }}
+                className={`flex flex-col items-center justify-center p-4 bg-[#000000] border-2 border-dashed ${showRepoInput ? 'border-x-blue/50' : 'border-x-border/50'} rounded-2xl cursor-pointer hover:bg-x-dark/50 hover:border-x-blue/50 transition-all group h-full`}
+              >
+                <img 
+                  src="/icons/folder.png" 
+                  alt="Add Repo" 
+                  className="w-10 h-10 mb-2 transition-transform group-hover:scale-110"
+                />
+                <span 
+                  className="text-sm font-bold tracking-tight text-center" 
+                  style={{ 
+                    color: "#A855F7",
+                    fontFamily: "'Space Grotesk', sans-serif"
+                  }}
+                >
+                  {formData.repoUrl ? "Repo Added" : "Repo"}
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="mb-6 bg-x-dark/20 p-4 border border-x-border/30 rounded-xl">
-            <label className="block text-sm font-bold mb-3">
-              <span className="animated-gradient-text">Add Media (Optional)</span>
-            </label>
-            <input 
-              type="file" 
-              accept="image/*,application/pdf"
-              onChange={handleMediaChange}
-              className="text-sm font-mono text-x-gray file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-x-blue file:text-white hover:file:bg-x-blue-hover cursor-pointer w-full"
-            />
-            {mediaPreview && (
-              <div className="mt-4 relative inline-block">
-                {mediaPreview === "PDF_DOCUMENT" ? (
-                  <div className="p-4 bg-x-dark/50 border border-x-border rounded-xl flex items-center space-x-3">
-                    <span className="text-3xl">📄</span>
-                    <div>
-                      <p className="font-semibold text-x-white">{media.name}</p>
-                      <p className="text-xs text-x-gray">{(media.size / 1024 / 1024).toFixed(2)} MB - PDF Document</p>
-                    </div>
-                  </div>
-                ) : (
-                  <img src={mediaPreview} alt="Preview" className="max-w-full h-auto max-h-64 rounded-xl border border-x-border" />
-                )}
-                <button
-                  type="button"
-                  onClick={() => { setMedia(null); setMediaPreview(null); }}
-                  className="absolute -top-3 -right-3 bg-red-600 hover:bg-red-700 text-white w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shadow-lg"
-                >
-                  X
-                </button>
-              </div>
-            )}
-          </div>
-
-          <div className="mb-8 border-t border-x-border/30 pt-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-              {/* Custom react-select dropdown */}
-              <div className="flex flex-row items-center gap-2 w-full">
-                <Select
-                  className="w-full text-xs font-mono"
-                  classNamePrefix="react-select"
-                  options={languageOptions}
-                  value={languageOptions.find(
-                    (opt) => opt.value === selectedLanguage
-                  )}
-                  onChange={handleLanguageSelect}
-                  isClearable
-                  isSearchable={false}
-                  placeholder="✨ Choose Language"
-                  styles={{
-                    control: (base, state) => ({
-                      ...base,
-                      background:
-                        "linear-gradient(90deg, #181c24 60%, #23272f 100%)",
-                      borderImage:
-                        "linear-gradient(90deg, #1d9bf0, #a259f7, #00ba7c, #1d9bf0) 1",
-                      borderImageSlice: 1,
-                      borderWidth: "2px 2px 3px 2px", // Thicker bottom border
-                      borderStyle: "solid",
-                      borderColor: "transparent",
-                      borderBottomColor: "#1d9bf0", // Fallback for bottom border
-                      boxShadow: "none",
-                      outline: "none",
-                      borderRadius: 12,
-                      minHeight: 38,
-                      height: 38, // Prevent expansion
-                      maxHeight: 38, // Prevent expansion
-                      paddingTop: 0,
-                      paddingBottom: 0,
-                      fontSize: 13,
-                      fontWeight: 500,
-                      letterSpacing: "0.02em",
-                      color: "#fff",
-                      zIndex: 100,
-                      animation: "border-gradient 3s linear infinite",
-                      transition: "border-image 0.5s",
-                    }),
-                    menu: (base) => ({
-                      ...base,
-                      background: "#23272f",
-                      color: "#fff",
-                      borderRadius: 12,
-                      boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
-                      fontSize: 13,
-                      zIndex: 9999,
-                    }),
-                    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                    option: (base, state) => ({
-                      ...base,
-                      background: state.isSelected
-                        ? "#1d9bf0"
-                        : state.isFocused
-                        ? "#23272f"
-                        : "transparent",
-                      color: state.isSelected ? "#fff" : "#fff",
-                      fontWeight: state.isSelected ? 700 : 500,
-                      fontFamily: "monospace",
-                      cursor: "pointer",
-                    }),
-                    singleValue: (base) => ({
-                      ...base,
-                      color: "#fff",
-                      fontFamily: "monospace",
-                    }),
-                    placeholder: (base) => ({
-                      ...base,
-                      color: "#888",
-                      fontFamily: "monospace",
-                    }),
-                  }}
-                  menuPortalTarget={
-                    typeof window !== "undefined" ? document.body : null
-                  }
-                  menuPosition="fixed"
-                  theme={(theme) => ({
-                    ...theme,
-                    borderRadius: 12,
-                    colors: {
-                      ...theme.colors,
-                      primary: "#1d9bf0",
-                      primary25: "#23272f",
-                      neutral0: "#23272f",
-                      neutral80: "#fff",
-                    },
-                  })}
+          {/* Repo Input Field */}
+          {showRepoInput && (
+            <div className="mb-6 animate-fade-in space-y-1.5">
+              <div className="border border-x-border/50 rounded-none bg-[#000000]">
+                <input
+                  type="text"
+                  name="repoTitle"
+                  placeholder="Repository Title (e.g., My Portfolio Website)"
+                  className="w-full bg-transparent border-none text-x-white placeholder-x-gray px-4 py-3 text-sm font-mono focus:ring-1 focus:ring-x-blue transition-all"
+                  value={formData.repoTitle}
+                  onChange={handleChange}
                 />
               </div>
+              <div className="relative border border-x-border/50 rounded-none bg-[#000000]">
+                  <input
+                    type="url"
+                    name="repoUrl"
+                    placeholder="GitHub Repository URL"
+                    className="w-full bg-transparent border-none text-x-white placeholder-x-gray px-4 py-3 pr-12 text-sm font-mono focus:ring-1 focus:ring-x-blue transition-all"
+                    value={formData.repoUrl}
+                    onChange={handleChange}
+                  />
+                  {formData.repoUrl && (
+                    <button
+                      type="button"
+                      onClick={() => setFormData({ ...formData, repoUrl: "" })}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-x-gray hover:text-red-500 transition-colors"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  )}
+              </div>
             </div>
+          )}
 
-            {(selectedLanguage || formData.codeSnippet) && (
-              <div className="bg-x-black/80 border border-x-border/50 rounded-xl overflow-hidden">
+          {/* Previews and Editors - Below the triggers */}
+          {mediaPreview && (
+            <div className="mb-6 relative inline-block group/preview">
+              {mediaPreview === "PDF_DOCUMENT" ? (
+                <div className="p-4 bg-x-dark/50 border border-x-border rounded-xl flex items-center space-x-3">
+                  <span className="text-3xl">📄</span>
+                  <div>
+                    <p className="font-semibold text-x-white">{media.name}</p>
+                    <p className="text-xs text-x-gray">{(media.size / 1024 / 1024).toFixed(2)} MB - PDF Document</p>
+                  </div>
+                </div>
+              ) : (
+                <img src={mediaPreview} alt="Preview" className="max-w-full h-auto max-h-64 rounded-xl border border-x-border shadow-2xl" />
+              )}
+              <button
+                type="button"
+                onClick={() => { setMedia(null); setMediaPreview(null); }}
+                className="absolute -top-3 -right-3 bg-red-600 hover:bg-red-700 text-white w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shadow-lg transform transition-transform group-hover/preview:scale-110"
+              >
+                ✕
+              </button>
+            </div>
+          )}
+
+          {(selectedLanguage || formData.codeSnippet) && (
+            <div className="bg-x-black/80 border border-x-border/50 rounded-xl overflow-hidden mb-8">
                 <div className="flex items-center justify-between bg-x-dark/60 px-4 py-2 border-b border-x-border/30">
                   <div className="flex items-center space-x-2">
                     <div className="flex space-x-1">
@@ -374,18 +372,44 @@ const CreatePost = () => {
                       <div className="w-3 h-3 rounded-full bg-yellow-500/60"></div>
                       <div className="w-3 h-3 rounded-full bg-green-500/60"></div>
                     </div>
-                    <span className="text-xs text-x-gray font-mono">
-                      {selectedLanguage
-                        ? `💾 ${
-                            selectedLanguage.charAt(0).toUpperCase() +
-                            selectedLanguage.slice(1)
-                          } Code`
-                        : "💾 Code Snippet"}
-                    </span>
                   </div>
-                  <span className="text-xs text-x-gray font-mono">
-                    📊 {formData.codeSnippet.length}/5000
-                  </span>
+                  <div className="flex items-center space-x-3">
+                    {/* Paste Icon */}
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        try {
+                          const text = await navigator.clipboard.readText();
+                          if (text) {
+                            setFormData({ ...formData, codeSnippet: text });
+                          }
+                        } catch (err) {
+                          console.error("Failed to read clipboard:", err);
+                        }
+                      }}
+                      className="text-x-gray hover:text-x-blue transition-colors p-1"
+                      title="Paste from clipboard"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                      </svg>
+                    </button>
+
+                    {/* Cross Icon */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFormData({ ...formData, codeSnippet: "" });
+                        setSelectedLanguage("");
+                      }}
+                      className="text-x-gray hover:text-red-500 transition-colors p-1"
+                      title="Clear code"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
                 <textarea
                   id="codeSnippet"
@@ -410,18 +434,7 @@ console.log("Welcome to DevMate!");`
               </div>
             )}
 
-            {formData.codeSnippet && (
-              <div className="mt-3 text-xs text-x-blue font-mono">
-                💡 Tip:{" "}
-                {selectedLanguage
-                  ? `${
-                      selectedLanguage.charAt(0).toUpperCase() +
-                      selectedLanguage.slice(1)
-                    } template loaded! You can edit it or choose a different language.`
-                  : "Choose a language from the dropdown to get syntax templates, or add context to help others understand your code better."}
-              </div>
-            )}
-          </div>
+
 
           <div className="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4 items-center">
             {showCancel && (
@@ -442,9 +455,10 @@ console.log("Welcome to DevMate!");`
                     }, 100);
                   } else {
                     window.scrollTo({ top: 0, behavior: "smooth" });
-                    setFormData({ content: "", codeSnippet: "" });
+                    setFormData({ content: "", codeSnippet: "", repoUrl: "", repoTitle: "" });
                     setMedia(null);
                     setMediaPreview(null);
+                    setShowRepoInput(false);
                     setShowCancel(false);
                   }
                 }}
@@ -497,33 +511,25 @@ console.log("Welcome to DevMate!");`
               className={`bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-colors duration-200 min-h-[44px] h-[44px] ${
                 isMobile ? "w-full" : ""
               }`}
-              style={{ lineHeight: "1.5", height: "44px" }}
+              style={{ height: "44px" }}
             >
-              <span className="flex items-center justify-center w-full h-full">
+              <div className="flex items-center justify-center space-x-2">
                 {loading ? (
                   <>
                     <LoadingSpinner size="small" />
-                    <span className="ml-2">Publishing...</span>
+                    <span>Publishing...</span>
                   </>
                 ) : (
                   <>
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                      />
-                    </svg>
-                    <span className="ml-2">Publish</span>
+                    <span className="font-bold leading-none">Publish</span>
+                    <img 
+                      src="/icons/arrow-up.png" 
+                      alt="Publish" 
+                      className="w-5 h-5 object-contain -translate-y-[2px]"
+                    />
                   </>
                 )}
-              </span>
+              </div>
             </button>
           </div>
         </form>
@@ -533,7 +539,7 @@ console.log("Welcome to DevMate!");`
           {(formData.content || mediaPreview) && (
             <div>
               <h3 className="text-lg font-semibold text-x-white mb-4 flex items-center">
-                👀 Live Preview
+                Live Preview
               </h3>
               <div className="card p-6 bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/30">
                 <div className="flex items-center mb-6">
@@ -587,6 +593,32 @@ console.log("Welcome to DevMate!");`
                           <img src={mediaPreview} alt="Post Attachment Preview" className="w-full h-auto object-contain max-h-[500px]" />
                         </div>
                       )}
+                    </div>
+                  )}
+
+                  {/* Repository Preview Section */}
+                  {formData.repoUrl && (
+                    <div className="mt-4 animate-fade-in group">
+                      <div className="bg-[#0d0d17] border border-x-border/30 rounded-xl overflow-hidden shadow-lg">
+                        <div className="p-4 flex items-center justify-between">
+                          <div className="flex items-center space-x-4">
+                            <div className="bg-[#161b22] p-2 rounded-lg border border-x-border/10">
+                              <svg className="w-5 h-5 text-x-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+                              </svg>
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h4 className="text-x-white font-bold text-sm truncate">
+                                {formData.repoTitle || formData.repoUrl.split('/').slice(-2).join('/') || "New Repository"}
+                              </h4>
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                             <div className="w-1.5 h-1.5 rounded-full bg-x-blue"></div>
+                             <span className="text-[10px] text-x-gray font-bold uppercase tracking-widest opacity-60">Selected</span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   )}
 
@@ -664,7 +696,7 @@ console.log("Welcome to DevMate!");`
             </div>
           )}
 
-          {!(formData.content || mediaPreview) && (
+          {!(formData.content || mediaPreview || formData.repoUrl) && (
             <div className="card p-8 bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/20 text-center">
               <div className="flex items-center justify-center mx-auto mb-6">
                 <img 

@@ -25,6 +25,14 @@ const postSchema = new mongoose.Schema(
       enum: ["image", "pdf", ""],
       default: "",
     },
+    repoUrl: {
+      type: String,
+      default: "",
+    },
+    repoTitle: {
+      type: String,
+      default: "",
+    },
     likes: [
       {
         user: {

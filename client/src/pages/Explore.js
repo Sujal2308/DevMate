@@ -311,39 +311,6 @@ const Explore = () => {
         willChange: isMobile ? "transform" : "auto",
       }}
     >
-      {/* Hero Section - Reduced when keyboard active */}
-      {!isMobile && (
-        <div
-          className={`hero-container ${
-            isKeyboardOpen
-              ? "h-0 opacity-0 overflow-hidden"
-              : "mb-2 sm:mb-3 lg:mb-6"
-          }`}
-          style={{
-            transition:
-              "height var(--transition-speed), opacity var(--transition-speed)",
-          }}
-        >
-          <h1
-            className="hidden sm:flex mt-4 text-xl sm:text-2xl md:text-3xl font-bold items-center gap-3 explore-mobile-heading"
-            style={{
-              fontFamily:
-                '"Fira Code", "Monaco", "Menlo", "Ubuntu Mono", "Consolas", "Courier New", monospace',
-            }}
-          >
-            <span className="text-x-white font-bold">explore</span>
-            <img
-              src="/icons/friend.png"
-              alt="Friend"
-              className="w-8 h-8 sm:w-10 sm:h-10 object-contain"
-            />
-          </h1>
-          <p className="text-x-gray text-xs sm:text-sm lg:text-base max-w-2xl">
-            Discover and connect with talented developers in the DevMate
-            community. Find your next collaborator, mentor, or coding buddy.
-          </p>
-        </div>
-      )}
 
       {/* Search and Filter Controls - Fixed position on mobile when keyboard active */}
       <div

@@ -214,17 +214,6 @@ const Navbar = () => {
                         View Profile
                       </Link>
                       <Link
-                        to="/settings"
-                        className={`px-4 py-3 hover:bg-x-darker transition-colors text-left ${
-                          location.pathname === "/settings"
-                            ? "text-x-blue border-l-2 border-x-blue"
-                            : "text-x-white"
-                        }`}
-                        onClick={(e) => handleNavClick("/settings", e)}
-                      >
-                        Settings
-                      </Link>
-                      <Link
                         to="/news"
                         className={`px-4 py-3 hover:bg-x-darker transition-colors text-left flex items-center justify-between ${
                           location.pathname === "/news"
