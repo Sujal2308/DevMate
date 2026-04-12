@@ -428,6 +428,53 @@ const Home = () => {
         </div>
       </div>
 
+      {/* ── FAQ Section ── */}
+      <div className="w-full bg-x-black pt-8 md:pt-16 pb-12 md:pb-16 border-t border-x-border/30">
+        <div className="max-w-4xl mx-auto px-6 md:px-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-x-white mb-8 md:mb-12 text-left" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+            <span className="md:hidden">FAQs</span>
+            <span className="hidden md:block">Frequently Asked Questions</span>
+          </h2>
+          
+          <div className="flex flex-col gap-3">
+            {[
+              {
+                q: "What exactly is DevMate?",
+                a: "DevMate is a social platform designed specifically for developers to share code snippets, discover innovative projects, and connect with a global community of coders."
+              },
+              {
+                q: "Is DevMate free for individual developers?",
+                a: "Yes! DevMate is completely free for individuals to share, explore, and learn from the community."
+              },
+              {
+                q: "How can I share my code snippets?",
+                a: "Simply sign up, head to your feed, and use our intuitive post editor. You can paste your code, add a description, and even tag it for better discoverability."
+              },
+              {
+                q: "Can I collaborate on projects with others?",
+                a: "Absolutely. DevMate encourages collaboration through comments, direct messaging, and project highlighting, making it easy to find partners for your next big idea."
+              }
+            ].map((faq, index) => (
+              <details key={index} className="group border border-x-border/50 bg-[#0f0f15] open:bg-x-blue open:border-x-blue rounded-none overflow-hidden transition-all duration-500">
+                <summary className="flex items-center justify-between p-4 md:p-5 cursor-pointer list-none hover:bg-x-blue/10 transition-all duration-300">
+                  <span className="text-lg font-bold text-x-white pr-4 group-open:text-white" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+                    {faq.q}
+                  </span>
+                  <span className="text-x-blue group-open:text-white transition-transform duration-500 group-open:rotate-180">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </span>
+                </summary>
+                <div className="px-4 pb-4 md:px-5 md:pb-5 text-x-gray group-open:text-white leading-relaxed font-sans transition-all duration-500">
+                  {faq.a}
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* ── Premium Redesigned Footer ── */}
       <footer className="border-t border-x-border bg-x-black w-full pt-16 pb-12 mt-auto">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
@@ -534,9 +581,9 @@ const Home = () => {
               © 2026 DEV MATE — <span className="text-x-blue">SHARE MORE, LEARN MORE.</span>
             </p>
             <div className="flex gap-8 text-x-gray text-xs font-medium tracking-wider uppercase">
-              <a href="#" className="hover:text-x-white transition-colors border-b border-transparent hover:border-x-white pb-0.5">Privacy</a>
-              <a href="#" className="hover:text-x-white transition-colors border-b border-transparent hover:border-x-white pb-0.5">Terms</a>
-              <a href="#" className="hover:text-x-white transition-colors border-b border-transparent hover:border-x-white pb-0.5">Cookies</a>
+              <a href="/privacy" className="hover:text-x-white transition-colors border-b border-transparent hover:border-x-white pb-0.5">Privacy</a>
+              <a href="/terms" className="hover:text-x-white transition-colors border-b border-transparent hover:border-x-white pb-0.5">Terms</a>
+              <a href="/cookies" className="hover:text-x-white transition-colors border-b border-transparent hover:border-x-white pb-0.5">Cookies</a>
             </div>
           </div>
         </div>
