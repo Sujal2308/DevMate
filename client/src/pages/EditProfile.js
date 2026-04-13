@@ -16,6 +16,16 @@ const EditProfile = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [isEditingDisplayName, setIsEditingDisplayName] = useState(false);
+  const [originalDisplayName, setOriginalDisplayName] = useState("");
+  const [isEditingBio, setIsEditingBio] = useState(false);
+  const [originalBio, setOriginalBio] = useState("");
+  const [isEditingSkills, setIsEditingSkills] = useState(false);
+  const [originalSkills, setOriginalSkills] = useState([]);
+  const [isEditingGithub, setIsEditingGithub] = useState(false);
+  const [originalGithub, setOriginalGithub] = useState("");
+  const [avatarPreview, setAvatarPreview] = useState(user?.avatar || null);
+  const fileInputRef = React.useRef(null);
 
   const navigate = useNavigate();
 
@@ -78,33 +88,18 @@ const EditProfile = () => {
   };
 
   return (
-  <div className="w-full max-w-2xl mx-auto py-6 px-4 sm:px-8 lg:px-12 xl:px-24 pb-24 sm:pb-6 border-l border-r border-x-border/50 bg-gradient-to-br from-x-dark/10 to-x-dark/5">
+  <div className="w-full max-w-2xl mx-auto py-6 px-4 sm:px-8 lg:px-10 pb-24 sm:pb-8 border-l border-r border-x-border/50 bg-gradient-to-br from-x-dark/10 to-x-dark/5">
       {/* Header Section */}
-      <div className="mb-8 text-center">
-        <div className="bg-x-navy h-32 relative overflow-hidden mb-6">
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="bg-black backdrop-blur-sm rounded-2xl p-6 border-2 border-purple-500 shadow-[0_0_16px_4px_rgba(168,85,247,0.5)]">
-              <svg
-                className="w-8 h-8 text-x-blue mx-auto mb-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                />
-              </svg>
-              <h1 className="text-2xl lg:text-3xl font-bold text-x-gray-300 font-mono">
-                Edit Profile
-              </h1>
-            </div>
-          </div>
-        </div>
-        <p className="text-x-gray text-lg max-w-md mx-auto">
+      <div className="mb-12 text-left">
+        <h1 
+          className="text-4xl md:text-6xl font-black text-x-white tracking-tighter mb-4" 
+          style={{ 
+            fontFamily: "'Space Grotesk', sans-serif"
+          }}
+        >
+          Edit Profile
+        </h1>
+        <p className="text-x-gray text-lg max-w-md">
           Customize your profile to showcase your developer journey
         </p>
       </div>
@@ -149,12 +144,68 @@ const EditProfile = () => {
           </div>
         )}
 
+          {/* Profile Photo Section */}
+          <div className="flex flex-col items-start mb-12 animate-fade-in">
+            <div 
+              className="relative group/avatar cursor-pointer"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <div className="bg-gradient-to-br from-x-blue to-purple-500 text-white w-24 h-24 lg:w-32 lg:h-32 rounded-full flex items-center justify-center text-3xl lg:text-4xl font-bold border-4 border-x-dark shadow-2xl overflow-hidden relative transition-transform duration-300 group-hover/avatar:scale-105 active:scale-95">
+                {avatarPreview ? (
+                  <img src={avatarPreview} alt="Profile" className="w-full h-full object-cover" />
+                ) : (
+                  <span style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+                    {user?.displayName?.charAt(0).toUpperCase() || user?.username?.charAt(0).toUpperCase()}
+                  </span>
+                )}
+                
+                {/* Overlay */}
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity duration-300">
+                  <div className="bg-white/20 backdrop-blur-md p-3 rounded-full">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Bottom Edit Badge */}
+              <div className="absolute -bottom-1 -right-1 bg-x-blue p-2 rounded-full border-4 border-x-dark shadow-lg transition-transform group-hover/avatar:scale-110">
+                <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                </svg>
+              </div>
+            </div>
+            
+            <input 
+              type="file" 
+              ref={fileInputRef}
+              className="hidden" 
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    setAvatarPreview(reader.result);
+                  };
+                  reader.readAsDataURL(file);
+                }
+              }}
+            />
+            
+            <p className="text-[10px] text-x-blue mt-4 font-mono uppercase tracking-[0.2em] opacity-60">
+              // Profile Identity
+            </p>
+          </div>
+
         <div className="space-y-8">
           {/* Display Name */}
-          <div className="bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/50 p-6">
-            <div className="flex items-center mb-4">
+          <div className="bg-transparent border-none p-0 mb-8 group/field">
+            <div className="flex items-center mb-2 opacity-60 group-hover/field:opacity-100 transition-opacity">
               <svg
-                className="w-5 h-5 text-x-blue mr-3"
+                className="w-4 h-4 text-x-blue mr-2"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -166,30 +217,80 @@ const EditProfile = () => {
                   d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                 />
               </svg>
-              <label className="text-lg font-semibold text-x-white">
+              <label className="text-sm font-semibold text-x-blue uppercase tracking-widest">
                 Display Name
               </label>
             </div>
-            <input
-              type="text"
-              id="displayName"
-              name="displayName"
-              className="w-full p-4 bg-x-black/50 border border-x-border/30 text-x-white placeholder-x-gray rounded-xl focus:ring-2 focus:ring-x-blue focus:border-x-blue transition-all duration-200"
-              placeholder="Your display name"
-              value={formData.displayName}
-              onChange={handleChange}
-              maxLength="50"
-            />
-            <p className="text-xs text-x-gray/70 mt-2">
-              How your name appears to other developers
-            </p>
+            <div className="relative flex items-center">
+              <input
+                type="text"
+                id="displayName"
+                name="displayName"
+                className={`w-full py-2 pr-24 transition-all duration-300 outline-none rounded-lg ${
+                  isEditingDisplayName 
+                    ? "bg-white text-black border-2 border-dotted border-x-blue px-3" 
+                    : "bg-transparent border-none text-xl font-bold text-x-white cursor-default select-none pointer-events-none"
+                }`}
+                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                placeholder="Your display name"
+                value={formData.displayName}
+                onChange={handleChange}
+                maxLength="50"
+                readOnly={!isEditingDisplayName}
+              />
+              <div className="absolute right-0 flex items-center space-x-1">
+                {!isEditingDisplayName ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOriginalDisplayName(formData.displayName);
+                      setIsEditingDisplayName(true);
+                    }}
+                    className="p-2 text-x-gray/40 hover:text-x-blue hover:bg-x-blue/10 rounded-lg transition-all"
+                    title="Edit Name"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                  </button>
+                ) : (
+                  <div className="flex bg-x-dark/80 backdrop-blur-md rounded-lg border border-x-border/30 shadow-xl p-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFormData({ ...formData, displayName: originalDisplayName });
+                        setIsEditingDisplayName(false);
+                      }}
+                      className="p-1.5 text-red-400 hover:bg-red-400/10 rounded-md transition-all"
+                      title="Cancel"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                    <div className="w-px h-6 bg-x-border/30 mx-1 self-center"></div>
+                    <button
+                      type="button"
+                      onClick={() => setIsEditingDisplayName(false)}
+                      className="p-1.5 text-x-green hover:bg-x-green/10 rounded-md transition-all"
+                      title="Confirm"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+
           </div>
 
           {/* Bio */}
-          <div className="bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/50 p-6">
-            <div className="flex items-center mb-4">
+          <div className="bg-transparent border-none p-0 mb-8 group/field">
+            <div className="flex items-center mb-2 opacity-60 group-hover/field:opacity-100 transition-opacity">
               <svg
-                className="w-5 h-5 text-purple-400 mr-3"
+                className="w-4 h-4 text-purple-400 mr-2"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -201,33 +302,80 @@ const EditProfile = () => {
                   d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                 />
               </svg>
-              <label className="text-lg font-semibold text-x-white">Bio</label>
+              <label className="text-sm font-semibold text-purple-400 uppercase tracking-widest">Bio</label>
             </div>
-            <textarea
-              id="bio"
-              name="bio"
-              rows="4"
-              className="w-full p-4 bg-x-black/50 border border-x-border/30 text-x-white placeholder-x-gray rounded-xl resize-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all duration-200"
-              placeholder="Tell us about yourself, your interests, and what you're working on..."
-              value={formData.bio}
-              onChange={handleChange}
-              maxLength="500"
-            />
-            <div className="flex justify-between items-center mt-2">
-              <p className="text-xs text-x-gray/70">
-                Share your developer story
-              </p>
-              <span className="text-xs text-x-gray/70">
+            <div className="relative">
+              <textarea
+                id="bio"
+                name="bio"
+                rows="6"
+                className={`w-full py-3 pr-4 transition-all duration-300 outline-none resize-none rounded-lg ${
+                  isEditingBio 
+                    ? "bg-white text-black border-2 border-dotted border-x-blue px-3 pb-12" 
+                    : "bg-transparent border-none text-base leading-relaxed text-x-white cursor-default select-none pointer-events-none"
+                }`}
+                placeholder="Tell us about your developer journey..."
+                value={formData.bio}
+                onChange={handleChange}
+                maxLength="500"
+                readOnly={!isEditingBio}
+              />
+              <div className="absolute bottom-2 right-2 flex items-center">
+                {!isEditingBio ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOriginalBio(formData.bio);
+                      setIsEditingBio(true);
+                    }}
+                    className="p-2 text-x-gray/40 hover:text-purple-400 hover:bg-purple-400/10 rounded-lg transition-all"
+                    title="Edit Bio"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                  </button>
+                ) : (
+                  <div className="flex items-center space-x-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFormData({ ...formData, bio: originalBio });
+                        setIsEditingBio(false);
+                      }}
+                      className="p-1.5 text-red-500 hover:bg-red-500/10 rounded-md transition-all"
+                      title="Cancel"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setIsEditingBio(false)}
+                      className="p-1.5 text-x-green hover:bg-x-green/10 rounded-md transition-all"
+                      title="Confirm"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="flex justify-end mt-2 animate-fade-in">
+              <span className="text-xs text-x-gray/50 font-mono">
                 {formData.bio.length}/500
               </span>
             </div>
           </div>
 
           {/* Skills */}
-          <div className="bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/50 p-6">
-            <div className="flex items-center mb-4">
+          <div className="bg-transparent border-none p-0 mb-12 group/field">
+            <div className="flex items-center mb-4 opacity-60 group-hover/field:opacity-100 transition-opacity">
               <svg
-                className="w-5 h-5 text-x-green mr-3"
+                className="w-4 h-4 text-x-green mr-2"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -239,88 +387,119 @@ const EditProfile = () => {
                   d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
                 />
               </svg>
-              <label className="text-lg font-semibold text-x-white">
+              <label className="text-sm font-semibold text-x-green uppercase tracking-widest">
                 Skills
               </label>
             </div>
 
-            {/* Add new skill */}
-            <div className="flex items-center gap-2 mb-4 w-full">
-              <div className="flex-1 flex items-center bg-x-black/50 border border-x-border/30 rounded-full overflow-hidden">
-                <input
-                  type="text"
-                  value={newSkill}
-                  onChange={(e) => setNewSkill(e.target.value)}
-                  className="w-full p-3 bg-transparent text-x-white placeholder-x-gray border-none outline-none rounded-full"
-                  placeholder="Add a skill (e.g., JavaScript, React)"
-                  maxLength="30"
-                  onKeyPress={(e) => {
-                    if (e.key === "Enter") {
-                      handleAddSkill(e);
-                    }
-                  }}
-                />
-                <button
-                  type="button"
-                  onClick={handleAddSkill}
-                  disabled={!newSkill.trim()}
-                  className="h-full px-6 py-0 bg-x-green hover:bg-x-green/80 disabled:bg-x-green/30 text-white font-medium transition-all duration-200 disabled:cursor-not-allowed rounded-full ml-2"
-                  style={{ minHeight: "48px" }}
-                >
-                  Add
-                </button>
-              </div>
-            </div>
-
-            {/* Skills list */}
-            {formData.skills.length > 0 ? (
-              <div className="flex flex-wrap gap-2 mb-4">
-                {formData.skills.map((skill, index) => (
-                  <span
-                    key={index}
-                    className="bg-gradient-to-r from-x-blue/20 to-purple-500/20 border border-x-blue/30 text-x-blue px-3 py-2 rounded-full text-sm font-medium flex items-center backdrop-blur-sm hover:from-x-blue/30 hover:to-purple-500/30 transition-all duration-200"
+            <div className={`relative transition-all duration-300 rounded-xl ${isEditingSkills ? "bg-white p-4 border-2 border-dotted border-x-blue" : ""}`}>
+              {/* Add new skill - Only visible when editing */}
+              {isEditingSkills ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFormData({ ...formData, skills: [...originalSkills] });
+                      setIsEditingSkills(false);
+                    }}
+                    className="absolute -top-3 -right-3 bg-x-white p-1.5 rounded-full border-2 border-dotted border-x-blue text-red-500 hover:text-red-600 transition-all shadow-lg shadow-black/20 group/close"
+                    title="Close and Discard"
                   >
-                    {skill}
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveSkill(skill)}
-                      className="ml-2 text-red-400 hover:text-red-300 transition-colors"
+                    <svg className="w-4 h-4 group-hover/close:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                  <div className="flex items-center gap-2 mb-6 w-full animate-fade-in">
+                    <div className="flex-1 flex items-center bg-x-black/5 border border-x-border/30 rounded-full overflow-hidden focus-within:ring-2 focus-within:ring-x-blue transition-all">
+                      <input
+                        type="text"
+                        value={newSkill}
+                        onChange={(e) => setNewSkill(e.target.value)}
+                        className="w-full p-3 bg-transparent text-black placeholder-gray-400 border-none outline-none rounded-full text-sm font-medium"
+                        placeholder="Add a skill (e.g., React, Node)"
+                        maxLength="30"
+                        onKeyPress={(e) => {
+                          if (e.key === "Enter") {
+                            handleAddSkill(e);
+                          }
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={handleAddSkill}
+                        disabled={!newSkill.trim()}
+                        className="px-6 py-2 bg-[tomato] hover:bg-[#ff4500] disabled:opacity-50 text-white font-bold transition-all rounded-full m-1 shadow-lg shadow-tomato/20"
+                      >
+                        Add
+                      </button>
+                    </div>
+                  </div>
+                </>
+              ) : null}
+
+              {/* Skills list */}
+              <div className="flex flex-wrap gap-2 mb-2">
+                {formData.skills.length > 0 ? (
+                  formData.skills.map((skill, index) => (
+                    <span
+                      key={index}
+                      className={`px-3 py-1.5 rounded-full text-sm font-bold flex items-center transition-all ${
+                        isEditingSkills 
+                          ? "bg-x-blue text-white shadow-md scale-105" 
+                          : "bg-x-blue/10 border border-x-blue/20 text-x-blue hover:bg-x-blue/20"
+                      }`}
+                      style={{ fontFamily: "'Space Grotesk', sans-serif" }}
                     >
-                      ×
-                    </button>
-                  </span>
-                ))}
+                      {skill}
+                      {isEditingSkills && (
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveSkill(skill)}
+                          className="ml-2 text-white/70 hover:text-white transition-colors"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      )}
+                    </span>
+                  ))
+                ) : (
+                  <p className="text-sm text-x-gray/50 italic animate-pulse">No skills added yet...</p>
+                )}
               </div>
-            ) : (
-              <div className="bg-x-dark/20 border border-x-border/20 rounded-xl p-4 text-center mb-4">
-                <svg
-                  className="w-8 h-8 text-x-gray/50 mx-auto mb-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                  />
-                </svg>
-                <p className="text-sm text-x-gray italic">
-                  No skills added yet
-                </p>
-              </div>
+
+              {/* Action Icons - Only show toggle icon when not editing */}
+              {!isEditingSkills && (
+                <div className="absolute bottom-0 right-0 flex items-center">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOriginalSkills([...formData.skills]);
+                      setIsEditingSkills(true);
+                    }}
+                    className="p-2 text-x-gray/40 hover:text-x-green hover:bg-x-green/10 rounded-lg transition-all"
+                    title="Add/Edit Skills"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                  </button>
+                </div>
+              )}
+            </div>
+            {isEditingSkills && (
+              <p className="text-xs text-x-gray/50 mt-4 font-mono">
+                // Showcase your technical expertise
+              </p>
             )}
-            <p className="text-xs text-x-gray/70">
-              Showcase your technical expertise
-            </p>
           </div>
 
           {/* GitHub Link */}
-          <div className="bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/50 p-6">
-            <div className="flex items-center mb-4">
+          <div className="bg-transparent border-none p-0 mb- group/field">
+            <div className="flex items-center mb-2 opacity-60 group-hover/field:opacity-100 transition-opacity">
               <svg
-                className="w-5 h-5 text-purple-400 mr-3"
+                className="w-4 h-4 text-purple-400 mr-2"
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >
@@ -330,21 +509,73 @@ const EditProfile = () => {
                   clipRule="evenodd"
                 />
               </svg>
-              <label className="text-lg font-semibold text-x-white">
+              <label className="text-sm font-semibold text-purple-400 uppercase tracking-widest">
                 GitHub Profile
               </label>
             </div>
-            <input
-              type="url"
-              id="githubLink"
-              name="githubLink"
-              className="w-full p-4 bg-x-black/50 border border-x-border/30 text-x-white placeholder-x-gray rounded-xl focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all duration-200"
-              placeholder="https://github.com/yourusername"
-              value={formData.githubLink}
-              onChange={handleChange}
-            />
-            <p className="text-xs text-x-gray/70 mt-2">
-              Showcase your projects and contributions
+            <div className="relative flex items-center">
+              <input
+                type="url"
+                id="githubLink"
+                name="githubLink"
+                className={`w-full py-2 pr-24 transition-all duration-300 outline-none rounded-lg ${
+                  isEditingGithub 
+                    ? "bg-white text-black border-2 border-dotted border-x-blue px-3" 
+                    : "bg-transparent border-none text-base text-x-white opacity-80 cursor-default select-none pointer-events-none"
+                }`}
+                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                placeholder="https://github.com/yourusername"
+                value={formData.githubLink}
+                onChange={handleChange}
+                readOnly={!isEditingGithub}
+              />
+              <div className="absolute right-0 flex items-center">
+                {!isEditingGithub ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOriginalGithub(formData.githubLink);
+                      setIsEditingGithub(true);
+                    }}
+                    className="p-2 text-x-gray/40 hover:text-purple-400 hover:bg-purple-400/10 rounded-lg transition-all"
+                    title="Edit Link"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                  </button>
+                ) : (
+                  <div className="flex bg-x-dark/80 backdrop-blur-md rounded-lg border border-x-border/30 shadow-xl p-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFormData({ ...formData, githubLink: originalGithub });
+                        setIsEditingGithub(false);
+                      }}
+                      className="p-1.5 text-red-400 hover:bg-red-400/10 rounded-md transition-all"
+                      title="Cancel"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                    <div className="w-px h-6 bg-x-border/30 mx-1 self-center"></div>
+                    <button
+                      type="button"
+                      onClick={() => setIsEditingGithub(false)}
+                      className="p-1.5 text-x-green hover:bg-x-green/10 rounded-md transition-all"
+                      title="Confirm"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+            <p className="text-xs text-x-gray/50 mt-2 font-mono">
+              // Showcase your projects and contributions
             </p>
           </div>
         </div>

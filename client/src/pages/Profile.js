@@ -466,12 +466,10 @@ const Profile = () => {
                   <div className="absolute right-0 mt-2 w-56 bg-x-dark/95 backdrop-blur-xl border border-x-border/50 rounded-2xl shadow-3xl z-[100] py-2 animate-fade-in origin-top-right overflow-hidden shadow-black/50">
                     <Link
                       to="/edit-profile"
-                      className="flex items-center space-x-3 px-4 py-3 text-sm text-x-white hover:bg-x-blue/10 transition-colors group"
+                      className="flex items-center px-4 py-3 text-sm text-x-white hover:bg-x-blue/10 transition-colors group"
+                      style={{ fontFamily: "'Space Grotesk', sans-serif" }}
                       onClick={() => setMenuOpen(false)}
                     >
-                      <svg className="w-4 h-4 text-x-blue group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                      </svg>
                       <span className="font-medium">Edit Profile</span>
                     </Link>
                     
