@@ -78,6 +78,9 @@ router.post(
           email: user.email,
           displayName: user.displayName,
           avatar: user.avatar,
+          dob: user.dob,
+          gender: user.gender,
+          nationality: user.nationality,
           savedPosts: user.savedPosts || [],
         },
       });
@@ -133,6 +136,9 @@ router.post(
           email: user.email,
           displayName: user.displayName,
           avatar: user.avatar,
+          dob: user.dob,
+          gender: user.gender,
+          nationality: user.nationality,
           savedPosts: user.savedPosts || [],
         },
       });
@@ -155,6 +161,9 @@ router.get("/me", auth, async (req, res) => {
       skills: req.user.skills,
       githubLink: req.user.githubLink,
       avatar: req.user.avatar,
+      dob: req.user.dob,
+      gender: req.user.gender,
+      nationality: req.user.nationality,
       savedPosts: req.user.savedPosts || [],
     });
   } catch (error) {

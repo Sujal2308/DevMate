@@ -43,6 +43,19 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    dob: {
+      type: Date,
+      default: null,
+    },
+    gender: {
+      type: String,
+      enum: ["Male", "Female", "Non-binary", "Other", "Prefer not to say"],
+      default: "Prefer not to say",
+    },
+    nationality: {
+      type: String,
+      default: "",
+    },
     avatar: {
       type: String,
       default: "",

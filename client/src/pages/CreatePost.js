@@ -153,30 +153,13 @@ const CreatePost = () => {
           )}
 
           <div className="mb-6">
-            <label
-              htmlFor="content"
-              className="block text-sm font-bold mb-3"
-            >
-              <span 
-                className="text-xl tracking-tight" 
-                style={{ 
-                  color: "#A855F7",
-                  fontFamily: "'Space Grotesk', sans-serif",
-                  fontWeight: 700 
-                }}
-              >
-                What's on your mind? *
-              </span>
-            </label>
             <textarea
               id="content"
               name="content"
               rows="8"
               required
               className="w-full p-6 bg-[#000000] border border-x-border text-x-white placeholder-x-gray rounded-xl resize-none focus:ring-2 focus:ring-x-blue focus:border-x-blue transition-colors text-lg leading-relaxed font-mono placeholder:font-mono"
-              placeholder={
-                "• Share your thoughts, ideas, experiences, or questions with the DevMate community...\n• Pro tip: You can add code snippets below to enhance your post!"
-              }
+              placeholder="Share your thoughts, ideas, experiences, or questions with the DevMate community..."
               value={formData.content}
               onChange={handleChange}
               maxLength="2000"

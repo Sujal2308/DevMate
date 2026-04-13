@@ -151,6 +151,9 @@ router.get("/:username", async (req, res) => {
         isPrivate: user.isPrivate,
         followersCount,
         followingCount,
+        dob: user.dob,
+        gender: user.gender,
+        nationality: user.nationality,
         projects: user.projects || [],
         // Only include actual followers/following data if requested
         ...(req.query.includeFollowersData === "true" && {
@@ -216,12 +219,15 @@ router.put(
         return res.status(403).json({ message: "Access denied" });
       }
 
-      const { displayName, bio, skills, githubLink, avatar } = req.body;
+      const { displayName, bio, skills, githubLink, avatar, dob, gender, nationality } = req.body;
 
       const updateData = {};
       if (displayName !== undefined) updateData.displayName = displayName;
       if (bio !== undefined) updateData.bio = bio;
       if (skills !== undefined) updateData.skills = skills;
+      if (dob !== undefined) updateData.dob = dob;
+      if (gender !== undefined) updateData.gender = gender;
+      if (nationality !== undefined) updateData.nationality = nationality;
       if (githubLink !== undefined) {
         // Handle empty GitHub link - set to empty string if cleared
         updateData.githubLink = githubLink || "";
@@ -263,6 +269,9 @@ router.put(
         displayName: user.displayName,
         bio: user.bio,
         skills: user.skills,
+        dob: user.dob,
+        gender: user.gender,
+        nationality: user.nationality,
         githubLink: user.githubLink,
         avatar: user.avatar,
         projects: user.projects || [],

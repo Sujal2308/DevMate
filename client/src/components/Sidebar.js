@@ -126,7 +126,7 @@ const Sidebar = () => {
   return (
     <>
       {/* Floating Icon Bar - Desktop Only */}
-      <div className="hidden lg:flex fixed left-4 top-1/2 transform -translate-y-1/2 z-50 bg-black/90 backdrop-blur-md border border-x-border/30 rounded-2xl p-3 shadow-2xl">
+      <div className="hidden lg:flex fixed left-4 top-1/2 transform -translate-y-1/2 z-50 bg-black/90 backdrop-blur-md rounded-2xl p-3 shadow-2xl">
         <div className="flex flex-col items-center space-y-4">
           {/* Navigation Icons */}
           {navItems.map((item) => {
@@ -135,7 +135,7 @@ const Sidebar = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`relative p-3 rounded-xl transition-all duration-300 hover:scale-110 group ${
+                className={`relative p-3 rounded-full transition-all duration-300 hover:scale-110 group ${
                   isActive
                     ? "bg-x-blue text-white"
                     : "text-x-gray hover:text-white hover:bg-white/10"
@@ -160,7 +160,7 @@ const Sidebar = () => {
       <div className="hidden lg:flex fixed left-4 bottom-8 z-50">
         <button
           onClick={logout}
-          className="flex items-center space-x-3 px-4 py-3 rounded-xl bg-black/90 backdrop-blur-md border border-x-border/30 text-x-gray hover:text-red-500 hover:bg-red-500/10 transition-all duration-300 shadow-2xl group"
+          className="flex items-center space-x-3 px-4 py-3 rounded-full bg-black/90 backdrop-blur-md text-x-gray hover:text-red-500 hover:bg-red-500/10 transition-all duration-300 shadow-2xl group"
         >
           <svg
             className="w-5 h-5"

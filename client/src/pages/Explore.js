@@ -9,6 +9,7 @@ import React, {
 import { Link } from "react-router-dom";
 import axios from "axios";
 import ShimmerEffect from "../components/ShimmerEffect";
+import SearchComponent from "../components/ui/animated-glowing-search-bar";
 
 // Window dimensions singleton to avoid repeated calculations
 const useWindowDimensions = () => {
@@ -315,7 +316,7 @@ const Explore = () => {
       {/* Search and Filter Controls - Fixed position on mobile when keyboard active */}
       <div
         ref={searchContainerRef}
-        className={`card search-control-panel p-2 sm:p-3 lg:p-6 mb-1 sm:mb-2 lg:mb-4 bg-gradient-to-r from-x-dark/50 to-x-dark/30 md:backdrop-blur-sm backdrop-blur-none border border-x-border/50 mt-4-mobile overflow-x-hidden max-w-full`}
+        className={`search-control-panel p-2 sm:p-3 lg:p-6 mb-1 sm:mb-2 lg:mb-4 mt-4-mobile overflow-x-hidden max-w-full`}
         style={{
           zIndex: isKeyboardOpen ? 50 : "auto",
           position: isKeyboardOpen ? "sticky" : "relative",
@@ -326,14 +327,13 @@ const Explore = () => {
         <div className="flex flex-col gap-2 sm:gap-3 lg:gap-4">
           <div className="flex flex-col gap-3 sm:gap-4 lg:gap-6">
             <div className="w-full">
-              {!isMobile && (
-                <label
-                  htmlFor="search"
-                  className="block text-sm font-medium text-x-white mb-2 sm:mb-3"
-                >
-                  🔍 Search by name or username
-                </label>
-              )}
+              <label
+                htmlFor="search"
+                className="block text-sm font-bold text-x-white mb-2 sm:mb-3"
+                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+              >
+                Search by name or username
+              </label>
               <div
                 className={
                   !isMobile
@@ -342,13 +342,9 @@ const Explore = () => {
                 }
               >
                 {/* Large Search Bar Row */}
-                <div className="relative w-full flex items-center">
-                  <input
+                <div className="w-full">
+                  <SearchComponent
                     ref={searchInputRef}
-                    type="text"
-                    id="search"
-                    className="w-full bg-x-black/60 border border-x-border text-x-white placeholder-x-gray rounded-xl px-6 py-4 pr-16 text-lg font-mono transform-gpu animated-gradient-border focus:pr-16 focus:outline-none focus:ring-0 focus:border-x-border autofill:!bg-x-black/60"
-                    placeholder="Search developers..."
                     value={searchTerm}
                     onChange={handleSearchChange}
                     onFocus={handleSearchFocus}
@@ -359,70 +355,14 @@ const Explore = () => {
                         executeSearch();
                       }
                     }}
-                    autoComplete="on"
+                    clearSearch={() => setSearchTerm("")}
+                    placeholder="Search developers..."
                   />
-                  {/* Clear (cross) icon inside search bar */}
-                  {searchTerm && (
-                    <button
-                      type="button"
-                      onClick={() => setSearchTerm("")}
-                      className="absolute right-16 top-1/2 -translate-y-1/2 text-x-gray hover:text-x-blue focus:outline-none text-2xl px-2"
-                      tabIndex={0}
-                      aria-label="Clear search"
-                      style={{ zIndex: 2 }}
-                    >
-                      ×
-                    </button>
-                  )}
-                  {/* Small search button */}
-                  <button
-                    type="button"
-                    onClick={executeSearch}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 bg-x-blue hover:bg-x-green text-white rounded-full p-2 shadow-md focus:outline-none transition-colors"
-                    style={{
-                      width: "2.2rem",
-                      height: "2.2rem",
-                      minWidth: "2.2rem",
-                      zIndex: 1,
-                    }}
-                    aria-label="Search"
-                  >
-                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24">
-                      <circle
-                        cx="11"
-                        cy="11"
-                        r="7"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      />
-                      <path
-                        d="M20 20L16.65 16.65"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                  </button>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        {/* Mobile-only tip below the search bar */}
-        {isMobile && (
-          <div
-            className="mt-2 text-xs text-x-gray rounded-lg px-3 py-2 flex items-center gap-2 animate-fade-in"
-            style={{ background: "none", border: "none" }}
-          >
-            <span role="img" aria-label="tip">
-              💡
-            </span>
-            <span>
-              Tip: Use the search bar to find developers by name or username.
-              Tap a profile to connect!
-            </span>
-          </div>
-        )}
       </div>
 
       {/* Results - Fixed dimensions on mobile */}

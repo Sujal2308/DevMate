@@ -199,7 +199,12 @@ const News = () => {
     <div className="min-h-screen bg-x-black text-x-white font-sans">
       <div className="max-w-4xl mx-auto p-4 md:p-6">
         <div className="mb-6 md:mb-8">
-          <h1 className="text-xl md:text-2xl font-bold text-red-500 mb-2 font-sans">
+          <h1 
+            className="text-3xl md:text-5xl font-black text-x-white tracking-tighter mb-4" 
+            style={{ 
+              fontFamily: "'Space Grotesk', sans-serif"
+            }}
+          >
             Developer News
           </h1>
           <p className="text-x-gray text-sm md:text-base">
@@ -212,12 +217,15 @@ const News = () => {
           {news.slice(0, visibleCount).map((article) => (
             <article
               key={article.id}
-              className="bg-x-dark/30 backdrop-blur-md border border-x-border/50 rounded-lg p-4 md:p-6 hover:border-x-blue/50 hover:bg-x-dark/40 transition-all duration-300 group cursor-pointer shadow-lg"
+              className="bg-black border border-x-blue/20 rounded-none p-3 md:p-4 hover:border-x-blue/50 hover:bg-x-dark/20 transition-all duration-300 group cursor-pointer shadow-2xl"
               onClick={() => article.url !== "#" && window.open(article.url, "_blank")}
             >
               <div className="flex items-start justify-between mb-3 md:mb-4">
                 <div className="flex-1">
-                  <h2 className="text-base md:text-lg font-semibold text-x-white group-hover:text-x-blue transition-colors mb-2 line-clamp-2">
+                  <h2 
+                    className="text-lg md:text-xl font-bold text-x-white group-hover:text-x-blue transition-colors mb-2 line-clamp-2"
+                    style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                  >
                     {article.title}
                   </h2>
                   <p className="text-x-gray text-xs md:text-sm mb-3 line-clamp-3">
@@ -266,7 +274,7 @@ const News = () => {
               {article.tag_list && article.tag_list.length > 0 && (
                 <div className="flex flex-wrap gap-1 md:gap-2 mt-3 md:mt-4">
                   {article.tag_list.slice(0, 3).map((tag, index) => (
-                    <span key={index} className="px-2 py-1 bg-x-blue/10 text-x-blue text-xs rounded-full border border-x-blue/20">#{tag}</span>
+                    <span key={index} className="px-2 py-1 bg-yellow-400/10 text-yellow-400 text-xs rounded-none border border-yellow-400/20">#{tag}</span>
                   ))}
                 </div>
               )}

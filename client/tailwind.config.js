@@ -35,6 +35,7 @@ module.exports = {
         "fade-in-out": "fadeInOut 2s cubic-bezier(0.4,0,0.2,1)",
         "bounce-in": "bounceIn 1s cubic-bezier(0.68,-0.55,0.27,1.55)",
         "slide-in": "slideIn 1.2s cubic-bezier(0.4,0,0.2,1)",
+        "spin-slow": "spin 8s linear infinite",
       },
       keyframes: {
         float: {

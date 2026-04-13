@@ -254,23 +254,7 @@ const Profile = () => {
     }
   };
 
-  const [bioExpanded, setBioExpanded] = useState(false);
   const bioRef = useRef(null);
-  const [showViewMore, setShowViewMore] = useState(false);
-
-  useEffect(() => {
-    if (profileData && profileData.user && bioRef.current) {
-      const lineHeight = parseFloat(
-        getComputedStyle(bioRef.current).lineHeight
-      );
-      const maxHeight = lineHeight * 3;
-      if (bioRef.current.scrollHeight > maxHeight) {
-        setShowViewMore(true);
-      } else {
-        setShowViewMore(false);
-      }
-    }
-  }, [profileData]);
 
   // Function to load more posts
   const loadMorePosts = async () => {
@@ -456,8 +440,11 @@ const Profile = () => {
                 {/* Dropdown Menu */}
                 {menuOpen && (
                   <div className="absolute right-0 mt-2 w-56 bg-x-dark/95 backdrop-blur-xl border border-x-border/50 rounded-2xl shadow-3xl z-[100] py-2 animate-fade-in origin-top-right overflow-hidden shadow-black/50">
-                    <Link to="/edit-profile" className="flex items-center px-4 py-3 text-sm text-x-white hover:bg-white/5 transition-colors font-space" onClick={() => setMenuOpen(false)}>
-                      Edit Profile
+                    <Link to="/edit-profile" className="flex items-center px-4 py-3 text-sm text-x-white hover:bg-white/5 transition-colors font-space gap-3" onClick={() => setMenuOpen(false)}>
+                      <svg className="w-4 h-4 text-x-blue group-hover:scale-110 transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                      </svg>
+                      <span className="truncate">Edit Profile</span>
                     </Link>
                     <Link to="/settings" className="flex items-center space-x-3 px-4 py-3 text-sm text-x-white hover:bg-white/5 transition-colors group" onClick={() => setMenuOpen(false)}>
                       <svg className="w-4 h-4 text-x-blue group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -543,23 +530,10 @@ const Profile = () => {
               <div className="relative">
                 <p
                   ref={bioRef}
-                  className={`text-x-white leading-relaxed transition-all duration-200 ${
-                    bioExpanded
-                      ? ""
-                      : "line-clamp-3 max-h-[4.5em] overflow-hidden"
-                  } md:line-clamp-none md:max-h-none`}
-                  style={{ WebkitLineClamp: bioExpanded ? "unset" : 3 }}
+                  className="text-x-white leading-relaxed"
                 >
                   {profileUser.bio}
                 </p>
-                {showViewMore && (
-                  <button
-                    className="mt-2 text-x-blue underline text-sm block md:hidden"
-                    onClick={() => setBioExpanded((v) => !v)}
-                  >
-                    {bioExpanded ? "View Less" : "View More"}
-                  </button>
-                )}
               </div>
             )}
           </div>
@@ -567,7 +541,7 @@ const Profile = () => {
           {/* Stats Row */}
           <div className="mt-8 flex items-center justify-between border-t border-b border-white/20 py-6 px-4">
             <div className="flex-1 text-center group cursor-default">
-              <div className="text-2xl font-bold text-cyan-400 font-space leading-tight">
+              <div className="text-4xl font-bold text-cyan-400 font-space leading-tight">
                 {profileData.pagination?.total || 0}
               </div>
               <div className="text-[10px] text-x-gray uppercase tracking-[0.2em] font-space mt-1.5 opacity-60 group-hover:opacity-100 transition-opacity">
@@ -579,7 +553,7 @@ const Profile = () => {
               to={`/profile/${profileUser.username}/followers`}
               className="flex-1 text-center group transition-transform active:scale-95 border-l-2 border-r-2 border-white/20"
             >
-              <div className="text-2xl font-bold text-emerald-400 font-space leading-tight group-hover:text-x-blue transition-colors">
+              <div className="text-4xl font-bold text-emerald-400 font-space leading-tight group-hover:text-x-blue transition-colors">
                 {profileUser.followersCount ?? (profileUser.followers?.length || 0)}
               </div>
               <div className="text-[10px] text-x-gray uppercase tracking-[0.2em] font-space mt-1.5 opacity-60 group-hover:opacity-100 group-hover:text-x-blue transition-all">
@@ -591,7 +565,7 @@ const Profile = () => {
               to={`/profile/${profileUser.username}/following`}
               className="flex-1 text-center group transition-transform active:scale-95"
             >
-              <div className="text-2xl font-bold text-fuchsia-400 font-space leading-tight group-hover:text-x-blue transition-colors">
+              <div className="text-4xl font-bold text-fuchsia-400 font-space leading-tight group-hover:text-x-blue transition-colors">
                 {profileUser.followingCount ?? (profileUser.following?.length || 0)}
               </div>
               <div className="text-[10px] text-x-gray uppercase tracking-[0.2em] font-space mt-1.5 opacity-60 group-hover:opacity-100 group-hover:text-x-blue transition-all">
@@ -609,25 +583,25 @@ const Profile = () => {
             {/* Skills Box */}
             <button 
               onClick={() => setShowSkills(!showSkills)}
-              className={`flex-1 bg-black border ${showSkills ? 'border-solid border-x-blue shadow-[0_0_15px_rgba(29,155,240,0.3)]' : 'border-dashed border-white/20'} rounded-none p-4 sm:p-6 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:border-solid hover:border-white/60 group`}
+              className={`flex-1 bg-black border ${showSkills ? 'border-solid border-x-blue shadow-[0_0_15px_rgba(29,155,240,0.3)]' : 'border-dashed border-white/20'} rounded-none p-4 sm:p-6 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:bg-x-blue hover:border-solid hover:border-x-blue group`}
             >
               <img src="/icons/skills.png" alt="Skills" className="w-10 h-10 sm:w-12 sm:h-12 object-contain transition-transform group-hover:scale-110" />
-              <span className={`text-[10px] sm:text-xs font-bold ${showSkills ? 'text-x-blue' : 'text-x-white'} font-space uppercase tracking-[max(0.2em,2px)] opacity-70 group-hover:opacity-100`}>Skills</span>
+              <span className={`text-[10px] sm:text-xs font-bold ${showSkills ? 'text-x-blue' : 'text-x-white'} group-hover:text-white font-space uppercase tracking-[max(0.2em,2px)] opacity-70 group-hover:opacity-100`}>Skills</span>
             </button>
 
             {/* Projects Box */}
             <Link 
               to={`/profile/${profileUser.username}/projects`}
-              className="flex-1 bg-black border border-dashed border-white/20 rounded-none p-4 sm:p-6 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:border-solid hover:border-white/60 group"
+              className="flex-1 bg-black border border-dashed border-white/20 rounded-none p-4 sm:p-6 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:bg-x-blue hover:border-solid hover:border-x-blue group"
             >
               <img src="/icons/projects.png" alt="Projects" className="w-10 h-10 sm:w-12 sm:h-12 object-contain transition-transform group-hover:scale-110" />
-              <span className="text-[10px] sm:text-xs font-bold text-x-white font-space uppercase tracking-[max(0.2em,2px)] opacity-70 group-hover:opacity-100">Projects</span>
+              <span className="text-[10px] sm:text-xs font-bold text-x-white group-hover:text-white font-space uppercase tracking-[max(0.2em,2px)] opacity-70 group-hover:opacity-100">Projects</span>
             </Link>
 
             {/* Socials Box */}
-            <div className="flex-1 bg-black border border-dashed border-white/20 rounded-none p-4 sm:p-6 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:border-solid hover:border-white/60 group">
+            <div className="flex-1 bg-black border border-dashed border-white/20 rounded-none p-4 sm:p-6 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:bg-x-blue hover:border-solid hover:border-x-blue group">
               <img src="/icons/links.png" alt="Socials" className="w-10 h-10 sm:w-12 sm:h-12 object-contain transition-transform group-hover:scale-110" />
-              <span className="text-[10px] sm:text-xs font-bold text-x-white font-space uppercase tracking-[max(0.2em,2px)] opacity-70 group-hover:opacity-100">Socials</span>
+              <span className="text-[10px] sm:text-xs font-bold text-x-white group-hover:text-white font-space uppercase tracking-[max(0.2em,2px)] opacity-70 group-hover:opacity-100">Socials</span>
             </div>
           </div>
 
@@ -635,8 +609,8 @@ const Profile = () => {
           {showSkills && (
             <div className="mb-8 p-6 bg-black border border-x-border/50 animate-fade-in">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold font-space uppercase tracking-widest text-x-white">Techncial Skills</h3>
-                <button onClick={() => setShowSkills(false)} className="text-x-gray hover:text-white transition-colors">
+                <h3 className="text-xl font-bold font-space tracking-widest text-x-white">Technical Skills</h3>
+                <button onClick={() => setShowSkills(false)} className="text-red-500 hover:text-red-400 transition-colors">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
@@ -648,44 +622,44 @@ const Profile = () => {
                   profileUser.skills.map((skill, index) => (
                     <div 
                       key={index} 
-                      className="group flex items-center bg-x-blue/10 border border-x-blue/30 px-3 py-1 text-sm font-mono text-x-blue transition-all hover:bg-x-blue/20"
+                      className="group flex items-center bg-x-blue border border-x-blue/30 px-4 py-1.5 rounded-full text-sm font-space text-white transition-all hover:bg-x-blue/80 shadow-lg shadow-x-blue/10"
                     >
-                      {skill}
-                      {isOwnProfile && (
-                        <button 
-                          onClick={() => handleRemoveSkill(skill)}
-                          className="ml-2 opacity-0 group-hover:opacity-100 text-x-blue hover:text-red-500 transition-all"
-                        >
-                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        </button>
-                      )}
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-x-gray font-mono italic opacity-60">No skills added yet...</p>
-                )}
-              </div>
-
-              {isOwnProfile && (
-                <form onSubmit={handleAddSkill} className="flex gap-2">
-                  <input
-                    type="text"
-                    placeholder="Enter new skill..."
-                    className="flex-1 bg-white border border-x-border p-2 text-black text-sm focus:border-x-blue outline-none font-space transition-colors placeholder:text-gray-400"
-                    value={newSkill}
-                    onChange={(e) => setNewSkill(e.target.value)}
-                  />
-                  <button 
-                    type="submit" 
-                    disabled={skillSubmitting}
-                    className="bg-x-blue text-white px-4 py-1 font-bold uppercase tracking-widest text-[10px] hover:bg-x-blue/80 transition-colors disabled:opacity-50"
-                  >
-                    ADD
-                  </button>
-                </form>
+                    {skill}
+                    {isOwnProfile && (
+                      <button 
+                        onClick={() => handleRemoveSkill(skill)}
+                        className="ml-2 opacity-70 group-hover:opacity-100 text-white/70 hover:text-white transition-all"
+                      >
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    )}
+                  </div>
+                ))
+              ) : (
+                <p className="text-x-gray font-space italic opacity-60">No skills added yet...</p>
               )}
+            </div>
+
+            {isOwnProfile && (
+              <form onSubmit={handleAddSkill} className="flex gap-2">
+                <input
+                  type="text"
+                  placeholder="Enter new skill..."
+                  className="flex-1 bg-white border border-x-border p-2 text-black text-sm focus:border-x-blue outline-none font-space transition-colors placeholder:text-gray-400"
+                  value={newSkill}
+                  onChange={(e) => setNewSkill(e.target.value)}
+                />
+                <button 
+                  type="submit" 
+                  disabled={skillSubmitting}
+                  className="bg-x-blue text-white px-4 py-1 font-bold tracking-widest text-[11px] hover:bg-x-blue/80 transition-colors disabled:opacity-50"
+                >
+                  Add
+                </button>
+              </form>
+            )}
             </div>
           )}
 
@@ -719,6 +693,16 @@ const Profile = () => {
                   }`}
                 >
                   Activity
+                </button>
+                <button
+                  onClick={() => setActiveTab("about")}
+                  className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors ${
+                    activeTab === "about"
+                      ? "border-x-blue text-x-blue"
+                      : "border-transparent text-x-gray hover:text-x-white hover:border-x-border"
+                  }`}
+                >
+                  About
                 </button>
               </nav>
             </div>
@@ -893,6 +877,52 @@ const Profile = () => {
               )}
             </div>
             )
+          )}
+          {activeTab === "about" && (
+            <div className="bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/30 p-8 animate-fade-in mb-8">
+              <div className="flex items-center justify-start mb-8 border-b border-x-border/30 pb-4">
+                <h3 
+                  className="text-3xl md:text-4xl font-black text-x-white tracking-tighter"
+                  style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                >
+                  About Person
+                </h3>
+              </div>
+              
+              <div className="space-y-6 font-space">
+                <div>
+                  <h4 className="text-x-blue font-bold uppercase tracking-widest text-xs mb-2">Full Name</h4>
+                  <p className="text-x-white text-lg">{profileUser.displayName || profileUser.username}</p>
+                </div>
+
+                <div>
+                  <h4 className="text-x-blue font-bold uppercase tracking-widest text-xs mb-2">Biography</h4>
+                  <p className="text-x-white leading-relaxed">{profileUser.bio || "No biography provided."}</p>
+                </div>
+
+                <div>
+                  <h4 className="text-x-blue font-bold uppercase tracking-widest text-xs mb-2">Email Identity</h4>
+                  <p className="text-x-white text-lg">{profileUser.email || (isOwnProfile ? user.email : "Email not public")}</p>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                  <div>
+                    <h4 className="text-x-blue font-bold uppercase tracking-widest text-xs mb-2">Gender</h4>
+                    <p className="text-x-white text-lg">{profileUser.gender || "Not specified"}</p>
+                  </div>
+                  <div>
+                    <h4 className="text-x-blue font-bold uppercase tracking-widest text-xs mb-2">Date of Birth</h4>
+                    <p className="text-x-white text-lg">
+                      {profileUser.dob ? new Date(profileUser.dob).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : "Not specified"}
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="text-x-blue font-bold uppercase tracking-widest text-xs mb-2">Nationality</h4>
+                    <p className="text-x-white text-lg">{profileUser.nationality || "Not specified"}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           )}
         </>
       ) : (
