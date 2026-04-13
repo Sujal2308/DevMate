@@ -196,9 +196,7 @@ const EditProfile = () => {
               }}
             />
             
-            <p className="text-[10px] text-x-blue mt-4 font-mono uppercase tracking-[0.2em] opacity-60">
-              // Profile Identity
-            </p>
+
           </div>
 
         <div className="space-y-8">
@@ -489,11 +487,7 @@ const EditProfile = () => {
                 </div>
               )}
             </div>
-            {isEditingSkills && (
-              <p className="text-xs text-x-gray/50 mt-4 font-mono">
-                // Showcase your technical expertise
-              </p>
-            )}
+
           </div>
 
           {/* GitHub Link */}
@@ -575,9 +569,7 @@ const EditProfile = () => {
                 )}
               </div>
             </div>
-            <p className="text-xs text-x-gray/50 mt-2 font-mono">
-              // Showcase your projects and contributions
-            </p>
+
           </div>
         </div>
 
