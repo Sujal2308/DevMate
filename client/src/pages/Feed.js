@@ -190,15 +190,14 @@ const Feed = () => {
         {/* Mobile Branded Header */}
         <h1 
           className="flex sm:hidden items-center gap-2 ml-3"
-          style={{ fontFamily: "'Space Grotesk', sans-serif" }}
         >
           <img 
             src="/icons/puzzle.png" 
             alt="DevMate" 
             className="w-8 h-8 object-contain"
           />
-          <span className="text-2xl font-black text-x-white tracking-tighter">
-            devmate
+          <span className="text-2xl font-normal text-x-white lobster-regular">
+            DevMate
           </span>
         </h1>
 

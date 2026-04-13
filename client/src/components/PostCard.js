@@ -425,9 +425,6 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
                 post.author?.username ||
                 "Unknown User"}
             </Link>
-            <p className="text-xs sm:text-sm text-x-gray truncate mt-1">
-              posted on : {new Date(post.createdAt).toLocaleDateString()}
-            </p>
           </div>
         </div>
         {/* Delete Icon Button for Post Author - Top Right */}
@@ -715,6 +712,16 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
             )}
           </div>
         )}
+      </div>
+
+      {/* Posted Date at the end */}
+      <div className="flex justify-end px-4 mb-2">
+           <p className="text-[10px] sm:text-xs text-x-gray/60 font-medium tracking-wide">
+             posted on : {(() => {
+               const d = new Date(post.createdAt);
+               return `${String(d.getDate()).padStart(2, '0')}-${String(d.getMonth() + 1).padStart(2, '0')}-${d.getFullYear()}`;
+             })()}
+           </p>
       </div>
 
       {/* Post Actions */}

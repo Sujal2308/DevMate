@@ -1362,3 +1362,11 @@ body::-webkit-scrollbar-thumb:hover {
 .font-space {
   font-family: 'Space Grotesk', sans-serif !important;
 }
+
+/* Hide default date picker icons */
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-clear-button {
+  display: none;
+  -webkit-appearance: none;
+}

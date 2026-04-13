@@ -11,6 +11,7 @@ const EditProfile = () => {
     bio: user?.bio || "",
     gender: user?.gender || "Male",
     nationality: user?.nationality || "",
+    dob: user?.dob ? new Date(user.dob).toISOString().split('T')[0] : "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -35,6 +36,7 @@ const EditProfile = () => {
         bio: user.bio || "",
         gender: user.gender || "Male",
         nationality: user.nationality || "",
+        dob: user.dob ? new Date(user.dob).toISOString().split('T')[0] : "",
       });
       setAvatarPreview(user.avatar || null);
     }
