@@ -368,13 +368,8 @@ const Profile = () => {
   const { user: profileUser, posts } = profileData;
 
   // Pagination calculations
-  const totalPosts = profileData?.pagination?.total || posts.length;
   const currentPosts = posts; // No slicing needed since we're using server-side pagination
 
-  const totalLikes = posts.reduce(
-    (total, post) => total + post.likes.length,
-    0
-  );
 
   // Determine privacy: show only card if private and not owner/follower
   const isPrivate = profileUser.isPrivate;
