@@ -105,37 +105,34 @@ const CreatePost = () => {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto py-2 sm:py-4 lg:py-8 px-3 sm:px-4 lg:px-6 pb-20 lg:pb-8 bg-gradient-to-br from-x-dark/10 to-x-dark/5">
-      {/* Header Section */}
-      <div className="mb-4 sm:mb-6 lg:mb-8 ml-4 sm:ml-6">
-        <h1
-          className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 flex items-center gap-3"
-          style={{
-            fontFamily:
-              '"Fira Code", "Monaco", "Menlo", "Ubuntu Mono", "Consolas", "Courier New", monospace',
-          }}
-        >
-          <span className="text-x-white font-bold">
-            Create
-          </span>
-          <img
-            src="/icons/compose.png"
-            alt="Compose"
-            className="w-8 h-8 sm:w-10 sm:h-10 object-contain"
-          />
-        </h1>
-        <p className="text-x-gray text-sm sm:text-base">
-          Share your code and ideas with the community.
-        </p>
-      </div>
+    <div className="w-full max-w-2xl mx-auto pt-0 pb-8 px-0 sm:px-4">
 
       {/* Single Column Layout */}
       <div className="space-y-4 sm:space-y-6 lg:space-y-8">
         {/* Form Section */}
         <form
           onSubmit={handleSubmit}
-          className="card p-3 sm:p-4 lg:p-8 bg-gradient-to-br from-x-dark/80 to-x-dark/40 backdrop-blur-sm border border-x-border/50 mx-0 sm:mx-1 lg:mx-4"
+          className="p-3 sm:p-4 lg:p-8 bg-gradient-to-br from-x-dark/95 to-x-dark/70 backdrop-blur-sm border border-x-border/50 mx-0 rounded-none relative"
         >
+          {/* Integrated Header */}
+          <div className="mb-8 border-b border-x-border/20 pb-6">
+            <div className="flex items-center gap-4 mb-2">
+              <h1 
+                className="text-4xl md:text-5xl font-black text-x-white tracking-tighter" 
+                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+              >
+                Create Post
+              </h1>
+              <img
+                src="/icons/compose.png"
+                alt="Compose"
+                className="w-10 h-10 md:w-12 md:h-12 object-contain"
+              />
+            </div>
+            <p className="text-x-gray text-base opacity-70">
+              Share your code and ideas with the community.
+            </p>
+          </div>
           {error && (
             <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-6 py-4 rounded-xl backdrop-blur-sm mb-6">
               <div className="flex items-center">

@@ -379,76 +379,34 @@ const Profile = () => {
 
   return (
     <div
-      className="max-w-2xl mx-auto py-8 px-4 bg-gradient-to-br from-x-dark/10 to-x-dark/5"
+      className="max-w-2xl mx-auto pt-0 pb-8 px-0 sm:px-4"
       style={{
         willChange: "scroll-position",
         transform: "translateZ(0)",
       }}
     >
-      {/* Hero Profile Section */}
-      <div className="relative mb-8">
-        {/* Cover */}
-        <div className="h-32 md:h-44 bg-gradient-to-r from-cyan-500 via-indigo-500 to-fuchsia-500 relative z-20">
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-          {/* Username at bottom right on mobile only */}
-          <div className="absolute bottom-2 right-2 sm:hidden flex items-center text-xs text-x-white font-mono">
-            <span>@{profileUser.username}</span>
-            <button
-              onClick={async () => {
-                try {
-                  await navigator.clipboard.writeText(profileUser.username);
-                  setCopied(true);
-                  setTimeout(() => setCopied(false), 1000);
-                } catch (err) {
-                  console.error("Failed to copy username:", err);
-                }
-              }}
-              className="ml-2 p-1 hover:bg-white/20 rounded transition-colors"
-              title="Copy username"
-            >
-              {copied ? (
-                <svg
-                  className="w-3 h-3 text-green-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 17l4 4L23 11"
-                  />
-                </svg>
-              ) : (
-                <svg
-                  className="w-3 h-3 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                  />
-                </svg>
-              )}
-            </button>
-          </div>
-          <div className="absolute top-4 right-4 z-50" ref={menuRef}>
+        {/* Profile Info Card */}
+        <div className="bg-gradient-to-br from-x-dark/95 to-x-dark/70 backdrop-blur-sm border border-x-border/50 pt-8 pb-6 px-4 md:px-8 relative rounded-none mb-8">
+          {isOwnProfile && (
+            <div className="mb-6">
+              <h1 
+                className="text-4xl md:text-5xl font-black text-x-white tracking-tighter" 
+                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+              >
+                My Profile
+              </h1>
+            </div>
+          )}
+          
+          {/* Top Right Actions */}
+          <div className="absolute top-6 right-6 flex items-center gap-3 z-50">
+
+            {/* Menu */}
             {isOwnProfile && (
-              <div className="relative">
+              <div className="relative" ref={menuRef}>
                 <button
                   onClick={() => setMenuOpen(!menuOpen)}
-                  className="p-2 transition-all duration-300 group active:scale-95 flex flex-col items-end justify-center gap-1.5 h-10 w-10"
+                  className="p-2 transition-all duration-300 group active:scale-95 flex flex-col items-end justify-center gap-1.5 h-10 w-10 hover:bg-white/5 rounded-full"
                   aria-label="Profile Menu"
                 >
                   <span className={`block h-0.5 bg-white transition-all duration-300 rounded-full ${menuOpen ? 'w-6 rotate-45 translate-y-2' : 'w-6'}`}></span>
@@ -459,193 +417,80 @@ const Profile = () => {
                 {/* Dropdown Menu */}
                 {menuOpen && (
                   <div className="absolute right-0 mt-2 w-56 bg-x-dark/95 backdrop-blur-xl border border-x-border/50 rounded-2xl shadow-3xl z-[100] py-2 animate-fade-in origin-top-right overflow-hidden shadow-black/50">
-                    <Link
-                      to="/edit-profile"
-                      className="flex items-center px-4 py-3 text-sm text-x-white hover:bg-x-blue/10 transition-colors group"
-                      style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-                      onClick={() => setMenuOpen(false)}
-                    >
-                      <span className="font-medium">Edit Profile</span>
+                    <Link to="/edit-profile" className="flex items-center px-4 py-3 text-sm text-x-white hover:bg-white/5 transition-colors font-space" onClick={() => setMenuOpen(false)}>
+                      Edit Profile
                     </Link>
-                    
-                    <Link
-                      to="/settings"
-                      className="flex items-center space-x-3 px-4 py-3 text-sm text-x-white hover:bg-x-blue/10 transition-colors group"
-                      onClick={() => setMenuOpen(false)}
-                    >
+                    <Link to="/settings" className="flex items-center space-x-3 px-4 py-3 text-sm text-x-white hover:bg-white/5 transition-colors group" onClick={() => setMenuOpen(false)}>
                       <svg className="w-4 h-4 text-x-blue group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
-                      <span className="font-medium">Settings</span>
+                      <span className="font-space">Settings</span>
                     </Link>
-
                     <div className="h-[1px] bg-x-border/30 my-1 mx-2"></div>
-
-                    <button
-                      onClick={() => {
-                        setMenuOpen(false);
-                        logout();
-                      }}
-                      className="flex items-center space-x-3 w-full px-4 py-3 text-sm text-red-400 hover:bg-red-400/10 transition-colors group"
-                    >
+                    <button onClick={() => { setMenuOpen(false); logout(); }} className="flex items-center space-x-3 w-full px-4 py-3 text-sm text-red-400 hover:bg-red-400/5 transition-colors group">
                       <svg className="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                       </svg>
-                      <span className="font-medium">Logout</span>
+                      <span className="font-space">Logout</span>
                     </button>
                   </div>
                 )}
               </div>
             )}
           </div>
-          {/* Date of Joining on Mobile and on Desktop for other users */}
-          {(!isOwnProfile && (
-            <div className="hidden md:flex absolute top-4 right-8 text-xs text-x-white px-4 py-2 rounded-xl font-medium transition-all duration-200 items-center bg-x-dark/60 shadow-lg z-10">
-              <svg
-                className="w-4 h-4 mr-1"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
-              Joined{" "}
-              {new Date(profileUser.createdAt).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-              })}
-            </div>
-          )) ||
-            null}
-        </div>
 
-        {/* Profile Info Card */}
-        <div className="bg-gradient-to-br from-x-dark/90 to-x-dark/60 backdrop-blur-sm border border-x-border/50 -mt-1 pt-2 md:pt-8 pb-6 px-4 md:px-8">
           <div
-            className={`flex flex-row ${
-              isOwnProfile ? "items-end" : "items-start"
-            } justify-between`}
+            className={`flex flex-row items-center justify-between`}
           >
-            <div className={`flex flex-row items-center text-left ${isOwnProfile ? "mt-4 md:mt-0" : "mt-2 md:mt-0"}`}>
+            <div className={`flex flex-row items-center text-left mt-2`}>
               {/* Avatar */}
-              <div
-                className={`relative ${
-                  isOwnProfile ? "md:-mt-4" : "md:-mt-6" // move avatar lower to reduce banner overlap
-                } -ml-2 md:-ml-4 mb-0 mr-6 z-20`}
-              >
-                <div className="bg-gradient-to-r from-x-blue to-purple-500 text-white w-16 h-16 md:w-28 md:h-28 rounded-full flex items-center justify-center text-xl md:text-3xl font-bold border-4 border-x-dark shadow-2xl overflow-hidden relative">
+              <div className="-ml-2 md:-ml-4 mb-0 mr-6 z-20 flex flex-col items-center gap-3">
+                <div className="bg-black text-white w-16 h-16 md:w-28 md:h-28 rounded-full flex items-center justify-center text-xl md:text-3xl font-bold border-4 border-x-border/20 shadow-2xl overflow-hidden relative">
                   {profileUser.avatar ? (
-                    <img 
-                      src={profileUser.avatar} 
-                      alt={profileUser.displayName} 
-                      className="w-full h-full object-cover"
-                    />
+                    <img src={profileUser.avatar} alt={profileUser.displayName} className="w-full h-full object-cover" />
                   ) : (
-                    <div className="bg-black text-white w-full h-full flex items-center justify-center">
-                      {profileUser.displayName?.charAt(0).toUpperCase() ||
-                        profileUser.username.charAt(0).toUpperCase()}
+                    <div className="bg-black text-white w-full h-full flex items-center justify-center font-space">
+                      {profileUser.displayName?.charAt(0).toUpperCase() || profileUser.username.charAt(0).toUpperCase()}
                     </div>
                   )}
                 </div>
+
+                {/* Follow button - positioned under avatar */}
+                {!isOwnProfile && user && (
+                  <button
+                    onClick={handleFollowToggle}
+                    disabled={followLoading}
+                    className={`px-3 py-1.5 md:px-5 md:py-2 rounded-full font-bold text-xs md:text-sm transition-all duration-200 shadow-md focus:outline-none focus:ring-2 focus:ring-x-blue focus:ring-offset-2 w-full max-w-[120px] ${
+                      isFollowing
+                        ? "bg-x-dark/40 text-x-gray border border-x-border/40 hover:bg-x-dark/60"
+                        : "bg-x-blue text-white hover:bg-x-green"
+                    } ${
+                      followLoading ? "opacity-60 cursor-not-allowed" : ""
+                    } ${
+                      followAnim ? "animate-follow-pop" : ""
+                    }`}
+                  >
+                    {followLoading ? (
+                      <span className="animate-pulse">...</span>
+                    ) : isFollowing ? (
+                      "Following"
+                    ) : (
+                      "Follow"
+                    )}
+                  </button>
+                )}
               </div>
               {/* Name and Info */}
-              <div
-                className={`text-left flex flex-col justify-start ${
-                  isOwnProfile ? "mt-6 md:mt-0" : "mt-0 md:-mt-6"
-                }`}
-              >
-                <h1 className="text-lg sm:text-2xl md:text-4xl font-bold text-x-white mb-2">
-                  <span className="bg-gradient-to-r from-[#C0C0C0] via-[#E0E0E0] to-[#A9A9A9] bg-clip-text text-transparent">
-                    {profileUser.displayName || profileUser.username}
-                  </span>
+              <div className="text-left flex flex-col justify-start">
+                <h1 className="text-lg sm:text-2xl md:text-4xl font-bold text-x-white mb-1 font-space">
+                  {profileUser.displayName || profileUser.username}
                 </h1>
+                <p className="text-sm sm:text-lg text-x-gray mb-2 font-mono opacity-80">
+                  @{profileUser.username}
+                </p>
                 <div className="flex flex-row space-x-4 mb-2 items-center">
-                  {/* On mobile, show follow button at left, completely hide username */}
-                  {!isOwnProfile && user && (
-                    <button
-                      onClick={handleFollowToggle}
-                      disabled={followLoading}
-                      className={`px-4 py-2 rounded-full font-semibold text-base transition-all duration-200 shadow-md focus:outline-none focus:ring-2 focus:ring-x-blue focus:ring-offset-2 w-auto ${
-                        isFollowing
-                          ? "bg-x-dark/40 text-x-gray border border-x-border/40 hover:bg-x-dark/60"
-                          : "bg-x-blue text-white hover:bg-x-green"
-                      } ${
-                        followLoading ? "opacity-60 cursor-not-allowed" : ""
-                      } ${
-                        followAnim ? "animate-follow-pop" : ""
-                      } block sm:hidden`}
-                      style={{ minWidth: 80, maxWidth: 160 }}
-                    >
-                      {followLoading ? (
-                        <span className="animate-pulse">...</span>
-                      ) : isFollowing ? (
-                        "Following"
-                      ) : (
-                        "Follow"
-                      )}
-                    </button>
-                  )}
-                  {/* Username only visible on desktop (sm and above) */}
-                  <p className="hidden sm:flex text-base sm:text-xl text-x-gray mb-0 items-center font-mono">
-                    @{profileUser.username}
-                    {isOwnProfile && (
-                      <span className="profile-joined-date profile-joined-date-inline-desktop ml-3 flex items-center text-sm text-x-gray font-normal align-middle">
-                        <svg
-                          className="w-4 h-4 mr-1 align-middle"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          style={{ display: "inline", verticalAlign: "middle" }}
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                          />
-                        </svg>
-                        Joined{" "}
-                        {new Date(profileUser.createdAt).toLocaleDateString(
-                          "en-US",
-                          {
-                            year: "numeric",
-                            month: "long",
-                          }
-                        )}
-                      </span>
-                    )}
-                  </p>
-                  {/* Follow button inline with username for other users */}
-                  {!isOwnProfile && user && (
-                    <button
-                      onClick={handleFollowToggle}
-                      disabled={followLoading}
-                      className={`ml-2 px-4 py-2 rounded-full font-semibold text-base transition-all duration-200 shadow-md focus:outline-none focus:ring-2 focus:ring-x-blue focus:ring-offset-2 w-auto ${
-                        isFollowing
-                          ? "bg-x-dark/40 text-x-gray border border-x-border/40 hover:bg-x-dark/60"
-                          : "bg-x-blue text-white hover:bg-x-green"
-                      } ${
-                        followLoading ? "opacity-60 cursor-not-allowed" : ""
-                      } ${
-                        followAnim ? "animate-follow-pop" : ""
-                      } hidden sm:inline-flex`}
-                      style={{ minWidth: 80, maxWidth: 160 }}
-                    >
-                      {followLoading ? (
-                        <span className="animate-pulse">...</span>
-                      ) : isFollowing ? (
-                        "Following"
-                      ) : (
-                        "Follow"
-                      )}
-                    </button>
-                  )}
+                  {/* Additional actions can go here */}
                 </div>
                 {/* Follow button - stacked for own profile */}
                 {/* Date of joining for other users removed - only at cover image now */}
@@ -716,7 +561,7 @@ const Profile = () => {
             </Link>
           </div>
         </div>
-      </div>
+
       {/* Only show rest if not private, or if owner/follower */}
       {showFullProfile ? (
         <>
@@ -1040,7 +885,7 @@ const Profile = () => {
           )}
         </>
       ) : (
-        <div className="bg-gradient-to-br from-x-dark/70 to-x-dark/40 backdrop-blur-sm border border-x-border/40 p-8 mt-8 text-center rounded-2xl">
+        <div className="bg-gradient-to-br from-x-dark/70 to-x-dark/40 backdrop-blur-sm border border-x-border/40 p-8 mt-8 text-center rounded-none">
           <svg
             className="w-12 h-12 text-x-gray mx-auto mb-4"
             fill="none"
