@@ -653,26 +653,8 @@ const Profile = () => {
             </div>
           </div>
 
-          {/* Bio - with ABOUT header */}
+          {/* Bio section */}
           <div className="mt-6 block">
-            <div className="flex items-center mb-3">
-              <svg
-                className="w-4 h-4 text-x-blue mr-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                />
-              </svg>
-              <span className="text-sm font-semibold text-x-blue uppercase tracking-wide">
-                About
-              </span>
-            </div>
             {profileUser.bio && (
               <div className="relative">
                 <p
@@ -699,36 +681,36 @@ const Profile = () => {
           </div>
 
           {/* Stats Row */}
-          <div className="mt-8 flex items-center justify-start space-x-12 border-t border-b border-x-border/10 py-4 px-2">
-            <div className="text-center group cursor-default">
-              <div className="text-2xl font-bold text-x-white font-space leading-tight">
+          <div className="mt-8 flex items-center justify-between border-t border-b border-white/20 py-6 px-4">
+            <div className="flex-1 text-center group cursor-default">
+              <div className="text-2xl font-bold text-cyan-400 font-space leading-tight">
                 {profileData.pagination?.total || 0}
               </div>
-              <div className="text-xs text-x-gray uppercase tracking-widest font-space mt-1 opacity-60 group-hover:opacity-100 transition-opacity">
+              <div className="text-[10px] text-x-gray uppercase tracking-[0.2em] font-space mt-1.5 opacity-60 group-hover:opacity-100 transition-opacity">
                 Posts
               </div>
             </div>
             
             <Link 
               to={`/profile/${profileUser.username}/followers`}
-              className="text-center group transition-transform active:scale-95"
+              className="flex-1 text-center group transition-transform active:scale-95 border-l-2 border-r-2 border-white/20"
             >
-              <div className="text-2xl font-bold text-x-white font-space leading-tight group-hover:text-x-blue transition-colors">
+              <div className="text-2xl font-bold text-emerald-400 font-space leading-tight group-hover:text-x-blue transition-colors">
                 {profileUser.followersCount ?? (profileUser.followers?.length || 0)}
               </div>
-              <div className="text-xs text-x-gray uppercase tracking-widest font-space mt-1 opacity-60 group-hover:opacity-100 group-hover:text-x-blue transition-all">
+              <div className="text-[10px] text-x-gray uppercase tracking-[0.2em] font-space mt-1.5 opacity-60 group-hover:opacity-100 group-hover:text-x-blue transition-all">
                 Followers
               </div>
             </Link>
             
             <Link 
               to={`/profile/${profileUser.username}/following`}
-              className="text-center group transition-transform active:scale-95"
+              className="flex-1 text-center group transition-transform active:scale-95"
             >
-              <div className="text-2xl font-bold text-x-white font-space leading-tight group-hover:text-x-blue transition-colors">
+              <div className="text-2xl font-bold text-fuchsia-400 font-space leading-tight group-hover:text-x-blue transition-colors">
                 {profileUser.followingCount ?? (profileUser.following?.length || 0)}
               </div>
-              <div className="text-xs text-x-gray uppercase tracking-widest font-space mt-1 opacity-60 group-hover:opacity-100 group-hover:text-x-blue transition-all">
+              <div className="text-[10px] text-x-gray uppercase tracking-[0.2em] font-space mt-1.5 opacity-60 group-hover:opacity-100 group-hover:text-x-blue transition-all">
                 Following
               </div>
             </Link>
@@ -741,19 +723,19 @@ const Profile = () => {
           {/* Minimalist Info Boxes Bar */}
           <div className="flex flex-row items-center justify-between gap-4 mb-8 w-full">
             {/* Skills Box */}
-            <div className="flex-1 bg-black border border-dashed border-x-green/30 rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:border-solid hover:border-x-green/60 group">
+            <div className="flex-1 bg-black border border-dashed border-white/20 rounded-none p-4 sm:p-6 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:border-solid hover:border-white/60 group">
               <img src="/icons/skills.png" alt="Skills" className="w-10 h-10 sm:w-12 sm:h-12 object-contain transition-transform group-hover:scale-110" />
               <span className="text-[10px] sm:text-xs font-bold text-x-white font-space uppercase tracking-[max(0.2em,2px)] opacity-70 group-hover:opacity-100">Skills</span>
             </div>
 
             {/* Projects Box */}
-            <div className="flex-1 bg-black border border-dashed border-x-green/30 rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:border-solid hover:border-x-blue/60 group">
+            <div className="flex-1 bg-black border border-dashed border-white/20 rounded-none p-4 sm:p-6 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:border-solid hover:border-white/60 group">
               <img src="/icons/projects.png" alt="Projects" className="w-10 h-10 sm:w-12 sm:h-12 object-contain transition-transform group-hover:scale-110" />
               <span className="text-[10px] sm:text-xs font-bold text-x-white font-space uppercase tracking-[max(0.2em,2px)] opacity-70 group-hover:opacity-100">Projects</span>
             </div>
 
             {/* Socials Box */}
-            <div className="flex-1 bg-black border border-dashed border-x-green/30 rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:border-solid hover:border-purple-500/60 group">
+            <div className="flex-1 bg-black border border-dashed border-white/20 rounded-none p-4 sm:p-6 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:border-solid hover:border-white/60 group">
               <img src="/icons/links.png" alt="Socials" className="w-10 h-10 sm:w-12 sm:h-12 object-contain transition-transform group-hover:scale-110" />
               <span className="text-[10px] sm:text-xs font-bold text-x-white font-space uppercase tracking-[max(0.2em,2px)] opacity-70 group-hover:opacity-100">Socials</span>
             </div>
