@@ -106,6 +106,7 @@ router.get("/:username", async (req, res) => {
           followersCount: user.followers.length,
           followingCount: user.following.length,
           projectsCount: user.projects?.length || 0,
+          socialLinks: user.socialLinks || [],
         },
         posts: [],
         pagination: {
@@ -155,6 +156,7 @@ router.get("/:username", async (req, res) => {
         gender: user.gender,
         nationality: user.nationality,
         projects: user.projects || [],
+        socialLinks: user.socialLinks || [],
         // Only include actual followers/following data if requested
         ...(req.query.includeFollowersData === "true" && {
           followers: user.followers.map((u) => ({
@@ -219,7 +221,7 @@ router.put(
         return res.status(403).json({ message: "Access denied" });
       }
 
-      const { displayName, bio, skills, githubLink, avatar, dob, gender, nationality } = req.body;
+      const { displayName, bio, skills, githubLink, avatar, dob, gender, nationality, socialLinks } = req.body;
 
       const updateData = {};
       if (displayName !== undefined) updateData.displayName = displayName;
@@ -228,6 +230,7 @@ router.put(
       if (dob !== undefined) updateData.dob = dob;
       if (gender !== undefined) updateData.gender = gender;
       if (nationality !== undefined) updateData.nationality = nationality;
+      if (socialLinks !== undefined) updateData.socialLinks = socialLinks;
       if (githubLink !== undefined) {
         // Handle empty GitHub link - set to empty string if cleared
         updateData.githubLink = githubLink || "";
@@ -275,6 +278,7 @@ router.put(
         githubLink: user.githubLink,
         avatar: user.avatar,
         projects: user.projects || [],
+        socialLinks: user.socialLinks || [],
       });
     } catch (error) {
       console.error("Update user error:", error);

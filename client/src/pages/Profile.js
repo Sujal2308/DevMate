@@ -150,12 +150,52 @@ const Profile = () => {
     }
   };
 
+  const handleAddSocial = async (e) => {
+    e.preventDefault();
+    if (!newSocial.platform.trim() || !newSocial.url.trim() || socialSubmitting) return;
+
+    try {
+      setSocialSubmitting(true);
+      const updatedSocials = [...(profileData.user.socialLinks || []), newSocial];
+      const response = await axios.put(`/api/users/${user.id || user._id}`, {
+        socialLinks: updatedSocials
+      });
+      setProfileData({
+        ...profileData,
+        user: { ...profileData.user, socialLinks: response.data.socialLinks }
+      });
+      setNewSocial({ platform: "", url: "" });
+    } catch (err) {
+      console.error("Add social error:", err);
+    } finally {
+      setSocialSubmitting(false);
+    }
+  };
+
+  const handleRemoveSocial = async (socialToRemove) => {
+    try {
+      const updatedSocials = profileData.user.socialLinks.filter(s => s._id !== socialToRemove._id && s.url !== socialToRemove.url);
+      const response = await axios.put(`/api/users/${user.id || user._id}`, {
+        socialLinks: updatedSocials
+      });
+      setProfileData({
+        ...profileData,
+        user: { ...profileData.user, socialLinks: response.data.socialLinks }
+      });
+    } catch (err) {
+      console.error("Remove social error:", err);
+    }
+  };
+
   // Follow/Unfollow logic for profile page
   const [isFollowing, setIsFollowing] = useState(false);
   const [followLoading, setFollowLoading] = useState(false);
   const [showSkills, setShowSkills] = useState(false); // Controls the skills section visibility
   const [newSkill, setNewSkill] = useState("");
   const [skillSubmitting, setSkillSubmitting] = useState(false);
+  const [showSocials, setShowSocials] = useState(false);
+  const [newSocial, setNewSocial] = useState({ platform: "", url: "" });
+  const [socialSubmitting, setSocialSubmitting] = useState(false);
 
   useEffect(() => {
     if (profileData && user) {
@@ -582,7 +622,10 @@ const Profile = () => {
           <div className="flex flex-row items-center justify-between gap-4 mb-8 w-full">
             {/* Skills Box */}
             <button 
-              onClick={() => setShowSkills(!showSkills)}
+              onClick={() => {
+                setShowSkills(!showSkills);
+                if (!showSkills) setShowSocials(false);
+              }}
               className={`flex-1 bg-black border ${showSkills ? 'border-solid border-x-blue shadow-[0_0_15px_rgba(29,155,240,0.3)]' : 'border-dashed border-white/20'} rounded-none p-4 sm:p-6 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:bg-x-blue hover:border-solid hover:border-x-blue group`}
             >
               <img src="/icons/skills.png" alt="Skills" className="w-10 h-10 sm:w-12 sm:h-12 object-contain transition-transform group-hover:scale-110" />
@@ -599,10 +642,16 @@ const Profile = () => {
             </Link>
 
             {/* Socials Box */}
-            <div className="flex-1 bg-black border border-dashed border-white/20 rounded-none p-4 sm:p-6 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:bg-x-blue hover:border-solid hover:border-x-blue group">
+            <button 
+              onClick={() => {
+                setShowSocials(!showSocials);
+                if (!showSocials) setShowSkills(false);
+              }}
+              className={`flex-1 bg-black border ${showSocials ? 'border-solid border-x-blue shadow-[0_0_15px_rgba(29,155,240,0.3)]' : 'border-solid border-x-border/20'} rounded-none p-4 sm:p-6 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:bg-x-blue hover:border-solid hover:border-x-blue group`}
+            >
               <img src="/icons/links.png" alt="Socials" className="w-10 h-10 sm:w-12 sm:h-12 object-contain transition-transform group-hover:scale-110" />
-              <span className="text-[10px] sm:text-xs font-bold text-x-white group-hover:text-white font-space uppercase tracking-[max(0.2em,2px)] opacity-70 group-hover:opacity-100">Socials</span>
-            </div>
+              <span className={`text-[10px] sm:text-xs font-bold ${showSocials ? 'text-x-blue' : 'text-x-white'} group-hover:text-white font-space uppercase tracking-[max(0.2em,2px)] opacity-70 group-hover:opacity-100`}>Socials</span>
+            </button>
           </div>
 
           {/* Expanded Skills Section */}
@@ -660,6 +709,89 @@ const Profile = () => {
                 </button>
               </form>
             )}
+            </div>
+          )}
+
+          {/* Expanded Socials Section */}
+          {showSocials && (
+            <div className="mb-8 p-6 bg-black border border-x-border/50 animate-fade-in">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold font-space tracking-wide text-x-white">Social Connections</h3>
+                <button onClick={() => setShowSocials(false)} className="text-red-500 hover:text-red-400 transition-colors">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              <div className="flex flex-wrap gap-x-6 gap-y-3 mb-6">
+                {profileUser.socialLinks && profileUser.socialLinks.length > 0 ? (
+                  profileUser.socialLinks.map((social, index) => (
+                    <div 
+                      key={index} 
+                      className="group flex items-center transition-all"
+                    >
+                      <a 
+                        href={social.url} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="flex items-center space-x-2 border-b-2 border-transparent hover:border-[#e2442b] transition-all pb-0.5"
+                      >
+                        <span 
+                          className="font-space font-bold text-sm text-x-white transition-colors"
+                        >
+                          {social.platform}
+                        </span>
+                        <svg className="w-5 h-5 opacity-80 group-hover:opacity-100 transition-opacity" style={{ color: '#e2442b' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                      </a>
+                      {isOwnProfile && (
+                        <button 
+                          onClick={() => handleRemoveSocial(social)} 
+                          className="ml-2 text-x-gray/30 hover:text-red-500 transition-all opacity-0 group-hover:opacity-100"
+                        >
+                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      )}
+                    </div>
+                  ))
+                ) : (
+                  <div className="w-full py-8 text-center border border-dashed border-white/10">
+                    <p className="text-x-gray font-space italic opacity-60 text-sm tracking-widest uppercase">Connectivity Offline...</p>
+                  </div>
+                )}
+              </div>
+
+              {isOwnProfile && (
+                <form onSubmit={handleAddSocial} className="space-y-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <input
+                      type="text"
+                      placeholder="Platform (e.g. Portfolio)"
+                      className="bg-white border border-x-border p-3 text-black text-sm focus:border-x-blue outline-none font-space transition-colors placeholder:text-gray-400"
+                      value={newSocial.platform}
+                      onChange={(e) => setNewSocial({ ...newSocial, platform: e.target.value })}
+                    />
+                    <input
+                      type="url"
+                      placeholder="Profile URL"
+                      className="bg-white border border-x-border p-3 text-black text-sm focus:border-x-blue outline-none font-space transition-colors placeholder:text-gray-400"
+                      value={newSocial.url}
+                      onChange={(e) => setNewSocial({ ...newSocial, url: e.target.value })}
+                    />
+                  </div>
+                  <button 
+                    type="submit" 
+                    disabled={socialSubmitting}
+                    className="w-full bg-x-blue text-white py-3 font-bold tracking-widest text-xs uppercase hover:bg-x-blue/80 transition-all disabled:opacity-50"
+                  >
+                    Establish Connection
+                  </button>
+                </form>
+              )}
             </div>
           )}
 

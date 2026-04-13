@@ -9,7 +9,6 @@ const EditProfile = () => {
   const [formData, setFormData] = useState({
     displayName: user?.displayName || "",
     bio: user?.bio || "",
-    dob: user?.dob ? new Date(user.dob).toISOString().split('T')[0] : "",
     gender: user?.gender || "Male",
     nationality: user?.nationality || "",
   });
@@ -34,7 +33,6 @@ const EditProfile = () => {
       setFormData({
         displayName: user.displayName || "",
         bio: user.bio || "",
-        dob: user.dob ? new Date(user.dob).toISOString().split('T')[0] : "",
         gender: user.gender || "Male",
         nationality: user.nationality || "",
       });
@@ -50,7 +48,6 @@ const EditProfile = () => {
     if (error) setError("");
     if (success) setSuccess("");
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
