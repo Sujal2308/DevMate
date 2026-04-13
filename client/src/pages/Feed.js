@@ -190,20 +190,23 @@ const Feed = () => {
         {/* Mobile Branded Header */}
         <h1 
           className="flex sm:hidden items-center gap-2 ml-3"
-          style={{ fontFamily: "'Lobster', sans-serif" }}
+          style={{ fontFamily: "'Space Grotesk', sans-serif" }}
         >
           <img 
             src="/icons/puzzle.png" 
             alt="DevMate" 
             className="w-8 h-8 object-contain"
           />
-          <span className="text-2xl text-x-white">
-            DevMate
+          <span className="text-2xl font-black text-x-white tracking-tighter">
+            devmate
           </span>
         </h1>
 
         {/* Desktop Title */}
-        <h1 className="hidden sm:block text-xl sm:text-2xl lg:text-3xl font-bold text-x-white ml-4 lg:ml-6">
+        <h1 
+          className="hidden sm:block text-2xl lg:text-4xl font-black text-x-white ml-4 lg:ml-6 tracking-tighter"
+          style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+        >
           Feed
         </h1>
         <div className="flex items-center gap-2 sm:gap-3">
@@ -252,6 +255,30 @@ const Feed = () => {
               <path fillRule="evenodd" d="M5.25 9a6.75 6.75 0 0113.5 0v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 01-.297 1.206c-1.544.57-3.16.99-4.831 1.243a3.75 3.75 0 11-7.48 0 24.585 24.585 0 01-4.831-1.244.75.75 0 01-.298-1.205A8.217 8.217 0 005.25 9.75V9zm4.502 8.9a2.25 2.25 0 104.496 0 25.057 25.057 0 01-4.496 0z" clipRule="evenodd" />
             </svg>
           </Link>
+          
+          {/* Desktop Notification Icon */}
+          <Link
+            to="/notifications"
+            className={`hidden sm:flex p-2 transition-all duration-200 relative items-center justify-center ${
+              location.pathname === "/notifications" ? "text-x-blue" : (hasUnread ? "text-x-red" : "text-x-white")
+            } hover:bg-x-blue/10 rounded-full`}
+            title="Notifications"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill={location.pathname === "/notifications" ? "currentColor" : "none"}
+              stroke="currentColor"
+              className="w-6 h-6"
+              strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+            </svg>
+            {hasUnread && (
+              <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border border-x-dark"></span>
+            )}
+          </Link>
+
           <Link
             to="/create-post"
             className="hidden sm:flex font-medium text-sm sm:text-base px-4 py-2 sm:px-5 sm:py-2 rounded-full transition-all duration-300 bg-blue-900 text-white focus:outline-none hover:bg-blue-800 no-underline items-center gap-2"

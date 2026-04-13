@@ -4,70 +4,6 @@ import { socket } from "../socket";
 import { useAuth } from "../contexts/AuthContext";
 import { Link } from "react-router-dom";
 
-const iconForType = (type) => {
-  switch (type) {
-    case "follow":
-      return (
-        <svg
-          className="w-5 h-5 text-green-400"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M18 9a3 3 0 11-6 0 3 3 0 016 0zM6 21v-2a4 4 0 014-4h0a4 4 0 014 4v2"
-          />
-        </svg>
-      );
-    case "comment":
-      return (
-        <svg
-          className="w-5 h-5 text-blue-400"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M17 8h2a2 2 0 012 2v8a2 2 0 01-2 2H7a2 2 0 01-2-2V10a2 2 0 012-2h2m4-4h4a2 2 0 012 2v4a2 2 0 01-2 2h-4a2 2 0 01-2-2V6a2 2 0 012-2z"
-          />
-        </svg>
-      );
-    case "like":
-      return (
-        <svg
-          className="w-5 h-5 text-pink-400"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-          />
-        </svg>
-      );
-    default:
-      return (
-        <svg
-          className="w-5 h-5 text-gray-400"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-        >
-          <circle cx="12" cy="12" r="10" />
-        </svg>
-      );
-  }
-};
 
 const TrashIcon = (props) => (
   <svg
@@ -193,25 +129,12 @@ const NotificationPage = () => {
   return (
     <div className="w-full max-w-2xl mx-auto px-2 sm:px-4 py-8 pb-32 sm:pb-12 bg-gradient-to-br from-x-dark/10 to-x-dark/5">
       <div className="flex items-center mb-6 relative">
-        <svg
-          className="w-7 h-7 text-blue-400 mr-3"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-          />
-        </svg>
-        <h1 className="text-2xl font-mono font-bold text-white">
+        <h1 className="text-2xl font-space font-bold text-white">
           Notifications
         </h1>
         {/* Desktop: Mark all as read + delete icon */}
         <button
-          className="ml-auto text-xs text-blue-400 hover:underline font-mono hidden sm:inline"
+          className="ml-auto text-xs text-blue-400 hover:underline font-space hidden sm:inline"
           onClick={handleMarkAllAsRead}
         >
           Mark all as read
@@ -238,7 +161,7 @@ const NotificationPage = () => {
               className="absolute right-0 mt-2 w-44 bg-gray-900 border border-gray-700 rounded-lg shadow-lg z-20"
             >
               <button
-                className="w-full text-left px-4 py-3 text-blue-400 hover:bg-gray-800 font-mono text-sm"
+                className="w-full text-left px-4 py-3 text-blue-400 hover:bg-gray-800 font-space text-sm"
                 onClick={() => {
                   setShowMenu(false);
                   handleMarkAllAsRead();
@@ -247,7 +170,7 @@ const NotificationPage = () => {
                 Mark all as read
               </button>
               <button
-                className="w-full text-left px-4 py-3 text-red-400 hover:bg-gray-800 font-mono text-sm border-t border-gray-800"
+                className="w-full text-left px-4 py-3 text-red-400 hover:bg-gray-800 font-space text-sm border-t border-gray-800"
                 onClick={() => {
                   setShowMenu(false);
                   setShowConfirm(true);
@@ -265,11 +188,11 @@ const NotificationPage = () => {
           <div className="bg-gray-900 border border-gray-700 rounded-lg p-6 max-w-sm w-full shadow-lg">
             <div className="flex items-center mb-4">
               <TrashIcon className="w-6 h-6 mr-2 text-red-500" />
-              <span className="text-lg font-bold text-white font-mono">
+              <span className="text-lg font-bold text-white font-space">
                 Delete All Notifications?
               </span>
             </div>
-            <div className="text-gray-300 mb-6 font-mono">
+            <div className="text-gray-300 mb-6 font-space">
               This action{" "}
               <span className="text-red-400 font-bold">cannot be undone</span>.
               <br />
@@ -278,14 +201,14 @@ const NotificationPage = () => {
             </div>
             <div className="flex justify-end space-x-3">
               <button
-                className="px-4 py-2 rounded bg-gray-700 text-gray-200 hover:bg-gray-600 font-mono"
+                className="px-4 py-2 rounded bg-gray-700 text-gray-200 hover:bg-gray-600 font-space"
                 onClick={() => setShowConfirm(false)}
                 disabled={deleting}
               >
                 Cancel
               </button>
               <button
-                className="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700 font-mono font-bold shadow"
+                className="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700 font-space font-bold shadow"
                 onClick={handleDeleteAll}
                 disabled={deleting}
               >
@@ -296,13 +219,31 @@ const NotificationPage = () => {
         </div>
       )}
       {loading ? (
-        <div className="text-center text-gray-400 font-mono mt-12">
+        <div className="text-center text-gray-400 font-space mt-12">
           Loading...
         </div>
       ) : notifications.length === 0 ? (
-        <div className="flex flex-col items-center justify-center h-64">
-          <div className="text-center text-gray-400 font-mono text-lg">
-            No notifications yet.
+        <div className="flex flex-col items-center justify-center min-h-[50vh] py-12 px-4 transition-all animate-fade-in">
+          <img 
+            src="/Push notifications-rafiki.svg" 
+            alt="No notifications" 
+            className="w-48 h-48 sm:w-64 sm:h-64 object-contain mb-6 drop-shadow-xl opacity-80"
+          />
+          <div className="text-center space-y-2">
+            <h3 className="text-xl font-bold text-x-white/40 tracking-widest font-space">
+              notifications are empty
+            </h3>
+            <p className="text-x-gray text-sm font-space max-w-xs mx-auto">
+              It looks like you don't have any notifications at the moment. Check back later!
+            </p>
+            <div className="pt-8">
+              <Link 
+                to="/feed" 
+                className="inline-flex items-center px-8 py-3 bg-x-blue text-white font-bold tracking-widest uppercase hover:bg-x-blue/80 transition-all text-xs rounded-full"
+              >
+                Go to Feed
+              </Link>
+            </div>
           </div>
         </div>
       ) : (
@@ -315,23 +256,22 @@ const NotificationPage = () => {
               } w-full min-w-0`}
               style={{ width: "100%", maxWidth: "100%" }}
             >
-              <div className="mr-3 mt-1">{iconForType(n.type)}</div>
               <div className="flex-1">
                 {n.fromUser?.username ? (
                   <Link
                     to={`/profile/${n.fromUser.username}`}
-                    className="font-mono text-white hover:underline hover:text-x-blue transition-colors"
+                    className="font-space text-white hover:underline hover:text-x-blue transition-colors"
                   >
                     {n.fromUser.displayName || n.fromUser.username}
                   </Link>
                 ) : (
-                  <span className="font-mono text-white">
+                  <span className="font-space text-white">
                     {n.fromUser?.displayName ||
                       n.fromUser?.username ||
                       "Someone"}
                   </span>
                 )}
-                <span className="font-mono text-gray-300">
+                <span className="font-space text-gray-300">
                   {(n.type === "like" || n.type === "comment") && n.post ? (
                     <Link
                       to={`/post/${n.post._id || n.post}`}
@@ -347,7 +287,7 @@ const NotificationPage = () => {
                     " sent a notification."
                   )}
                 </span>
-                <div className="text-xs text-gray-500 mt-1 font-mono">
+                <div className="text-xs text-gray-500 mt-1 font-space">
                   {new Date(n.createdAt).toLocaleString()}
                 </div>
               </div>
@@ -358,7 +298,7 @@ const NotificationPage = () => {
           ))}
           {notifications.length > 0 && (
             <div className="flex justify-center mt-10">
-              <div className="text-blue-400 font-mono text-sm opacity-80 px-4 py-2 rounded-lg bg-gray-900/60 border border-blue-900/30 shadow">
+              <div className="text-blue-400 font-space text-sm opacity-80 px-4 py-2 rounded-lg bg-gray-900/60 border border-blue-900/30 shadow">
                 — End of notifications —
               </div>
             </div>
