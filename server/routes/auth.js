@@ -77,6 +77,7 @@ router.post(
           username: user.username,
           email: user.email,
           displayName: user.displayName,
+          avatar: user.avatar,
           savedPosts: user.savedPosts || [],
         },
       });
@@ -131,6 +132,7 @@ router.post(
           username: user.username,
           email: user.email,
           displayName: user.displayName,
+          avatar: user.avatar,
           savedPosts: user.savedPosts || [],
         },
       });
@@ -152,6 +154,7 @@ router.get("/me", auth, async (req, res) => {
       bio: req.user.bio,
       skills: req.user.skills,
       githubLink: req.user.githubLink,
+      avatar: req.user.avatar,
       savedPosts: req.user.savedPosts || [],
     });
   } catch (error) {

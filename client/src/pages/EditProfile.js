@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
@@ -27,7 +27,21 @@ const EditProfile = () => {
   const [avatarPreview, setAvatarPreview] = useState(user?.avatar || null);
   const fileInputRef = React.useRef(null);
 
+
   const navigate = useNavigate();
+
+  // Sync state with user data when it becomes available
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        displayName: user.displayName || "",
+        bio: user.bio || "",
+        skills: user.skills || [],
+        githubLink: user.githubLink || "",
+      });
+      setAvatarPreview(user.avatar || null);
+    }
+  }, [user]);
 
   const handleChange = (e) => {
     setFormData({
