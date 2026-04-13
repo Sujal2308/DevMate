@@ -67,6 +67,15 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    projects: [
+      {
+        name: { type: String, required: true },
+        description: { type: String, default: "" },
+        repoLink: { type: String, default: "" },
+        liveLink: { type: String, default: "" },
+        createdAt: { type: Date, default: Date.now },
+      },
+    ],
   },
   {
     timestamps: true,

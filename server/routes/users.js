@@ -105,6 +105,7 @@ router.get("/:username", async (req, res) => {
           isPrivate: user.isPrivate,
           followersCount: user.followers.length,
           followingCount: user.following.length,
+          projectsCount: user.projects?.length || 0,
         },
         posts: [],
         pagination: {
@@ -150,6 +151,7 @@ router.get("/:username", async (req, res) => {
         isPrivate: user.isPrivate,
         followersCount,
         followingCount,
+        projects: user.projects || [],
         // Only include actual followers/following data if requested
         ...(req.query.includeFollowersData === "true" && {
           followers: user.followers.map((u) => ({
@@ -263,6 +265,7 @@ router.put(
         skills: user.skills,
         githubLink: user.githubLink,
         avatar: user.avatar,
+        projects: user.projects || [],
       });
     } catch (error) {
       console.error("Update user error:", error);
@@ -710,6 +713,67 @@ router.get("/:username/:type(followers|following)", async (req, res) => {
     });
   } catch (error) {
     console.error(`Get user ${req.params.type} error:`, error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Add a new project to user profile
+router.post(
+  "/:id/projects",
+  auth,
+  [
+    body("name").notEmpty().withMessage("Project name is required"),
+    body("description").optional().isString(),
+    body("repoLink").optional({ checkFalsy: true }).isURL().withMessage("Invalid repo URL"),
+    body("liveLink").optional({ checkFalsy: true }).isURL().withMessage("Invalid live URL"),
+  ],
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+
+      if (req.user._id.toString() !== req.params.id) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      const user = await User.findById(req.params.id);
+      if (!user) return res.status(404).json({ message: "User not found" });
+
+      const { name, description, repoLink, liveLink } = req.body;
+      const newProject = { name, description, repoLink, liveLink };
+
+      if (!user.projects) user.projects = [];
+      user.projects.push(newProject);
+      await user.save();
+
+      res.status(201).json({ message: "Project added", projects: user.projects });
+    } catch (error) {
+      console.error("Add project error:", error);
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+);
+
+// Delete a project from user profile
+router.delete("/:id/projects/:projectId", auth, async (req, res) => {
+  try {
+    if (req.user._id.toString() !== req.params.id) {
+      return res.status(403).json({ message: "Access denied" });
+    }
+
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    user.projects = user.projects.filter(
+      (p) => p._id.toString() !== req.params.projectId
+    );
+    await user.save();
+
+    res.json({ message: "Project deleted", projects: user.projects });
+  } catch (error) {
+    console.error("Delete project error:", error);
     res.status(500).json({ message: "Server error" });
   }
 });

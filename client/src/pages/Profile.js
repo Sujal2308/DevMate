@@ -13,7 +13,6 @@ const Profile = () => {
   const [activeTab, setActiveTab] = useState("posts");
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage] = useState(8); // Increased from 2 to 8 for better mobile scrolling
-  const [copied, setCopied] = useState(false);
   const [loadingMorePosts, setLoadingMorePosts] = useState(false);
   const [hasMorePosts, setHasMorePosts] = useState(true);
   const [showUpdatePrompt, setShowUpdatePrompt] = useState(false);
@@ -114,9 +113,49 @@ const Profile = () => {
     });
   };
 
+  const handleAddSkill = async (e) => {
+    e.preventDefault();
+    if (!newSkill.trim() || skillSubmitting) return;
+    
+    try {
+      setSkillSubmitting(true);
+      const updatedSkills = [...(profileData.user.skills || []), newSkill.trim()];
+      const response = await axios.put(`/api/users/${user.id || user._id}`, {
+        skills: updatedSkills
+      });
+      setProfileData({
+        ...profileData,
+        user: { ...profileData.user, skills: response.data.skills }
+      });
+      setNewSkill("");
+    } catch (err) {
+      console.error("Add skill error:", err);
+    } finally {
+      setSkillSubmitting(false);
+    }
+  };
+
+  const handleRemoveSkill = async (skillToRemove) => {
+    try {
+      const updatedSkills = profileData.user.skills.filter(s => s !== skillToRemove);
+      const response = await axios.put(`/api/users/${user.id || user._id}`, {
+        skills: updatedSkills
+      });
+      setProfileData({
+        ...profileData,
+        user: { ...profileData.user, skills: response.data.skills }
+      });
+    } catch (err) {
+      console.error("Remove skill error:", err);
+    }
+  };
+
   // Follow/Unfollow logic for profile page
   const [isFollowing, setIsFollowing] = useState(false);
   const [followLoading, setFollowLoading] = useState(false);
+  const [showSkills, setShowSkills] = useState(false); // Controls the skills section visibility
+  const [newSkill, setNewSkill] = useState("");
+  const [skillSubmitting, setSkillSubmitting] = useState(false);
 
   useEffect(() => {
     if (profileData && user) {
@@ -568,16 +607,22 @@ const Profile = () => {
           {/* Minimalist Info Boxes Bar */}
           <div className="flex flex-row items-center justify-between gap-4 mb-8 w-full">
             {/* Skills Box */}
-            <div className="flex-1 bg-black border border-dashed border-white/20 rounded-none p-4 sm:p-6 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:border-solid hover:border-white/60 group">
+            <button 
+              onClick={() => setShowSkills(!showSkills)}
+              className={`flex-1 bg-black border ${showSkills ? 'border-solid border-x-blue shadow-[0_0_15px_rgba(29,155,240,0.3)]' : 'border-dashed border-white/20'} rounded-none p-4 sm:p-6 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:border-solid hover:border-white/60 group`}
+            >
               <img src="/icons/skills.png" alt="Skills" className="w-10 h-10 sm:w-12 sm:h-12 object-contain transition-transform group-hover:scale-110" />
-              <span className="text-[10px] sm:text-xs font-bold text-x-white font-space uppercase tracking-[max(0.2em,2px)] opacity-70 group-hover:opacity-100">Skills</span>
-            </div>
+              <span className={`text-[10px] sm:text-xs font-bold ${showSkills ? 'text-x-blue' : 'text-x-white'} font-space uppercase tracking-[max(0.2em,2px)] opacity-70 group-hover:opacity-100`}>Skills</span>
+            </button>
 
             {/* Projects Box */}
-            <div className="flex-1 bg-black border border-dashed border-white/20 rounded-none p-4 sm:p-6 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:border-solid hover:border-white/60 group">
+            <Link 
+              to={`/profile/${profileUser.username}/projects`}
+              className="flex-1 bg-black border border-dashed border-white/20 rounded-none p-4 sm:p-6 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:border-solid hover:border-white/60 group"
+            >
               <img src="/icons/projects.png" alt="Projects" className="w-10 h-10 sm:w-12 sm:h-12 object-contain transition-transform group-hover:scale-110" />
               <span className="text-[10px] sm:text-xs font-bold text-x-white font-space uppercase tracking-[max(0.2em,2px)] opacity-70 group-hover:opacity-100">Projects</span>
-            </div>
+            </Link>
 
             {/* Socials Box */}
             <div className="flex-1 bg-black border border-dashed border-white/20 rounded-none p-4 sm:p-6 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:border-solid hover:border-white/60 group">
@@ -585,6 +630,64 @@ const Profile = () => {
               <span className="text-[10px] sm:text-xs font-bold text-x-white font-space uppercase tracking-[max(0.2em,2px)] opacity-70 group-hover:opacity-100">Socials</span>
             </div>
           </div>
+
+          {/* Expanded Skills Section */}
+          {showSkills && (
+            <div className="mb-8 p-6 bg-black border border-x-border/50 animate-fade-in">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold font-space uppercase tracking-widest text-x-white">Techncial Skills</h3>
+                <button onClick={() => setShowSkills(false)} className="text-x-gray hover:text-white transition-colors">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              <div className="flex flex-wrap gap-2 mb-6">
+                {profileUser.skills && profileUser.skills.length > 0 ? (
+                  profileUser.skills.map((skill, index) => (
+                    <div 
+                      key={index} 
+                      className="group flex items-center bg-x-blue/10 border border-x-blue/30 px-3 py-1 text-sm font-mono text-x-blue transition-all hover:bg-x-blue/20"
+                    >
+                      {skill}
+                      {isOwnProfile && (
+                        <button 
+                          onClick={() => handleRemoveSkill(skill)}
+                          className="ml-2 opacity-0 group-hover:opacity-100 text-x-blue hover:text-red-500 transition-all"
+                        >
+                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      )}
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-x-gray font-mono italic opacity-60">No skills added yet...</p>
+                )}
+              </div>
+
+              {isOwnProfile && (
+                <form onSubmit={handleAddSkill} className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Enter new skill..."
+                    className="flex-1 bg-white border border-x-border p-2 text-black text-sm focus:border-x-blue outline-none font-space transition-colors placeholder:text-gray-400"
+                    value={newSkill}
+                    onChange={(e) => setNewSkill(e.target.value)}
+                  />
+                  <button 
+                    type="submit" 
+                    disabled={skillSubmitting}
+                    className="bg-x-blue text-white px-4 py-1 font-bold uppercase tracking-widest text-[10px] hover:bg-x-blue/80 transition-colors disabled:opacity-50"
+                  >
+                    ADD
+                  </button>
+                </form>
+              )}
+            </div>
+          )}
 
           {/* Update Profile Prompt - Show for new users who haven't completed their profile */}
           {showUpdatePrompt && (
