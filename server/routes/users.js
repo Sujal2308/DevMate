@@ -16,8 +16,8 @@ router.get("/saved/posts", auth, async (req, res) => {
     const user = await User.findById(req.user._id).populate({
       path: "savedPosts",
       populate: [
-        { path: "author", select: "username displayName" },
-        { path: "comments.user", select: "username displayName" }
+        { path: "author", select: "username displayName avatar" },
+        { path: "comments.user", select: "username displayName avatar" }
       ]
     });
     // Reverse to show newest saves first
@@ -73,8 +73,8 @@ router.get("/:username", async (req, res) => {
 
     const user = await User.findOne({ username: req.params.username })
       .select("-password")
-      .populate("followers", "username displayName")
-      .populate("following", "username displayName");
+      .populate("followers", "username displayName avatar")
+      .populate("following", "username displayName avatar");
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -126,8 +126,8 @@ router.get("/:username", async (req, res) => {
 
     // Get user's posts with pagination
     const posts = await Post.find({ author: user._id })
-      .populate("author", "username displayName")
-      .populate("comments.user", "username displayName")
+      .populate("author", "username displayName avatar")
+      .populate("comments.user", "username displayName avatar")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
@@ -164,6 +164,7 @@ router.get("/:username", async (req, res) => {
             _id: u._id,
             username: u.username,
             displayName: u.displayName,
+            avatar: u.avatar,
           })),
         }),
         ...(req.query.includeFollowingData === "true" && {
@@ -172,6 +173,7 @@ router.get("/:username", async (req, res) => {
             _id: u._id,
             username: u.username,
             displayName: u.displayName,
+            avatar: u.avatar,
           })),
         }),
       },
@@ -435,8 +437,8 @@ router.put("/:username/follow", auth, async (req, res) => {
     // Return updated user data with followers populated
     const updatedUser = await User.findOne({ username: req.params.username })
       .select("-password")
-      .populate("followers", "username displayName")
-      .populate("following", "username displayName");
+      .populate("followers", "username displayName avatar")
+      .populate("following", "username displayName avatar");
 
     res.json({
       message: "Followed successfully",
@@ -451,12 +453,14 @@ router.put("/:username/follow", auth, async (req, res) => {
           _id: u._id,
           username: u.username,
           displayName: u.displayName,
+          avatar: u.avatar,
         })),
         following: updatedUser.following.map((u) => ({
           id: u._id,
           _id: u._id,
           username: u.username,
           displayName: u.displayName,
+          avatar: u.avatar,
         })),
       },
     });
@@ -489,8 +493,8 @@ router.put("/:username/unfollow", auth, async (req, res) => {
     // Return updated user data with followers populated
     const updatedUser = await User.findOne({ username: req.params.username })
       .select("-password")
-      .populate("followers", "username displayName")
-      .populate("following", "username displayName");
+      .populate("followers", "username displayName avatar")
+      .populate("following", "username displayName avatar");
 
     res.json({
       message: "Unfollowed successfully",
@@ -505,12 +509,14 @@ router.put("/:username/unfollow", auth, async (req, res) => {
           _id: u._id,
           username: u.username,
           displayName: u.displayName,
+          avatar: u.avatar,
         })),
         following: updatedUser.following.map((u) => ({
           id: u._id,
           _id: u._id,
           username: u.username,
           displayName: u.displayName,
+          avatar: u.avatar,
         })),
       },
     });
@@ -543,7 +549,7 @@ router.get("/:username/followers", async (req, res) => {
   try {
     const user = await User.findOne({ username: req.params.username })
       .select("followers")
-      .populate("followers", "username displayName");
+      .populate("followers", "username displayName avatar");
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -676,8 +682,8 @@ router.get("/:username/posts", async (req, res) => {
 
     // Get user's posts with pagination
     const posts = await Post.find({ author: user._id })
-      .populate("author", "username displayName")
-      .populate("comments.user", "username displayName")
+      .populate("author", "username displayName avatar")
+      .populate("comments.user", "username displayName avatar")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);

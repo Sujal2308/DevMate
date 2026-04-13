@@ -626,10 +626,10 @@ const Profile = () => {
                 setShowSkills(!showSkills);
                 if (!showSkills) setShowSocials(false);
               }}
-              className={`flex-1 bg-black border ${showSkills ? 'border-solid border-x-blue shadow-[0_0_15px_rgba(29,155,240,0.3)]' : 'border-dashed border-white/20'} rounded-none p-4 sm:p-6 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:bg-x-blue hover:border-solid hover:border-x-blue group`}
+              className={`flex-1 ${showSkills ? 'bg-x-blue border-solid border-x-blue shadow-[0_0_20px_rgba(29,155,240,0.4)]' : 'bg-black border-dashed border-white/20'} border rounded-none p-4 sm:p-6 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:bg-x-blue hover:border-solid hover:border-x-blue group`}
             >
               <img src="/icons/skills.png" alt="Skills" className="w-10 h-10 sm:w-12 sm:h-12 object-contain transition-transform group-hover:scale-110" />
-              <span className={`text-[10px] sm:text-xs font-bold ${showSkills ? 'text-x-blue' : 'text-x-white'} group-hover:text-white font-space uppercase tracking-[max(0.2em,2px)] opacity-70 group-hover:opacity-100`}>Skills</span>
+              <span className={`text-[10px] sm:text-xs font-bold ${showSkills ? 'text-white' : 'text-x-white'} group-hover:text-white font-space uppercase tracking-[max(0.2em,2px)] opacity-70 group-hover:opacity-100`}>Skills</span>
             </button>
 
             {/* Projects Box */}
@@ -647,16 +647,16 @@ const Profile = () => {
                 setShowSocials(!showSocials);
                 if (!showSocials) setShowSkills(false);
               }}
-              className={`flex-1 bg-black border ${showSocials ? 'border-solid border-x-blue shadow-[0_0_15px_rgba(29,155,240,0.3)]' : 'border-solid border-x-border/20'} rounded-none p-4 sm:p-6 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:bg-x-blue hover:border-solid hover:border-x-blue group`}
+              className={`flex-1 ${showSocials ? 'bg-x-blue border-solid border-x-blue shadow-[0_0_20px_rgba(29,155,240,0.4)]' : 'bg-black border-dashed border-white/20'} border rounded-none p-4 sm:p-6 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:bg-x-blue hover:border-solid hover:border-x-blue group`}
             >
               <img src="/icons/links.png" alt="Socials" className="w-10 h-10 sm:w-12 sm:h-12 object-contain transition-transform group-hover:scale-110" />
-              <span className={`text-[10px] sm:text-xs font-bold ${showSocials ? 'text-x-blue' : 'text-x-white'} group-hover:text-white font-space uppercase tracking-[max(0.2em,2px)] opacity-70 group-hover:opacity-100`}>Socials</span>
+              <span className={`text-[10px] sm:text-xs font-bold ${showSocials ? 'text-white' : 'text-x-white'} group-hover:text-white font-space uppercase tracking-[max(0.2em,2px)] opacity-70 group-hover:opacity-100`}>Socials</span>
             </button>
           </div>
 
           {/* Expanded Skills Section */}
           {showSkills && (
-            <div className="mb-8 p-6 bg-black border border-x-border/50 animate-fade-in">
+            <div className="mb-8 px-4 py-6 md:p-6 bg-black border border-dashed border-x-border/50 animate-fade-in w-full overflow-hidden">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold font-space tracking-widest text-x-white">Technical Skills</h3>
                 <button onClick={() => setShowSkills(false)} className="text-red-500 hover:text-red-400 transition-colors">
@@ -669,17 +669,17 @@ const Profile = () => {
               <div className="flex flex-wrap gap-2 mb-6">
                 {profileUser.skills && profileUser.skills.length > 0 ? (
                   profileUser.skills.map((skill, index) => (
-                    <div 
-                      key={index} 
-                      className="group flex items-center bg-x-blue border border-x-blue/30 px-4 py-1.5 rounded-full text-sm font-space text-white transition-all hover:bg-x-blue/80 shadow-lg shadow-x-blue/10"
-                    >
+                  <div 
+                    key={index} 
+                    className="group relative flex items-center bg-black border border-x-green/30 px-4 py-1.5 rounded-full text-sm font-space font-bold text-x-green transition-all hover:border-x-green/60 hover:shadow-[0_0_10px_rgba(56,189,248,0.1)] shadow-lg"
+                  >
                     {skill}
                     {isOwnProfile && (
                       <button 
                         onClick={() => handleRemoveSkill(skill)}
-                        className="ml-2 opacity-70 group-hover:opacity-100 text-white/70 hover:text-white transition-all"
+                        className="absolute -top-1.5 -right-1.5 bg-black border border-white/20 text-white hover:text-red-500 rounded-full p-0.5 transition-all shadow-lg active:scale-90"
                       >
-                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                         </svg>
                       </button>
@@ -692,20 +692,20 @@ const Profile = () => {
             </div>
 
             {isOwnProfile && (
-              <form onSubmit={handleAddSkill} className="flex gap-2">
+              <form onSubmit={handleAddSkill} className="flex flex-col sm:flex-row gap-3">
                 <input
                   type="text"
                   placeholder="Enter new skill..."
-                  className="flex-1 bg-white border border-x-border p-2 text-black text-sm focus:border-x-blue outline-none font-space transition-colors placeholder:text-gray-400"
+                  className="flex-1 bg-white border border-x-border p-2 text-black text-sm focus:border-x-blue outline-none font-space transition-colors placeholder:text-gray-400 w-full"
                   value={newSkill}
                   onChange={(e) => setNewSkill(e.target.value)}
                 />
                 <button 
                   type="submit" 
                   disabled={skillSubmitting}
-                  className="bg-x-blue text-white px-4 py-1 font-bold tracking-widest text-[11px] hover:bg-x-blue/80 transition-colors disabled:opacity-50"
+                  className="bg-x-blue text-white px-6 py-2 sm:py-1 font-space font-bold tracking-widest text-[11px] uppercase hover:bg-x-blue/80 transition-colors disabled:opacity-50 whitespace-nowrap"
                 >
-                  Add
+                  ADD SKILL
                 </button>
               </form>
             )}
@@ -714,7 +714,7 @@ const Profile = () => {
 
           {/* Expanded Socials Section */}
           {showSocials && (
-            <div className="mb-8 p-6 bg-black border border-x-border/50 animate-fade-in">
+            <div className="mb-8 px-4 py-6 md:p-6 bg-black border border-dashed border-x-border/50 animate-fade-in w-full overflow-hidden">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold font-space tracking-wide text-x-white">Social Connections</h3>
                 <button onClick={() => setShowSocials(false)} className="text-red-500 hover:text-red-400 transition-colors">
@@ -724,34 +724,32 @@ const Profile = () => {
                 </button>
               </div>
 
-              <div className="flex flex-wrap gap-x-6 gap-y-3 mb-6">
+              <div className="flex flex-wrap gap-4 mb-6">
                 {profileUser.socialLinks && profileUser.socialLinks.length > 0 ? (
                   profileUser.socialLinks.map((social, index) => (
                     <div 
                       key={index} 
-                      className="group flex items-center transition-all"
+                      className="group relative flex items-center border border-white/20 px-5 py-2 rounded-full transition-all hover:border-[#e2442b]/60"
                     >
                       <a 
                         href={social.url} 
                         target="_blank" 
                         rel="noopener noreferrer" 
-                        className="flex items-center space-x-2 border-b-2 border-transparent hover:border-[#e2442b] transition-all pb-0.5"
+                        className="flex items-center space-x-2"
                       >
-                        <span 
-                          className="font-space font-bold text-sm text-x-white transition-colors"
-                        >
+                        <span className="font-space font-bold text-sm text-x-white">
                           {social.platform}
                         </span>
-                        <svg className="w-5 h-5 opacity-80 group-hover:opacity-100 transition-opacity" style={{ color: '#e2442b' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 opacity-80 group-hover:opacity-100 transition-opacity" style={{ color: '#e2442b' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                         </svg>
                       </a>
                       {isOwnProfile && (
                         <button 
                           onClick={() => handleRemoveSocial(social)} 
-                          className="ml-2 text-x-gray/30 hover:text-red-500 transition-all opacity-0 group-hover:opacity-100"
+                          className="absolute -top-1.5 -right-1.5 bg-black border border-white/20 text-white hover:text-red-500 rounded-full p-0.5 transition-all shadow-lg active:scale-90"
                         >
-                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                           </svg>
                         </button>
@@ -766,27 +764,35 @@ const Profile = () => {
               </div>
 
               {isOwnProfile && (
-                <form onSubmit={handleAddSocial} className="space-y-3">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <input
-                      type="text"
-                      placeholder="Platform (e.g. Portfolio)"
-                      className="bg-white border border-x-border p-3 text-black text-sm focus:border-x-blue outline-none font-space transition-colors placeholder:text-gray-400"
-                      value={newSocial.platform}
-                      onChange={(e) => setNewSocial({ ...newSocial, platform: e.target.value })}
-                    />
-                    <input
-                      type="url"
-                      placeholder="Profile URL"
-                      className="bg-white border border-x-border p-3 text-black text-sm focus:border-x-blue outline-none font-space transition-colors placeholder:text-gray-400"
-                      value={newSocial.url}
-                      onChange={(e) => setNewSocial({ ...newSocial, url: e.target.value })}
-                    />
+                <form onSubmit={handleAddSocial} className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[10px] font-bold text-x-gray uppercase tracking-widest mb-2 font-space">Platform</label>
+                      <input
+                        type="text"
+                        placeholder="e.g. GitHub, Portfolio"
+                        className="w-full bg-white border border-x-border p-3 text-black text-sm focus:border-x-blue outline-none font-space transition-colors placeholder:text-gray-400"
+                        value={newSocial.platform}
+                        onChange={(e) => setNewSocial({ ...newSocial, platform: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-x-gray uppercase tracking-widest mb-2 font-space">Profile URL</label>
+                      <input
+                        type="url"
+                        placeholder="https://..."
+                        className="w-full bg-white border border-x-border p-3 text-black text-sm focus:border-x-blue outline-none font-space transition-colors placeholder:text-gray-400"
+                        value={newSocial.url}
+                        onChange={(e) => setNewSocial({ ...newSocial, url: e.target.value })}
+                        required
+                      />
+                    </div>
                   </div>
                   <button 
                     type="submit" 
                     disabled={socialSubmitting}
-                    className="w-full bg-x-blue text-white py-3 font-bold tracking-widest text-xs uppercase hover:bg-x-blue/80 transition-all disabled:opacity-50"
+                    className="w-full bg-x-blue text-white py-4 sm:py-3 font-space font-bold tracking-widest text-xs uppercase hover:bg-x-blue/80 transition-all disabled:opacity-50"
                   >
                     Establish Connection
                   </button>
@@ -804,7 +810,7 @@ const Profile = () => {
           )}
 
           <div className="mb-8">
-            <div className="border-b border-x-border/30">
+            <div className="border-b border-x-border/30 px-4 sm:px-0">
               <nav className="flex justify-start space-x-8">
                 <button
                   onClick={() => setActiveTab("posts")}
@@ -843,7 +849,7 @@ const Profile = () => {
           {/* Tab Content */}
           {activeTab === "posts" && (
             <div className="w-full max-w-2xl mx-auto px-0 py-2 sm:py-4 mb-24 md:mb-8">
-              <div className="flex items-center justify-start mb-8 border-b border-x-border/30 pb-4">
+              <div className="flex items-center justify-start mb-8 border-b border-x-border/30 pb-4 px-4 sm:px-0">
                 <h3 
                   className="text-3xl md:text-4xl font-black text-x-white tracking-tighter"
                   style={{ fontFamily: "'Space Grotesk', sans-serif" }}
