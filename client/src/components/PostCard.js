@@ -150,11 +150,15 @@ const CommentItem = ({ comment, postId, onUpdate, formatDate }) => {
         className={`${getUserColor(
           comment.user?._id,
           comment.user?.username
-        )} text-white w-8 h-8 rounded-full flex items-center justify-center text-sm shadow-lg`}
+        )} text-white w-8 h-8 rounded-full flex items-center justify-center text-sm shadow-lg overflow-hidden relative`}
       >
-        {comment.user?.displayName?.charAt(0)?.toUpperCase() ||
+        {comment.user?.avatar ? (
+          <img src={comment.user.avatar} alt={comment.user.displayName} className="w-full h-full object-cover" />
+        ) : (
+          comment.user?.displayName?.charAt(0)?.toUpperCase() ||
           comment.user?.username?.charAt(0)?.toUpperCase() ||
-          "?"}
+          "?"
+        )}
       </div>
 
       <div className="flex-1">
@@ -400,13 +404,17 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
             className={`${getUserColor(
               post.author?._id,
               post.author?.username
-            )} text-white w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0 shadow-lg`}
+            )} text-white w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0 shadow-lg overflow-hidden relative`}
           >
-            <span className="text-sm sm:text-base font-semibold">
-              {post.author?.displayName?.charAt(0)?.toUpperCase() ||
-                post.author?.username?.charAt(0)?.toUpperCase() ||
-                "?"}
-            </span>
+            {post.author?.avatar ? (
+              <img src={post.author.avatar} alt={post.author.displayName} className="w-full h-full object-cover" />
+            ) : (
+              <span className="text-sm sm:text-base font-semibold">
+                {post.author?.displayName?.charAt(0)?.toUpperCase() ||
+                  post.author?.username?.charAt(0)?.toUpperCase() ||
+                  "?"}
+              </span>
+            )}
           </div>
           <div className="min-w-0 flex-1">
             <Link

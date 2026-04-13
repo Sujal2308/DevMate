@@ -393,7 +393,7 @@ const Profile = () => {
       {/* Hero Profile Section */}
       <div className="relative mb-8">
         {/* Cover */}
-        <div className="h-40 md:h-64 bg-gradient-to-r from-cyan-500 via-indigo-500 to-fuchsia-500 relative z-20">
+        <div className="h-32 md:h-44 bg-gradient-to-r from-cyan-500 via-indigo-500 to-fuchsia-500 relative z-20">
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
           {/* Username at bottom right on mobile only */}
           <div className="absolute bottom-2 right-2 sm:hidden flex items-center text-xs text-x-white font-mono">
@@ -537,18 +537,26 @@ const Profile = () => {
               isOwnProfile ? "items-end" : "items-start"
             } justify-between`}
           >
-            <div className="flex flex-row items-start text-left">
+            <div className={`flex flex-row items-center text-left ${isOwnProfile ? "mt-4 md:mt-0" : "mt-2 md:mt-0"}`}>
               {/* Avatar */}
               <div
                 className={`relative ${
-                  isOwnProfile ? "mt-1 md:-mt-10" : "-mt-2 md:-mt-12" // move avatar higher for other users on mobile
-                } mb-0 mr-6 z-20`}
+                  isOwnProfile ? "md:-mt-4" : "md:-mt-6" // move avatar lower to reduce banner overlap
+                } -ml-2 md:-ml-4 mb-0 mr-6 z-20`}
               >
-                <div className="bg-gradient-to-r from-x-blue to-purple-500 text-white w-20 h-20 md:w-32 md:h-32 rounded-full md:rounded-3xl flex items-center justify-center text-2xl md:text-4xl font-bold border-4 border-x-dark shadow-2xl">
-                  <div className="bg-black text-white w-20 h-20 md:w-32 md:h-32 rounded-full md:rounded-3xl flex items-center justify-center text-2xl md:text-4xl font-bold border-4 border-x-dark shadow-2xl">
-                    {profileUser.displayName?.charAt(0).toUpperCase() ||
-                      profileUser.username.charAt(0).toUpperCase()}
-                  </div>
+                <div className="bg-gradient-to-r from-x-blue to-purple-500 text-white w-16 h-16 md:w-28 md:h-28 rounded-full flex items-center justify-center text-xl md:text-3xl font-bold border-4 border-x-dark shadow-2xl overflow-hidden relative">
+                  {profileUser.avatar ? (
+                    <img 
+                      src={profileUser.avatar} 
+                      alt={profileUser.displayName} 
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="bg-black text-white w-full h-full flex items-center justify-center">
+                      {profileUser.displayName?.charAt(0).toUpperCase() ||
+                        profileUser.username.charAt(0).toUpperCase()}
+                    </div>
+                  )}
                 </div>
               </div>
               {/* Name and Info */}

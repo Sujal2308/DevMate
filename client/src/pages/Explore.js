@@ -527,9 +527,13 @@ const Explore = () => {
                         {/* Mobile Layout - Avatar and View Profile Button Horizontal */}
                         <div className="flex items-center justify-between sm:hidden mb-2">
                           <div className="flex items-center gap-3">
-                            <div className="bg-black text-white w-12 h-12 rounded-2xl flex items-center justify-center text-lg font-bold shadow-lg border-2 border-[#a259f7]">
-                              {user.displayName?.charAt(0).toUpperCase() ||
-                                user.username.charAt(0).toUpperCase()}
+                            <div className="bg-black text-white w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold shadow-lg border-2 border-[#a259f7] overflow-hidden relative flex-shrink-0">
+                              {user.avatar ? (
+                                <img src={user.avatar} alt={user.displayName} className="w-full h-full object-cover" />
+                              ) : (
+                                user.displayName?.charAt(0).toUpperCase() ||
+                                user.username.charAt(0).toUpperCase()
+                              )}
                             </div>
                             <div className="flex-1 min-w-0">
                               <h3 className="font-bold text-x-white text-base mb-1">
@@ -605,9 +609,13 @@ const Explore = () => {
                         <div className="hidden sm:flex items-start justify-between gap-6 mb-4">
                           <div className="flex items-start gap-6 flex-1">
                             <div className="flex-shrink-0">
-                              <div className="bg-black text-white w-16 h-16 rounded-2xl flex items-center justify-center text-xl font-bold shadow-lg border-2 border-[#a259f7]">
-                                {user.displayName?.charAt(0).toUpperCase() ||
-                                  user.username.charAt(0).toUpperCase()}
+                              <div className="bg-black text-white w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold shadow-lg border-2 border-[#a259f7] overflow-hidden relative">
+                                {user.avatar ? (
+                                  <img src={user.avatar} alt={user.displayName} className="w-full h-full object-cover" />
+                                ) : (
+                                  user.displayName?.charAt(0).toUpperCase() ||
+                                  user.username.charAt(0).toUpperCase()
+                                )}
                               </div>
                             </div>
                             <div className="flex-1 min-w-0">

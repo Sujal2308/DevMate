@@ -137,12 +137,20 @@ const Profile = () => {
           <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between">
             <div className="flex flex-col lg:flex-row items-start lg:items-end mb-6 lg:mb-0">
               {/* Avatar */}
-              <div className="relative -mt-16 lg:-mt-20 mb-4 lg:mb-0 lg:mr-6">
-                <div className="bg-gradient-to-r from-x-blue to-purple-500 text-white w-24 h-24 lg:w-32 lg:h-32 rounded-3xl flex items-center justify-center text-3xl lg:text-4xl font-bold border-4 border-x-dark shadow-2xl">
-                  {profileUser.displayName?.charAt(0).toUpperCase() ||
-                    profileUser.username.charAt(0).toUpperCase()}
+              <div className="relative -mt-16 lg:-mt-20 mb-4 lg:mb-0 lg:mr-6 shrink-0">
+                <div className="bg-gradient-to-r from-x-blue to-purple-500 text-white w-24 h-24 lg:w-32 lg:h-32 rounded-full flex items-center justify-center text-3xl lg:text-4xl font-bold border-4 border-x-dark shadow-2xl overflow-hidden relative">
+                  {profileUser.avatar ? (
+                    <img 
+                      src={profileUser.avatar} 
+                      alt={profileUser.displayName} 
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    profileUser.displayName?.charAt(0).toUpperCase() ||
+                    profileUser.username.charAt(0).toUpperCase()
+                  )}
                 </div>
-                <div className="absolute -bottom-2 -right-2 bg-x-green w-6 h-6 lg:w-8 lg:h-8 rounded-full border-4 border-x-dark flex items-center justify-center">
+                <div className="absolute -bottom-1 -right-1 bg-x-green w-6 h-6 lg:w-8 lg:h-8 rounded-full border-4 border-x-dark flex items-center justify-center shadow-lg">
                   <svg
                     className="w-3 h-3 lg:w-4 lg:h-4 text-white"
                     fill="currentColor"

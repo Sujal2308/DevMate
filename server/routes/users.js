@@ -7,6 +7,7 @@ const auth = require("../middleware/auth");
 const bcrypt = require("bcryptjs");
 const emitNotification = require("../utils/notify");
 const { sendEmail } = require("../utils/email");
+const { cloudinary } = require("../config/cloudinary");
 
 const router = express.Router();
 // Get all saved posts
@@ -213,7 +214,7 @@ router.put(
         return res.status(403).json({ message: "Access denied" });
       }
 
-      const { displayName, bio, skills, githubLink } = req.body;
+      const { displayName, bio, skills, githubLink, avatar } = req.body;
 
       const updateData = {};
       if (displayName !== undefined) updateData.displayName = displayName;
@@ -222,6 +223,24 @@ router.put(
       if (githubLink !== undefined) {
         // Handle empty GitHub link - set to empty string if cleared
         updateData.githubLink = githubLink || "";
+      }
+      if (avatar !== undefined) {
+        // If avatar is a new base64 image string, upload to Cloudinary
+        if (avatar && avatar.startsWith("data:image")) {
+          try {
+            const uploadResponse = await cloudinary.uploader.upload(avatar, {
+              folder: "devmate/avatars",
+              transformation: [{ width: 500, height: 500, crop: "fill" }],
+            });
+            updateData.avatar = uploadResponse.secure_url;
+          } catch (uploadError) {
+            console.error("Cloudinary avatar upload error:", uploadError);
+            // Fallback: don't update avatar or use base64 if upload fails
+            // For now, only update if upload successful to keep DB clean
+          }
+        } else {
+          updateData.avatar = avatar;
+        }
       }
 
       // Mark profile as completed when any field is updated
@@ -243,6 +262,7 @@ router.put(
         bio: user.bio,
         skills: user.skills,
         githubLink: user.githubLink,
+        avatar: user.avatar,
       });
     } catch (error) {
       console.error("Update user error:", error);
@@ -320,7 +340,7 @@ router.get("/", async (req, res) => {
     }
 
     const users = await User.find(query)
-      .select("username displayName bio skills githubLink createdAt")
+      .select("username displayName bio skills githubLink createdAt avatar")
       .sort({ createdAt: -1 })
       .limit(50);
 

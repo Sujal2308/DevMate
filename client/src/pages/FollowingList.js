@@ -110,9 +110,13 @@ const FollowingList = () => {
                   to={`/profile/${user.username}`}
                   className="flex-shrink-0"
                 >
-                  <div className="bg-black text-white w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold shadow-md">
-                    {user.displayName?.charAt(0).toUpperCase() ||
-                      user.username.charAt(0).toUpperCase()}
+                  <div className="bg-black text-white w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold shadow-md overflow-hidden relative border border-x-border/30">
+                    {user.avatar ? (
+                      <img src={user.avatar} alt={user.displayName} className="w-full h-full object-cover" />
+                    ) : (
+                      user.displayName?.charAt(0).toUpperCase() ||
+                      user.username.charAt(0).toUpperCase()
+                    )}
                   </div>
                 </Link>
                 <div className="flex-1 min-w-0 flex flex-col items-start gap-0">

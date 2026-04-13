@@ -108,9 +108,13 @@ const FollowersList = () => {
                   to={`/profile/${follower.username}`}
                   className="flex-shrink-0"
                 >
-                  <div className="bg-black text-white w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold shadow-md">
-                    {follower.displayName?.charAt(0).toUpperCase() ||
-                      follower.username.charAt(0).toUpperCase()}
+                  <div className="bg-black text-white w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold shadow-md overflow-hidden relative border border-x-border/30">
+                    {follower.avatar ? (
+                      <img src={follower.avatar} alt={follower.displayName} className="w-full h-full object-cover" />
+                    ) : (
+                      follower.displayName?.charAt(0).toUpperCase() ||
+                      follower.username.charAt(0).toUpperCase()
+                    )}
                   </div>
                 </Link>
                 <div className="flex-1 min-w-0 flex flex-col items-start gap-0">

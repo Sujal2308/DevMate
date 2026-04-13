@@ -67,6 +67,7 @@ const EditProfile = () => {
         displayName: formData.displayName.trim(),
         bio: formData.bio.trim(),
         skills: formData.skills,
+        avatar: avatarPreview,
       };
       if (formData.githubLink.trim()) {
         payload.githubLink = formData.githubLink.trim();
@@ -150,7 +151,7 @@ const EditProfile = () => {
               className="relative group/avatar cursor-pointer"
               onClick={() => fileInputRef.current?.click()}
             >
-              <div className="bg-gradient-to-br from-x-blue to-purple-500 text-white w-24 h-24 lg:w-32 lg:h-32 rounded-full flex items-center justify-center text-3xl lg:text-4xl font-bold border-4 border-x-dark shadow-2xl overflow-hidden relative transition-transform duration-300 group-hover/avatar:scale-105 active:scale-95">
+              <div className="bg-gradient-to-br from-x-blue to-purple-500 text-white w-20 h-20 lg:w-28 lg:h-28 rounded-full flex items-center justify-center text-2xl lg:text-3xl font-bold border-4 border-x-dark shadow-2xl overflow-hidden relative transition-transform duration-300 group-hover/avatar:scale-105 active:scale-95">
                 {avatarPreview ? (
                   <img src={avatarPreview} alt="Profile" className="w-full h-full object-cover" />
                 ) : (

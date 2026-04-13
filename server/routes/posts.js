@@ -62,7 +62,7 @@ router.post(
       await post.save();
 
       // Populate author info
-      await post.populate("author", "username displayName");
+      await post.populate("author", "username displayName avatar");
 
       res.status(201).json(post);
     } catch (error) {
@@ -96,8 +96,8 @@ router.get("/", auth, async (req, res) => {
       }
       // Only fetch posts for this user
       const posts = await Post.find({ author: user._id })
-        .populate("author", "username displayName")
-        .populate("comments.user", "username displayName")
+        .populate("author", "username displayName avatar")
+        .populate("comments.user", "username displayName avatar")
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit);
@@ -114,8 +114,8 @@ router.get("/", auth, async (req, res) => {
 
     // Default: fetch all public posts
     const posts = await Post.find()
-      .populate("author", "username displayName")
-      .populate("comments.user", "username displayName")
+      .populate("author", "username displayName avatar")
+      .populate("comments.user", "username displayName avatar")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
@@ -140,8 +140,8 @@ router.get("/", auth, async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const post = await Post.findById(req.params.id)
-      .populate("author", "username displayName")
-      .populate("comments.user", "username displayName");
+      .populate("author", "username displayName avatar")
+      .populate("comments.user", "username displayName avatar");
 
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
@@ -176,8 +176,8 @@ router.put("/:id/like", auth, async (req, res) => {
     }
     await post.save();
     // Populate author info
-    await post.populate("author", "username displayName");
-    await post.populate("comments.user", "username displayName");
+    await post.populate("author", "username displayName avatar");
+    await post.populate("comments.user", "username displayName avatar");
     // Create notification if liked and not self
     if (liked && post.author._id.toString() !== req.user._id.toString()) {
       const notification = await Notification.create({
@@ -224,9 +224,9 @@ router.post(
       // Populate author info
       await post.populate(
         "author",
-        "username displayName email notificationPreferences"
+        "username displayName email notificationPreferences avatar"
       );
-      await post.populate("comments.user", "username displayName");
+      await post.populate("comments.user", "username displayName avatar");
       // Create notification if not self
       if (post.author._id.toString() !== req.user._id.toString()) {
         const notification = await Notification.create({
@@ -308,8 +308,8 @@ router.put("/:postId/comment/:commentId", auth, async (req, res) => {
     comment.updatedAt = new Date();
 
     await post.save();
-    await post.populate("comments.user", "username displayName");
-    await post.populate("author", "username displayName");
+    await post.populate("comments.user", "username displayName avatar");
+    await post.populate("author", "username displayName avatar");
     console.log("✅ Comment edited successfully");
     res.json(post);
   } catch (error) {
@@ -349,8 +349,8 @@ router.delete("/:postId/comment/:commentId", auth, async (req, res) => {
     // Soft delete: set deleted flag
     comment.deleted = true;
     await post.save();
-    await post.populate("comments.user", "username displayName");
-    await post.populate("author", "username displayName");
+    await post.populate("comments.user", "username displayName avatar");
+    await post.populate("author", "username displayName avatar");
     console.log("✅ Comment deleted successfully");
     res.json(post);
   } catch (error) {

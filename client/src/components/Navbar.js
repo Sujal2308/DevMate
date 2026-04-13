@@ -151,10 +151,14 @@ const Navbar = () => {
                 {/* User Menu - Desktop */}
                 <div className="hidden md:flex items-center space-x-4">
                   <Link to={`/profile/${user.username}`} className="group">
-                    <div className="w-9 h-9 bg-[#003366] rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
-                      <span className="text-white font-bold text-sm">
-                        {user.displayName?.[0] || user.username?.[0]}
-                      </span>
+                    <div className="w-9 h-9 bg-[#003366] rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg overflow-hidden relative border border-x-border/30">
+                      {user.avatar ? (
+                        <img src={user.avatar} alt={user.displayName} className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="text-white font-bold text-sm">
+                          {user.displayName?.[0] || user.username?.[0]}
+                        </span>
+                      )}
                     </div>
                   </Link>
                   <button
@@ -188,10 +192,14 @@ const Navbar = () => {
                         />
                       </svg>
                     ) : (
-                      <div className="w-8 h-8 bg-[#003366] rounded-full flex items-center justify-center transition-transform shadow-lg">
-                        <span className="text-white font-bold text-xs">
-                          {user.displayName?.[0] || user.username?.[0]}
-                        </span>
+                      <div className="w-8 h-8 bg-[#003366] rounded-full flex items-center justify-center transition-transform shadow-lg overflow-hidden relative border border-x-border/30">
+                        {user.avatar ? (
+                          <img src={user.avatar} alt={user.displayName} className="w-full h-full object-cover" />
+                        ) : (
+                          <span className="text-white font-bold text-xs">
+                            {user.displayName?.[0] || user.username?.[0]}
+                          </span>
+                        )}
                       </div>
                     )}
                   </button>
