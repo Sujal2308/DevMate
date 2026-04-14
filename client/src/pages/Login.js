@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 // Font loaded via <link> in index.html or inline @import below
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import LoadingSpinner from "../components/LoadingSpinner";
 
@@ -12,6 +12,9 @@ const Login = () => {
 
   const { login } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const logoutSuccess = searchParams.get("logout") === "success";
+  const [showLogoutToast, setShowLogoutToast] = useState(logoutSuccess);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -368,6 +371,26 @@ const Login = () => {
           </div>
 
           <div className="lp-card">
+            {/* logout success toast */}
+            {showLogoutToast && (
+              <div className="flex items-center justify-between gap-3 bg-green-50 z-50 animate-fade-in p-4 rounded-xl border border-green-100 mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="bg-green-500 rounded-full p-1">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </div>
+                  <p className="text-sm font-semibold text-green-800 m-0">Logged out successfully!</p>
+                </div>
+                <button onClick={() => setShowLogoutToast(false)} className="text-green-800 hover:text-green-900">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </button>
+              </div>
+            )}
+
             {/* heading */}
             <div className="lp-heading">
               <h1 className="lp-title">Welcome back</h1>

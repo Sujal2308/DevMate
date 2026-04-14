@@ -1,10 +1,11 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 
 const Sidebar = () => {
   const { user, logout } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const navItems = [
     {
@@ -159,7 +160,7 @@ const Sidebar = () => {
       {/* Logout Button - Bottom Left (Desktop Only) */}
       <div className="hidden lg:flex fixed left-4 bottom-8 z-50">
         <button
-          onClick={logout}
+          onClick={() => navigate("/logout-confirm")}
           className="flex items-center space-x-3 px-4 py-3 rounded-full bg-black/90 backdrop-blur-md text-x-gray hover:text-red-500 hover:bg-red-500/10 transition-all duration-300 shadow-2xl group"
         >
           <svg

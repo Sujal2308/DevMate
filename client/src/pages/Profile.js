@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
 import PostCard from "../components/PostCard";
@@ -19,6 +19,7 @@ const Profile = () => {
   const [viewingSavedPosts, setViewingSavedPosts] = useState(false);
   const { username } = useParams();
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
@@ -494,7 +495,7 @@ const Profile = () => {
                       <span className="font-space">Settings</span>
                     </Link>
                     <div className="h-[1px] bg-x-border/30 my-1 mx-2"></div>
-                    <button onClick={() => { setMenuOpen(false); logout(); }} className="flex items-center space-x-3 w-full px-4 py-3 text-sm text-red-400 hover:bg-red-400/5 transition-colors group">
+                    <button onClick={() => { setMenuOpen(false); navigate("/logout-confirm"); }} className="flex items-center space-x-3 w-full px-4 py-3 text-sm text-center text-red-400 hover:bg-red-400/5 transition-colors group">
                       <svg className="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                       </svg>
