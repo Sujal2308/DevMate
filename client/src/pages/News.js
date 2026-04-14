@@ -205,7 +205,7 @@ const News = () => {
               fontFamily: "'Space Grotesk', sans-serif"
             }}
           >
-            Developer News
+            Dev News
           </h1>
           <p className="text-x-gray text-sm md:text-base">
             Stay updated with the latest trends in development and technology
@@ -217,7 +217,7 @@ const News = () => {
           {news.slice(0, visibleCount).map((article) => (
             <article
               key={article.id}
-              className="bg-black border border-x-blue/20 rounded-none p-3 md:p-4 hover:border-x-blue/50 hover:bg-x-dark/20 transition-all duration-300 group cursor-pointer shadow-2xl"
+              className="bg-black rounded-none p-3 md:p-4 hover:bg-x-dark/20 transition-all duration-300 group cursor-pointer shadow-2xl"
               onClick={() => article.url !== "#" && window.open(article.url, "_blank")}
             >
               <div className="flex items-start justify-between mb-3 md:mb-4">

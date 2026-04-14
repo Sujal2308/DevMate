@@ -18,7 +18,7 @@ const Profile = () => {
   const [showUpdatePrompt, setShowUpdatePrompt] = useState(false);
   const [viewingSavedPosts, setViewingSavedPosts] = useState(false);
   const { username } = useParams();
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
