@@ -167,8 +167,14 @@ const Home = () => {
 
       {/* Hero Section */}
       <div className="relative flex-1 pt-32 lg:pt-36 sm:pt-20 pb-8 sm:pb-12 overflow-visible flex items-center w-full">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 bg-gradient-to-br from-x-blue/5 to-x-black w-full"></div>
+        {/* Background Image Layer */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: "url('/hero.jpg')" }}
+        >
+          {/* High-quality overlay for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-x-black/80 via-x-black/40 to-x-black/90"></div>
+        </div>
 
         <div className="relative w-full h-full">
           <div className="flex flex-col lg:flex-row items-center justify-between py-4 lg:py-8 gap-3 lg:gap-4 w-full min-h-full px-8 lg:px-16">
@@ -182,7 +188,7 @@ const Home = () => {
                     "Code.",
                     "Create."
                   ]}
-                  mainClassName="text-[tomato] px-2 bg-black overflow-hidden py-1 justify-center lg:justify-start rounded-lg mt-2 md:mt-0 shadow-lg"
+                  mainClassName="text-[tomato] px-4 bg-black overflow-hidden py-1 justify-center lg:justify-start rounded-xl mt-2 md:mt-0"
                   staggerFrom={"last"}
                   initial={{ y: "100%" }}
                   animate={{ y: 0 }}
@@ -193,7 +199,7 @@ const Home = () => {
                   rotationInterval={2500}
                 />
               </h1>
-              <p className="text-base sm:text-xl lg:text-2xl text-x-gray mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+              <p className="text-base sm:text-xl lg:text-2xl text-x-gray mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed">
                 <span className="block sm:hidden">
                   <span style={{ fontFamily: "monospace" }}>
                     Join 10,000+ devs. Share code. Build. Grow. Discover new
@@ -206,11 +212,19 @@ const Home = () => {
                 </span>
               </p>
 
+              {/* Enhanced Registration Teaser - Hidden on mobile */}
+              <div className="hidden sm:flex items-center gap-3 mb-10 px-4 py-2 bg-gradient-to-r from-x-blue/10 to-transparent border-l-2 border-x-blue rounded-r-lg max-w-fit mx-auto lg:mx-0">
+                <span className="flex h-2 w-2 rounded-full bg-x-blue animate-pulse"></span>
+                <p className="text-x-white/80 text-sm md:text-base font-medium">
+                  Level up your craft. <span className="text-x-blue font-bold">Join the tribe</span> and start building today.
+                </p>
+              </div>
+
               {/* CTA Buttons - Enhanced (order-1 on mobile, order-2 on lg+) */}
               <div className="flex flex-row gap-2 justify-center sm:justify-start items-center mb-8 sm:mb-12 flex-wrap">
                 <Link
                   to="/register"
-                  className="bg-[#e63946] hover:bg-[#0d1333] text-white font-bold text-base px-4 py-2 rounded-full transition-colors duration-200 shadow-xl min-w-[110px] flex items-center justify-center sm:bg-[#1a237e] sm:hover:bg-[#0d1333] sm:text-xl sm:px-12 sm:py-5 sm:min-w-[250px]"
+                  className="bg-[#e63946] hover:bg-[#b92b36] text-white font-bold text-base px-6 py-3 rounded-xl transition-all duration-200 min-w-[110px] flex items-center justify-center sm:bg-[#1a237e] sm:hover:bg-[#0d1333] sm:text-xl sm:px-12 sm:py-5 sm:min-w-[250px]"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -232,7 +246,7 @@ const Home = () => {
                 {/* Mobile: Sign In button, smaller and inline */}
                 <Link
                   to="/login"
-                  className="border-2 border-x-blue text-x-blue hover:bg-x-blue hover:text-white font-bold text-sm px-4 py-2 rounded-full transition-all duration-300 transform hover:scale-105 min-w-[90px] backdrop-blur-sm flex items-center justify-center space-x-2 sm:hidden"
+                  className="border-2 border-x-blue text-x-blue hover:bg-x-blue hover:text-white font-bold text-sm px-4 py-3 rounded-xl transition-all duration-300 transform hover:scale-105 min-w-[90px] backdrop-blur-sm flex items-center justify-center space-x-2 sm:hidden"
                 >
                   <span className="flex items-center space-x-1">
                     <svg
@@ -256,7 +270,7 @@ const Home = () => {
                 {/* Desktop: I'm Already In button */}
                 <Link
                   to="/login"
-                  className="border-2 border-x-blue text-x-blue hover:bg-x-blue hover:text-white font-bold text-xl px-12 py-5 rounded-full transition-colors duration-200 min-w-[250px] backdrop-blur-sm flex items-center justify-center space-x-3 hidden sm:flex group"
+                  className="border-2 border-x-blue text-x-blue hover:bg-x-blue hover:text-white font-bold text-xl px-12 py-5 rounded-xl transition-colors duration-200 min-w-[250px] backdrop-blur-sm flex items-center justify-center space-x-3 hidden sm:flex group"
                 >
                   <span className="flex items-center space-x-2">
                     <svg
@@ -278,67 +292,7 @@ const Home = () => {
                 </Link>
               </div>
 
-              {/* Key Features - Redesigned (order-2 on mobile, order-1 on lg+) */}
-              <div className="grid grid-cols-2 lg:grid-cols-2 gap-4 mb-10 max-w-2xl mx-auto lg:mx-0 order-2 lg:order-1">
-                {/* Instant Sharing */}
-                <div className="flex items-center space-x-3 p-4 bg-x-dark/30 rounded-lg border border-x-border/50">
-                  <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-white text-xl font-bold">⚡</span>
-                  </div>
-                  <div className="text-left">
-                    <h3 className="text-x-white font-medium lg:font-semibold">
-                      Instant Sharing
-                    </h3>
-                    <p className="hidden lg:block text-x-gray text-xs mt-1">
-                      Share your code and ideas instantly with the community.
-                    </p>
-                  </div>
-                </div>
-                {/* Global Network */}
-                <div className="flex items-center space-x-3 p-4 bg-x-dark/30 rounded-lg border border-x-border/50">
-                  <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-white text-xl font-bold">🌐</span>
-                  </div>
-                  <div className="text-left">
-                    <h3 className="text-x-white font-medium lg:font-semibold">
-                      Global Network
-                    </h3>
-                    <p className="hidden lg:block text-x-gray text-xs mt-1">
-                      Connect with developers from all around the world.
-                    </p>
-                  </div>
-                </div>
-                {/* Grow Portfolio */}
-                <div className="flex items-center space-x-3 p-4 bg-x-dark/30 rounded-lg border border-x-border/50">
-                  <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-white text-xl font-bold">📈</span>
-                  </div>
-                  <div className="text-left">
-                    <h3 className="text-x-white font-medium lg:font-semibold">
-                      Grow Portfolio
-                    </h3>
-                    <p className="hidden lg:block text-x-gray text-xs mt-1">
-                      Build your portfolio by sharing and collaborating on
-                      projects.
-                    </p>
-                  </div>
-                </div>
-                {/* Collaborate */}
-                <div className="flex items-center space-x-3 p-4 bg-x-dark/30 rounded-lg border border-x-border/50">
-                  <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-white text-xl font-bold">🤝</span>
-                  </div>
-                  <div className="text-left">
-                    <h3 className="text-x-white font-medium lg:font-semibold">
-                      <span className="block lg:hidden">Collab</span>
-                      <span className="hidden lg:block">Collaborate</span>
-                    </h3>
-                    <p className="hidden lg:block text-x-gray text-xs mt-1">
-                      Work together with peers to create amazing things.
-                    </p>
-                  </div>
-                </div>
-              </div>
+
 
               {/* Stats Row - mobile only, with gradient background */}
               {/* Animated counter stats section removed as per user request */}
@@ -385,7 +339,7 @@ const Home = () => {
                 <img 
                   src="/Group Chat-pana.svg" 
                   alt="Group Chat Illustration" 
-                  className="w-full h-auto drop-shadow-2xl"
+                  className="w-full h-auto"
                   width="600"
                   height="450"
                   fetchpriority="high"
@@ -397,44 +351,44 @@ const Home = () => {
       </div>
 
       {/* Stats Section - DevMate Specific with Hover Animation */}
-      <div className="w-full bg-[#f3ece3] py-10 lg:py-20 px-4 lg:px-16">
+      <div className="w-full bg-x-black py-10 lg:py-20 px-4 lg:px-16">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
             {/* Developers Card */}
-            <div className="relative bg-[#fff9f2] rounded-[32px] p-6 lg:p-8 shadow-sm flex flex-col justify-between min-h-[180px] lg:min-h-[220px] transition-all duration-300 border border-black/5 overflow-hidden group cursor-default">
+            <div className="relative bg-[#0f0f15] rounded-[32px] p-6 lg:p-8 shadow-sm flex flex-col justify-between min-h-[180px] lg:min-h-[220px] transition-all duration-300 border border-white/5 overflow-hidden group cursor-default">
               <div className="absolute inset-0 bg-[#ff6347] translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-in-out z-0"></div>
               
-              <div className="relative z-10 w-8 h-8 lg:w-10 lg:h-10 text-black group-hover:text-white mb-8 lg:mb-12 transition-colors duration-300">
+              <div className="relative z-10 w-8 h-8 lg:w-10 lg:h-10 text-white group-hover:text-white mb-8 lg:mb-12 transition-colors duration-300">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
               </div>
               <div className="relative z-10">
-                <p className="text-black group-hover:text-white/90 text-xs lg:text-sm font-semibold mb-1 uppercase tracking-wider transition-colors duration-300" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>Active Developers</p>
-                <h3 className="text-3xl lg:text-5xl font-bold text-black group-hover:text-white tracking-tighter transition-colors duration-300" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+                <p className="text-white group-hover:text-white/90 text-xs lg:text-sm font-semibold mb-1 uppercase tracking-wider transition-colors duration-300" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>Active Developers</p>
+                <h3 className="text-3xl lg:text-5xl font-bold text-white group-hover:text-white tracking-tighter transition-colors duration-300" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
                   <AnimatedCounter end={10} suffix="k+" />
                 </h3>
               </div>
             </div>
 
             {/* Snippets Card */}
-            <div className="relative bg-[#fff9f2] rounded-[32px] p-6 lg:p-8 shadow-sm flex flex-col justify-between min-h-[180px] lg:min-h-[220px] transition-all duration-300 border border-black/5 overflow-hidden group cursor-default">
+            <div className="relative bg-[#0f0f15] rounded-[32px] p-6 lg:p-8 shadow-sm flex flex-col justify-between min-h-[180px] lg:min-h-[220px] transition-all duration-300 border border-white/5 overflow-hidden group cursor-default">
               <div className="absolute inset-0 bg-[#22c55e] translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-in-out z-0"></div>
 
-              <div className="relative z-10 w-8 h-8 lg:w-10 lg:h-10 text-black group-hover:text-white mb-8 lg:mb-12 transition-colors duration-300">
+              <div className="relative z-10 w-8 h-8 lg:w-10 lg:h-10 text-white group-hover:text-white mb-8 lg:mb-12 transition-colors duration-300">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
               </div>
               <div className="relative z-10">
-                <p className="text-black group-hover:text-white/90 text-xs lg:text-sm font-semibold mb-1 uppercase tracking-wider transition-colors duration-300" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>Code Snippets</p>
-                <h3 className="text-3xl lg:text-5xl font-bold text-black group-hover:text-white tracking-tighter transition-colors duration-300" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+                <p className="text-white group-hover:text-white/90 text-xs lg:text-sm font-semibold mb-1 uppercase tracking-wider transition-colors duration-300" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>Code Snippets</p>
+                <h3 className="text-3xl lg:text-5xl font-bold text-white group-hover:text-white tracking-tighter transition-colors duration-300" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
                   <AnimatedCounter end={50} suffix="k+" />
                 </h3>
               </div>
             </div>
 
             {/* Projects Card */}
-            <div className="relative bg-[#fff9f2] rounded-[32px] p-6 lg:p-8 shadow-sm flex flex-col justify-between min-h-[180px] lg:min-h-[220px] transition-all duration-300 border border-black/5 overflow-hidden group cursor-default">
+            <div className="relative bg-[#0f0f15] rounded-[32px] p-6 lg:p-8 shadow-sm flex flex-col justify-between min-h-[180px] lg:min-h-[220px] transition-all duration-300 border border-white/5 overflow-hidden group cursor-default">
               <div className="absolute inset-0 bg-[#a855f7] translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-in-out z-0"></div>
 
-              <div className="relative z-10 w-8 h-8 lg:w-10 lg:h-10 text-black group-hover:text-white mb-8 lg:mb-12 transition-colors duration-300">
+              <div className="relative z-10 w-8 h-8 lg:w-10 lg:h-10 text-white group-hover:text-white mb-8 lg:mb-12 transition-colors duration-300">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   <polygon points="12 2 2 7 12 12 22 7 12 2"/>
                   <polyline points="2 17 12 22 22 17"/>
@@ -442,23 +396,23 @@ const Home = () => {
                 </svg>
               </div>
               <div className="relative z-10">
-                <p className="text-black group-hover:text-white/90 text-xs lg:text-sm font-semibold mb-1 uppercase tracking-wider transition-colors duration-300" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>Shared Projects</p>
-                <h3 className="text-3xl lg:text-5xl font-bold text-black group-hover:text-white tracking-tighter transition-colors duration-300" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+                <p className="text-white group-hover:text-white/90 text-xs lg:text-sm font-semibold mb-1 uppercase tracking-wider transition-colors duration-300" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>Shared Projects</p>
+                <h3 className="text-3xl lg:text-5xl font-bold text-white group-hover:text-white tracking-tighter transition-colors duration-300" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
                   <AnimatedCounter end={5000} suffix="+" />
                 </h3>
               </div>
             </div>
 
             {/* LOC Card */}
-            <div className="relative bg-[#fff9f2] rounded-[32px] p-6 lg:p-8 shadow-sm flex flex-col justify-between min-h-[180px] lg:min-h-[220px] transition-all duration-300 border border-black/5 overflow-hidden group cursor-default">
+            <div className="relative bg-[#0f0f15] rounded-[32px] p-6 lg:p-8 shadow-sm flex flex-col justify-between min-h-[180px] lg:min-h-[220px] transition-all duration-300 border border-white/5 overflow-hidden group cursor-default">
               <div className="absolute inset-0 bg-[#1d9bf0] translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-in-out z-0"></div>
 
-              <div className="relative z-10 w-8 h-8 lg:w-10 lg:h-10 text-black group-hover:text-white mb-8 lg:mb-12 transition-colors duration-300">
+              <div className="relative z-10 w-8 h-8 lg:w-10 lg:h-10 text-white group-hover:text-white mb-8 lg:mb-12 transition-colors duration-300">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
               </div>
               <div className="relative z-10">
-                <p className="text-black group-hover:text-white/90 text-xs lg:text-sm font-semibold mb-1 uppercase tracking-wider transition-colors duration-300" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>Lines of Code</p>
-                <h3 className="text-3xl lg:text-5xl font-bold text-black group-hover:text-white tracking-tighter transition-colors duration-300" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+                <p className="text-white group-hover:text-white/90 text-xs lg:text-sm font-semibold mb-1 uppercase tracking-wider transition-colors duration-300" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>Lines of Code</p>
+                <h3 className="text-3xl lg:text-5xl font-bold text-white group-hover:text-white tracking-tighter transition-colors duration-300" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
                   <AnimatedCounter end={1} suffix="M+" />
                 </h3>
               </div>
@@ -482,19 +436,19 @@ const Home = () => {
             {[
               {
                 q: "What exactly is DevMate?",
-                a: "DevMate is a social platform designed specifically for developers to share code snippets, discover innovative projects, and connect with a global community of coders."
+                a: "DevMate is a social community built exclusively for developers. Think of it as a mix of GitHub and your favorite news feed, where you can share code, discover new projects, and grow together."
               },
               {
-                q: "Is DevMate free for individual developers?",
-                a: "Yes! DevMate is completely free for individuals to share, explore, and learn from the community."
+                q: "Is DevMate free to use?",
+                a: "Yes! The core features of DevMate—sharing code, browsing the feed, and connecting with other developers—are and will always be free."
               },
               {
-                q: "How can I share my code snippets?",
-                a: "Simply sign up, head to your feed, and use our intuitive post editor. You can paste your code, add a description, and even tag it for better discoverability."
+                q: "Can I use DevMate on mobile?",
+                a: "Absolutely. DevMate is designed with a mobile-first approach, ensuring a seamless experience on any device."
               },
               {
-                q: "Can I collaborate on projects with others?",
-                a: "Absolutely. DevMate encourages collaboration through comments, direct messaging, and project highlighting, making it easy to find partners for your next big idea."
+                q: "How do I share my code snippets?",
+                a: "Simply sign up, head to your feed, and use our intuitive post editor to share your work with the global community."
               }
             ].map((faq, index) => (
               <details key={index} className="group border border-x-border/50 bg-[#0f0f15] open:bg-x-blue open:border-x-blue rounded-none overflow-hidden transition-all duration-500">
@@ -525,8 +479,7 @@ const Home = () => {
           loop={true}
         />
       </div>
-
-      {/* ── Premium Redesigned Footer ── */}
+          {/* ── Premium Redesigned Footer ── */}
       <footer className="border-t border-x-border bg-x-black w-full pt-16 pb-12 mt-auto relative z-10">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-16">
@@ -592,7 +545,7 @@ const Home = () => {
                 ))}
               </div>
             </div>
-
+ 
             {/* Right Column: Feedback Form */}
             <div className="flex flex-col gap-6 bg-transparent p-0 rounded-none border-none">
               <h3 className="text-xl font-bold text-x-white flex items-center gap-2" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
@@ -638,7 +591,7 @@ const Home = () => {
               </form>
             </div>
           </div>
-
+ 
           {/* Bottom Bar */}
           <div className="border-t border-x-border/30 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
             <p className="text-x-gray text-sm" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>

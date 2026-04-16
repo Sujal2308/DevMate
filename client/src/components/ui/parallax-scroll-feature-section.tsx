@@ -11,6 +11,7 @@ const sections = [
       "Effortlessly share your most useful code snippets with the community. Syntax highlighting, easy copying, and categorized tags make your code discoverable and reusable.",
     imageUrl: "/sharecode.jpg",
     reverse: false,
+    color: "text-x-blue"
   },
   {
     id: 2,
@@ -19,6 +20,7 @@ const sections = [
       "Explore a vast repository of brilliant projects built by developers around the world. Find inspiration, study architectural designs, and learn from real-world applications.",
     imageUrl: "/projects.jpg",
     reverse: true,
+    color: "text-[#22c55e]" // Vibrant Green
   },
   {
     id: 3,
@@ -27,6 +29,7 @@ const sections = [
       "Connect with peers, find mentors, or team up for your next big idea. DevMate creates a dynamic environment where collaboration happens organically.",
     imageUrl: "/connection.jpg",
     reverse: false,
+    color: "text-[#a855f7]" // Vibrant Purple
   },
 ];
 
@@ -65,12 +68,15 @@ const FeatureSection = ({ section }: { section: typeof sections[0] }) => {
         className="flex-1 px-4 text-left"
       >
         <div
-          className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight"
-          style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+          className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-white tracking-tighter uppercase"
+          style={{ fontFamily: "'Syne', sans-serif" }}
         >
           {section.title}
         </div>
-        <p className="text-x-gray text-lg md:text-xl mt-6 lg:mt-8 leading-relaxed max-w-xl mx-auto md:mx-0">
+        <p 
+          className="text-x-gray text-lg md:text-xl mt-6 lg:mt-8 leading-[1.8] max-w-xl mx-auto md:mx-0"
+          style={{ fontFamily: "'Outfit', sans-serif" }}
+        >
           {section.description}
         </p>
       </motion.div>
@@ -81,7 +87,7 @@ const FeatureSection = ({ section }: { section: typeof sections[0] }) => {
         }}
         className="relative flex-1 flex justify-center items-center w-full"
       >
-        <div className="relative w-full max-w-[450px] aspect-[4/3] md:aspect-square rounded-[32px] overflow-hidden shadow-[0_0_40px_rgba(29,155,240,0.15)] border border-x-border/80 group">
+        <div className="relative w-full max-w-[360px] aspect-[4/3] md:aspect-square rounded-[32px] overflow-hidden group">
           <img
             src={section.imageUrl}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
