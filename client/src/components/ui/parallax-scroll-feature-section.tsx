@@ -69,7 +69,7 @@ const FeatureSection = ({ section }: { section: typeof sections[0] }) => {
   return (
     <div
       ref={ref}
-      className={`min-h-[70vh] py-16 flex flex-col items-center justify-center gap-12 md:gap-20 ${
+      className={`py-20 md:py-16 md:min-h-[70vh] flex flex-col items-center justify-center gap-12 md:gap-20 ${
         section.reverse ? "md:flex-row-reverse" : "md:flex-row"
       }`}
     >
