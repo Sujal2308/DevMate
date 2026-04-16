@@ -46,8 +46,12 @@ const FeatureSection = ({ section }: { section: typeof sections[0] }) => {
   });
 
   const opacity = useTransform(smoothProgress, [0, 1], [0, 1]);
-  const clipPath = useTransform(smoothProgress, [0, 1], ["inset(0 100% 0 0)", "inset(0 0% 0 0)"]);
   const y = useTransform(smoothProgress, [0, 1], [80, 0]);
+  
+  // Image slides out to the edge it's closest to. 
+  // If reverse is true, image is on the left -> slides out to the left (-150). Otherwise right (150).
+  const startX = section.reverse ? -150 : 150;
+  const imageX = useTransform(smoothProgress, [0, 1], [startX, 0]);
 
   return (
     <div
@@ -73,8 +77,7 @@ const FeatureSection = ({ section }: { section: typeof sections[0] }) => {
 
       <motion.div
         style={{
-          opacity,
-          clipPath,
+          x: imageX,
         }}
         className="relative flex-1 flex justify-center items-center w-full"
       >
