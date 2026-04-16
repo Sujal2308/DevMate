@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { TextRotate } from "../components/ui/text-rotate";
+import { CosmicParallaxBg } from "../components/ui/parallax-cosmic-background";
 
 
 
@@ -180,7 +181,7 @@ const Home = () => {
                     "Code.",
                     "Create."
                   ]}
-                  mainClassName="text-x-blue px-2 bg-x-blue/10 overflow-hidden py-1 justify-center lg:justify-start rounded-lg mt-2 md:mt-0 shadow-lg border border-x-blue/20"
+                  mainClassName="text-[tomato] px-2 bg-black overflow-hidden py-1 justify-center lg:justify-start rounded-lg mt-2 md:mt-0 shadow-lg"
                   staggerFrom={"last"}
                   initial={{ y: "100%" }}
                   animate={{ y: 0 }}
@@ -394,39 +395,71 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Stats Section */}
-      <div className="lg:border-t lg:border-x-border w-full bg-gradient-to-r from-x-pink via-x-yellow to-x-blue">
-        <div className="w-full px-8 lg:px-16 py-12">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
-            <div className="group hover:transform hover:scale-105 transition-all duration-300">
-              <div className="text-3xl font-bold text-x-blue mb-2">
-                <AnimatedCounter end={10} suffix="K+" />
+      {/* Stats Section - DevMate Specific with Hover Animation */}
+      <div className="w-full bg-[#f3ece3] py-10 lg:py-20 px-4 lg:px-16">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+            {/* Developers Card */}
+            <div className="relative bg-[#fff9f2] rounded-[32px] p-6 lg:p-8 shadow-sm flex flex-col justify-between min-h-[180px] lg:min-h-[220px] transition-all duration-300 border border-black/5 overflow-hidden group cursor-default">
+              <div className="absolute inset-0 bg-[#ff6347] translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-in-out z-0"></div>
+              
+              <div className="relative z-10 w-8 h-8 lg:w-10 lg:h-10 text-black group-hover:text-white mb-8 lg:mb-12 transition-colors duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
               </div>
-              <div className="text-x-gray group-hover:text-x-light-gray transition-colors">
-                Active Developers
-              </div>
-            </div>
-            <div className="group hover:transform hover:scale-105 transition-all duration-300">
-              <div className="text-3xl font-bold text-x-blue mb-2">
-                <AnimatedCounter end={50} suffix="K+" />
-              </div>
-              <div className="text-x-gray group-hover:text-x-light-gray transition-colors">
-                Code Snippets
+              <div className="relative z-10">
+                <p className="text-black group-hover:text-white/90 text-xs lg:text-sm font-semibold mb-1 uppercase tracking-wider transition-colors duration-300" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>Active Developers</p>
+                <h3 className="text-3xl lg:text-5xl font-bold text-black group-hover:text-white tracking-tighter transition-colors duration-300" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+                  <AnimatedCounter end={10} suffix="k+" />
+                </h3>
               </div>
             </div>
-            <div className="group hover:transform hover:scale-105 transition-all duration-300">
-              <div className="text-3xl font-bold text-x-blue mb-2">
-                <AnimatedCounter end={100} suffix="K+" />
+
+            {/* Snippets Card */}
+            <div className="relative bg-[#fff9f2] rounded-[32px] p-6 lg:p-8 shadow-sm flex flex-col justify-between min-h-[180px] lg:min-h-[220px] transition-all duration-300 border border-black/5 overflow-hidden group cursor-default">
+              <div className="absolute inset-0 bg-[#22c55e] translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-in-out z-0"></div>
+
+              <div className="relative z-10 w-8 h-8 lg:w-10 lg:h-10 text-black group-hover:text-white mb-8 lg:mb-12 transition-colors duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
               </div>
-              <div className="text-x-gray group-hover:text-x-light-gray transition-colors">
-                Lines of Code
+              <div className="relative z-10">
+                <p className="text-black group-hover:text-white/90 text-xs lg:text-sm font-semibold mb-1 uppercase tracking-wider transition-colors duration-300" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>Code Snippets</p>
+                <h3 className="text-3xl lg:text-5xl font-bold text-black group-hover:text-white tracking-tighter transition-colors duration-300" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+                  <AnimatedCounter end={50} suffix="k+" />
+                </h3>
               </div>
             </div>
-            <div className="group hover:transform hover:scale-105 transition-all duration-300">
-              <div className="text-3xl font-bold text-x-blue mb-2">24/7</div>
-              <div className="text-x-gray group-hover:text-x-light-gray transition-colors">
-                <span className="block sm:hidden">Support</span>
-                <span className="hidden sm:block">Community Support</span>
+
+            {/* Projects Card */}
+            <div className="relative bg-[#fff9f2] rounded-[32px] p-6 lg:p-8 shadow-sm flex flex-col justify-between min-h-[180px] lg:min-h-[220px] transition-all duration-300 border border-black/5 overflow-hidden group cursor-default">
+              <div className="absolute inset-0 bg-[#a855f7] translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-in-out z-0"></div>
+
+              <div className="relative z-10 w-8 h-8 lg:w-10 lg:h-10 text-black group-hover:text-white mb-8 lg:mb-12 transition-colors duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+                  <polyline points="2 17 12 22 22 17"/>
+                  <polyline points="2 12 12 17 22 12"/>
+                </svg>
+              </div>
+              <div className="relative z-10">
+                <p className="text-black group-hover:text-white/90 text-xs lg:text-sm font-semibold mb-1 uppercase tracking-wider transition-colors duration-300" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>Shared Projects</p>
+                <h3 className="text-3xl lg:text-5xl font-bold text-black group-hover:text-white tracking-tighter transition-colors duration-300" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+                  <AnimatedCounter end={5000} suffix="+" />
+                </h3>
+              </div>
+            </div>
+
+            {/* LOC Card */}
+            <div className="relative bg-[#fff9f2] rounded-[32px] p-6 lg:p-8 shadow-sm flex flex-col justify-between min-h-[180px] lg:min-h-[220px] transition-all duration-300 border border-black/5 overflow-hidden group cursor-default">
+              <div className="absolute inset-0 bg-[#1d9bf0] translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-in-out z-0"></div>
+
+              <div className="relative z-10 w-8 h-8 lg:w-10 lg:h-10 text-black group-hover:text-white mb-8 lg:mb-12 transition-colors duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+              </div>
+              <div className="relative z-10">
+                <p className="text-black group-hover:text-white/90 text-xs lg:text-sm font-semibold mb-1 uppercase tracking-wider transition-colors duration-300" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>Lines of Code</p>
+                <h3 className="text-3xl lg:text-5xl font-bold text-black group-hover:text-white tracking-tighter transition-colors duration-300" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+                  <AnimatedCounter end={1} suffix="M+" />
+                </h3>
               </div>
             </div>
           </div>
@@ -480,8 +513,17 @@ const Home = () => {
         </div>
       </div>
 
+      {/* Cosmic Parallax Component */}
+      <div className="w-full relative z-0">
+        <CosmicParallaxBg 
+          head="DevMate" 
+          text="Share Code, Build Projects, Connect Globally, Grow Together" 
+          loop={true}
+        />
+      </div>
+
       {/* ── Premium Redesigned Footer ── */}
-      <footer className="border-t border-x-border bg-x-black w-full pt-16 pb-12 mt-auto">
+      <footer className="border-t border-x-border bg-x-black w-full pt-16 pb-12 mt-auto relative z-10">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-16">
             
