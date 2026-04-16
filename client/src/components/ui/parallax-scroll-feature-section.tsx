@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 // @ts-ignore
 import { ArrowDown } from "lucide-react";
 
@@ -35,12 +35,19 @@ const FeatureSection = ({ section }: { section: typeof sections[0] }) => {
 
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start end", "center center"],
+    offset: ["start 85%", "center center"],
   });
 
-  const opacity = useTransform(scrollYProgress, [0.2, 0.6], [0, 1]);
-  const clipPath = useTransform(scrollYProgress, [0.2, 0.6], ["inset(0 100% 0 0)", "inset(0 0% 0 0)"]);
-  const y = useTransform(scrollYProgress, [0, 1], [-100, 0]);
+  // Apply a spring to smooth out the jittery mouse-wheel inputs!
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 70,
+    damping: 20,
+    restDelta: 0.001
+  });
+
+  const opacity = useTransform(smoothProgress, [0, 1], [0, 1]);
+  const clipPath = useTransform(smoothProgress, [0, 1], ["inset(0 100% 0 0)", "inset(0 0% 0 0)"]);
+  const y = useTransform(smoothProgress, [0, 1], [80, 0]);
 
   return (
     <div
@@ -76,6 +83,9 @@ const FeatureSection = ({ section }: { section: typeof sections[0] }) => {
             src={section.imageUrl}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             alt={section.title}
+            loading={section.id === 1 ? "eager" : "lazy"}
+            fetchPriority={section.id === 1 ? "high" : "auto"}
+            decoding="async"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent opacity-80"></div>
         </div>
