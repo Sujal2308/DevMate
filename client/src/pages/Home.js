@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { TextRotate } from "../components/ui/text-rotate";
 import { CosmicParallaxBg } from "../components/ui/parallax-cosmic-background";
+import { ParallaxScrollFeatureSection } from "../components/ui/parallax-scroll-feature-section";
 
 
 
@@ -158,7 +159,7 @@ const Home = () => {
         />
         <span 
           className="text-4xl text-x-white tracking-tight"
-          style={{ fontFamily: "'Lobster', sans-serif", textShadow: "0 4px 15px rgba(0,0,0,0.6)" }}
+          style={{ fontFamily: "'Lobster', sans-serif" }}
         >
           DevMate
         </span>
@@ -465,6 +466,9 @@ const Home = () => {
           </div>
         </div>
       </div>
+
+      {/* Parallax Scroll Feature Section */}
+      <ParallaxScrollFeatureSection />
 
       {/* ── FAQ Section ── */}
       <div className="w-full bg-x-black pt-8 md:pt-16 pb-12 md:pb-16 border-t border-x-border/30">
