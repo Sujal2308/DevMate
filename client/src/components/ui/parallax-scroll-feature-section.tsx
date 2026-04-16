@@ -9,7 +9,7 @@ const sections = [
     title: "Share Code Snippets",
     description:
       "Effortlessly share your most useful code snippets with the community. Syntax highlighting, easy copying, and categorized tags make your code discoverable and reusable.",
-    imageUrl: "/sharecode.jpg",
+    imageUrl: "/sharecode.webp",
     reverse: false,
     color: "text-x-blue"
   },
@@ -18,7 +18,7 @@ const sections = [
     title: "Discover Projects",
     description:
       "Explore a vast repository of brilliant projects built by developers around the world. Find inspiration, study architectural designs, and learn from real-world applications.",
-    imageUrl: "/projects.jpg",
+    imageUrl: "/projects.webp",
     reverse: true,
     color: "text-[#22c55e]" // Vibrant Green
   },
@@ -27,7 +27,7 @@ const sections = [
     title: "Connect Globally",
     description:
       "Connect with peers, find mentors, or team up for your next big idea. DevMate creates a dynamic environment where collaboration happens organically.",
-    imageUrl: "/connection.jpg",
+    imageUrl: "/connection.webp",
     reverse: false,
     color: "text-[#a855f7]" // Vibrant Purple
   },
@@ -74,7 +74,7 @@ const FeatureSection = ({ section }: { section: typeof sections[0] }) => {
       }`}
     >
       <motion.div
-        style={{ y, opacity }}
+        style={{ y: isMobile ? 0 : y, opacity: isMobile ? 1 : opacity }}
         className="flex-1 px-4 text-left"
       >
         <div
@@ -92,7 +92,7 @@ const FeatureSection = ({ section }: { section: typeof sections[0] }) => {
       </motion.div>
 
       <motion.div
-        style={!isMobile ? { x: imageX } : {}}
+        style={{ x: isMobile ? 0 : imageX }}
         className="relative flex-1 flex justify-center items-center w-full"
       >
         <div className="relative w-full max-w-[360px] aspect-[4/3] md:aspect-square rounded-[32px] overflow-hidden group">
