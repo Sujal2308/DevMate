@@ -195,6 +195,9 @@ const Feed = () => {
             src="/icons/puzzle.png" 
             alt="DevMate" 
             className="w-8 h-8 object-contain"
+            width="32"
+            height="32"
+            fetchpriority="high"
           />
           <span className="text-2xl font-normal text-x-white lobster-regular">
             DevMate

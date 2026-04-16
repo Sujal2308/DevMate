@@ -152,6 +152,8 @@ const Home = () => {
           src="/icons/puzzle.png" 
           alt="DevMate" 
           className="w-10 h-10 object-contain"
+          width="40"
+          height="40"
         />
         <span 
           className="text-4xl text-x-white tracking-tight"
@@ -382,6 +384,9 @@ const Home = () => {
                   src="/Group Chat-pana.svg" 
                   alt="Group Chat Illustration" 
                   className="w-full h-auto drop-shadow-2xl"
+                  width="600"
+                  height="450"
+                  fetchpriority="high"
                 />
               </div>
             </div>
@@ -483,7 +488,13 @@ const Home = () => {
             {/* Left Column: Branding & Description */}
             <div className="flex flex-col gap-8">
               <Link to="/" className="flex items-center gap-3 group w-fit">
-                <img src="/icons/puzzle.png" alt="DevMate" className="w-12 h-12 object-contain group-hover:rotate-12 transition-all duration-300" />
+                <img 
+                  src="/icons/puzzle.png" 
+                  alt="DevMate" 
+                  className="w-12 h-12 object-contain group-hover:rotate-12 transition-all duration-300" 
+                  width="48"
+                  height="48"
+                />
                 <span className="text-4xl text-x-white tracking-tight" style={{ fontFamily: "'Lobster', sans-serif" }}>DevMate</span>
               </Link>
               <p className="text-x-gray text-lg max-w-md leading-relaxed" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
@@ -564,7 +575,14 @@ const Home = () => {
                     style={{ backgroundColor: "tomato" }}
                   >
                     Submit
-                    <img src="/icons/send.png" alt="" className="w-5 h-5 object-contain" />
+                    <img 
+                      src="/icons/send.png" 
+                      alt="" 
+                      className="w-5 h-5 object-contain" 
+                      width="20"
+                      height="20"
+                      loading="lazy"
+                    />
                   </button>
                   <div className="flex items-center gap-3 text-x-green text-sm font-semibold bg-x-green/5 px-4 py-2 rounded-full border border-x-green/20">
                     <span className="w-2.5 h-2.5 bg-x-green rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.6)]"></span>

@@ -197,22 +197,35 @@ const News = () => {
 
   return (
     <div className="min-h-screen bg-x-black text-x-white font-sans">
-      <div className="max-w-4xl mx-auto p-4 md:p-6">
-        <div className="mb-6 md:mb-8">
-          <h1 
-            className="text-3xl md:text-5xl font-black text-x-white tracking-tighter mb-4" 
-            style={{ 
-              fontFamily: "'Space Grotesk', sans-serif"
-            }}
-          >
-            Dev News
-          </h1>
-          <p className="text-x-gray text-sm md:text-base">
+      {/* Header section with solid blue background */}
+      <div className="bg-x-blue border-b border-x-blue/30 pt-8 pb-6 mb-8 px-4 md:px-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center gap-4 mb-4">
+            <h1 
+              className="text-3xl md:text-5xl font-black text-x-white tracking-tighter" 
+              style={{ 
+                fontFamily: "'Space Grotesk', sans-serif"
+              }}
+            >
+              Dev News
+            </h1>
+            <img 
+              src="/icons/fox.png" 
+              alt="Fox" 
+              className="w-10 h-10 md:w-16 md:h-16 object-contain -translate-y-1.5 md:-translate-y-3"
+              width="64"
+              height="64"
+              fetchpriority="high"
+            />
+          </div>
+          <p className="text-x-white text-base md:text-lg opacity-90">
             Stay updated with the latest trends in development and technology
           </p>
-          {error && <p className="text-red-400 text-xs mt-2">Note: {error}</p>}
+          {error && <p className="text-red-100 text-xs mt-4">Note: {error}</p>}
         </div>
+      </div>
 
+      <div className="max-w-4xl mx-auto p-4 md:p-6">
         <div className="space-y-4 md:space-y-6 pb-20 md:pb-8">
           {news.slice(0, visibleCount).map((article) => (
             <article
@@ -223,7 +236,7 @@ const News = () => {
               <div className="flex items-start justify-between mb-3 md:mb-4">
                 <div className="flex-1">
                   <h2 
-                    className="text-lg md:text-xl font-bold text-x-white group-hover:text-x-blue transition-colors mb-2 line-clamp-2"
+                    className="text-lg md:text-xl font-bold text-x-white transition-colors mb-2 line-clamp-2"
                     style={{ fontFamily: "'Space Grotesk', sans-serif" }}
                   >
                     {article.title}

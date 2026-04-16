@@ -412,6 +412,8 @@ const Explore = () => {
                   src="/Team work-pana.svg"
                   alt="Search for developers"
                   className="w-48 h-48 sm:w-64 sm:h-64 object-contain drop-shadow-2xl"
+                  width="256"
+                  height="256"
                 />
               </div>
               <h3 className="text-xl sm:text-2xl font-bold text-x-white mb-3">
@@ -469,7 +471,14 @@ const Explore = () => {
                           <div className="flex items-center gap-3">
                             <div className="bg-black text-white w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold shadow-lg border-2 border-[#a259f7] overflow-hidden relative flex-shrink-0">
                               {user.avatar ? (
-                                <img src={user.avatar} alt={user.displayName} className="w-full h-full object-cover" />
+                                <img 
+                                  src={user.avatar} 
+                                  alt={user.displayName} 
+                                  className="w-full h-full object-cover" 
+                                  width="48"
+                                  height="48"
+                                  loading="lazy"
+                                />
                               ) : (
                                 user.displayName?.charAt(0).toUpperCase() ||
                                 user.username.charAt(0).toUpperCase()
@@ -551,7 +560,14 @@ const Explore = () => {
                             <div className="flex-shrink-0">
                               <div className="bg-black text-white w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold shadow-lg border-2 border-[#a259f7] overflow-hidden relative">
                                 {user.avatar ? (
-                                  <img src={user.avatar} alt={user.displayName} className="w-full h-full object-cover" />
+                                  <img 
+                                    src={user.avatar} 
+                                    alt={user.displayName} 
+                                    className="w-full h-full object-cover" 
+                                    width="64"
+                                    height="64"
+                                    loading="lazy"
+                                  />
                                 ) : (
                                   user.displayName?.charAt(0).toUpperCase() ||
                                   user.username.charAt(0).toUpperCase()

@@ -153,7 +153,14 @@ const CommentItem = ({ comment, postId, onUpdate, formatDate }) => {
         )} text-white w-8 h-8 rounded-full flex items-center justify-center text-sm shadow-lg overflow-hidden relative`}
       >
         {comment.user?.avatar ? (
-          <img src={comment.user.avatar} alt={comment.user.displayName} className="w-full h-full object-cover" />
+          <img 
+            src={comment.user.avatar} 
+            alt={comment.user.displayName} 
+            className="w-full h-full object-cover" 
+            width="32"
+            height="32"
+            loading="lazy"
+          />
         ) : (
           comment.user?.displayName?.charAt(0)?.toUpperCase() ||
           comment.user?.username?.charAt(0)?.toUpperCase() ||
@@ -407,7 +414,14 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
             )} text-white w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0 shadow-lg overflow-hidden relative`}
           >
             {post.author?.avatar ? (
-              <img src={post.author.avatar} alt={post.author.displayName} className="w-full h-full object-cover" />
+              <img 
+                src={post.author.avatar} 
+                alt={post.author.displayName} 
+                className="w-full h-full object-cover" 
+                width="40"
+                height="40"
+                loading="lazy"
+              />
             ) : (
               <span className="text-sm sm:text-base font-semibold">
                 {post.author?.displayName?.charAt(0)?.toUpperCase() ||

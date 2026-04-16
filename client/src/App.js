@@ -297,6 +297,9 @@ function AppContent() {
             src="/icons/puzzle.png" 
             alt="Puzzle" 
             className="w-10 h-10 sm:w-12 sm:h-12 object-contain opacity-90 drop-shadow-lg"
+            width="48"
+            height="48"
+            fetchpriority="high"
           />
         </div>
       )}

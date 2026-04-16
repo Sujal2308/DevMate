@@ -515,7 +515,14 @@ const Profile = () => {
               <div className="-ml-2 md:-ml-4 mb-0 mr-6 z-20 flex flex-col items-center gap-3">
                 <div className="bg-black text-white w-16 h-16 md:w-28 md:h-28 rounded-full flex items-center justify-center text-xl md:text-3xl font-bold border-4 border-x-border/20 shadow-2xl overflow-hidden relative">
                   {profileUser.avatar ? (
-                    <img src={profileUser.avatar} alt={profileUser.displayName} className="w-full h-full object-cover" />
+                    <img 
+                      src={profileUser.avatar} 
+                      alt={profileUser.displayName} 
+                      className="w-full h-full object-cover" 
+                      width="112"
+                      height="112"
+                      fetchpriority="high"
+                    />
                   ) : (
                     <div className="bg-black text-white w-full h-full flex items-center justify-center font-space">
                       {profileUser.displayName?.charAt(0).toUpperCase() || profileUser.username.charAt(0).toUpperCase()}
@@ -629,7 +636,14 @@ const Profile = () => {
               }}
               className={`flex-1 ${showSkills ? 'bg-x-blue border-solid border-x-blue shadow-[0_0_20px_rgba(29,155,240,0.4)]' : 'bg-black border-dashed border-white/20'} border rounded-none p-4 sm:p-6 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:bg-x-blue hover:border-solid hover:border-x-blue group`}
             >
-              <img src="/icons/skills.png" alt="Skills" className="w-10 h-10 sm:w-12 sm:h-12 object-contain transition-transform group-hover:scale-110" />
+              <img 
+                src="/icons/skills.png" 
+                alt="Skills" 
+                className="w-10 h-10 sm:w-12 sm:h-12 object-contain transition-transform group-hover:scale-110" 
+                width="48"
+                height="48"
+                loading="lazy"
+              />
               <span className={`text-[10px] sm:text-xs font-bold ${showSkills ? 'text-white' : 'text-x-white'} group-hover:text-white font-space uppercase tracking-[max(0.2em,2px)] opacity-70 group-hover:opacity-100`}>Skills</span>
             </button>
 
@@ -638,7 +652,14 @@ const Profile = () => {
               to={`/profile/${profileUser.username}/projects`}
               className="flex-1 bg-black border border-dashed border-white/20 rounded-none p-4 sm:p-6 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:bg-x-blue hover:border-solid hover:border-x-blue group"
             >
-              <img src="/icons/projects.png" alt="Projects" className="w-10 h-10 sm:w-12 sm:h-12 object-contain transition-transform group-hover:scale-110" />
+              <img 
+                src="/icons/projects.png" 
+                alt="Projects" 
+                className="w-10 h-10 sm:w-12 sm:h-12 object-contain transition-transform group-hover:scale-110" 
+                width="48"
+                height="48"
+                loading="lazy"
+              />
               <span className="text-[10px] sm:text-xs font-bold text-x-white group-hover:text-white font-space uppercase tracking-[max(0.2em,2px)] opacity-70 group-hover:opacity-100">Projects</span>
             </Link>
 
@@ -650,7 +671,14 @@ const Profile = () => {
               }}
               className={`flex-1 ${showSocials ? 'bg-x-blue border-solid border-x-blue shadow-[0_0_20px_rgba(29,155,240,0.4)]' : 'bg-black border-dashed border-white/20'} border rounded-none p-4 sm:p-6 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:bg-x-blue hover:border-solid hover:border-x-blue group`}
             >
-              <img src="/icons/links.png" alt="Socials" className="w-10 h-10 sm:w-12 sm:h-12 object-contain transition-transform group-hover:scale-110" />
+              <img 
+                src="/icons/links.png" 
+                alt="Socials" 
+                className="w-10 h-10 sm:w-12 sm:h-12 object-contain transition-transform group-hover:scale-110" 
+                width="48"
+                height="48"
+                loading="lazy"
+              />
               <span className={`text-[10px] sm:text-xs font-bold ${showSocials ? 'text-white' : 'text-x-white'} group-hover:text-white font-space uppercase tracking-[max(0.2em,2px)] opacity-70 group-hover:opacity-100`}>Socials</span>
             </button>
           </div>

@@ -345,13 +345,16 @@ const Login = () => {
         {/* ── Left ── */}
         <div className="lp-left">
           <div className="lp-topbrand lp-left-brand">
-            <img src="/icons/puzzle.png" alt="DevMate logo" className="lp-puzzle-icon" />
+            <img src="/icons/puzzle.png" alt="DevMate logo" className="lp-puzzle-icon" width="32" height="32" fetchpriority="high" />
             <span className="lp-brand-text">DevMate</span>
           </div>
           <img
             src="/Mobile login-cuate.svg"
             alt="Mobile login illustration"
             className="lp-illustration"
+            width="460"
+            height="460"
+            fetchpriority="high"
           />
           <p className="lp-tagline">Connect. Collaborate. Build together.</p>
         </div>
@@ -367,7 +370,7 @@ const Login = () => {
 
           {/* Mobile-only puzzle logo */}
           <div className="lp-mobile-logo">
-            <img src="/icons/puzzle.png" alt="DevMate" />
+            <img src="/icons/puzzle.png" alt="DevMate" width="44" height="44" />
           </div>
 
           <div className="lp-card">

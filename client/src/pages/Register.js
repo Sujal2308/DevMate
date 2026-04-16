@@ -275,13 +275,16 @@ const Register = () => {
         {/* ── Left ── */}
         <div className="rp-left">
           <div className="rp-left-brand">
-            <img src="/icons/puzzle.png" alt="DevMate" className="rp-puzzle" />
+            <img src="/icons/puzzle.png" alt="DevMate" className="rp-puzzle" width="32" height="32" fetchpriority="high" />
             <span className="rp-brand-text">DevMate</span>
           </div>
           <img
             src="/Tablet login-pana.svg"
             alt="Tablet login illustration"
             className="rp-illustration"
+            width="520"
+            height="520"
+            fetchpriority="high"
           />
           <p className="rp-tagline">Build your profile. Join the community.</p>
         </div>
@@ -297,7 +300,7 @@ const Register = () => {
 
           {/* Mobile-only puzzle logo */}
           <div className="rp-mobile-logo">
-            <img src="/icons/puzzle.png" alt="DevMate" />
+            <img src="/icons/puzzle.png" alt="DevMate" width="44" height="44" />
           </div>
 
           <div className="rp-card">

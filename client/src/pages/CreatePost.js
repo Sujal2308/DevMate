@@ -127,6 +127,9 @@ const CreatePost = () => {
                 src="/icons/compose.png"
                 alt="Compose"
                 className="w-10 h-10 md:w-12 md:h-12 object-contain"
+                width="48"
+                height="48"
+                fetchpriority="high"
               />
             </div>
             <p className="text-x-gray text-base opacity-70">
@@ -180,6 +183,8 @@ const CreatePost = () => {
                   src="/icons/image-gallery.png" 
                   alt="Upload Media" 
                   className="w-10 h-10 mb-2 transition-transform group-hover:scale-110"
+                  width="40"
+                  height="40"
                 />
                 <span 
                   className="text-sm font-bold tracking-tight text-center" 
@@ -211,6 +216,8 @@ const CreatePost = () => {
                   src="/icons/code.png" 
                   alt="Add Code" 
                   className="w-10 h-10 mb-2 transition-transform group-hover:scale-110"
+                  width="40"
+                  height="40"
                 />
                 <span 
                   className="text-sm font-bold tracking-tight text-center" 
@@ -236,6 +243,8 @@ const CreatePost = () => {
                   src="/icons/folder.png" 
                   alt="Add Repo" 
                   className="w-10 h-10 mb-2 transition-transform group-hover:scale-110"
+                  width="40"
+                  height="40"
                 />
                 <span 
                   className="text-sm font-bold tracking-tight text-center" 
@@ -474,6 +483,8 @@ console.log("Welcome to DevMate!");`
                       src="/icons/arrow-up.png" 
                       alt="Publish" 
                       className="w-5 h-5 object-contain -translate-y-[2px]"
+                      width="20"
+                      height="20"
                     />
                   </>
                 )}
@@ -654,6 +665,9 @@ console.log("Welcome to DevMate!");`
                   src="/icons/share.png" 
                   alt="Share" 
                   className="w-16 h-16 object-contain"
+                  width="64"
+                  height="64"
+                  loading="lazy"
                 />
               </div>
               <h3 className="text-lg font-semibold text-x-white mb-2">
