@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 // @ts-ignore
 import { ArrowDown } from "lucide-react";
@@ -35,6 +35,16 @@ const sections = [
 
 const FeatureSection = ({ section }: { section: typeof sections[0] }) => {
   const ref = useRef(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -82,9 +92,7 @@ const FeatureSection = ({ section }: { section: typeof sections[0] }) => {
       </motion.div>
 
       <motion.div
-        style={{
-          x: imageX,
-        }}
+        style={!isMobile ? { x: imageX } : {}}
         className="relative flex-1 flex justify-center items-center w-full"
       >
         <div className="relative w-full max-w-[360px] aspect-[4/3] md:aspect-square rounded-[32px] overflow-hidden group">
