@@ -439,7 +439,7 @@ const Home = () => {
       {/* ── FAQ Section ── */}
       <div className="w-full bg-x-black pt-8 md:pt-16 pb-12 md:pb-16 border-t border-x-border/30">
         <div className="max-w-7xl mx-auto px-4 md:px-10 lg:px-20">
-          <h2 className="text-3xl md:text-4xl font-bold text-x-white mb-8 md:mb-12 text-left bungee-regular">
+          <h2 className="text-3xl md:text-4xl font-bold text-x-white mb-8 md:mb-12 text-left bungee-regular pl-2 md:pl-0">
             <span className="md:hidden">FAQs</span>
             <span className="hidden md:block uppercase">Frequently Asked Questions</span>
           </h2>

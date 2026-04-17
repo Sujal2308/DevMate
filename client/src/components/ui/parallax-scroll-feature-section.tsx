@@ -115,7 +115,7 @@ export const ParallaxScrollFeatureSection = () => {
   return (
     <div className="bg-x-black text-x-white py-10 relative z-20 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 md:px-10 lg:px-20">
-        <div className="min-h-[30vh] md:min-h-[40vh] w-full flex flex-col items-start justify-center py-8">
+        <div className="min-h-[30vh] md:min-h-[40vh] w-full flex flex-col items-start justify-center py-8 pl-2 md:pl-0">
           <h2
             className="text-3xl md:text-4xl font-bold text-left bungee-regular"
           >
