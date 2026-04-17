@@ -170,7 +170,7 @@ const Home = () => {
       <div className="relative flex-1 pt-20 sm:pt-24 lg:pt-36 pb-8 sm:pb-12 overflow-hidden flex items-center w-full min-h-[400px] lg:min-h-[600px]">
 
         {/* DarkVeil — bottommost layer */}
-        <div className="absolute inset-0" style={{ zIndex: 0, pointerEvents: 'none' }}>
+        <div className="hidden md:block absolute inset-0" style={{ zIndex: 0, pointerEvents: 'none' }}>
           <DarkVeil
             hueShift={0}
             noiseIntensity={0.08}
