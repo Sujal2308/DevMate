@@ -240,15 +240,15 @@ const Login = () => {
         .lp-input {
           width: 100%;
           padding: 0.7rem 1rem;
-          background: #000000;
-          border: 1px solid #333333;
+          background: rgba(59, 130, 246, 0.05);
+          border: 1px solid rgba(0, 0, 0, 0.1);
           border-radius: 0;
-          color: #ffffff;
+          color: #111111;
           font-size: 0.9rem;
           outline: none;
           transition: border-color 0.2s, box-shadow 0.2s;
         }
-        .lp-input::placeholder { color: rgba(255,255,255,0.3); }
+        .lp-input::placeholder { color: rgba(0, 0, 0, 0.4); }
         .lp-input:focus {
           border-color: #2563eb;
           box-shadow: none;
@@ -262,13 +262,13 @@ const Login = () => {
           background: none;
           border: none;
           cursor: pointer;
-          color: rgba(255,255,255,0.4);
+          color: rgba(0, 0, 0, 0.35);
           display: flex;
           align-items: center;
           padding: 0;
           transition: color 0.2s;
         }
-        .lp-eye:hover { color: rgba(255,255,255,0.85); }
+        .lp-eye:hover { color: rgba(0, 0, 0, 0.7); }
 
         .lp-submit {
           width: 100%;

@@ -204,15 +204,15 @@ const Register = () => {
         .rp-input {
           width: 100%;
           padding: 0.68rem 1rem;
-          background: #000000;
-          border: 1px solid #333333;
+          background: rgba(59, 130, 246, 0.05);
+          border: 1px solid rgba(0, 0, 0, 0.1);
           border-radius: 0;
-          color: #ffffff;
+          color: #111111;
           font-size: 0.9rem;
           outline: none;
           transition: border-color 0.2s;
         }
-        .rp-input::placeholder { color: rgba(255,255,255,0.28); }
+        .rp-input::placeholder { color: rgba(0, 0, 0, 0.4); }
         .rp-input:focus { border-color: #2563eb; box-shadow: none; }
         .rp-input.rp-input-err { border-color: #dc2626; }
         .rp-field-err { font-size: 0.75rem; color: #dc2626; margin: 0; }
@@ -221,10 +221,10 @@ const Register = () => {
         .rp-eye {
           position: absolute; right: 0.8rem; top: 50%; transform: translateY(-50%);
           background: none; border: none; cursor: pointer;
-          color: rgba(255,255,255,0.35); display: flex; align-items: center; padding: 0;
+          color: rgba(0, 0, 0, 0.35); display: flex; align-items: center; padding: 0;
           transition: color 0.2s;
         }
-        .rp-eye:hover { color: rgba(255,255,255,0.8); }
+        .rp-eye:hover { color: rgba(0, 0, 0, 0.7); }
 
         .rp-submit {
           width: 100%; padding: 0.78rem;

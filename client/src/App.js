@@ -258,24 +258,15 @@ function AppContent() {
             <Route
               path="/forgot-password"
               element={
-                <div className="flex justify-center items-center min-h-screen px-4">
-                  <div className="w-full max-w-md">
-                    <PublicRoute>
-                      <ForgotPassword />
-                    </PublicRoute>
-                  </div>
-                </div>
+                <PublicRoute>
+                  <ForgotPassword />
+                </PublicRoute>
               }
             />
             <Route
               path="/reset-password"
               element={
-                <div className="flex justify-center items-center min-h-screen px-4">
-                  <div className="w-full max-w-md">
-                    {/* Removed PublicRoute to allow both logged-in and logged-out users to access */}
-                    <ResetPassword />
-                  </div>
-                </div>
+                <ResetPassword />
               }
             />
             <Route path="/features" element={<Features />} />{" "}
@@ -285,7 +276,7 @@ function AppContent() {
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
           {/* Only show Footer if not on '/', '/support', or '/features' on desktop */}
-          {!["/", "/login", "/register", "/support", "/features"].includes(location.pathname) && (
+          {!["/", "/login", "/register", "/support", "/features", "/forgot-password", "/reset-password"].includes(location.pathname) && (
             <Footer />
           )}
         </div>
@@ -303,20 +294,7 @@ function AppContent() {
           />
         </div>
       )}
-      {/* DevMate Watermark - Bottom Right */}
-      {showBranding && (
-        <div 
-          className="hidden lg:block fixed bottom-4 right-4 z-[9999] pointer-events-none select-none opacity-80"
-          style={{ 
-            textShadow: '0 0 10px rgba(29, 155, 240, 0.5)',
-            fontFamily: "'Lobster', sans-serif" 
-          }}
-        >
-          <span className="text-2xl sm:text-3xl text-x-blue">
-            DevMate
-          </span>
-        </div>
-      )}
+
       {/* Global Floating Post Button for Mobile */}
       {/* <FloatingPostButton /> */}
       {/* Bottom Navigation for Mobile */}
