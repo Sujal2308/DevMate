@@ -114,23 +114,24 @@ const FeatureSection = ({ section }: { section: typeof sections[0] }) => {
 export const ParallaxScrollFeatureSection = () => {
   return (
     <div className="bg-x-black text-x-white py-10 relative z-20 overflow-hidden">
-      <div className="min-h-[30vh] md:min-h-[40vh] w-full flex flex-col items-start md:items-center justify-center p-8">
-        <h2
-          className="text-4xl md:text-6xl font-bold max-w-2xl text-left md:text-center"
-          style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-        >
-          COMMUNITY FEATURES
-        </h2>
-        <p className="mt-8 md:mt-16 flex items-center gap-2 text-sm uppercase tracking-widest text-x-gray">
-          Scroll to explore{" "}
-          <ArrowDown size={16} className="animate-bounce text-x-blue" />
-        </p>
-      </div>
+      <div className="max-w-7xl mx-auto px-4 md:px-10 lg:px-20">
+        <div className="min-h-[30vh] md:min-h-[40vh] w-full flex flex-col items-start justify-center py-8">
+          <h2
+            className="text-3xl md:text-4xl font-bold text-left bungee-regular"
+          >
+            COMMUNITY FEATURES
+          </h2>
+          <p className="mt-8 md:mt-16 flex items-center gap-2 text-sm uppercase tracking-widest text-x-gray">
+            Scroll to explore{" "}
+            <ArrowDown size={16} className="animate-bounce text-x-blue" />
+          </p>
+        </div>
 
-      <div className="flex flex-col px-4 md:px-10 lg:px-20 max-w-7xl mx-auto">
-        {sections.map((section) => (
-          <FeatureSection key={section.id} section={section} />
-        ))}
+        <div className="flex flex-col">
+          {sections.map((section) => (
+            <FeatureSection key={section.id} section={section} />
+          ))}
+        </div>
       </div>
     </div>
   );
