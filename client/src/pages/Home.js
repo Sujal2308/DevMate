@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { TextRotate } from "../components/ui/text-rotate";
 import { CosmicParallaxBg } from "../components/ui/parallax-cosmic-background";
 import { ParallaxScrollFeatureSection } from "../components/ui/parallax-scroll-feature-section";
+import DarkVeil from "../components/ui/DarkVeil";
 
 
 
@@ -166,19 +167,30 @@ const Home = () => {
       </div>
 
       {/* Hero Section */}
-      <div className="relative flex-1 pt-32 lg:pt-36 sm:pt-20 pb-8 sm:pb-12 overflow-visible flex items-center w-full">
-        {/* Background Image Layer */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/hero.jpg')" }}
-        >
-          {/* High-quality overlay for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-b from-x-black/80 via-x-black/40 to-x-black/90"></div>
+      <div className="relative flex-1 pt-20 sm:pt-24 lg:pt-36 pb-8 sm:pb-12 overflow-hidden flex items-center w-full min-h-[400px] lg:min-h-[600px]">
+
+        {/* DarkVeil — bottommost layer */}
+        <div className="absolute inset-0" style={{ zIndex: 0, pointerEvents: 'none' }}>
+          <DarkVeil
+            hueShift={0}
+            noiseIntensity={0.08}
+            scanlineIntensity={0.15}
+            speed={0.4}
+            warpAmount={0.5}
+            resolutionScale={1.5}
+          />
         </div>
 
-        <div className="relative w-full h-full">
-          <div className="flex flex-col lg:flex-row items-center justify-between py-4 lg:py-8 gap-3 lg:gap-4 w-full min-h-full px-8 lg:px-16">
-            {/* Left Content - Redesigned */}
+        {/* Dark gradient overlay — lightened to show background more */}
+        <div
+          className="absolute inset-0"
+          style={{ zIndex: 1, pointerEvents: 'none', background: 'linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.7) 100%)' }}
+        />
+
+        {/* Content layer */}
+        <div className="relative w-full h-full" style={{ zIndex: 10 }}>
+          <div className="flex flex-col lg:flex-row items-center justify-between py-4 lg:py-8 gap-3 lg:gap-4 w-full min-h-full px-6 sm:px-8 lg:px-16">
+            {/* Left Content */}
             <div className="flex-[2] lg:pr-4 text-center lg:text-left order-1 lg:order-1 w-full lg:pl-4 flex flex-col">
               <h1 className="text-6xl xs:text-7xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-2 lg:mb-2 leading-tight flex flex-col md:flex-row items-center lg:items-start lg:justify-start justify-center text-center lg:text-left h-[180px] sm:h-[120px] lg:h-[90px] xl:h-[110px] overflow-hidden">
                 <span className="text-x-white md:mr-4 whitespace-nowrap">It's time to</span>
@@ -335,7 +347,7 @@ const Home = () => {
 
             {/* Right Content - Hero Image */}
             <div className="flex-[1] order-2 lg:order-2 w-full max-w-lg lg:max-w-2xl lg:flex-shrink-0">
-              <div className="relative w-full mx-auto lg:mx-0 pb-8 lg:pb-0 transform scale-110 lg:scale-125 origin-center lg:origin-right mt-8 lg:-mt-24 xl:-mt-28">
+              <div className="relative w-full mx-auto lg:mx-0 pb-8 lg:pb-0 transform scale-90 sm:scale-110 lg:scale-125 origin-center lg:origin-right mt-4 lg:-mt-24 xl:-mt-28">
                 <img 
                   src="/Group Chat-pana.svg" 
                   alt="Group Chat Illustration" 
