@@ -513,7 +513,7 @@ const Profile = () => {
             <div className={`flex flex-row items-center text-left mt-2`}>
               {/* Avatar */}
               <div className="-ml-2 md:-ml-4 mb-0 mr-6 z-20 flex flex-col items-center gap-3">
-                <div className="bg-black text-white w-16 h-16 md:w-28 md:h-28 rounded-full flex items-center justify-center text-xl md:text-3xl font-bold border-4 border-x-border/20 shadow-2xl overflow-hidden relative">
+                <div className="bg-black text-white w-24 h-24 md:w-28 md:h-28 rounded-full flex items-center justify-center text-2xl md:text-3xl font-bold border-4 border-x-border/20 shadow-2xl overflow-hidden relative">
                   {profileUser.avatar ? (
                     <img 
                       src={profileUser.avatar} 
