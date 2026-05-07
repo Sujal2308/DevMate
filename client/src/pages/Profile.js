@@ -21,6 +21,7 @@ const Profile = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showAvatarPreview, setShowAvatarPreview] = useState(false);
   const menuRef = useRef(null);
 
   // Handle clicking outside of menu to close it
@@ -442,6 +443,7 @@ const Profile = () => {
   const showFullProfile = !isPrivate || isOwnProfile || isFollower;
 
   return (
+    <>
     <div
       className="max-w-2xl mx-auto pt-0 pb-8 px-0 sm:px-4"
       style={{
@@ -513,7 +515,10 @@ const Profile = () => {
             <div className={`flex flex-row items-center text-left mt-2`}>
               {/* Avatar */}
               <div className="-ml-2 md:-ml-4 mb-0 mr-6 z-20 flex flex-col items-center gap-3">
-                <div className="bg-black text-white w-24 h-24 md:w-28 md:h-28 rounded-full flex items-center justify-center text-2xl md:text-3xl font-bold border-4 border-x-border/20 shadow-2xl overflow-hidden relative">
+                <div 
+                  onClick={() => profileUser.avatar && setShowAvatarPreview(true)}
+                  className={`bg-black text-white w-24 h-24 md:w-28 md:h-28 rounded-full flex items-center justify-center text-2xl md:text-3xl font-bold border-4 border-x-border/20 shadow-2xl overflow-hidden relative ${profileUser.avatar ? 'cursor-pointer hover:scale-105 active:scale-95 transition-all duration-300' : ''}`}
+                >
                   {profileUser.avatar ? (
                     <img 
                       src={profileUser.avatar} 
@@ -1115,7 +1120,46 @@ const Profile = () => {
           </p>
         </div>
       )}
-    </div>
+      </div>
+
+      {/* Avatar Preview Modal - Moved outside to escape transform context */}
+      {showAvatarPreview && profileUser.avatar && (
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <div 
+            className="absolute inset-0 bg-black/90 backdrop-blur-xl animate-fade-in"
+            onClick={() => setShowAvatarPreview(false)}
+          />
+          
+          {/* Close Button */}
+          <button 
+            onClick={() => setShowAvatarPreview(false)}
+            className="absolute top-6 right-6 z-[1010] p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all duration-300"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          {/* Image Container */}
+          <div className="relative z-[1010] max-w-full max-h-full animate-in zoom-in fade-in duration-300 flex flex-col items-center">
+            <img 
+              src={profileUser.avatar} 
+              alt={profileUser.displayName} 
+              className="max-w-[90vw] max-h-[80vh] object-contain shadow-2xl border border-white/10"
+            />
+            <div className="mt-6 text-center">
+              <h3 className="text-white font-space font-bold text-xl tracking-tight">
+                {profileUser.displayName || profileUser.username}
+              </h3>
+              <p className="text-x-gray text-sm font-mono opacity-60">
+                @{profileUser.username}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
