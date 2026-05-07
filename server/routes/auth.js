@@ -82,6 +82,7 @@ router.post(
           gender: user.gender,
           nationality: user.nationality,
           savedPosts: user.savedPosts || [],
+          following: user.following || [],
         },
       });
     } catch (error) {
@@ -140,6 +141,7 @@ router.post(
           gender: user.gender,
           nationality: user.nationality,
           savedPosts: user.savedPosts || [],
+          following: user.following || [],
         },
       });
     } catch (error) {
@@ -165,6 +167,7 @@ router.get("/me", auth, async (req, res) => {
       gender: req.user.gender,
       nationality: req.user.nationality,
       savedPosts: req.user.savedPosts || [],
+      following: req.user.following || [],
     });
   } catch (error) {
     console.error("Get user error:", error);

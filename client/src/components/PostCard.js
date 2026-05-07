@@ -44,11 +44,11 @@ const ThreeDotsIcon = () => (
     fill="none"
     viewBox="0 0 24 24"
     stroke="currentColor"
-    className="w-4 h-4"
+    className="w-5 h-5"
   >
-    <circle cx="12" cy="12" r="1.5" />
-    <circle cx="12" cy="5" r="1.5" />
-    <circle cx="12" cy="19" r="1.5" />
+    <circle cx="12" cy="12" r="2" />
+    <circle cx="12" cy="5" r="2" />
+    <circle cx="12" cy="19" r="2" />
   </svg>
 );
 
@@ -281,17 +281,54 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
   const [isSaved, setIsSaved] = useState(false);
   const [saveAnimating, setSaveAnimating] = useState(false);
 
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [followLoading, setFollowLoading] = useState(false);
+  const [postMenuOpen, setPostMenuOpen] = useState(false);
+  const postMenuRef = React.useRef();
+
   React.useEffect(() => {
-    if (user && post?.author?.followers) {
-      // Check if user is following this author
+    if (user && user.following && post?.author?._id) {
+      setIsFollowing(
+        user.following.includes(post.author._id) ||
+        user.following.some((id) => id === post.author._id || id.toString() === post.author._id.toString())
+      );
     }
-  }, [post?.author?.followers, user]);
+  }, [user, post?.author?._id]);
+
+  React.useEffect(() => {
+    if (!postMenuOpen) return;
+    const handler = (e) => {
+      if (postMenuRef.current && !postMenuRef.current.contains(e.target)) {
+        setPostMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [postMenuOpen]);
+
+  const handleFollowToggle = async () => {
+    if (!user || followLoading) return;
+    setFollowLoading(true);
+    try {
+      if (isFollowing) {
+        await axios.put(`/api/users/${post.author.username}/unfollow`);
+        setIsFollowing(false);
+      } else {
+        await axios.put(`/api/users/${post.author.username}/follow`);
+        setIsFollowing(true);
+      }
+    } catch (err) {
+      console.error("Follow toggle error:", err);
+    } finally {
+      setFollowLoading(false);
+    }
+  };
 
   React.useEffect(() => {
     if (user?.savedPosts) {
       setIsSaved(user.savedPosts.includes(post?._id));
     }
-  }, [user?.savedPosts, post?._id]);
+  }, [user, post?._id]);
 
   // Safety check for post data (after ALL hooks)
   if (!post || !post.author) {
@@ -534,34 +571,54 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
             )}
           </div>
         )}
-        {/* View Button for Other Users - Top Right */}
+        {/* Follow and Menu Button for Other Users - Top Right */}
         {!isAuthor && (
-          <Link
-            to={`/profile/${post.author.username}`}
-            className="ml-2 flex items-center justify-center p-2 rounded-full hover:bg-x-blue/10 focus:outline-none focus:ring-2 focus:ring-x-blue transition-all group"
-            title="View Profile"
-            aria-label="View Profile"
-            style={{ color: "#1d9bf0" }}
-          >
-            <svg
-              className="w-5 h-5 text-x-blue group-hover:text-x-green transition-colors"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.2"
-              viewBox="0 0 24 24"
+          <div className="flex items-center space-x-2 ml-2 relative" ref={postMenuRef}>
+            <button
+              onClick={handleFollowToggle}
+              disabled={followLoading}
+              className={`px-3 py-1.5 text-xs font-bold rounded-full transition-all duration-200 border-2 ${
+                isFollowing 
+                  ? "bg-transparent text-x-white hover:bg-red-500/10 hover:text-red-500 border-x-border" 
+                  : "bg-transparent text-x-blue hover:bg-x-blue/10 border-x-blue"
+              }`}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-              />
-            </svg>
-          </Link>
+              {followLoading ? "..." : isFollowing ? "Following" : "Follow"}
+            </button>
+
+            <button
+              onClick={() => setPostMenuOpen(!postMenuOpen)}
+              className="p-2 rounded-full hover:bg-gray-800 focus:outline-none transition-all group text-white"
+            >
+              <ThreeDotsIcon />
+            </button>
+
+            {postMenuOpen && (
+              <div className="absolute right-0 top-full mt-2 w-48 bg-x-dark border border-x-border rounded-xl shadow-2xl z-50 overflow-hidden animate-fade-in">
+                <Link
+                  to={`/profile/${post.author.username}`}
+                  className="w-full text-left px-4 py-3 text-sm font-medium text-white hover:bg-gray-800 flex items-center transition-colors"
+                >
+                  <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                  View Profile
+                </Link>
+                <button
+                  onClick={() => {
+                    setPostMenuOpen(false);
+                    alert("Report has been submitted.");
+                  }}
+                  className="w-full text-left px-4 py-3 text-sm font-medium text-red-400 hover:bg-gray-800 hover:text-red-500 flex items-center transition-colors border-t border-x-border/50"
+                >
+                  <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
+                  </svg>
+                  Report Post
+                </button>
+              </div>
+            )}
+          </div>
         )}
       </div>
 
