@@ -29,7 +29,7 @@
 }
 
 .dock-item:hover {
-  background-color: tomato;
+  background-color: rgba(113, 118, 123, 0.2);
 }
 
 .dock-item:hover svg,

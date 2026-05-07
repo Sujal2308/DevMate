@@ -92,56 +92,7 @@ const AnimatedCounter = ({ end, duration = 2000, suffix = "" }) => {
   );
 };
 
-// Floating Contact Button (Mobile only, only visible after scroll)
-const FloatingContactButton = () => {
-  const navigate = useNavigate();
-  const [visible, setVisible] = React.useState(false);
 
-  React.useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 40) {
-        setVisible(true);
-      } else {
-        setVisible(false);
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  if (!visible) return null;
-
-  return (
-    <button
-      onClick={(e) => {
-        e.preventDefault();
-        navigate("/support");
-        setTimeout(() => {
-          window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-        }, 0);
-      }}
-      className="fixed bottom-6 right-6 z-50 bg-[#0a1931] bg-opacity-80 text-white rounded-full shadow-lg p-4 flex items-center justify-center transition-all duration-300 hover:bg-[#13294b] hover:bg-opacity-90 focus:outline-none md:hidden backdrop-blur"
-      aria-label="Contact Support"
-      style={{ boxShadow: "0 4px 24px 0 rgba(0,0,0,0.18)" }}
-    >
-      {/* Modern chat/support icon */}
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="h-7 w-7"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        strokeWidth={2}
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M7 8h10M7 12h6m-6 4h8a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v7a2 2 0 002 2zm0 0v3l3-3"
-        />
-      </svg>
-    </button>
-  );
-};
 
 
 const Home = () => {
@@ -167,25 +118,8 @@ const Home = () => {
       </div>
 
       {/* Hero Section */}
-      <div className="relative flex-1 pt-20 sm:pt-24 lg:pt-36 pb-8 sm:pb-12 overflow-hidden flex items-center w-full min-h-[400px] lg:min-h-[600px]">
+      <div className="relative flex-1 pt-20 sm:pt-24 lg:pt-36 pb-8 sm:pb-12 overflow-hidden flex items-center w-full min-h-[400px] lg:min-h-[600px] bg-[#000000]">
 
-        {/* DarkVeil — bottommost layer */}
-        <div className="hidden md:block absolute inset-0" style={{ zIndex: 0, pointerEvents: 'none' }}>
-          <DarkVeil
-            hueShift={0}
-            noiseIntensity={0.08}
-            scanlineIntensity={0.15}
-            speed={0.4}
-            warpAmount={0.5}
-            resolutionScale={1.5}
-          />
-        </div>
-
-        {/* Dark gradient overlay — lightened to show background more */}
-        <div
-          className="absolute inset-0"
-          style={{ zIndex: 1, pointerEvents: 'none', background: 'linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.7) 100%)' }}
-        />
 
         {/* Content layer */}
         <div className="relative w-full h-full" style={{ zIndex: 10 }}>
@@ -560,8 +494,12 @@ const Home = () => {
  
             {/* Right Column: Feedback Form */}
             <div className="flex flex-col gap-6 bg-transparent p-0 rounded-none border-none">
-              <h3 className="text-xl font-bold text-x-white flex items-center gap-2" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-                Send us feedback <span className="text-2xl">📣</span>
+              <h3 className="text-xl font-bold text-x-white flex items-center gap-3 group cursor-default" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+                Send us feedback 
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="tomato" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="drop-shadow-[0_0_10px_rgba(255,99,71,0.3)] transform group-hover:scale-110 group-hover:-rotate-6 transition-all duration-300">
+                  <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                </svg>
               </h3>
               <form className="flex flex-col gap-4" onSubmit={(e) => {
                 e.preventDefault();
@@ -586,14 +524,10 @@ const Home = () => {
                     style={{ backgroundColor: "tomato" }}
                   >
                     Submit
-                    <img 
-                      src="/icons/send.png" 
-                      alt="" 
-                      className="w-5 h-5 object-contain" 
-                      width="20"
-                      height="20"
-                      loading="lazy"
-                    />
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="22" y1="2" x2="11" y2="13"></line>
+                      <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
                   </button>
                   <div className="flex items-center gap-3 text-x-green text-sm font-semibold bg-x-green/5 px-4 py-2 rounded-full border border-x-green/20">
                     <span className="w-2.5 h-2.5 bg-x-green rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.6)]"></span>
@@ -618,8 +552,7 @@ const Home = () => {
         </div>
       </footer>
 
-      {/* Floating Contact Button (Mobile only) */}
-      <FloatingContactButton />
+
 
       {/* Add this style at the top or bottom of the file, or in your CSS file */}
       <style>

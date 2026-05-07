@@ -391,84 +391,55 @@ console.log("Welcome to DevMate!");`
               </div>
             )}
 
-
-
-          <div className="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4 items-center">
+          <div className="flex flex-row justify-end items-center space-x-3 sm:space-x-4">
             {showCancel && (
-              <button
-                type="button"
-                onClick={() => {
-                  if (isMobile) {
-                    setShowConfirm(true);
-                    setTimeout(() => {
-                      const confirmBox =
-                        document.getElementById("cancel-confirm-box");
-                      if (confirmBox) {
-                        confirmBox.scrollIntoView({
-                          behavior: "smooth",
-                          block: "center",
-                        });
-                      }
-                    }, 100);
-                  } else {
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                    setFormData({ content: "", codeSnippet: "", repoUrl: "", repoTitle: "" });
-                    setMedia(null);
-                    setMediaPreview(null);
-                    setShowRepoInput(false);
-                    setShowCancel(false);
-                  }
-                }}
-                className="text-red-600 font-bold px-8 h-[38px] rounded-full transition-all duration-200 bg-transparent border-none hover:text-red-700"
-              >
-                Cancel
-              </button>
-            )}
-
-            {/* Confirmation message between Cancel and Publish */}
-            {showConfirm && isMobile && (
-              <div
-                id="cancel-confirm-box"
-                className="mx-4 flex flex-col items-center"
-              >
-                <div className="bg-x-dark rounded-xl p-4 shadow-xl text-center mb-2">
-                  <div className="mb-2 text-base text-x-white font-normal">
-                    Are you sure you want to cancel your post?
-                  </div>
-                  <div className="mb-4 text-sm text-x-gray">
-                    Your changes will be lost if you leave this page.
-                  </div>
-                  <div className="flex justify-center gap-4">
-                    <button
-                      className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-bold rounded-full flex items-center justify-center transition-all duration-200"
-                      onClick={() => {
-                        setFormData({ content: "", codeSnippet: "" });
-                        setMedia(null);
-                        setMediaPreview(null);
-                        setShowCancel(false);
-                        setShowConfirm(false);
-                      }}
-                    >
-                      Discard All
-                    </button>
-                    <button
-                      className="px-5 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-bold rounded-full flex items-center justify-center transition-all duration-200"
-                      onClick={() => setShowConfirm(false)}
-                    >
-                      Back
-                    </button>
-                  </div>
-                </div>
+              <div className="flex items-center">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (isMobile) {
+                      setShowConfirm(true);
+                    } else {
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                      setFormData({ content: "", codeSnippet: "", repoUrl: "", repoTitle: "" });
+                      setMedia(null);
+                      setMediaPreview(null);
+                      setShowRepoInput(false);
+                      setShowCancel(false);
+                    }
+                  }}
+                  className="text-red-600 font-bold pl-4 sm:pl-8 pr-1 sm:pr-2 h-[38px] rounded-full transition-all duration-200 bg-transparent border-none hover:text-red-700 text-sm sm:text-base"
+                >
+                  Cancel
+                </button>
+                <svg 
+                  className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 hover:text-red-700 transition-colors mr-1 sm:mr-4 cursor-pointer" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                  onClick={() => {
+                    if (isMobile) {
+                      setShowConfirm(true);
+                    } else {
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                      setFormData({ content: "", codeSnippet: "", repoUrl: "", repoTitle: "" });
+                      setMedia(null);
+                      setMediaPreview(null);
+                      setShowRepoInput(false);
+                      setShowCancel(false);
+                    }
+                  }}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                </svg>
               </div>
             )}
 
             <button
               type="submit"
               disabled={loading || !formData.content.trim()}
-              className={`bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-colors duration-200 min-h-[44px] h-[44px] ${
-                isMobile ? "w-full" : ""
-              }`}
-              style={{ height: "44px" }}
+              className={`bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 sm:px-6 py-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-colors duration-200 min-h-[40px] sm:min-h-[44px] h-[40px] sm:h-[44px]`}
+              style={{ height: isMobile ? "40px" : "44px" }}
             >
               <div className="flex items-center justify-center space-x-2">
                 {loading ? (
@@ -478,11 +449,11 @@ console.log("Welcome to DevMate!");`
                   </>
                 ) : (
                   <>
-                    <span className="font-bold leading-none">Publish</span>
+                    <span className="font-bold leading-none text-sm sm:text-base">Publish</span>
                     <img 
                       src="/icons/arrow-up.png" 
                       alt="Publish" 
-                      className="w-5 h-5 object-contain -translate-y-[2px]"
+                      className="w-4 h-4 sm:w-5 sm:h-5 object-contain -translate-y-[1px]"
                       width="20"
                       height="20"
                     />
@@ -491,6 +462,46 @@ console.log("Welcome to DevMate!");`
               </div>
             </button>
           </div>
+
+          {/* Premium Confirmation Modal - Positioned above the button row */}
+          {showConfirm && isMobile && (
+            <div className="fixed inset-0 z-[100] flex items-end justify-center p-4 pb-28 bg-black/40 backdrop-blur-sm animate-fade-in">
+              <div className="bg-x-dark border border-white/10 rounded-[2rem] p-6 shadow-2xl max-w-xs w-full text-center space-y-6 relative overflow-hidden animate-slide-up">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 via-purple-500 to-blue-500 opacity-50"></div>
+                
+                <div className="space-y-2">
+                  <h3 className="text-xl font-black text-x-white tracking-tight" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+                    Discard draft?
+                  </h3>
+                  <p className="text-x-gray text-xs leading-relaxed opacity-80 font-medium">
+                    This will permanently delete your progress.
+                  </p>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <button
+                    className="w-full py-3 bg-red-600/90 hover:bg-red-600 text-white text-sm font-black rounded-xl transition-all duration-200 active:scale-95"
+                    onClick={() => {
+                      setFormData({ content: "", codeSnippet: "", repoUrl: "", repoTitle: "" });
+                      setMedia(null);
+                      setMediaPreview(null);
+                      setShowRepoInput(false);
+                      setShowCancel(false);
+                      setShowConfirm(false);
+                    }}
+                  >
+                    Discard All
+                  </button>
+                  <button
+                    className="w-full py-3 bg-white/5 hover:bg-white/10 text-x-white text-sm font-bold rounded-xl transition-all duration-200 active:scale-95 border border-white/10"
+                    onClick={() => setShowConfirm(false)}
+                  >
+                    Keep Editing
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </form>
 
         {/* Enhanced Preview Section with Clear Visual Distinction */}

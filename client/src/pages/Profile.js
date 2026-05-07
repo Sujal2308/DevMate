@@ -587,24 +587,24 @@ const Profile = () => {
           </div>
 
           {/* Stats Row */}
-          <div className="mt-8 flex items-center justify-between border-t border-b border-white/20 py-6 px-4">
+          <div className="mt-8 flex items-center justify-between border border-white/20 py-4 px-2 sm:px-6 rounded-full bg-black shadow-2xl shadow-black/50">
             <div className="flex-1 text-center group cursor-default">
-              <div className="text-4xl font-bold text-cyan-400 font-space leading-tight">
+              <div className="text-2xl sm:text-4xl font-black text-red-500 font-space leading-none py-1">
                 {profileData.pagination?.total || 0}
               </div>
-              <div className="text-[10px] text-x-gray uppercase tracking-[0.2em] font-space mt-1.5 opacity-60 group-hover:opacity-100 transition-opacity">
+              <div className="text-[9px] sm:text-[10px] text-x-gray uppercase tracking-[0.2em] font-space font-bold mt-1 opacity-70 group-hover:opacity-100 transition-opacity">
                 Posts
               </div>
             </div>
             
             <Link 
               to={`/profile/${profileUser.username}/followers`}
-              className="flex-1 text-center group transition-transform active:scale-95 border-l-2 border-r-2 border-white/20"
+              className="flex-1 text-center group transition-transform active:scale-95 border-l border-r border-white/10"
             >
-              <div className="text-4xl font-bold text-emerald-400 font-space leading-tight group-hover:text-x-blue transition-colors">
+              <div className="text-2xl sm:text-4xl font-black text-green-500 font-space leading-none py-1 transition-colors">
                 {profileUser.followersCount ?? (profileUser.followers?.length || 0)}
               </div>
-              <div className="text-[10px] text-x-gray uppercase tracking-[0.2em] font-space mt-1.5 opacity-60 group-hover:opacity-100 group-hover:text-x-blue transition-all">
+              <div className="text-[9px] sm:text-[10px] text-x-gray uppercase tracking-[0.2em] font-space font-bold mt-1 opacity-70 group-hover:opacity-100 transition-all">
                 Followers
               </div>
             </Link>
@@ -613,10 +613,10 @@ const Profile = () => {
               to={`/profile/${profileUser.username}/following`}
               className="flex-1 text-center group transition-transform active:scale-95"
             >
-              <div className="text-4xl font-bold text-fuchsia-400 font-space leading-tight group-hover:text-x-blue transition-colors">
+              <div className="text-2xl sm:text-4xl font-black text-blue-500 font-space leading-none py-1 transition-colors">
                 {profileUser.followingCount ?? (profileUser.following?.length || 0)}
               </div>
-              <div className="text-[10px] text-x-gray uppercase tracking-[0.2em] font-space mt-1.5 opacity-60 group-hover:opacity-100 group-hover:text-x-blue transition-all">
+              <div className="text-[9px] sm:text-[10px] text-x-gray uppercase tracking-[0.2em] font-space font-bold mt-1 opacity-70 group-hover:opacity-100 transition-all">
                 Following
               </div>
             </Link>
