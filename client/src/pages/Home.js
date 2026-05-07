@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { TextRotate } from "../components/ui/text-rotate";
 import { CosmicParallaxBg } from "../components/ui/parallax-cosmic-background";
 import { ParallaxScrollFeatureSection } from "../components/ui/parallax-scroll-feature-section";
-import DarkVeil from "../components/ui/DarkVeil";
+
 
 
 
