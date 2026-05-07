@@ -175,7 +175,6 @@ router.put("/:id/like", auth, async (req, res) => {
       liked = true;
     }
     await post.save();
-    // Populate author info
     await post.populate("author", "username displayName avatar");
     await post.populate("comments.user", "username displayName avatar");
     // Create notification if liked and not self

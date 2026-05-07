@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
 import ShareModal from "./ShareModal";
+import ReportModal from "./ReportModal";
 import PdfCarousel from "./PdfCarousel";
 import ImageLightboxModal from "./ImageLightboxModal";
 import "../index.css"; // Import the CSS file for animations
@@ -280,6 +281,7 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
   const [showShareModal, setShowShareModal] = useState(false); // For share modal
   const [isSaved, setIsSaved] = useState(false);
   const [saveAnimating, setSaveAnimating] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
 
   const [isFollowing, setIsFollowing] = useState(false);
   const [followLoading, setFollowLoading] = useState(false);
@@ -607,7 +609,7 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
                 <button
                   onClick={() => {
                     setPostMenuOpen(false);
-                    alert("Report has been submitted.");
+                    setShowReportModal(true);
                   }}
                   className="w-full text-left px-4 py-3 text-sm font-medium text-red-400 hover:bg-gray-800 hover:text-red-500 flex items-center transition-colors border-t border-x-border/50"
                 >
@@ -1031,6 +1033,13 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
       <ShareModal
         isOpen={showShareModal}
         onClose={() => setShowShareModal(false)}
+        postId={post._id}
+      />
+
+      {/* Report Modal */}
+      <ReportModal
+        isOpen={showReportModal}
+        onClose={() => setShowReportModal(false)}
         postId={post._id}
       />
     </div>
