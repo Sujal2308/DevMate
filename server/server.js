@@ -168,6 +168,7 @@ const messagesRouter = require("./routes/messages");
 app.use("/api/messages", messagesRouter);
 app.use("/api", require("./routes/report"));
 app.use("/api/news", require("./routes/news"));
+app.use("/api/admin", checkDBConnection, require("./routes/admin"));
 
 // Health check route (doesn't require DB)
 app.get("/api/health", (req, res) => {

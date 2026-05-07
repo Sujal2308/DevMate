@@ -83,6 +83,7 @@ router.post(
           nationality: user.nationality,
           savedPosts: user.savedPosts || [],
           following: user.following || [],
+          role: user.role,
         },
       });
     } catch (error) {
@@ -142,6 +143,7 @@ router.post(
           nationality: user.nationality,
           savedPosts: user.savedPosts || [],
           following: user.following || [],
+          role: user.role,
         },
       });
     } catch (error) {
@@ -168,6 +170,7 @@ router.get("/me", auth, async (req, res) => {
       nationality: req.user.nationality,
       savedPosts: req.user.savedPosts || [],
       following: req.user.following || [],
+      role: req.user.role,
     });
   } catch (error) {
     console.error("Get user error:", error);

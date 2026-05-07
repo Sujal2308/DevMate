@@ -412,7 +412,7 @@ pre.code,
   }
 
   .card {
-    @apply rounded-lg mx-1;
+    @apply rounded-full;
   }
 
   /* Ensure mobile menu appears above all content */

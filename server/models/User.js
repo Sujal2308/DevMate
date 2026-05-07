@@ -72,6 +72,23 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
+    isBlocked: {
+      type: Boolean,
+      default: false,
+    },
+    blockReason: {
+      type: String,
+      default: "",
+    },
+    blockedUntil: {
+      type: Date,
+      default: null,
+    },
     resetPasswordToken: {
       type: String,
       default: null,

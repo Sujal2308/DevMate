@@ -62,8 +62,7 @@ const Explore = () => {
   // Track keyboard state
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
 
-  // Track expanded card for mobile
-  const [expandedCardId, setExpandedCardId] = useState(null);
+
 
   // Function to determine if we should show results - memoized
   const shouldShowResults = useMemo(() => {
@@ -303,7 +302,7 @@ const Explore = () => {
   return (
     <div
       ref={rootContainerRef}
-      className={`w-full max-w-2xl mx-auto py-1 sm:py-2 lg:py-6 px-2 sm:px-3 lg:px-6 pb-16 lg:pb-8 explore-root-container bg-gradient-to-br from-x-dark/10 to-x-dark/5`}
+      className={`w-full max-w-2xl mx-auto py-1 sm:py-2 lg:py-6 px-2 sm:px-3 lg:px-6 pb-6 lg:pb-8 explore-root-container bg-gradient-to-br from-x-dark/10 to-x-dark/5`}
       style={{
         minHeight: isMobile ? "100vh" : "auto",
         height: "auto",
@@ -374,7 +373,9 @@ const Explore = () => {
           }`}
           style={{
             height: isMobile ? "calc(100vh - 180px)" : "auto", // increased height for more space
-            paddingBottom: isMobile ? "2.5rem" : undefined, // extra bottom padding on mobile
+            paddingBottom: isMobile ? "0.75rem" : undefined, 
+            paddingLeft: isMobile ? "0.5rem" : undefined,
+            paddingRight: isMobile ? "0.5rem" : undefined,
             overflow: isMobile ? "auto" : "visible",
             contain: isMobile ? "content" : "none",
             transform: "translateZ(0)", // Force GPU acceleration
@@ -451,19 +452,12 @@ const Explore = () => {
 
               <div className="space-y-2 lg:space-y-4">
                 {users.map((user) => {
-                  const isExpanded = expandedCardId === user._id;
                   return (
                     <div
                       key={user._id}
-                      className={`w-full card p-2 sm:p-3 lg:p-6 hover:border-x-border/50 transition-colors duration-200 bg-gradient-to-br from-x-dark/80 to-x-dark/40 md:backdrop-blur-sm backdrop-blur-none border border-x-border/30${
-                        isMobile ? " cursor-pointer" : ""
+                      className={`w-full card p-2 sm:p-3 lg:p-6 hover:border-x-border/50 transition-colors duration-200 bg-gradient-to-br from-x-dark/80 to-x-dark/40 md:backdrop-blur-sm backdrop-blur-none border border-x-border/30 ${
+                        isMobile ? "rounded-full overflow-hidden px-5 py-3" : "rounded-xl"
                       }`}
-                      onClick={
-                        isMobile
-                          ? () =>
-                              setExpandedCardId(isExpanded ? null : user._id)
-                          : undefined
-                      }
                     >
                       <div className="w-full">
                         {/* Mobile Layout - Avatar and View Profile Button Horizontal */}
@@ -496,7 +490,7 @@ const Explore = () => {
                           <div className="flex items-center gap-2">
                             <Link
                               to={`/profile/${user.username}`}
-                              className="text-xs px-3 py-2 transition-colors duration-200 whitespace-nowrap bg-[#ff6347] text-white hover:bg-[#e5533c] rounded border border-x-border shadow-md"
+                              className="text-xs px-4 py-2 transition-all duration-200 whitespace-nowrap bg-x-blue text-white hover:bg-x-blue-hover rounded-full border border-white/10 shadow-lg font-bold"
                               onClick={(e) => e.stopPropagation()}
                             >
                               View Profile
@@ -505,54 +499,7 @@ const Explore = () => {
                         </div>
 
                         {/* Expanded details for mobile only */}
-                        {isMobile && isExpanded && (
-                          <div className="w-full mb-2 animate-fade-in">
-                            {user.bio && (
-                              <div className="mb-2">
-                                <p className="text-x-gray text-sm leading-relaxed text-left">
-                                  "{user.bio}"
-                                </p>
-                              </div>
-                            )}
-                            {user.skills && user.skills.length > 0 && (
-                              <div className="flex flex-wrap gap-2 mb-2">
-                                {user.skills.slice(0, 8).map((skill, index) => (
-                                  <span
-                                    key={index}
-                                    className="bg-x-blue/20 text-x-blue border border-x-blue/30 px-3 py-1 rounded-full text-sm font-medium hover:bg-x-blue/30 transition-colors duration-200"
-                                  >
-                                    {skill}
-                                  </span>
-                                ))}
-                                {user.skills.length > 8 && (
-                                  <span className="text-sm text-x-gray px-3 py-1 bg-x-dark/60 rounded-full border border-x-border">
-                                    +{user.skills.length - 8} more
-                                  </span>
-                                )}
-                              </div>
-                            )}
-                            <div className="flex items-center text-sm text-x-gray">
-                              <svg
-                                className="w-4 h-4 mr-2"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                />
-                              </svg>
-                              Joined{" "}
-                              {new Date(user.createdAt).toLocaleDateString(
-                                "en-US",
-                                { year: "numeric", month: "short" }
-                              )}
-                            </div>
-                          </div>
-                        )}
+
 
                         {/* Desktop Layout - Side by Side with Action Buttons */}
                         <div className="hidden sm:flex items-start justify-between gap-6 mb-4">
@@ -586,7 +533,7 @@ const Explore = () => {
                           <div className="flex items-center gap-3 flex-shrink-0">
                             <Link
                               to={`/profile/${user.username}`}
-                              className="text-base px-6 py-3 transition-colors duration-200 whitespace-nowrap bg-[#ff6347] text-white rounded-full hover:bg-[#e5533c]"
+                              className="text-base px-6 py-3 transition-all duration-200 whitespace-nowrap bg-x-blue text-white rounded-full hover:bg-x-blue-hover font-bold shadow-lg shadow-x-blue/20"
                             >
                               View Profile
                             </Link>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "../config/axios";
 
 const ReportModal = ({ isOpen, onClose, postId }) => {
   const [selectedReason, setSelectedReason] = useState("");
@@ -32,11 +33,16 @@ const ReportModal = ({ isOpen, onClose, postId }) => {
     
     try {
       setLoading(true);
-      // In a real app, you'd send this to an admin endpoint
-      // await axios.post(`/api/posts/${postId}/report`, { reason: selectedReason, details });
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const finalReason = selectedReason === "Something else" && details 
+        ? `Other: ${details}` 
+        : selectedReason;
+
+      await axios.post("/api/report", { 
+        targetId: postId, 
+        targetType: "post", 
+        reason: finalReason 
+      });
       
       setSubmitted(true);
       setTimeout(() => {
@@ -44,7 +50,7 @@ const ReportModal = ({ isOpen, onClose, postId }) => {
       }, 2000);
     } catch (error) {
       console.error("Report error:", error);
-      alert("Failed to submit report. Please try again.");
+      alert(error.response?.data?.message || "Failed to submit report. Please try again.");
     } finally {
       setLoading(false);
     }

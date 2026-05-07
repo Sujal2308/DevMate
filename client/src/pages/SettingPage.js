@@ -134,7 +134,7 @@ const SettingPage = () => {
   };
 
   return (
-  <div className="max-w-lg mx-auto py-12 px-4 pb-32 sm:pb-12 bg-gradient-to-br from-x-dark/10 to-x-dark/5">
+  <div className="max-w-4xl mx-auto py-12 px-4 pb-32 sm:pb-12 bg-gradient-to-br from-x-dark/10 to-x-dark/5">
       <div className="flex flex-col items-center justify-center mb-8">
         <h2
           className="text-3xl font-extrabold tracking-tight drop-shadow-lg"
@@ -145,17 +145,7 @@ const SettingPage = () => {
         >
           Settings
         </h2>
-        <p
-          className="mt-2 text-sm text-left max-w-md mr-4 ml-4"
-          style={{
-            color: "#6b7280",
-            whiteSpace: "pre-line",
-            fontFamily: "Poppins, sans-serif",
-          }}
-        >
-          Tip: Keep your account secure and notifications relevant. You can
-          always update your preferences here for a better experience!
-        </p>
+
       </div>
 
       {/* Change Password */}

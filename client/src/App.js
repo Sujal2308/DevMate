@@ -37,7 +37,8 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import News from "./pages/News"; // Import News page
 import ProjectsList from "./pages/ProjectsList";
-
+import AdminRoute from "./components/routing/AdminRoute";
+import AdminDashboard from "./pages/AdminDashboard";
 function ScrollToTop() {
   const { pathname } = useLocation();
 
@@ -81,6 +82,20 @@ function AppContent() {
     <div className="min-h-screen flex flex-col bg-x-black text-x-white relative">
       <ScrollToTop />
       {user ? (
+        location.pathname === "/admin" ? (
+          <div className="w-full flex-1 flex flex-col">
+            <Routes>
+              <Route
+                path="/admin"
+                element={
+                  <AdminRoute>
+                    <AdminDashboard />
+                  </AdminRoute>
+                }
+              />
+            </Routes>
+          </div>
+        ) : (
         // Logged in layout - Responsive 3-column
         <>
           <div className="flex-1 flex flex-col">
@@ -234,6 +249,7 @@ function AppContent() {
             </div>
           </div>
         </>
+        )
       ) : (
         // Not logged in layout - full width
         <div className="w-full flex-1 flex flex-col">
