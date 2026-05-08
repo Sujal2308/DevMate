@@ -597,14 +597,14 @@ const CreatePost = () => {
                   {/* Code Section with Distinct Styling */}
                   {formData.codeSnippet && (
                     <div className="code-snippet">
-                      <div className="flex items-center justify-between bg-x-dark/60 px-4 py-3 border-b border-x-border/30">
-                        <div className="flex items-center space-x-2">
+                      <div className="flex items-center justify-between bg-x-blue px-4 py-3 border-b border-white/20">
+                        <div className="flex items-center space-x-2 text-white">
                           <div className="flex space-x-1">
                             <div className="w-3 h-3 rounded-full bg-red-500/60"></div>
                             <div className="w-3 h-3 rounded-full bg-yellow-500/60"></div>
                             <div className="w-3 h-3 rounded-full bg-green-500/60"></div>
                           </div>
-                          <span className="text-xs text-x-gray font-mono">
+                          <span className="text-xs text-white font-mono">
                             💻{" "}
                             {selectedLanguage
                               ? `${
@@ -614,7 +614,7 @@ const CreatePost = () => {
                               : "Code Snippet"}
                           </span>
                         </div>
-                        <span className="text-xs text-x-blue font-mono uppercase tracking-wide">
+                        <span className="text-xs text-white font-mono uppercase tracking-wide opacity-90">
                           Code Preview
                         </span>
                       </div>

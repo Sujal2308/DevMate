@@ -713,7 +713,9 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
             {/* Toggle Header */}
             <button
               onClick={() => setShowFullCode(!showFullCode)}
-              className="w-full flex items-center justify-between bg-[#080808] px-4 py-3 hover:bg-[#121212] transition-all group"
+              className={`w-full flex items-center justify-between px-4 py-3 transition-all group ${
+                showFullCode ? "bg-x-blue border-b border-white/20" : "bg-[#080808] hover:bg-[#121212]"
+              }`}
             >
               <div className="flex items-center space-x-3">
                 <div className="flex space-x-1.5">
@@ -721,7 +723,7 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
                   <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80"></div>
                   <div className="w-2.5 h-2.5 rounded-full bg-green-500/80"></div>
                 </div>
-                <div className="flex items-center space-x-2 text-x-gray group-hover:text-x-white transition-colors">
+                <div className={`flex items-center space-x-2 transition-colors ${showFullCode ? 'text-white' : 'text-x-gray group-hover:text-x-white'}`}>
                   <span className="text-sm font-mono opacity-80 decoration-x-blue underline-offset-4 decoration-2">
                     {showFullCode ? "Hide Code Snippet" : "View Code Snippet"}
                   </span>
@@ -738,7 +740,7 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
                         setTimeout(() => setCopied(false), 1500);
                       }
                     }}
-                    className="p-1.5 rounded-none hover:bg-x-blue/20 text-x-gray hover:text-x-blue transition-all cursor-pointer flex items-center justify-center min-w-[40px]"
+                    className={`p-1.5 rounded-none transition-all cursor-pointer flex items-center justify-center min-w-[40px] ${showFullCode ? 'hover:bg-white/20 text-white' : 'hover:bg-x-blue/20 text-x-gray hover:text-x-blue'}`}
                     title="Copy code"
                   >
                     {copied ? (

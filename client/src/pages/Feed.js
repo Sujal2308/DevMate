@@ -283,7 +283,7 @@ const Feed = () => {
 
           <Link
             to="/create-post"
-            className="hidden sm:flex font-medium text-sm sm:text-base px-4 py-2 sm:px-5 sm:py-2 rounded-full transition-all duration-300 bg-blue-900 text-white focus:outline-none hover:bg-blue-800 no-underline items-center gap-2"
+            className="hidden sm:flex font-black uppercase tracking-widest text-[10px] px-5 py-2.5 rounded-full transition-all duration-300 bg-black border border-white/20 text-white focus:outline-none hover:bg-white hover:text-black no-underline items-center gap-2 shadow-xl"
           >
             <svg
               className="w-4 h-4"
@@ -326,7 +326,7 @@ const Feed = () => {
           </p>
           <Link
             to="/create-post"
-            className="inline-flex items-center gap-2 bg-blue-900 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full hover:bg-blue-800 transition-colors text-sm sm:text-base font-medium no-underline"
+            className="inline-flex items-center gap-2 bg-black border border-white/20 text-white px-6 py-3 rounded-full hover:bg-white hover:text-black transition-all text-sm sm:text-base font-black uppercase tracking-widest no-underline shadow-xl"
           >
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
               <path
