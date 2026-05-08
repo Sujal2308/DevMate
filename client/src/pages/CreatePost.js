@@ -558,27 +558,24 @@ const CreatePost = () => {
                   {/* Text Content Section with Clear Visual Identity */}
                   {formData.content && (
                     <div className="bg-x-dark/20 border border-x-border/30 rounded-xl p-5">
-                      <div className="flex items-center mb-3">
-                        <svg
-                          className="w-4 h-4 text-x-blue mr-2"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                          />
-                        </svg>
-                        <span className="text-xs font-semibold text-x-blue uppercase tracking-wide">
-                          Post Text
-                        </span>
-                      </div>
                       <p className="text-x-white text-base leading-relaxed whitespace-pre-wrap">
                         {formData.content}
                       </p>
+                    </div>
+                  )}
+                  
+                  {/* Repository Link Preview */}
+                  {formData.repoUrl && (
+                    <div className="inline-flex items-center space-x-1.5 text-x-white group px-1">
+                      <svg className="w-4 h-4 text-x-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+                      </svg>
+                      <span className="text-xs font-black truncate">
+                        {formData.repoTitle || formData.repoUrl.split('/').slice(-2).join('/') || "New Repository"}
+                      </span>
+                      <svg className="w-3.5 h-3.5 text-red-500 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3.5} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
                     </div>
                   )}
 
@@ -595,31 +592,7 @@ const CreatePost = () => {
                     </div>
                   )}
 
-                  {/* Repository Preview Section */}
-                  {formData.repoUrl && (
-                    <div className="mt-4 animate-fade-in group">
-                      <div className="bg-[#0d0d17] border border-x-border/30 rounded-xl overflow-hidden shadow-lg">
-                        <div className="p-4 flex items-center justify-between">
-                          <div className="flex items-center space-x-4">
-                            <div className="bg-[#161b22] p-2 rounded-lg border border-x-border/10">
-                              <svg className="w-5 h-5 text-x-white" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
-                              </svg>
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <h4 className="text-x-white font-bold text-sm truncate">
-                                {formData.repoTitle || formData.repoUrl.split('/').slice(-2).join('/') || "New Repository"}
-                              </h4>
-                            </div>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                             <div className="w-1.5 h-1.5 rounded-full bg-x-blue"></div>
-                             <span className="text-[10px] text-x-gray font-bold uppercase tracking-widest opacity-60">Selected</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
+
 
                   {/* Code Section with Distinct Styling */}
                   {formData.codeSnippet && (
