@@ -5,7 +5,7 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import { useAuth } from "../contexts/AuthContext";
 import PdfCarousel from "../components/PdfCarousel";
 import "../styles/animated-gradient.css";
-import Editor from "@monaco-editor/react";
+import Editor from "react-simple-code-editor";
 import Prism from "prismjs";
 import "prismjs/themes/prism-tomorrow.css";
 import "prismjs/components/prism-javascript";
@@ -393,29 +393,25 @@ const CreatePost = () => {
                     </button>
                   </div>
                 </div>
-                <div className="p-0">
+                <div className="p-4 bg-[#1e1e1e] min-h-[150px] max-h-[400px] overflow-y-auto overflow-x-hidden font-mono text-sm leading-relaxed border-t border-x-border/30">
                   <Editor
-                    height="300px"
-                    language={selectedLanguage}
                     value={formData.codeSnippet}
-                    theme="vs-dark"
-                    onChange={(value) => setFormData({ ...formData, codeSnippet: value || "" })}
-                    loading={
-                      <div className="flex flex-col items-center justify-center h-full w-full bg-[#1e1e1e] space-y-4">
-                        <LoadingSpinner size="small" />
-                        <span className="text-x-gray text-xs font-mono tracking-widest uppercase animate-pulse">
-                          Loading Editor...
-                        </span>
-                      </div>
-                    }
-                    options={{
-                      fontSize: 14,
-                      minimap: { enabled: false },
-                      automaticLayout: true,
-                      wordWrap: "on",
-                      scrollBeyondLastLine: false,
-                      padding: { top: 16, bottom: 16 }
+                    onValueChange={(code) => setFormData({ ...formData, codeSnippet: code || "" })}
+                    highlight={(code) => {
+                      const lang = selectedLanguage || "javascript";
+                      const grammar = Prism.languages[lang] || Prism.languages.javascript;
+                      return Prism.highlight(code, grammar, lang);
                     }}
+                    padding={0}
+                    style={{
+                      fontFamily: '"Fira Code", "Monaco", "Menlo", "Ubuntu Mono", "Consolas", monospace',
+                      fontSize: 14,
+                      backgroundColor: "transparent",
+                      color: "#e5e7eb",
+                      outline: "none",
+                      minHeight: "150px"
+                    }}
+                    textareaClassName="focus:outline-none border-none ring-0 focus:ring-0"
                   />
                 </div>
               </div>
