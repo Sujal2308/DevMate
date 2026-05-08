@@ -6,6 +6,7 @@ import ShareModal from "./ShareModal";
 import ReportModal from "./ReportModal";
 import PdfCarousel from "./PdfCarousel";
 import ImageLightboxModal from "./ImageLightboxModal";
+import SaveToCollectionModal from "./SaveToCollectionModal";
 import "../index.css"; // Import the CSS file for animations
 
 import Prism from "prismjs";
@@ -291,6 +292,7 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
   const [isSaved, setIsSaved] = useState(false);
   const [saveAnimating, setSaveAnimating] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
+  const [showSaveModal, setShowSaveModal] = useState(false);
 
   const [isFollowing, setIsFollowing] = useState(false);
   const [followLoading, setFollowLoading] = useState(false);
@@ -342,10 +344,26 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
   };
 
   React.useEffect(() => {
-    if (user?.savedPosts) {
-      setIsSaved(user.savedPosts.includes(post?._id));
+    if (user) {
+      // Check if saved in main array
+      const isInSavedPosts = user.savedPosts?.includes(post?._id);
+      
+      // Check if saved in any custom collection
+      const isInCollections = user.savedCollections?.some(c => 
+        c.posts?.some(id => id === post?._id || (id._id && id._id === post?._id))
+      );
+      
+      const newSavedStatus = isInSavedPosts || isInCollections;
+      
+      // Trigger animation if status changed from false to true
+      if (newSavedStatus && !isSaved) {
+        setSaveAnimating(true);
+        setTimeout(() => setSaveAnimating(false), 600);
+      }
+      
+      setIsSaved(newSavedStatus);
     }
-  }, [user, post?._id]);
+  }, [user, post?._id, isSaved]);
 
   // Safety check for post data (after ALL hooks)
   if (!post || !post.author) {
@@ -357,20 +375,14 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
   const isLiked = post.likes?.some((like) => like.user === user?.id);
   const isAuthor = post.author?._id === user?.id;
 
-  const handleSave = async () => {
+  const handleSaveClick = (e) => {
+    e.preventDefault();
     if (!user) return;
-    setSaveAnimating(true);
-    try {
-      const response = await axios.put(`/api/users/save/${post._id}`);
-      setIsSaved(response.data.savedPosts.includes(post._id));
-      if (user) {
-         user.savedPosts = response.data.savedPosts;
-      }
-    } catch (error) {
-      console.error("Save error:", error);
-    } finally {
-      setTimeout(() => setSaveAnimating(false), 600);
-    }
+    setShowSaveModal(true);
+  };
+
+  const handleSaveToggle = (savedStatus) => {
+    setIsSaved(savedStatus);
   };
 
   const handleLike = async () => {
@@ -874,7 +886,7 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
         </button>
 
         <button
-          onClick={handleSave}
+          onClick={handleSaveClick}
           className={`flex items-center space-x-1 sm:space-x-2 text-sm ${
             isSaved ? "text-x-green" : "text-x-gray hover:text-x-green"
           } transition-colors relative`}
@@ -1034,6 +1046,13 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
         isOpen={showReportModal}
         onClose={() => setShowReportModal(false)}
         postId={post._id}
+      />
+      <SaveToCollectionModal
+        isOpen={showSaveModal}
+        onClose={() => setShowSaveModal(false)}
+        post={post}
+        isSaved={isSaved}
+        onSaveToggle={handleSaveToggle}
       />
     </div>
   );

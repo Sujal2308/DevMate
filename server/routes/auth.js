@@ -82,6 +82,7 @@ router.post(
           gender: user.gender,
           nationality: user.nationality,
           savedPosts: user.savedPosts || [],
+          savedCollections: user.savedCollections || [],
           following: user.following || [],
           role: user.role,
         },
@@ -142,6 +143,7 @@ router.post(
           gender: user.gender,
           nationality: user.nationality,
           savedPosts: user.savedPosts || [],
+          savedCollections: user.savedCollections || [],
           following: user.following || [],
           role: user.role,
         },
@@ -169,6 +171,7 @@ router.get("/me", auth, async (req, res) => {
       gender: req.user.gender,
       nationality: req.user.nationality,
       savedPosts: req.user.savedPosts || [],
+      savedCollections: req.user.savedCollections || [],
       following: req.user.following || [],
       role: req.user.role,
     });

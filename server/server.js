@@ -32,10 +32,22 @@ process.on("unhandledRejection", (reason, promise) => {
 // Global variable to track DB connection status
 let isDBConnected = false;
 
+// Handle MongoDB connection events globally
+const mongoose = require("mongoose");
+mongoose.connection.on("connected", () => {
+  isDBConnected = true;
+});
+mongoose.connection.on("disconnected", () => {
+  isDBConnected = false;
+});
+mongoose.connection.on("error", () => {
+  isDBConnected = false;
+});
+
 // Connect to database
 const initializeDatabase = async () => {
-  isDBConnected = await connectDB();
-  if (!isDBConnected) {
+  const connected = await connectDB();
+  if (!connected) {
     console.log("⚠️ Server starting without database connection");
     console.log("🔄 Will attempt to reconnect automatically");
   }

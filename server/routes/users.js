@@ -10,7 +10,7 @@ const { sendEmail } = require("../utils/email");
 const { cloudinary } = require("../config/cloudinary");
 
 const router = express.Router();
-// Get all saved posts
+// Get all saved posts and collections
 router.get("/saved/posts", auth, async (req, res) => {
   try {
     const user = await User.findById(req.user._id).populate({
@@ -19,34 +19,89 @@ router.get("/saved/posts", auth, async (req, res) => {
         { path: "author", select: "username displayName avatar" },
         { path: "comments.user", select: "username displayName avatar" }
       ]
+    }).populate({
+      path: "savedCollections.posts",
+      populate: [
+        { path: "author", select: "username displayName avatar" },
+        { path: "comments.user", select: "username displayName avatar" }
+      ]
     });
     // Reverse to show newest saves first
     const posts = user.savedPosts ? user.savedPosts.reverse() : [];
-    res.json({ posts });
+    res.json({ 
+      posts,
+      collections: user.savedCollections || []
+    });
   } catch (error) {
     console.error("Get saved posts error:", error);
     res.status(500).json({ message: "Server error" });
   }
 });
 
-// Save or unsave a post
+// Create a new collection
+router.post("/collections", auth, async (req, res) => {
+  try {
+    const { name } = req.body;
+    if (!name) return res.status(400).json({ message: "Collection name is required" });
+
+    const user = await User.findById(req.user._id);
+    if (!user.savedCollections) user.savedCollections = [];
+    
+    // Check if collection with same name exists
+    const exists = user.savedCollections.some(c => c.name.toLowerCase() === name.toLowerCase());
+    if (exists) return res.status(400).json({ message: "Collection already exists" });
+
+    user.savedCollections.push({ name, posts: [] });
+    await user.save();
+
+    res.status(201).json({ collections: user.savedCollections });
+  } catch (error) {
+    console.error("Create collection error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Save or unsave a post (supports specific collection)
 router.put("/save/:postId", auth, async (req, res) => {
   try {
+    const { collectionId } = req.body;
     const post = await Post.findById(req.params.postId);
     if (!post) return res.status(404).json({ message: "Post not found" });
 
     const user = await User.findById(req.user._id);
+    let isSaved = false;
 
-    const isSaved = user.savedPosts && user.savedPosts.includes(req.params.postId);
-    if (isSaved) {
-      user.savedPosts = user.savedPosts.filter(id => id.toString() !== req.params.postId);
+    if (collectionId) {
+      // Save/unsave to specific collection
+      const collection = user.savedCollections.id(collectionId);
+      if (!collection) return res.status(404).json({ message: "Collection not found" });
+
+      const postIndex = collection.posts.findIndex(id => id.toString() === req.params.postId);
+      if (postIndex > -1) {
+        collection.posts.splice(postIndex, 1);
+        isSaved = false;
+      } else {
+        collection.posts.push(req.params.postId);
+        isSaved = true;
+      }
     } else {
-      if (!user.savedPosts) user.savedPosts = [];
-      user.savedPosts.push(req.params.postId);
+      // Default: save/unsave to all posts
+      isSaved = user.savedPosts && user.savedPosts.includes(req.params.postId);
+      if (isSaved) {
+        user.savedPosts = user.savedPosts.filter(id => id.toString() !== req.params.postId);
+      } else {
+        if (!user.savedPosts) user.savedPosts = [];
+        user.savedPosts.push(req.params.postId);
+      }
     }
+
     await user.save();
     
-    res.json({ message: isSaved ? "Post unsaved" : "Post saved", savedPosts: user.savedPosts });
+    res.json({ 
+      message: isSaved ? "Post saved" : "Post unsaved", 
+      savedPosts: user.savedPosts,
+      savedCollections: user.savedCollections
+    });
   } catch (error) {
     console.error("Save post error:", error);
     res.status(500).json({ message: "Server error" });
