@@ -754,11 +754,6 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
                   <span className="text-sm font-mono opacity-80 decoration-x-blue underline-offset-4 decoration-2">
                     {showFullCode ? "Hide Code Snippet" : "View Code Snippet"}
                   </span>
-                  {post.codeLanguage && (
-                    <span className="px-2 py-0.5 rounded-none bg-x-blue/10 border border-x-blue/30 text-[10px] text-x-blue font-bold uppercase tracking-wider">
-                      {post.codeLanguage}
-                    </span>
-                  )}
                 </div>
               </div>
               <div className="flex items-center space-x-2">

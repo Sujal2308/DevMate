@@ -400,6 +400,14 @@ const CreatePost = () => {
                     value={formData.codeSnippet}
                     theme="vs-dark"
                     onChange={(value) => setFormData({ ...formData, codeSnippet: value || "" })}
+                    loading={
+                      <div className="flex flex-col items-center justify-center h-full w-full bg-[#1e1e1e] space-y-4">
+                        <LoadingSpinner size="small" />
+                        <span className="text-x-gray text-xs font-mono tracking-widest uppercase animate-pulse">
+                          Loading Editor...
+                        </span>
+                      </div>
+                    }
                     options={{
                       fontSize: 14,
                       minimap: { enabled: false },
