@@ -453,17 +453,25 @@ const Profile = () => {
     >
         {/* Profile Info Card */}
         <div className="bg-gradient-to-br from-x-dark/95 to-x-dark/70 backdrop-blur-sm border border-x-border/50 pt-8 pb-6 px-4 md:px-8 relative rounded-none mb-8">
-          {isOwnProfile && (
+          {isOwnProfile ? (
             <div className="mb-6">
               <h1 
-                className="text-4xl md:text-5xl font-black text-x-white tracking-tighter" 
+                className="text-2xl md:text-4xl font-black text-x-white tracking-tighter" 
                 style={{ fontFamily: "'Space Grotesk', sans-serif" }}
               >
                 My Profile
               </h1>
             </div>
+          ) : (
+            <div className="mb-6">
+              <h1 
+                className="text-2xl md:text-4xl font-black text-x-white tracking-tighter" 
+                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+              >
+                {profileUser.displayName || profileUser.username}'s Profile
+              </h1>
+            </div>
           )}
-          
           {/* Top Right Actions */}
           <div className="absolute top-6 right-6 flex items-center gap-3 z-50">
 
@@ -510,9 +518,9 @@ const Profile = () => {
           </div>
 
           <div
-            className={`flex flex-row items-center justify-between`}
+            className={`flex flex-row items-start justify-between`}
           >
-            <div className={`flex flex-row items-center text-left mt-2`}>
+            <div className={`flex flex-row items-start text-left mt-2`}>
               {/* Avatar */}
               <div className="-ml-2 md:-ml-4 mb-0 mr-6 z-20 flex flex-col items-center gap-3">
                 <div 
@@ -561,11 +569,11 @@ const Profile = () => {
                 )}
               </div>
               {/* Name and Info */}
-              <div className="text-left flex flex-col justify-start">
-                <h1 className="text-lg sm:text-2xl md:text-4xl font-bold text-x-white mb-1 font-space">
+              <div className="text-left flex flex-col justify-center min-h-[96px] md:min-h-[112px]">
+                <h1 className="text-base sm:text-xl md:text-2xl font-bold text-x-white mb-1 font-space">
                   {profileUser.displayName || profileUser.username}
                 </h1>
-                <p className="text-sm sm:text-lg text-x-gray mb-2 font-mono opacity-80">
+                <p className="text-xs sm:text-base text-x-gray mb-2 font-mono opacity-80">
                   @{profileUser.username}
                 </p>
                 <div className="flex flex-row space-x-4 mb-2 items-center">

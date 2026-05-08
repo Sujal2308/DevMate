@@ -92,8 +92,7 @@ html {
   margin: 0;
   padding: 16px;
   font-family: "Monaco", "Menlo", "Ubuntu Mono", "Courier New", monospace;
-  color: #58a6ff;
-  text-shadow: 0 0 2px rgba(88, 166, 255, 0.3);
+  color: #e5e7eb;
 }
 
 /* Syntax highlighting colors */
@@ -412,7 +411,7 @@ pre.code,
   }
 
   .card {
-    @apply rounded-full;
+    @apply rounded-none;
   }
 
   /* Ensure mobile menu appears above all content */

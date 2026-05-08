@@ -102,7 +102,7 @@ function AppContent() {
             <div className="x-container flex-1 flex">
               <Sidebar />
               <div className="flex flex-col flex-1">
-                <main className="x-main flex-1 flex flex-col">
+                <main className="x-main x-main-mobile flex-1 flex flex-col">
                   <Routes>
                     <Route
                       path="/"

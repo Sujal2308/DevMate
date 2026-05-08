@@ -8,6 +8,15 @@ import PdfCarousel from "./PdfCarousel";
 import ImageLightboxModal from "./ImageLightboxModal";
 import "../index.css"; // Import the CSS file for animations
 
+import Prism from "prismjs";
+import "prismjs/themes/prism-tomorrow.css";
+import "prismjs/components/prism-javascript";
+import "prismjs/components/prism-python";
+import "prismjs/components/prism-c";
+import "prismjs/components/prism-cpp";
+import "prismjs/components/prism-java";
+import "prismjs/components/prism-css";
+
 // Function to generate consistent colors for users
 const getUserColor = (userId, username) => {
   const colors = [
@@ -307,6 +316,12 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, [postMenuOpen]);
+
+  React.useEffect(() => {
+    if (showFullCode) {
+      Prism.highlightAll();
+    }
+  }, [showFullCode, post.codeSnippet]);
 
   const handleFollowToggle = async () => {
     if (!user || followLoading) return;
@@ -746,18 +761,9 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
                   )}
                 </div>
               </div>
-              <div className={`p-1.5 rounded-none bg-x-dark group-hover:bg-x-blue/20 transition-all ${showFullCode ? 'rotate-180' : ''}`}>
-                <svg className="w-4 h-4 text-x-gray group-hover:text-x-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
-                </svg>
-              </div>
-            </button>
-
-            {/* Code Content */}
-            {showFullCode && (
-              <div className="animate-fade-in border-t border-x-border/30">
-                <div className="flex items-center justify-end bg-x-dark/40 px-4 py-2 border-b border-x-border/20">
-                  <button
+              <div className="flex items-center space-x-2">
+                {showFullCode && (
+                  <div
                     onClick={(e) => {
                       e.stopPropagation();
                       if (navigator && navigator.clipboard) {
@@ -766,19 +772,34 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
                         setTimeout(() => setCopied(false), 1500);
                       }
                     }}
-                    className="flex items-center space-x-2 px-3 py-1.5 rounded-none hover:bg-x-blue/20 text-x-gray hover:text-x-blue transition-all"
+                    className="p-1.5 rounded-none hover:bg-x-blue/20 text-x-gray hover:text-x-blue transition-all cursor-pointer flex items-center justify-center min-w-[40px]"
+                    title="Copy code"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                    </svg>
-                    <span className="text-xs font-bold uppercase tracking-tight">
-                      {copied ? "Copied!" : "Copy"}
-                    </span>
-                  </button>
+                    {copied ? (
+                      <span className="text-[10px] font-bold text-x-blue uppercase animate-fade-in">Copied!</span>
+                    ) : (
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                    )}
+                  </div>
+                )}
+                <div className={`p-1.5 rounded-none bg-x-dark group-hover:bg-x-blue/20 transition-all ${showFullCode ? 'rotate-180' : ''}`}>
+                  <svg className="w-4 h-4 text-x-gray group-hover:text-x-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                  </svg>
                 </div>
+              </div>
+            </button>
+
+            {/* Code Content */}
+            {showFullCode && (
+              <div className="animate-fade-in border-t border-x-border/30">
                 <div className="p-4 overflow-x-auto bg-[#0d0d17]/50">
-                  <pre className="text-sm sm:text-base font-mono text-x-white leading-relaxed">
-                    {post.codeSnippet}
+                  <pre className={`text-sm sm:text-base font-mono text-x-white leading-relaxed language-${post.codeLanguage || 'javascript'}`}>
+                    <code className={`language-${post.codeLanguage || 'javascript'}`}>
+                      {post.codeSnippet}
+                    </code>
                   </pre>
                 </div>
               </div>

@@ -5,6 +5,15 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import { useAuth } from "../contexts/AuthContext";
 import PdfCarousel from "../components/PdfCarousel";
 import "../styles/animated-gradient.css";
+import Editor from "@monaco-editor/react";
+import Prism from "prismjs";
+import "prismjs/themes/prism-tomorrow.css";
+import "prismjs/components/prism-javascript";
+import "prismjs/components/prism-python";
+import "prismjs/components/prism-c";
+import "prismjs/components/prism-cpp";
+import "prismjs/components/prism-java";
+import "prismjs/components/prism-css";
 
 const CreatePost = () => {
   const { user } = useAuth();
@@ -26,6 +35,11 @@ const CreatePost = () => {
 
   const navigate = useNavigate();
 
+  React.useEffect(() => {
+    if (formData.codeSnippet) {
+      Prism.highlightAll();
+    }
+  }, [formData.codeSnippet, selectedLanguage]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -79,6 +93,7 @@ const CreatePost = () => {
       payload.append("content", formData.content.trim());
       if (formData.codeSnippet.trim()) {
         payload.append("codeSnippet", formData.codeSnippet.trim());
+        payload.append("codeLanguage", selectedLanguage || "javascript");
       }
       if (media) {
         payload.append("media", media);
@@ -203,8 +218,8 @@ const CreatePost = () => {
               <div 
                 onClick={() => {
                   if (!formData.codeSnippet) {
-                    setFormData({ ...formData, codeSnippet: "// Write your code here..." });
-                    setSelectedLanguage("other");
+                    setFormData({ ...formData, codeSnippet: "// Start coding..." });
+                    setSelectedLanguage("javascript");
                   } else {
                     setFormData({ ...formData, codeSnippet: "" });
                     setSelectedLanguage("");
@@ -321,7 +336,7 @@ const CreatePost = () => {
           )}
 
           {(selectedLanguage || formData.codeSnippet) && (
-            <div className="bg-x-black/80 border border-x-border/50 rounded-xl overflow-hidden mb-8">
+            <div className="bg-[#1e1e1e] border border-x-border/50 rounded-xl overflow-hidden mb-8">
                 <div className="flex items-center justify-between bg-x-dark/60 px-4 py-2 border-b border-x-border/30">
                   <div className="flex items-center space-x-2">
                     <div className="flex space-x-1">
@@ -331,28 +346,38 @@ const CreatePost = () => {
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
-                    {/* Paste Icon */}
-                    <button
-                      type="button"
-                      onClick={async () => {
-                        try {
-                          const text = await navigator.clipboard.readText();
-                          if (text) {
-                            setFormData({ ...formData, codeSnippet: text });
-                          }
-                        } catch (err) {
-                          console.error("Failed to read clipboard:", err);
+                    <select
+                      value={selectedLanguage}
+                      onChange={(e) => {
+                        const newLang = e.target.value;
+                        setSelectedLanguage(newLang);
+                        if (newLang === "python" && formData.codeSnippet === "// Start coding...") {
+                          setFormData({ ...formData, codeSnippet: "print('Hello World')" });
                         }
                       }}
+                      className="bg-[#16181c] text-x-white text-sm border border-x-border rounded px-2 py-1 focus:outline-none focus:border-x-blue font-mono"
+                    >
+                      <option value="javascript">JavaScript</option>
+                      <option value="python">Python</option>
+                      <option value="cpp">C++</option>
+                      <option value="java">Java</option>
+                      <option value="html">HTML</option>
+                      <option value="css">CSS</option>
+                    </select>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard.writeText(formData.codeSnippet);
+                      }}
                       className="text-x-gray hover:text-x-blue transition-colors p-1"
-                      title="Paste from clipboard"
+                      title="Copy code"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                       </svg>
                     </button>
 
-                    {/* Cross Icon */}
                     <button
                       type="button"
                       onClick={() => {
@@ -368,26 +393,23 @@ const CreatePost = () => {
                     </button>
                   </div>
                 </div>
-                <textarea
-                  id="codeSnippet"
-                  name="codeSnippet"
-                  rows="12"
-                  className="w-full p-4 bg-transparent border-none text-x-white placeholder-x-gray resize-none focus:ring-0 focus:outline-none font-mono text-sm leading-relaxed"
-                  placeholder={
-                    selectedLanguage
-                      ? `// ${
-                          selectedLanguage.charAt(0).toUpperCase() +
-                          selectedLanguage.slice(1)
-                        } template loaded! Edit as needed or write your own code...`
-                      : `// Select a language from the dropdown above to get templates
-// Or write your custom code here...
-
-console.log("Welcome to DevMate!");`
-                  }
-                  value={formData.codeSnippet}
-                  onChange={handleChange}
-                  maxLength="5000"
-                />
+                <div className="p-0">
+                  <Editor
+                    height="300px"
+                    language={selectedLanguage}
+                    value={formData.codeSnippet}
+                    theme="vs-dark"
+                    onChange={(value) => setFormData({ ...formData, codeSnippet: value || "" })}
+                    options={{
+                      fontSize: 14,
+                      minimap: { enabled: false },
+                      automaticLayout: true,
+                      wordWrap: "on",
+                      scrollBeyondLastLine: false,
+                      padding: { top: 16, bottom: 16 }
+                    }}
+                  />
+                </div>
               </div>
             )}
 
@@ -619,9 +641,11 @@ console.log("Welcome to DevMate!");`
                           Code Preview
                         </span>
                       </div>
-                      <div className="p-4">
-                        <pre className="whitespace-pre-wrap font-mono text-sm text-x-white">
-                          {formData.codeSnippet}
+                      <div className="p-4 overflow-x-auto">
+                        <pre className={`whitespace-pre-wrap font-mono text-sm leading-relaxed language-${selectedLanguage || 'javascript'}`}>
+                          <code className={`language-${selectedLanguage || 'javascript'}`}>
+                            {formData.codeSnippet}
+                          </code>
                         </pre>
                       </div>
                     </div>

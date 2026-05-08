@@ -39,7 +39,7 @@ router.post(
         return res.status(400).json({ errors: errors.array() });
       }
 
-      const { content, codeSnippet, repoUrl, repoTitle } = req.body;
+      const { content, codeSnippet, codeLanguage, repoUrl, repoTitle } = req.body;
       
       let mediaUrl = "";
       let mediaType = "";
@@ -53,6 +53,7 @@ router.post(
         author: req.user._id,
         content,
         codeSnippet: codeSnippet || "",
+        codeLanguage: codeLanguage || "javascript",
         mediaUrl,
         mediaType,
         repoUrl: repoUrl || "",

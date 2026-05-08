@@ -16,6 +16,10 @@ const postSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    codeLanguage: {
+      type: String,
+      default: "javascript",
+    },
     mediaUrl: {
       type: String,
       default: "",
