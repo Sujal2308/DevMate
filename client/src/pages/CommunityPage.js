@@ -140,7 +140,7 @@ const CommunityPage = () => {
         className="mb-6 border-b border-x-border/20 pb-6 pt-4 sm:px-0"
         style={{ borderTop: `3px solid ${community.color}` }}
       >
-        <div className="flex items-start justify-between gap-4 w-full min-w-0">
+        <div className="flex items-center justify-between gap-4 w-full min-w-0">
           <div className="flex items-center gap-4">
             <div
               className={`w-20 h-20 rounded-2xl flex items-center justify-center text-4xl shrink-0 overflow-hidden ${!community.icon?.startsWith("/") ? "" : "bg-transparent border-none"}`}
@@ -174,7 +174,7 @@ const CommunityPage = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0 mt-1">
+          <div className="flex items-center gap-2 shrink-0">
             {user && (
               <Link
                 to="/create-post"
