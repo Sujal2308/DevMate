@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import LoadingSpinner from "../components/LoadingSpinner";
@@ -220,48 +221,57 @@ const CreatePost = () => {
                   </button>
                 </div>
 
-                {/* Expandable Rules List */}
-                {showRules && (
-                  <div className="mt-3 p-4 border border-white rounded-none bg-white duration-300 shadow-2xl">
-                    <div className="space-y-4">
-                      {(() => {
-                        const c = selectedCommunity ? communities.find((c) => c._id === selectedCommunity) : null;
-                        const rules = (c?.rules && c.rules.length > 0) ? c.rules : [
-                          { title: "Stay Professional", description: "Keep discussions constructive and code-focused." },
-                          { title: "No Spam", description: "Strictly no low-effort promotions or redundant links." },
-                          { title: "No Explicit Content", description: "NSFW or explicit material is strictly prohibited." },
-                          { title: "Stay Relevant", description: "Content must be related to development or the community." },
-                          { title: "Privacy First", description: "Never share sensitive data or private credentials." }
-                        ];
-                        return rules.map((rule, idx) => (
-                          <div key={idx} className="flex gap-4 group">
-                            <span className="text-lg font-black text-x-blue shrink-0 min-w-[24px]">
-                              {idx + 1}.
-                            </span>
-                            <div className="space-y-1">
-                              <p className="text-sm font-black text-black leading-tight">
-                                {rule.title}
-                              </p>
-                              <p className="text-xs text-gray-600 leading-relaxed font-medium">
-                                {rule.description}
-                              </p>
-                            </div>
-                          </div>
-                        ));
-                      })()}
-                    </div>
-                    {/* Acknowledge Button */}
-                    <div className="mt-6 pt-4 border-t border-gray-100">
-                      <button
-                        type="button"
-                        onClick={() => setShowRules(false)}
-                        className="w-full py-2 bg-black text-white rounded-none font-black text-xs uppercase tracking-widest hover:bg-x-blue transition-all duration-300"
-                      >
-                        I Understand
-                      </button>
-                    </div>
-                  </div>
-                )}
+                <AnimatePresence>
+                  {showRules && (
+                    <motion.div 
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      className="overflow-hidden"
+                    >
+                      <div className="mt-3 p-4 border border-white rounded-none bg-white shadow-2xl">
+                        <div className="space-y-4">
+                          {(() => {
+                            const c = selectedCommunity ? communities.find((c) => c._id === selectedCommunity) : null;
+                            const rules = (c?.rules && c.rules.length > 0) ? c.rules : [
+                              { title: "Stay Professional", description: "Keep discussions constructive and code-focused." },
+                              { title: "No Spam", description: "Strictly no low-effort promotions or redundant links." },
+                              { title: "No Explicit Content", description: "NSFW or explicit material is strictly prohibited." },
+                              { title: "Stay Relevant", description: "Content must be related to development or the community." },
+                              { title: "Privacy First", description: "Never share sensitive data or private credentials." }
+                            ];
+                            return rules.map((rule, idx) => (
+                              <div key={idx} className="flex gap-4 group">
+                                <span className="text-lg font-black text-x-blue shrink-0 min-w-[24px]">
+                                  {idx + 1}.
+                                </span>
+                                <div className="space-y-1">
+                                  <p className="text-sm font-black text-black leading-tight">
+                                    {rule.title}
+                                  </p>
+                                  <p className="text-xs text-gray-600 leading-relaxed font-medium">
+                                    {rule.description}
+                                  </p>
+                                </div>
+                              </div>
+                            ));
+                          })()}
+                        </div>
+                        {/* Acknowledge Button */}
+                        <div className="mt-6 pt-4 border-t border-gray-100">
+                          <button
+                            type="button"
+                            onClick={() => setShowRules(false)}
+                            className="w-full py-2 bg-black text-white rounded-none font-black text-xs uppercase tracking-widest hover:bg-x-blue transition-all duration-300"
+                          >
+                            I Understand
+                          </button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             )}
           </div>
@@ -345,7 +355,7 @@ const CreatePost = () => {
           )}
 
           {/* Flair Selection Toggle */}
-          <div className="mb-6 relative animate-fade-in">
+          <div className="mb-6 relative">
             <div className="flex items-center justify-between mb-3">
               <label className="text-xs font-black uppercase tracking-widest text-x-gray">
                 Post Category <span className="text-red-500 ml-1">*</span>
@@ -380,7 +390,7 @@ const CreatePost = () => {
             )}
 
             {selectedCommunity && showFlairGrid && (
-              <div className="flex flex-wrap gap-2 p-5 bg-white border border-white/20 rounded-2xl animate-in slide-in-from-top-2 duration-300 shadow-2xl">
+              <div className="flex flex-wrap gap-2 p-5 bg-white border border-white/20 rounded-2xl shadow-2xl">
                 {(() => {
                   const comm = communities.find(c => c._id.toString() === selectedCommunity.toString());
                   if (!comm || !comm.flairs || comm.flairs.length === 0) {

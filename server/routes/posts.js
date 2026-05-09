@@ -224,6 +224,7 @@ router.put("/:id/like", auth, async (req, res) => {
     }
     await post.save();
     await post.populate("author", "username displayName avatar");
+    await post.populate("community", "name slug icon color");
     await post.populate("comments.user", "username displayName avatar");
     // Create notification if liked and not self
     if (liked && post.author._id.toString() !== req.user._id.toString()) {
@@ -273,6 +274,7 @@ router.post(
         "author",
         "username displayName email notificationPreferences avatar"
       );
+      await post.populate("community", "name slug icon color");
       await post.populate("comments.user", "username displayName avatar");
       // Create notification if not self
       if (post.author._id.toString() !== req.user._id.toString()) {
@@ -460,7 +462,7 @@ router.put("/:id/poll/:optionIndex/vote", auth, async (req, res) => {
 
     await post.populate("author", "username displayName avatar");
     await post.populate("community", "name slug icon color");
-
+    await post.populate("comments.user", "username displayName avatar");
     res.json(post);
   } catch (error) {
     console.error("Poll vote error:", error);
