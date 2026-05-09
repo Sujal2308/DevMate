@@ -298,6 +298,17 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
   const [followLoading, setFollowLoading] = useState(false);
   const [postMenuOpen, setPostMenuOpen] = useState(false);
   const postMenuRef = React.useRef();
+  const [showFullContent, setShowFullContent] = useState(false);
+
+  // Extract plain text length from HTML to decide if truncation is needed
+  const getPlainTextLength = (html) => {
+    if (!html) return 0;
+    const div = document.createElement("div");
+    div.innerHTML = html;
+    return (div.textContent || div.innerText || "").trim().length;
+  };
+  const CONTENT_THRESHOLD = 300; // chars before "see more" kicks in
+  const isLongPost = getPlainTextLength(post.content) > CONTENT_THRESHOLD;
 
   React.useEffect(() => {
     if (user && user.following && post?.author?._id) {
@@ -653,12 +664,42 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
 
       {/* Post Content */}
       <div className="mb-4 space-y-4">
-        {/* Text Content with Visual Identity */}
+        {/* Text Content with LinkedIn-style see more */}
         <div className="bg-x-dark/15 rounded-lg p-4">
           <div
-            className="rich-content text-base leading-relaxed"
-            dangerouslySetInnerHTML={{ __html: post.content }}
-          />
+            className="relative"
+            style={{
+              maxHeight: isLongPost && !showFullContent ? "120px" : "none",
+              overflow: isLongPost && !showFullContent ? "hidden" : "visible",
+              transition: "max-height 0.3s ease",
+            }}
+          >
+            <div
+              className="rich-content text-base leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: post.content }}
+            />
+            {/* Fade-out gradient when collapsed */}
+            {isLongPost && !showFullContent && (
+              <div
+                className="absolute bottom-0 left-0 right-0 h-12 pointer-events-none"
+                style={{
+                  background:
+                    "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.85) 100%)",
+                }}
+              />
+            )}
+          </div>
+
+          {/* See more / See less toggle */}
+          {isLongPost && (
+            <button
+              type="button"
+              onClick={() => setShowFullContent((prev) => !prev)}
+              className="mt-2 text-sm font-semibold text-x-blue hover:text-blue-400 transition-colors focus:outline-none"
+            >
+              {showFullContent ? "see less" : "...see more"}
+            </button>
+          )}
         </div>
         
         {/* Repository Link Section */}
