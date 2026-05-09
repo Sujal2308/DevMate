@@ -664,8 +664,8 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
 
       {/* Post Content */}
       <div className="mb-4 space-y-4">
-        {/* Text Content with LinkedIn-style see more */}
-        <div className="bg-transparent border border-white/20 rounded-lg p-4">
+        {/* Text Content - Minimalist (no border/bg/padding) */}
+        <div className="bg-transparent border-none p-0">
           <div
             className="relative"
             style={{
