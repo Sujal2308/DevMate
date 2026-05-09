@@ -129,13 +129,18 @@ const CommunityPage = () => {
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto px-3 sm:px-4 pb-20 overflow-x-hidden max-w-[100vw]">
+    <div className="relative w-full overflow-x-hidden min-h-screen">
+      <style>{`
+        body { overflow-x: hidden !important; width: 100vw !important; position: relative !important; }
+        .x-main, .x-main-mobile { overflow-x: hidden !important; max-width: 100vw !important; }
+      `}</style>
+      <div className="w-full max-w-2xl mx-auto px-3 sm:px-4 pb-20">
       {/* Community Header */}
       <div
-        className="mb-6 border-b border-x-border/20 pb-6 pt-4 px-3 sm:px-0"
+        className="mb-6 border-b border-x-border/20 pb-6 pt-4 sm:px-0"
         style={{ borderTop: `3px solid ${community.color}` }}
       >
-        <div className="flex items-start justify-between gap-4">
+        <div className="flex items-start justify-between gap-4 w-full min-w-0">
           <div className="flex items-center gap-4">
             <div
               className={`w-20 h-20 rounded-2xl flex items-center justify-center text-4xl shrink-0 overflow-hidden ${!community.icon?.startsWith("/") ? "" : "bg-transparent border-none"}`}
@@ -150,9 +155,9 @@ const CommunityPage = () => {
                 community.icon
               )}
             </div>
-            <div>
+            <div className="min-w-0 flex-1">
               <h1
-                className="text-xl md:text-3xl font-black text-white tracking-tighter leading-tight"
+                className="text-xl md:text-3xl font-black text-white tracking-tighter leading-tight break-words"
                 style={{ fontFamily: "'Space Grotesk', sans-serif" }}
               >
                 {community.name}
@@ -207,7 +212,7 @@ const CommunityPage = () => {
         </div>
 
         {/* Mobile Stat Bar */}
-        <div className="flex sm:hidden items-center border border-white/10 rounded-full overflow-hidden mt-6 mb-4 bg-white/[0.03] px-2">
+        <div className="flex sm:hidden items-center border border-white/10 rounded-full overflow-hidden mt-6 mb-4 bg-white/[0.03] px-2 w-full min-w-0">
           <div className="flex-1 py-3 px-4 text-center">
             <p className="text-lg font-black text-white leading-none">{community.memberCount}</p>
             <p className="text-[10px] font-bold text-x-gray uppercase tracking-widest mt-1">Members</p>
@@ -219,7 +224,7 @@ const CommunityPage = () => {
           </div>
         </div>
 
-        <p className="text-white/80 text-lg md:text-xl font-bold mt-6 leading-relaxed max-w-3xl">
+        <p className="text-white/80 text-lg md:text-xl font-bold mt-6 leading-relaxed max-w-3xl break-words">
           {community.description}
         </p>
 
@@ -376,6 +381,7 @@ const CommunityPage = () => {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 };
