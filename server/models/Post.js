@@ -42,6 +42,21 @@ const postSchema = new mongoose.Schema(
       ref: "Community",
       default: null,
     },
+    pollQuestion: {
+      type: String,
+      default: "",
+    },
+    pollOptions: [
+      {
+        text: String,
+        votes: [
+          {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+          }
+        ]
+      }
+    ],
     likes: [
       {
         user: {

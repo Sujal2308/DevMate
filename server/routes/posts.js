@@ -40,7 +40,16 @@ router.post(
         return res.status(400).json({ errors: errors.array() });
       }
 
-      const { content, codeSnippet, codeLanguage, repoUrl, repoTitle, community } = req.body;
+      const { 
+        content, 
+        codeSnippet, 
+        codeLanguage, 
+        repoUrl, 
+        repoTitle, 
+        community,
+        pollQuestion,
+        pollOptions 
+      } = req.body;
       
       let mediaUrl = "";
       let mediaType = "";
@@ -68,6 +77,12 @@ router.post(
         repoUrl: repoUrl || "",
         repoTitle: repoTitle || "",
         community: communityId,
+        pollQuestion: pollQuestion || "",
+        pollOptions: pollOptions 
+          ? (typeof pollOptions === 'string' ? JSON.parse(pollOptions) : pollOptions)
+              .filter(opt => opt.trim())
+              .map(opt => ({ text: opt, votes: [] })) 
+          : [],
       });
 
       await post.save();
@@ -395,6 +410,42 @@ router.delete("/:id", auth, async (req, res) => {
     res.json({ message: "Post deleted successfully" });
   } catch (error) {
     console.error("Delete post error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Vote in a poll
+router.put("/:id/poll/:optionIndex/vote", auth, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).json({ message: "Post not found" });
+
+    if (!post.pollQuestion) return res.status(400).json({ message: "Post is not a poll" });
+
+    const optionIndex = parseInt(req.params.optionIndex);
+    if (isNaN(optionIndex) || optionIndex < 0 || optionIndex >= post.pollOptions.length) {
+      return res.status(400).json({ message: "Invalid option index" });
+    }
+
+    // Check if user has already voted in any option
+    const userAlreadyVoted = post.pollOptions.some(option => 
+      option.votes.some(v => v.toString() === req.user._id.toString())
+    );
+
+    if (userAlreadyVoted) {
+      return res.status(400).json({ message: "User has already voted in this poll" });
+    }
+
+    // Add vote
+    post.pollOptions[optionIndex].votes.push(req.user._id);
+    await post.save();
+
+    await post.populate("author", "username displayName avatar");
+    await post.populate("community", "name slug icon color");
+
+    res.json(post);
+  } catch (error) {
+    console.error("Poll vote error:", error);
     res.status(500).json({ message: "Server error" });
   }
 });

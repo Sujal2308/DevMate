@@ -792,6 +792,82 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
           />
         )}
 
+        {/* Poll Section */}
+        {post.pollQuestion && (
+          <div className="w-full mt-4 mb-2 p-5 bg-black border-2 border-dashed border-white/10 rounded-none space-y-4 shadow-xl">
+            <div className="flex items-start justify-between gap-3">
+              <h4 className="text-sm sm:text-base font-black text-x-white tracking-tight leading-snug">
+                {post.pollQuestion}
+              </h4>
+              <span className="shrink-0 bg-x-blue/10 text-x-blue text-[10px] font-black px-2 py-1 rounded-full border border-x-blue/20 uppercase tracking-widest">
+                Poll
+              </span>
+            </div>
+            
+            <div className="space-y-3">
+              {post.pollOptions?.map((option, idx) => {
+                const totalVotes = post.pollOptions.reduce((acc, curr) => acc + (curr.votes?.length || 0), 0);
+                const voteCount = option.votes?.length || 0;
+                const percentage = totalVotes > 0 ? Math.round((voteCount / totalVotes) * 100) : 0;
+                const hasVoted = option.votes?.some(v => v === user?.id || (v._id && v._id === user?.id) || (v.user && v.user === user?.id));
+                const userVotedInPoll = post.pollOptions.some(opt => opt.votes?.some(v => v === user?.id || (v._id && v._id === user?.id) || (v.user && v.user === user?.id)));
+
+                return (
+                  <button
+                    key={idx}
+                    disabled={userVotedInPoll || !user}
+                    onClick={async () => {
+                      try {
+                        const res = await axios.put(`/api/posts/${post._id}/poll/${idx}/vote`);
+                        onUpdate(res.data);
+                      } catch (err) {
+                        console.error("Poll vote error:", err);
+                      }
+                    }}
+                    className="w-full group relative overflow-hidden disabled:cursor-default"
+                  >
+                    <div className="w-full h-11 bg-white/5 border border-white/5 rounded-full flex items-center px-5 relative z-10 overflow-hidden transition-all hover:bg-white/10 active:scale-[0.98]">
+                      {/* Progress Bar Background */}
+                      <div 
+                        className={`absolute left-0 top-0 bottom-0 transition-all duration-700 ease-out ${hasVoted ? 'bg-x-blue opacity-100' : 'bg-white/10'}`}
+                        style={{ width: `${percentage}%` }}
+                      />
+                      
+                      {/* Option Content */}
+                      <div className="flex items-center justify-between w-full relative z-20">
+                        <span className={`text-xs sm:text-sm font-bold truncate pr-4 ${hasVoted ? 'text-white' : 'text-x-white'}`}>
+                          {option.text}
+                          {hasVoted && (
+                            <span className="ml-2 inline-flex items-center">
+                              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                              </svg>
+                            </span>
+                          )}
+                        </span>
+                        <span className="text-[10px] sm:text-xs font-black font-mono text-white tabular-nums">
+                          {percentage}%
+                        </span>
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="flex items-center justify-between pt-2 border-t border-white/5">
+              <p className="text-[10px] font-black uppercase tracking-widest text-x-gray/60">
+                {post.pollOptions?.reduce((acc, curr) => acc + (curr.votes?.length || 0), 0)} Total Votes
+              </p>
+              {post.pollOptions?.some(opt => opt.votes?.some(v => v === user?.id || (v._id && v._id === user?.id) || (v.user && v.user === user?.id))) && (
+                <p className="text-[10px] font-black uppercase tracking-widest text-x-blue">
+                  ✓ Voted
+                </p>
+              )}
+            </div>
+          </div>
+        )}
+
 
 
         {/* Code Section with Expandable Toggle */}

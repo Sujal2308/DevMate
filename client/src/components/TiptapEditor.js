@@ -285,8 +285,8 @@ const TiptapEditor = ({
         }
 
         .tiptap-editor-area {
-          min-height: 180px;
-          max-height: 420px;
+          min-height: 320px;
+          max-height: 600px;
           overflow-y: auto;
           padding: 16px 18px;
           outline: none;

@@ -24,6 +24,8 @@ const CreatePost = () => {
     codeSnippet: "",
     repoUrl: "",
     repoTitle: "",
+    pollQuestion: "",
+    pollOptions: ["", ""],
   });
   const [media, setMedia] = useState(null);
   const [mediaPreview, setMediaPreview] = useState(null);
@@ -37,6 +39,7 @@ const CreatePost = () => {
   const [selectedCommunity, setSelectedCommunity] = useState("");
   const [showCommunityDropdown, setShowCommunityDropdown] = useState(false);
   const [showRules, setShowRules] = useState(false);
+  const [showPollInput, setShowPollInput] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -133,6 +136,10 @@ const CreatePost = () => {
       if (selectedCommunity) {
         payload.append("community", selectedCommunity);
       }
+      if (formData.pollQuestion.trim()) {
+        payload.append("pollQuestion", formData.pollQuestion.trim());
+        payload.append("pollOptions", JSON.stringify(formData.pollOptions.filter(opt => opt.trim())));
+      }
 
       await axios.post("/api/posts", payload);
 
@@ -219,7 +226,7 @@ const CreatePost = () => {
                         ];
                         return rules.map((rule, idx) => (
                           <div key={idx} className="flex gap-4 group">
-                            <span className="text-sm font-black text-x-blue shrink-0 min-w-[20px] pt-0.5">
+                            <span className="text-lg font-black text-x-blue shrink-0 min-w-[24px]">
                               {idx + 1}.
                             </span>
                             <div className="space-y-1">
@@ -278,11 +285,11 @@ const CreatePost = () => {
                             <span className="font-bold">{c.name}</span>
                           </>
                         ) : (
-                          <span className="text-x-gray">Select a community (optional)</span>
+                          <span className="text-x-gray">Select a community</span>
                         );
                       })()
                     ) : (
-                      <span className="text-x-gray">Select a community (optional)</span>
+                      <span className="text-x-gray">Select a community</span>
                     )}
                   </div>
                   <svg className={`w-4 h-4 text-x-gray transition-transform ${showCommunityDropdown ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -355,7 +362,7 @@ const CreatePost = () => {
           <div className="flex flex-row gap-3 mb-6">
             {/* Add Media Section */}
             <div className="flex-1">
-              <label className="flex flex-col items-center justify-center p-4 bg-[#000000] border-2 border-dashed border-x-border/50 rounded-2xl cursor-pointer hover:bg-x-dark/50 hover:border-x-blue/50 transition-all group h-full">
+              <label className="flex flex-col items-center justify-center p-4 bg-[#000000] border-none rounded-2xl cursor-pointer hover:bg-x-dark/50 transition-all group h-full">
                 <input 
                   type="file" 
                   accept="image/*,application/pdf"
@@ -393,7 +400,7 @@ const CreatePost = () => {
                     setSelectedLanguage("");
                   }
                 }}
-                className="flex flex-col items-center justify-center p-4 bg-[#000000] border-2 border-dashed border-x-border/50 rounded-2xl cursor-pointer hover:bg-x-dark/50 hover:border-x-blue/50 transition-all group h-full"
+                className="flex flex-col items-center justify-center p-4 bg-[#000000] border-none rounded-2xl cursor-pointer hover:bg-x-dark/50 transition-all group h-full"
               >
                 <img 
                   src="/icons/code.png" 
@@ -419,8 +426,9 @@ const CreatePost = () => {
               <div 
                 onClick={() => {
                   setShowRepoInput(!showRepoInput);
+                  if (showPollInput) setShowPollInput(false);
                 }}
-                className={`flex flex-col items-center justify-center p-4 bg-[#000000] border-2 border-dashed ${showRepoInput ? 'border-x-blue/50' : 'border-x-border/50'} rounded-2xl cursor-pointer hover:bg-x-dark/50 hover:border-x-blue/50 transition-all group h-full`}
+                className={`flex flex-col items-center justify-center p-4 bg-[#000000] border-none rounded-2xl cursor-pointer hover:bg-x-dark/50 transition-all group h-full`}
               >
                 <img 
                   src="/icons/folder.png" 
@@ -440,27 +448,55 @@ const CreatePost = () => {
                 </span>
               </div>
             </div>
+
+            {/* Add Poll Section */}
+            <div className="flex-1">
+              <div 
+                onClick={() => {
+                  setShowPollInput(!showPollInput);
+                  if (showRepoInput) setShowRepoInput(false);
+                }}
+                className={`flex flex-col items-center justify-center p-4 bg-[#000000] border-none rounded-2xl cursor-pointer hover:bg-x-dark/50 transition-all group h-full`}
+              >
+                <img 
+                  src="/icons/poll.png" 
+                  alt="Add Poll" 
+                  className="w-10 h-10 mb-2 transition-transform group-hover:scale-110"
+                  width="40"
+                  height="40"
+                />
+                <span 
+                  className="text-sm font-bold tracking-tight text-center" 
+                  style={{ 
+                    color: "#A855F7",
+                    fontFamily: "'Space Grotesk', sans-serif"
+                  }}
+                >
+                  {formData.pollQuestion ? "Poll Added" : "Poll"}
+                </span>
+              </div>
+            </div>
           </div>
 
           {/* Repo Input Field */}
           {showRepoInput && (
-            <div className="mb-6 animate-fade-in space-y-1.5">
-              <div className="border border-x-border/50 rounded-none bg-[#000000]">
+            <div className="mb-6 space-y-1.5">
+              <div className="border-none rounded-none bg-[#000000]">
                 <input
                   type="text"
                   name="repoTitle"
                   placeholder="Repository Title (e.g., My Portfolio Website)"
-                  className="w-full bg-transparent border-none text-x-white placeholder-x-gray px-4 py-3 text-sm font-mono focus:ring-1 focus:ring-x-blue transition-all"
+                  className="w-full bg-transparent border-none text-x-white placeholder-x-gray px-4 py-3 text-sm font-mono focus:outline-none transition-all"
                   value={formData.repoTitle}
                   onChange={handleChange}
                 />
               </div>
-              <div className="relative border border-x-border/50 rounded-none bg-[#000000]">
+              <div className="relative border-none rounded-none bg-[#000000]">
                   <input
                     type="url"
                     name="repoUrl"
                     placeholder="GitHub Repository URL"
-                    className="w-full bg-transparent border-none text-x-white placeholder-x-gray px-4 py-3 pr-12 text-sm font-mono focus:ring-1 focus:ring-x-blue transition-all"
+                    className="w-full bg-transparent border-none text-x-white placeholder-x-gray px-4 py-3 pr-12 text-sm font-mono focus:outline-none transition-all"
                     value={formData.repoUrl}
                     onChange={handleChange}
                   />
@@ -475,6 +511,61 @@ const CreatePost = () => {
                       </svg>
                     </button>
                   )}
+              </div>
+            </div>
+          )}
+
+          {/* Poll Input Field */}
+          {showPollInput && (
+            <div className="mb-6 space-y-4">
+              <div className="border-none rounded-full bg-[#000000] overflow-hidden">
+                <input
+                  type="text"
+                  placeholder="Ask a question..."
+                  className="w-full bg-transparent border-none text-x-white placeholder-x-gray px-8 py-4 text-base font-bold focus:outline-none transition-all"
+                  value={formData.pollQuestion}
+                  onChange={(e) => setFormData({ ...formData, pollQuestion: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2.5">
+                {formData.pollOptions.map((opt, idx) => (
+                  <div key={idx} className="relative border-none rounded-full bg-[#0a0a0a]/50 overflow-hidden">
+                    <input
+                      type="text"
+                      placeholder={`Option ${idx + 1}`}
+                      className="w-full bg-transparent border-none text-x-white placeholder-x-gray px-8 py-3.5 pr-14 text-sm font-medium focus:outline-none transition-all"
+                      value={opt}
+                      onChange={(e) => {
+                        const newOpts = [...formData.pollOptions];
+                        newOpts[idx] = e.target.value;
+                        setFormData({ ...formData, pollOptions: newOpts });
+                      }}
+                    />
+                    {formData.pollOptions.length > 2 && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const newOpts = formData.pollOptions.filter((_, i) => i !== idx);
+                          setFormData({ ...formData, pollOptions: newOpts });
+                        }}
+                        className="absolute right-5 top-1/2 -translate-y-1/2 text-x-gray hover:text-red-500 transition-colors"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    )}
+                  </div>
+                ))}
+                {formData.pollOptions.length < 5 && (
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, pollOptions: [...formData.pollOptions, ""] })}
+                    className="text-[11px] font-black uppercase tracking-widest text-x-blue hover:text-white transition-colors pl-8"
+                  >
+                    + Add Option
+                  </button>
+                )}
               </div>
             </div>
           )}
@@ -758,6 +849,31 @@ const CreatePost = () => {
                           <img src={mediaPreview} alt="Post Attachment Preview" className="w-full h-auto object-contain max-h-[500px]" />
                         </div>
                       )}
+                    </div>
+                  )}
+
+                  {/* Poll Preview Section */}
+                  {formData.pollQuestion && (
+                    <div className="w-full mt-4 p-5 bg-black border-2 border-dashed border-white/10 rounded-none space-y-4">
+                      <h4 className="text-sm font-black text-x-white tracking-tight leading-snug">
+                        {formData.pollQuestion}
+                      </h4>
+                      <div className="space-y-2">
+                        {formData.pollOptions.filter(opt => opt.trim()).map((opt, idx) => (
+                          <div key={idx} className="group relative">
+                            <div className="w-full h-10 bg-white/5 border border-white/5 rounded-full flex items-center px-4 transition-all">
+                              <span className="text-xs font-bold text-x-gray group-hover:text-x-white transition-colors">
+                                {opt}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="pt-2 border-t border-white/5">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-x-gray/50">
+                          Interactive Poll Preview
+                        </p>
+                      </div>
                     </div>
                   )}
 
