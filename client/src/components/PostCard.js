@@ -675,6 +675,29 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
 
       {/* Post Content */}
       <div className="mb-4 space-y-4">
+        {/* Community Badge */}
+        {post.community && (
+          <div className="flex items-center gap-1.5">
+            <a
+              href={`/community/${post.community.slug}`}
+              className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-black transition-all duration-200 hover:opacity-80"
+              style={post.community.icon?.startsWith("/") ? { color: post.community.color || "#1d9bf0" } : {
+                background: `${post.community.color || "#1d9bf0"}18`,
+                border: `1px solid ${post.community.color || "#1d9bf0"}30`,
+                color: post.community.color || "#1d9bf0",
+              }}
+            >
+              <span className="w-5 h-5 flex items-center justify-center overflow-hidden shrink-0">
+                {post.community.icon?.startsWith("/") ? (
+                  <img src={post.community.icon} alt="" className="w-full h-full object-contain" />
+                ) : (
+                  post.community.icon
+                )}
+              </span>
+              <span>{post.community.name}</span>
+            </a>
+          </div>
+        )}
         {/* Text Content - Minimalist (no border/bg/padding) */}
         <div className="bg-transparent border-none p-0">
           <div

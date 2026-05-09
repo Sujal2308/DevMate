@@ -28,7 +28,7 @@ const FollowersList = () => {
   if (error) return <div className="text-red-500 p-8">{error}</div>;
 
   return (
-    <div className="w-full min-h-[60vh] py-10 px-2 sm:px-4 lg:px-8">
+    <div className="w-full max-w-2xl mx-auto min-h-[60vh] py-10 px-2 sm:px-4 lg:px-8">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-3">
           <h2

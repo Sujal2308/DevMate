@@ -37,6 +37,11 @@ const postSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    community: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Community",
+      default: null,
+    },
     likes: [
       {
         user: {

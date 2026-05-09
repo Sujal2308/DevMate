@@ -25,7 +25,7 @@ import BottomNav from "./components/BottomNav";
 import { useAuth } from "./contexts/AuthContext";
 import LogoutConfirm from "./pages/LogoutConfirm";
 import SettingPage from "./pages/SettingPage";
-import MessagesComingSoon from "./pages/MessagesComingSoon";
+// import MessagesComingSoon from "./pages/MessagesComingSoon";
 import SplashScreen from "./components/SplashScreen";
 import Features from "./pages/Features"; // Import the new Features page
 import Support from "./pages/Support"; // Import the new Support page
@@ -39,6 +39,8 @@ import News from "./pages/News"; // Import News page
 import ProjectsList from "./pages/ProjectsList";
 import AdminRoute from "./components/routing/AdminRoute";
 import AdminDashboard from "./pages/AdminDashboard";
+import Communities from "./pages/Communities";
+import CommunityPage from "./pages/CommunityPage";
 function ScrollToTop() {
   const { pathname } = useLocation();
 
@@ -177,18 +179,18 @@ function AppContent() {
                       }
                     />
                     <Route
-                      path="/messages"
+                      path="/communities"
                       element={
                         <ProtectedRoute>
-                          <MessagesComingSoon />
+                          <Communities />
                         </ProtectedRoute>
                       }
                     />
                     <Route
-                      path="/messages/:username"
+                      path="/community/:slug"
                       element={
                         <ProtectedRoute>
-                          <MessagesComingSoon />
+                          <CommunityPage />
                         </ProtectedRoute>
                       }
                     />

@@ -1,3 +1,4 @@
+// Trigger Server Restart for Communities Route
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet"); // Security middleware
@@ -179,6 +180,7 @@ app.use(
 const messagesRouter = require("./routes/messages");
 app.use("/api/messages", messagesRouter);
 app.use("/api", require("./routes/report"));
+app.use("/api/communities", checkDBConnection, require("./routes/communities"));
 app.use("/api/news", require("./routes/news"));
 app.use("/api/admin", checkDBConnection, require("./routes/admin"));
 
@@ -273,7 +275,7 @@ app.post("/api/test-forgot-email", async (req, res) => {
 
 // Serve static files from React build
 app.use(
-  express.static(path.join(__dirname, "client/build"), {
+  express.static(path.join(__dirname, "../client/build"), {
     maxAge: process.env.NODE_ENV === "production" ? "1d" : 0,
     setHeaders: (res, path) => {
       if (path.endsWith(".html")) {
@@ -290,7 +292,7 @@ app.get("*", (req, res) => {
     return res.status(404).json({ message: "API route not found" });
   }
 
-  const buildPath = path.join(__dirname, "client/build", "index.html");
+  const buildPath = path.join(__dirname, "../client/build", "index.html");
   if (require("fs").existsSync(buildPath)) {
     res.sendFile(buildPath);
   } else {

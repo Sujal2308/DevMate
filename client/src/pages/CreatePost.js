@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { useAuth } from "../contexts/AuthContext";
@@ -33,8 +33,35 @@ const CreatePost = () => {
   const [showCancel, setShowCancel] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [showRepoInput, setShowRepoInput] = useState(false);
+  const [communities, setCommunities] = useState([]);
+  const [selectedCommunity, setSelectedCommunity] = useState("");
+  const [showCommunityDropdown, setShowCommunityDropdown] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Load communities on mount
+  useEffect(() => {
+    const fetchCommunities = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axios.get("/api/communities", {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        });
+        setCommunities(res.data);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchCommunities();
+  }, []);
+
+  // Pre-select community if navigated from CommunityPage
+  useEffect(() => {
+    if (location.state?.communityId) {
+      setSelectedCommunity(location.state.communityId);
+    }
+  }, [location.state]);
 
   React.useEffect(() => {
     if (formData.codeSnippet) {
@@ -102,10 +129,18 @@ const CreatePost = () => {
         payload.append("repoUrl", formData.repoUrl.trim());
         payload.append("repoTitle", formData.repoTitle.trim());
       }
+      if (selectedCommunity) {
+        payload.append("community", selectedCommunity);
+      }
 
       await axios.post("/api/posts", payload);
 
-      navigate("/feed");
+      // Navigate back to community page if came from one
+      if (location.state?.communitySlug) {
+        navigate(`/community/${location.state.communitySlug}`);
+      } else {
+        navigate("/feed");
+      }
     } catch (error) {
       console.error(error);
       const apiError = error.response?.data;
@@ -185,6 +220,80 @@ const CreatePost = () => {
               maxLength={2000}
             />
           </div>
+
+          {/* Community Selector */}
+          {communities.length > 0 && (
+            <div className="mb-5 relative">
+              <label className="text-xs font-black uppercase tracking-widest text-x-gray mb-2 block">
+                Post to Community
+              </label>
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setShowCommunityDropdown((p) => !p)}
+                  className="w-full flex items-center justify-between gap-2 px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white hover:border-white/20 transition-colors focus:outline-none"
+                >
+                  <div className="flex items-center gap-2">
+                    {selectedCommunity ? (
+                      (() => {
+                        const c = communities.find((c) => c._id === selectedCommunity);
+                        return c ? (
+                          <>
+                            <span className="w-7 h-7 flex items-center justify-center overflow-hidden shrink-0">
+                              {c.icon?.startsWith("/") ? (
+                                <img src={c.icon} alt="" className="w-full h-full object-contain" />
+                              ) : (
+                                c.icon
+                              )}
+                            </span>
+                            <span className="font-bold">{c.name}</span>
+                          </>
+                        ) : (
+                          <span className="text-x-gray">Select a community (optional)</span>
+                        );
+                      })()
+                    ) : (
+                      <span className="text-x-gray">Select a community (optional)</span>
+                    )}
+                  </div>
+                  <svg className={`w-4 h-4 text-x-gray transition-transform ${showCommunityDropdown ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                {showCommunityDropdown && (
+                  <div className="absolute top-full mt-1 left-0 right-0 z-50 bg-[#0a0a0a] border border-white/10 rounded-xl shadow-2xl max-h-56 overflow-y-auto">
+                    <button
+                      type="button"
+                      onClick={() => { setSelectedCommunity(""); setShowCommunityDropdown(false); }}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 text-sm text-x-gray hover:text-white transition-colors text-left"
+                    >
+                      <span>🌐</span>
+                      <span>No community (general post)</span>
+                    </button>
+                    {communities.map((c) => (
+                      <button
+                        key={c._id}
+                        type="button"
+                        onClick={() => { setSelectedCommunity(c._id); setShowCommunityDropdown(false); }}
+                        className={`w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 text-sm transition-colors text-left ${selectedCommunity === c._id ? "text-white bg-white/5" : "text-x-gray hover:text-white"}`}
+                      >
+                        <span className="w-7 h-7 flex items-center justify-center overflow-hidden shrink-0">
+                          {c.icon?.startsWith("/") ? (
+                            <img src={c.icon} alt="" className="w-full h-full object-contain" />
+                          ) : (
+                            c.icon
+                          )}
+                        </span>
+                        <span className="font-semibold">{c.name}</span>
+                        {c.isMember && <span className="ml-auto text-xs text-x-blue font-bold">Joined</span>}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           <div className="flex flex-row gap-3 mb-6">
             {/* Add Media Section */}

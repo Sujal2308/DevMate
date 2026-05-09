@@ -2,6 +2,7 @@
 const express = require("express");
 const { body, validationResult } = require("express-validator");
 const Post = require("../models/Post");
+const Community = require("../models/Community");
 const Notification = require("../models/Notification");
 const auth = require("../middleware/auth");
 const emitNotification = require("../utils/notify");
@@ -39,7 +40,7 @@ router.post(
         return res.status(400).json({ errors: errors.array() });
       }
 
-      const { content, codeSnippet, codeLanguage, repoUrl, repoTitle } = req.body;
+      const { content, codeSnippet, codeLanguage, repoUrl, repoTitle, community } = req.body;
       
       let mediaUrl = "";
       let mediaType = "";
@@ -47,6 +48,14 @@ router.post(
       if (req.file) {
         mediaUrl = req.file.path;
         mediaType = req.file.mimetype === "application/pdf" ? "pdf" : "image";
+      }
+
+      // Validate community if provided
+      let communityId = null;
+      if (community) {
+        const comm = await Community.findById(community);
+        if (!comm) return res.status(400).json({ message: "Invalid community" });
+        communityId = comm._id;
       }
 
       const post = new Post({
@@ -58,12 +67,19 @@ router.post(
         mediaType,
         repoUrl: repoUrl || "",
         repoTitle: repoTitle || "",
+        community: communityId,
       });
 
       await post.save();
 
+      // Increment community postCount
+      if (communityId) {
+        await Community.findByIdAndUpdate(communityId, { $inc: { postCount: 1 } });
+      }
+
       // Populate author info
       await post.populate("author", "username displayName avatar");
+      await post.populate("community", "name slug icon color");
 
       res.status(201).json(post);
     } catch (error) {
@@ -99,6 +115,7 @@ router.get("/", auth, async (req, res) => {
       const posts = await Post.find({ author: user._id })
         .populate("author", "username displayName avatar")
         .populate("comments.user", "username displayName avatar")
+        .populate("community", "name slug icon color")
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit);
@@ -117,6 +134,7 @@ router.get("/", auth, async (req, res) => {
     const posts = await Post.find()
       .populate("author", "username displayName avatar")
       .populate("comments.user", "username displayName avatar")
+      .populate("community", "name slug icon color")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
