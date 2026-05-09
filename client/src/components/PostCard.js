@@ -617,13 +617,24 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
             <button
               onClick={handleFollowToggle}
               disabled={followLoading}
-              className={`px-3 py-1.5 text-xs font-bold rounded-full transition-all duration-200 border-2 ${
+              className={`flex items-center gap-1.5 px-3 py-1 text-sm font-black tracking-tight rounded-full border border-white/10 transition-all duration-300 ${
                 isFollowing 
-                  ? "bg-transparent text-x-white hover:bg-red-500/10 hover:text-red-500 border-x-border" 
-                  : "bg-transparent text-x-blue hover:bg-x-blue/10 border-x-blue"
+                  ? "text-x-white hover:text-red-500 hover:border-red-500/30" 
+                  : "text-x-blue hover:text-white hover:border-x-blue"
               }`}
             >
-              {followLoading ? "..." : isFollowing ? "Following" : "Follow"}
+              {followLoading ? (
+                "..."
+              ) : isFollowing ? (
+                "Following"
+              ) : (
+                <>
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M12 4v16m8-8H4" />
+                  </svg>
+                  Follow
+                </>
+              )}
             </button>
 
             <button
