@@ -655,10 +655,10 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
       <div className="mb-4 space-y-4">
         {/* Text Content with Visual Identity */}
         <div className="bg-x-dark/15 rounded-lg p-4">
-
-          <p className="text-x-white text-base leading-relaxed whitespace-pre-wrap">
-            {post.content}
-          </p>
+          <div
+            className="rich-content text-base leading-relaxed"
+            dangerouslySetInnerHTML={{ __html: post.content }}
+          />
         </div>
         
         {/* Repository Link Section */}

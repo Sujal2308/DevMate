@@ -4,6 +4,7 @@ import axios from "axios";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { useAuth } from "../contexts/AuthContext";
 import PdfCarousel from "../components/PdfCarousel";
+import TiptapEditor from "../components/TiptapEditor";
 import "../styles/animated-gradient.css";
 import Editor from "react-simple-code-editor";
 import Prism from "prismjs";
@@ -47,16 +48,7 @@ const CreatePost = () => {
       ...prev,
       [name]: value,
     }));
-    
     if (error) setError("");
-    
-    if (name === "content") {
-      if (value.trim().length > 0) {
-        setShowCancel(true);
-      } else if (!media) {
-        setShowCancel(false);
-      }
-    }
   };
 
   const handleMediaChange = (e) => {
@@ -78,10 +70,18 @@ const CreatePost = () => {
   };
 
 
+  // Strip HTML tags to check if editor is truly empty
+  const getPlainText = (html) => {
+    const div = document.createElement("div");
+    div.innerHTML = html;
+    return div.textContent || div.innerText || "";
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.content.trim()) {
+    const plainText = getPlainText(formData.content);
+    if (!plainText.trim()) {
       setError("Post content is required");
       return;
     }
@@ -90,7 +90,7 @@ const CreatePost = () => {
       setLoading(true);
       
       const payload = new FormData();
-      payload.append("content", formData.content.trim());
+      payload.append("content", formData.content);
       if (formData.codeSnippet.trim()) {
         payload.append("codeSnippet", formData.codeSnippet.trim());
         payload.append("codeLanguage", selectedLanguage || "javascript");
@@ -171,16 +171,18 @@ const CreatePost = () => {
           )}
 
           <div className="mb-6">
-            <textarea
-              id="content"
-              name="content"
-              rows="8"
-              required
-              className="w-full p-6 bg-[#000000] border border-x-border text-x-white placeholder-x-gray rounded-xl resize-none focus:ring-2 focus:ring-x-blue focus:border-x-blue transition-colors text-lg leading-relaxed font-mono placeholder:font-mono"
-              placeholder="Share your thoughts, ideas, experiences, or questions with the DevMate community..."
+            <TiptapEditor
               value={formData.content}
-              onChange={handleChange}
-              maxLength="2000"
+              onChange={(html) => {
+                setFormData((prev) => ({ ...prev, content: html }));
+                const div = document.createElement("div");
+                div.innerHTML = html;
+                const text = div.textContent || "";
+                setShowCancel(text.trim().length > 0 || !!media);
+                if (error) setError("");
+              }}
+              onFocus={() => {}}
+              maxLength={2000}
             />
           </div>
 
@@ -463,7 +465,7 @@ const CreatePost = () => {
 
             <button
               type="submit"
-              disabled={loading || !formData.content.trim()}
+              disabled={loading || !((() => { const d = document.createElement('div'); d.innerHTML = formData.content; return (d.textContent || '').trim(); })())}
               className={`bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 sm:px-6 py-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-colors duration-200 min-h-[40px] sm:min-h-[44px] h-[40px] sm:h-[44px]`}
               style={{ height: isMobile ? "40px" : "44px" }}
             >
@@ -532,7 +534,7 @@ const CreatePost = () => {
 
         {/* Enhanced Preview Section with Clear Visual Distinction */}
         <div className="space-y-6">
-          {(formData.content || mediaPreview) && (
+          {((formData.content && (() => { const d = document.createElement('div'); d.innerHTML = formData.content; return (d.textContent || '').trim(); })()) || mediaPreview) && (
             <div>
               <h3 className="text-lg font-semibold text-x-white mb-4 flex items-center">
                 Live Preview
@@ -558,9 +560,10 @@ const CreatePost = () => {
                   {/* Text Content Section with Clear Visual Identity */}
                   {formData.content && (
                     <div className="bg-x-dark/20 border border-x-border/30 rounded-xl p-5">
-                      <p className="text-x-white text-base leading-relaxed whitespace-pre-wrap">
-                        {formData.content}
-                      </p>
+                      <div
+                        className="rich-content text-base leading-relaxed"
+                        dangerouslySetInnerHTML={{ __html: formData.content }}
+                      />
                     </div>
                   )}
                   
@@ -670,7 +673,7 @@ const CreatePost = () => {
             </div>
           )}
 
-          {!(formData.content || mediaPreview || formData.repoUrl) && (
+          {!((() => { const d = document.createElement('div'); d.innerHTML = formData.content; return (d.textContent || '').trim(); })() || mediaPreview || formData.repoUrl) && (
             <div className="card p-8 bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/20 text-center">
               <div className="flex items-center justify-center mx-auto mb-6">
                 <img 

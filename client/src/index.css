@@ -1452,3 +1452,35 @@ input[type="date"]::-webkit-clear-button {
     opacity: 0;
   }
 }
+
+/* ── Rich Content (Tiptap HTML output) ─────────────────────────────────────── */
+.rich-content h1 { font-size: 1.5em; font-weight: 800; margin: 0.5em 0 0.2em; color: #fff; font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.02em; }
+.rich-content h2 { font-size: 1.25em; font-weight: 700; margin: 0.4em 0 0.2em; color: #fff; font-family: 'Space Grotesk', sans-serif; }
+.rich-content h3 { font-size: 1.1em; font-weight: 700; margin: 0.3em 0 0.15em; color: #e2e8f0; font-family: 'Space Grotesk', sans-serif; }
+.rich-content p { margin: 0.3em 0; line-height: 1.65; color: #e2e8f0; }
+.rich-content p:first-child { margin-top: 0; }
+.rich-content p:last-child { margin-bottom: 0; }
+.rich-content strong { color: #fff; font-weight: 700; }
+.rich-content em { font-style: italic; color: #cbd5e1; }
+.rich-content u { text-decoration-color: #1d9bf0; }
+.rich-content s { color: #6b7280; }
+.rich-content ul, .rich-content ol { padding-left: 1.4em; margin: 0.35em 0; }
+.rich-content li { margin: 0.1em 0; color: #e2e8f0; }
+.rich-content ul > li { list-style-type: disc; }
+.rich-content ol > li { list-style-type: decimal; }
+.rich-content blockquote {
+  border-left: 3px solid #1d9bf0;
+  padding-left: 12px;
+  margin: 0.5em 0;
+  color: #94a3b8;
+  font-style: italic;
+}
+.rich-content code {
+  background: rgba(29, 155, 240, 0.1);
+  border: 1px solid rgba(29, 155, 240, 0.2);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: 'Fira Code', 'Monaco', monospace;
+  font-size: 0.87em;
+  color: #60a5fa;
+}
