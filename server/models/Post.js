@@ -57,6 +57,10 @@ const postSchema = new mongoose.Schema(
         ]
       }
     ],
+    flair: {
+      name: { type: String },
+      color: { type: String },
+    },
     likes: [
       {
         user: {

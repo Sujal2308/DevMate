@@ -677,15 +677,24 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
       <div className="mb-4 space-y-4">
         {/* Community Badge */}
         {post.community && (
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
+            {post.flair && (
+              <span 
+                className="inline-flex items-center py-0.5 rounded-full text-[10px] font-black tracking-wider text-black"
+                style={{ 
+                  backgroundColor: post.flair.color,
+                  border: 'none',
+                  paddingLeft: '6px',
+                  paddingRight: '6px'
+                }}
+              >
+                {post.flair.name}
+              </span>
+            )}
             <a
               href={`/community/${post.community.slug}`}
-              className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-black transition-all duration-200 hover:opacity-80"
-              style={post.community.icon?.startsWith("/") ? { color: post.community.color || "#1d9bf0" } : {
-                background: `${post.community.color || "#1d9bf0"}18`,
-                border: `1px solid ${post.community.color || "#1d9bf0"}30`,
-                color: post.community.color || "#1d9bf0",
-              }}
+              className="inline-flex items-center gap-1.5 text-xs font-black transition-all duration-200 hover:opacity-80"
+              style={{ color: post.community.color || "#1d9bf0" }}
             >
               <span className="w-5 h-5 flex items-center justify-center overflow-hidden shrink-0">
                 {post.community.icon?.startsWith("/") ? (

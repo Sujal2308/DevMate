@@ -48,7 +48,8 @@ router.post(
         repoTitle, 
         community,
         pollQuestion,
-        pollOptions 
+        pollOptions,
+        flair 
       } = req.body;
       
       let mediaUrl = "";
@@ -59,12 +60,24 @@ router.post(
         mediaType = req.file.mimetype === "application/pdf" ? "pdf" : "image";
       }
 
-      // Validate community if provided
+      // Validate community and flair if provided
       let communityId = null;
+      let selectedFlair = null;
+
       if (community) {
         const comm = await Community.findById(community);
         if (!comm) return res.status(400).json({ message: "Invalid community" });
         communityId = comm._id;
+
+        // Flair is required if community is selected
+        if (flair) {
+          const parsedFlair = typeof flair === 'string' ? JSON.parse(flair) : flair;
+          const foundFlair = comm.flairs.find(f => f.name === (parsedFlair.name || parsedFlair));
+          if (!foundFlair) return res.status(400).json({ message: "Invalid flair for this community" });
+          selectedFlair = { name: foundFlair.name, color: foundFlair.color };
+        } else {
+          return res.status(400).json({ message: "Flair is required for community posts" });
+        }
       }
 
       const post = new Post({
@@ -77,6 +90,7 @@ router.post(
         repoUrl: repoUrl || "",
         repoTitle: repoTitle || "",
         community: communityId,
+        flair: selectedFlair,
         pollQuestion: pollQuestion || "",
         pollOptions: pollOptions 
           ? (typeof pollOptions === 'string' ? JSON.parse(pollOptions) : pollOptions)
@@ -404,6 +418,10 @@ router.delete("/:id", auth, async (req, res) => {
     // Check if user is the author
     if (post.author.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: "Access denied" });
+    }
+
+    if (post.community) {
+      await Community.findByIdAndUpdate(post.community, { $inc: { postCount: -1 } });
     }
 
     await Post.findByIdAndDelete(req.params.id);

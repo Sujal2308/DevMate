@@ -15,6 +15,7 @@ const CommunityPage = () => {
   const [error, setError] = useState("");
   const [allCommunities, setAllCommunities] = useState([]);
   const [joiningId, setJoiningId] = useState(null);
+  const [selectedFlairFilter, setSelectedFlairFilter] = useState(null);
 
   useEffect(() => {
     fetchCommunity();
@@ -98,6 +99,10 @@ const CommunityPage = () => {
 
   const otherCommunities = allCommunities.filter((c) => c.slug !== slug);
 
+  const filteredPosts = selectedFlairFilter 
+    ? posts.filter(p => p.flair?.name === selectedFlairFilter)
+    : posts;
+
   if (loading) {
     return (
       <div className="w-full max-w-2xl mx-auto px-4 py-8">
@@ -124,7 +129,7 @@ const CommunityPage = () => {
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto px-3 sm:px-4 pb-20">
+    <div className="w-full max-w-2xl mx-auto px-3 sm:px-4 pb-20 overflow-x-hidden max-w-[100vw]">
       {/* Community Header */}
       <div
         className="mb-6 border-b border-x-border/20 pb-6 pt-4 px-3 sm:px-0"
@@ -217,6 +222,38 @@ const CommunityPage = () => {
         <p className="text-white/80 text-lg md:text-xl font-bold mt-6 leading-relaxed max-w-3xl">
           {community.description}
         </p>
+
+        {/* Flair Filter Bar */}
+        {community?.flairs?.length > 0 && (
+          <div className="w-full overflow-hidden mt-8">
+            <div className="flex items-center gap-2 overflow-x-auto pb-4 scrollbar-hide no-scrollbar">
+              <button
+                onClick={() => setSelectedFlairFilter(null)}
+                className={`shrink-0 px-4 py-2 rounded-full text-[10px] font-black tracking-widest transition-all duration-300 border whitespace-nowrap ${
+                  !selectedFlairFilter 
+                    ? "bg-white text-black border-white" 
+                    : "bg-transparent text-x-gray border-white/10 hover:border-white/30"
+                }`}
+              >
+                All Posts
+              </button>
+              {community.flairs.map((f, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setSelectedFlairFilter(f.name === selectedFlairFilter ? null : f.name)}
+                  className={`shrink-0 px-4 py-2 rounded-full text-[10px] font-black tracking-widest transition-all duration-300 border whitespace-nowrap`}
+                  style={{
+                    backgroundColor: selectedFlairFilter === f.name ? f.color : 'transparent',
+                    color: selectedFlairFilter === f.name ? '#000' : f.color,
+                    borderColor: selectedFlairFilter === f.name ? f.color : `${f.color}40`
+                  }}
+                >
+                  {f.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Posts */}
@@ -245,7 +282,7 @@ const CommunityPage = () => {
         </div>
       ) : (
         <div className="divide-y divide-x-border/20">
-          {posts.map((post) => (
+          {filteredPosts.map((post) => (
             <PostCard
               key={post._id}
               post={post}
@@ -255,6 +292,11 @@ const CommunityPage = () => {
               onDelete={(id) => setPosts((prev) => prev.filter((p) => p._id !== id))}
             />
           ))}
+          {filteredPosts.length === 0 && selectedFlairFilter && (
+            <div className="text-center py-20">
+              <p className="text-x-gray font-bold">No posts found with this flair.</p>
+            </div>
+          )}
         </div>
       )}
 

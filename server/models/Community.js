@@ -42,6 +42,12 @@ const communitySchema = new mongoose.Schema(
         description: { type: String, required: true },
       },
     ],
+    flairs: [
+      {
+        name: { type: String, required: true },
+        color: { type: String, required: true },
+      },
+    ],
   },
   {
     timestamps: true,

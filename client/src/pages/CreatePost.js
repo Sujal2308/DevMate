@@ -40,6 +40,8 @@ const CreatePost = () => {
   const [showCommunityDropdown, setShowCommunityDropdown] = useState(false);
   const [showRules, setShowRules] = useState(false);
   const [showPollInput, setShowPollInput] = useState(false);
+  const [selectedFlair, setSelectedFlair] = useState(null);
+  const [showFlairGrid, setShowFlairGrid] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -116,6 +118,10 @@ const CreatePost = () => {
       setError("Post content is required");
       return;
     }
+    if (selectedCommunity && !selectedFlair) {
+      setError("Please select a flair for your community post");
+      return;
+    }
 
     try {
       setLoading(true);
@@ -139,6 +145,9 @@ const CreatePost = () => {
       if (formData.pollQuestion.trim()) {
         payload.append("pollQuestion", formData.pollQuestion.trim());
         payload.append("pollOptions", JSON.stringify(formData.pollOptions.filter(opt => opt.trim())));
+      }
+      if (selectedFlair) {
+        payload.append("flair", JSON.stringify(selectedFlair));
       }
 
       await axios.post("/api/posts", payload);
@@ -267,7 +276,7 @@ const CreatePost = () => {
                 <button
                   type="button"
                   onClick={() => setShowCommunityDropdown((p) => !p)}
-                  className="w-full flex items-center justify-between gap-2 px-5 py-2.5 bg-transparent border border-white/10 rounded-full text-sm text-white hover:border-white/20 transition-colors focus:outline-none"
+                  className="w-full flex items-center justify-between gap-3 px-6 py-4 bg-transparent border border-white/10 rounded-full text-sm text-white hover:border-white/20 transition-all focus:outline-none shadow-sm"
                 >
                   <div className="flex items-center gap-2">
                     {selectedCommunity ? (
@@ -302,17 +311,21 @@ const CreatePost = () => {
                     <button
                       type="button"
                       onClick={() => { setSelectedCommunity(""); setShowCommunityDropdown(false); }}
-                      className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 text-sm text-x-gray hover:text-white transition-colors text-left"
+                      className="w-full flex items-center gap-4 px-6 py-3.5 hover:bg-white/5 text-sm text-x-gray hover:text-white transition-colors text-left"
                     >
                       <span>🌐</span>
-                      <span>No community (general post)</span>
+                      <span className="font-medium">No community (general post)</span>
                     </button>
                     {communities.map((c) => (
                       <button
                         key={c._id}
                         type="button"
-                        onClick={() => { setSelectedCommunity(c._id); setShowCommunityDropdown(false); }}
-                        className={`w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 text-sm transition-colors text-left ${selectedCommunity === c._id ? "text-white bg-white/5 font-bold" : "text-x-gray hover:text-white"}`}
+                        onClick={() => { 
+                          setSelectedCommunity(c._id); 
+                          setShowCommunityDropdown(false);
+                          setSelectedFlair(null); // Reset flair when community changes
+                        }}
+                        className={`w-full flex items-center gap-4 px-6 py-3.5 hover:bg-white/5 text-sm transition-colors text-left ${selectedCommunity === c._id ? "text-white bg-white/5 font-bold" : "text-x-gray hover:text-white"}`}
                       >
                         <span className="w-7 h-7 flex items-center justify-center overflow-hidden shrink-0">
                           {c.icon?.startsWith("/") ? (
@@ -330,6 +343,83 @@ const CreatePost = () => {
               </div>
             </div>
           )}
+
+          {/* Flair Selection Toggle */}
+          <div className="mb-6 relative animate-fade-in">
+            <div className="flex items-center justify-between mb-3">
+              <label className="text-xs font-black uppercase tracking-widest text-x-gray">
+                Post Category <span className="text-red-500 ml-1">*</span>
+              </label>
+              
+              {selectedCommunity && (
+                <button
+                  type="button"
+                  onClick={() => setShowFlairGrid(!showFlairGrid)}
+                  className={`flex items-center gap-2.5 px-6 py-2.5 rounded-full text-[11px] font-black uppercase tracking-wider transition-all duration-300 shadow-xl ${
+                    showFlairGrid || selectedFlair
+                      ? "" 
+                      : "bg-white text-black hover:bg-white/90"
+                  }`}
+                  style={showFlairGrid || selectedFlair ? {
+                    backgroundColor: selectedFlair ? selectedFlair.color : "var(--x-blue)",
+                    color: "#000"
+                  } : {}}
+                >
+                  <svg className={`w-3.5 h-3.5 transition-transform duration-300 ${showFlairGrid ? 'rotate-45' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" />
+                  </svg>
+                  {selectedFlair ? selectedFlair.name : "Add a Flair"}
+                </button>
+              )}
+            </div>
+
+            {selectedCommunity && !selectedFlair && !showFlairGrid && (
+              <div className="text-[10px] text-x-gray italic px-1 mb-3">
+                Click "Add a Flair" to categorize your post
+              </div>
+            )}
+
+            {selectedCommunity && showFlairGrid && (
+              <div className="flex flex-wrap gap-2 p-5 bg-white border border-white/20 rounded-2xl animate-in slide-in-from-top-2 duration-300 shadow-2xl">
+                {(() => {
+                  const comm = communities.find(c => c._id.toString() === selectedCommunity.toString());
+                  if (!comm || !comm.flairs || comm.flairs.length === 0) {
+                    return <span className="text-black/40 text-xs italic">No flairs available</span>;
+                  }
+                  return comm.flairs.map((f, idx) => {
+                    const isSelected = selectedFlair?.name === f.name;
+                    return (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => {
+                          setSelectedFlair(f);
+                          setShowFlairGrid(false);
+                        }}
+                        className={`px-5 py-2.5 rounded-full text-[11px] font-black tracking-wider transition-all duration-300 border shadow-sm ${
+                          isSelected ? "scale-105" : "hover:scale-105"
+                        }`}
+                        style={{ 
+                          background: f.color,
+                          borderColor: isSelected ? '#000' : 'transparent',
+                          color: '#000',
+                          borderWidth: isSelected ? '2px' : '1px'
+                        }}
+                      >
+                        {f.name}
+                      </button>
+                    );
+                  });
+                })()}
+              </div>
+            )}
+
+            {!selectedCommunity && (
+              <div className="w-full p-4 border border-dashed border-white/10 rounded-2xl bg-white/[0.02] text-center">
+                <span className="text-x-gray text-xs font-bold italic">Select a community above to unlock flairs</span>
+              </div>
+            )}
+          </div>
 
           {error && (
             <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-6 py-4 rounded-xl backdrop-blur-sm mb-6 mt-4 mx-1">
@@ -809,7 +899,40 @@ const CreatePost = () => {
                     <p className="font-semibold text-x-white">
                       {user?.displayName || "Your Name"}
                     </p>
-                    <p className="text-sm text-x-gray">now</p>
+                    <div className="flex items-center gap-1.5 mt-0.5">
+                      <p className="text-sm text-x-gray">now</p>
+                      {selectedCommunity && (() => {
+                        const comm = communities.find(c => c._id.toString() === selectedCommunity.toString());
+                        return comm ? (
+                          <>
+                            <span className="text-x-gray/40 text-[10px] font-black">•</span>
+                            <div className="flex items-center gap-2">
+                              {selectedFlair && (
+                                <span 
+                                  className="px-1.5 py-0.5 rounded-full text-[10px] font-black tracking-wider text-black"
+                                  style={{ 
+                                    backgroundColor: selectedFlair.color,
+                                    border: 'none'
+                                  }}
+                                >
+                                  {selectedFlair.name}
+                                </span>
+                              )}
+                              <span className="inline-flex items-center gap-1.5 text-[10px] font-black" style={{ color: comm.color || "#1d9bf0" }}>
+                                <span className="w-4 h-4 flex items-center justify-center overflow-hidden shrink-0">
+                                  {comm.icon?.startsWith("/") ? (
+                                    <img src={comm.icon} alt="" className="w-full h-full object-contain" />
+                                  ) : (
+                                    comm.icon
+                                  )}
+                                </span>
+                                <span>{comm.name}</span>
+                              </span>
+                            </div>
+                          </>
+                        ) : null;
+                      })()}
+                    </div>
                   </div>
                 </div>
 
