@@ -205,8 +205,7 @@ const CreatePost = () => {
             </p>
 
             {/* Community Rules Toggle (Integrated into Header) */}
-            {communities.length > 0 && (
-              <div className="mt-4 px-1">
+            <div className="mt-4 px-1">
                 <div className="flex items-center gap-2 text-[11px] font-bold text-x-gray">
                   <span>Post must follow</span>
                   <button
@@ -273,48 +272,49 @@ const CreatePost = () => {
                   )}
                 </AnimatePresence>
               </div>
-            )}
-          </div>
+            </div>
 
           {/* Community Selector (Moved above editor) */}
-          {communities.length > 0 && (
-            <div className="mb-6 relative">
-              <label className="text-xs font-black uppercase tracking-widest text-x-gray mb-2 block">
-                Post to Community
-              </label>
-              <div className="relative">
-                <button
-                  type="button"
-                  onClick={() => setShowCommunityDropdown((p) => !p)}
-                  className="w-full flex items-center justify-between gap-3 px-6 py-4 bg-transparent border border-white/10 rounded-full text-sm text-white hover:border-white/20 transition-all focus:outline-none shadow-sm"
-                >
-                  <div className="flex items-center gap-2">
-                    {selectedCommunity ? (
-                      (() => {
-                        const c = communities.find((c) => c._id === selectedCommunity);
-                        return c ? (
-                          <>
-                            <span className="w-7 h-7 flex items-center justify-center overflow-hidden shrink-0">
-                              {c.icon?.startsWith("/") ? (
-                                <img src={c.icon} alt="" className="w-full h-full object-contain" />
-                              ) : (
-                                <span className="text-lg">{c.icon}</span>
-                              )}
-                            </span>
-                            <span className="font-bold">{c.name}</span>
-                          </>
-                        ) : (
-                          <span className="text-x-gray">Select a community</span>
-                        );
-                      })()
-                    ) : (
-                      <span className="text-x-gray">Select a community</span>
-                    )}
-                  </div>
-                  <svg className={`w-4 h-4 text-x-gray transition-transform ${showCommunityDropdown ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
+          <div className="mb-6 relative">
+            <label className="text-xs font-black uppercase tracking-widest text-x-gray mb-2 block">
+              Post to Community
+            </label>
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setShowCommunityDropdown((p) => !p)}
+                disabled={communities.length === 0}
+                className={`w-full flex items-center justify-between gap-3 px-6 py-4 bg-transparent border border-white/10 rounded-full text-sm text-white hover:border-white/20 transition-all focus:outline-none shadow-sm ${communities.length === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+              >
+                <div className="flex items-center gap-2">
+                  {communities.length === 0 ? (
+                    <span className="text-x-gray animate-pulse">Loading communities...</span>
+                  ) : selectedCommunity ? (
+                    (() => {
+                      const c = communities.find((c) => c._id === selectedCommunity);
+                      return c ? (
+                        <>
+                          <span className="w-7 h-7 flex items-center justify-center overflow-hidden shrink-0">
+                            {c.icon?.startsWith("/") ? (
+                              <img src={c.icon} alt="" className="w-full h-full object-contain" />
+                            ) : (
+                              <span className="text-lg">{c.icon}</span>
+                            )}
+                          </span>
+                          <span className="font-bold">{c.name}</span>
+                        </>
+                      ) : (
+                        <span className="text-x-gray">Select a community</span>
+                      );
+                    })()
+                  ) : (
+                    <span className="text-x-gray">Select a community</span>
+                  )}
+                </div>
+                <svg className={`w-4 h-4 text-x-gray transition-transform ${showCommunityDropdown ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
 
                 {showCommunityDropdown && (
                   <div className="absolute top-full mt-1 left-0 right-0 z-50 bg-black/40 backdrop-blur-xl border border-white/10 rounded-none shadow-2xl max-h-56 overflow-y-auto">
@@ -352,7 +352,6 @@ const CreatePost = () => {
                 )}
               </div>
             </div>
-          )}
 
           {/* Flair Selection Toggle */}
           <div className="mb-6 relative">
