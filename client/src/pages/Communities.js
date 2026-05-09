@@ -82,14 +82,13 @@ const Communities = () => {
     <div className="w-full max-w-2xl mx-auto px-3 sm:px-4 pb-20">
       {/* Header */}
       <div className="mb-8 border-b border-x-border/20 pb-6 pt-4 px-3 sm:px-0">
-        <div className="flex items-center gap-3 mb-2">
+        <div className="flex items-center mb-2">
           <h1
             className="text-4xl md:text-5xl font-black text-x-white tracking-tighter"
             style={{ fontFamily: "'Space Grotesk', sans-serif" }}
           >
             Communities
           </h1>
-          <span className="text-4xl">🏘️</span>
         </div>
         <p className="text-x-gray text-base opacity-70">
           Join developer communities and share knowledge with your tribe.
