@@ -559,7 +559,7 @@ const CreatePost = () => {
                 <div className="space-y-6">
                   {/* Text Content Section with Clear Visual Identity */}
                   {formData.content && (
-                    <div className="bg-x-dark/20 border border-x-border/30 rounded-xl p-5">
+                    <div className="bg-transparent border border-white/20 rounded-xl p-5">
                       <div
                         className="rich-content text-base leading-relaxed"
                         dangerouslySetInnerHTML={{ __html: formData.content }}
