@@ -455,13 +455,15 @@ const Explore = () => {
                   return (
                     <div
                       key={user._id}
-                      className={`w-full card p-2 sm:p-3 lg:p-6 hover:border-x-border/50 transition-colors duration-200 bg-gradient-to-br from-x-dark/80 to-x-dark/40 md:backdrop-blur-sm backdrop-blur-none border border-x-border/30 ${
-                        isMobile ? "rounded-full overflow-hidden px-5 py-3" : "rounded-xl"
+                      className={`w-full card transition-all duration-200 bg-black border-2 border-white/20 shadow-2xl ${
+                        isMobile 
+                          ? "!rounded-full px-6 py-3" 
+                          : "rounded-xl p-3 lg:p-6 px-8 hover:border-white/40"
                       }`}
                     >
                       <div className="w-full">
                         {/* Mobile Layout - Avatar and View Profile Button Horizontal */}
-                        <div className="flex items-center justify-between sm:hidden mb-2">
+                        <div className="flex items-center justify-between sm:hidden">
                           <div className="flex items-center gap-3">
                             <div className="bg-black text-white w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold shadow-lg border-2 border-[#a259f7] overflow-hidden relative flex-shrink-0">
                               {user.avatar ? (
@@ -490,10 +492,13 @@ const Explore = () => {
                           <div className="flex items-center gap-2">
                             <Link
                               to={`/profile/${user.username}`}
-                              className="text-xs px-4 py-2 transition-all duration-200 whitespace-nowrap bg-x-blue text-white hover:bg-x-blue-hover rounded-full border border-white/10 shadow-lg font-bold"
+                              className="p-2 transition-all duration-200 bg-x-blue text-white hover:bg-x-blue-hover rounded-full border border-white/10 shadow-lg"
                               onClick={(e) => e.stopPropagation()}
+                              title="View Profile"
                             >
-                              View Profile
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                              </svg>
                             </Link>
                           </div>
                         </div>
