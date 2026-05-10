@@ -184,6 +184,20 @@ app.use("/api/communities", checkDBConnection, require("./routes/communities"));
 app.use("/api/news", require("./routes/news"));
 app.use("/api/admin", checkDBConnection, require("./routes/admin"));
 
+// Root route for API welcome
+app.get("/", (req, res) => {
+  res.status(200).send(`
+    <div style="font-family: sans-serif; padding: 40px; text-align: center; background: #000000; color: white; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+      <h1 style="color: #1d9bf0; margin-bottom: 10px;">🚀 DevMate API</h1>
+      <p style="color: #94a3b8; font-size: 1.1rem;">The backend server is running in decoupled mode.</p>
+      <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+        <p style="margin: 0;">Access frontend at: <a href="https://devmate.dev" style="color: #1d9bf0; text-decoration: none; font-weight: bold;">devmate.dev</a></p>
+      </div>
+      <p style="margin-top: 30px; font-size: 0.8rem; color: #4b5563;">Status: <span style="color: #10b981;">Online</span></p>
+    </div>
+  `);
+});
+
 // Health check route (doesn't require DB)
 app.get("/api/health", (req, res) => {
   res.json({
