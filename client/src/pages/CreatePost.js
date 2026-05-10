@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import LoadingSpinner from "../components/LoadingSpinner";
+import CommunitySelectorModal from "../components/CommunitySelectorModal";
 import { useAuth } from "../contexts/AuthContext";
 import PdfCarousel from "../components/PdfCarousel";
 import TiptapEditor from "../components/TiptapEditor";
@@ -38,7 +39,7 @@ const CreatePost = () => {
   const [showRepoInput, setShowRepoInput] = useState(false);
   const [communities, setCommunities] = useState([]);
   const [selectedCommunity, setSelectedCommunity] = useState("");
-  const [showCommunityDropdown, setShowCommunityDropdown] = useState(false);
+  const [isCommunityModalOpen, setIsCommunityModalOpen] = useState(false);
   const [showRules, setShowRules] = useState(false);
   const [showPollInput, setShowPollInput] = useState(false);
   const [selectedFlair, setSelectedFlair] = useState(null);
@@ -103,7 +104,6 @@ const CreatePost = () => {
     }
   };
 
-
   // Strip HTML tags to check if editor is truly empty
   const getPlainText = (html) => {
     const div = document.createElement("div");
@@ -126,7 +126,7 @@ const CreatePost = () => {
 
     try {
       setLoading(true);
-      
+
       const payload = new FormData();
       payload.append("content", formData.content);
       if (formData.codeSnippet.trim()) {
@@ -145,7 +145,10 @@ const CreatePost = () => {
       }
       if (formData.pollQuestion.trim()) {
         payload.append("pollQuestion", formData.pollQuestion.trim());
-        payload.append("pollOptions", JSON.stringify(formData.pollOptions.filter(opt => opt.trim())));
+        payload.append(
+          "pollOptions",
+          JSON.stringify(formData.pollOptions.filter((opt) => opt.trim())),
+        );
       }
       if (selectedFlair) {
         payload.append("flair", JSON.stringify(selectedFlair));
@@ -174,19 +177,18 @@ const CreatePost = () => {
 
   return (
     <div className="w-full max-w-2xl mx-auto pt-0 pb-8 px-0 sm:px-4 min-h-screen bg-black">
-
       {/* Single Column Layout */}
       <div className="space-y-4 sm:space-y-6 lg:space-y-8">
         {/* Form Section */}
         <form
           onSubmit={handleSubmit}
-          className="p-3 sm:p-4 lg:p-8 bg-gradient-to-br from-x-dark/95 to-x-dark/70 backdrop-blur-sm border border-x-border/50 mx-0 rounded-none relative"
+          className="p-3 sm:p-4 lg:p-8 bg-transparent border border-x-border/50 mx-0 rounded-none relative"
         >
           {/* Integrated Header */}
           <div className="mb-8 border-b border-x-border/20 pb-6">
             <div className="flex items-center gap-4 mb-2">
-              <h1 
-                className="text-4xl md:text-5xl font-black text-x-white tracking-tighter" 
+              <h1
+                className="text-4xl md:text-5xl font-black text-x-white tracking-tighter"
                 style={{ fontFamily: "'Space Grotesk', sans-serif" }}
               >
                 Create Post
@@ -206,152 +208,186 @@ const CreatePost = () => {
 
             {/* Community Rules Toggle (Integrated into Header) */}
             <div className="mt-4 px-1">
-                <div className="flex items-center gap-2 text-[11px] font-bold text-x-gray">
-                  <span>Post must follow</span>
-                  <button
-                    type="button"
-                    onClick={() => setShowRules(!showRules)}
-                    className="text-x-blue hover:underline decoration-2 underline-offset-4 flex items-center gap-1 transition-all"
+              <div className="flex items-center gap-2 text-[11px] font-bold text-x-gray">
+                <span>Post must follow</span>
+                <button
+                  type="button"
+                  onClick={() => setShowRules(!showRules)}
+                  className="text-x-blue hover:underline decoration-2 underline-offset-4 flex items-center gap-1 transition-all"
+                >
+                  community guidelines
+                  <svg
+                    className={`w-3 h-3 transition-transform duration-200 ${showRules ? "rotate-180" : ""}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    community guidelines
-                    <svg className={`w-3 h-3 transition-transform duration-200 ${showRules ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-                </div>
-
-                <AnimatePresence>
-                  {showRules && (
-                    <motion.div 
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
-                      className="overflow-hidden"
-                    >
-                      <div className="mt-3 p-4 border border-white rounded-none bg-white shadow-2xl">
-                        <div className="space-y-4">
-                          {(() => {
-                            const c = selectedCommunity ? communities.find((c) => c._id === selectedCommunity) : null;
-                            const rules = (c?.rules && c.rules.length > 0) ? c.rules : [
-                              { title: "Stay Professional", description: "Keep discussions constructive and code-focused." },
-                              { title: "No Spam", description: "Strictly no low-effort promotions or redundant links." },
-                              { title: "No Explicit Content", description: "NSFW or explicit material is strictly prohibited." },
-                              { title: "Stay Relevant", description: "Content must be related to development or the community." },
-                              { title: "Privacy First", description: "Never share sensitive data or private credentials." }
-                            ];
-                            return rules.map((rule, idx) => (
-                              <div key={idx} className="flex gap-4 group">
-                                <span className="text-lg font-black text-x-blue shrink-0 min-w-[24px]">
-                                  {idx + 1}.
-                                </span>
-                                <div className="space-y-1">
-                                  <p className="text-sm font-black text-black leading-tight">
-                                    {rule.title}
-                                  </p>
-                                  <p className="text-xs text-gray-600 leading-relaxed font-medium">
-                                    {rule.description}
-                                  </p>
-                                </div>
-                              </div>
-                            ));
-                          })()}
-                        </div>
-                        {/* Acknowledge Button */}
-                        <div className="mt-6 pt-4 border-t border-gray-100">
-                          <button
-                            type="button"
-                            onClick={() => setShowRules(false)}
-                            className="w-full py-2 bg-black text-white rounded-none font-black text-xs uppercase tracking-widest hover:bg-x-blue transition-all duration-300"
-                          >
-                            I Understand
-                          </button>
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={3}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
               </div>
+
+              <AnimatePresence>
+                {showRules && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    className="overflow-hidden"
+                  >
+                    <div className="mt-3 p-4 border border-white rounded-none bg-white shadow-2xl">
+                      <div className="space-y-4">
+                        {(() => {
+                          const c = selectedCommunity
+                            ? communities.find(
+                                (c) => c._id === selectedCommunity,
+                              )
+                            : null;
+                          const rules =
+                            c?.rules && c.rules.length > 0
+                              ? c.rules
+                              : [
+                                  {
+                                    title: "Stay Professional",
+                                    description:
+                                      "Keep discussions constructive and code-focused.",
+                                  },
+                                  {
+                                    title: "No Spam",
+                                    description:
+                                      "Strictly no low-effort promotions or redundant links.",
+                                  },
+                                  {
+                                    title: "No Explicit Content",
+                                    description:
+                                      "NSFW or explicit material is strictly prohibited.",
+                                  },
+                                  {
+                                    title: "Stay Relevant",
+                                    description:
+                                      "Content must be related to development or the community.",
+                                  },
+                                  {
+                                    title: "Privacy First",
+                                    description:
+                                      "Never share sensitive data or private credentials.",
+                                  },
+                                ];
+                          return rules.map((rule, idx) => (
+                            <div key={idx} className="flex gap-4 group">
+                              <span className="text-lg font-black text-x-blue shrink-0 min-w-[24px]">
+                                {idx + 1}.
+                              </span>
+                              <div className="space-y-1">
+                                <p className="text-sm font-black text-black leading-tight">
+                                  {rule.title}
+                                </p>
+                                <p className="text-xs text-gray-600 leading-relaxed font-medium">
+                                  {rule.description}
+                                </p>
+                              </div>
+                            </div>
+                          ));
+                        })()}
+                      </div>
+                      {/* Acknowledge Button */}
+                      <div className="mt-6 pt-4 border-t border-gray-100">
+                        <button
+                          type="button"
+                          onClick={() => setShowRules(false)}
+                          className="w-full py-2 bg-black text-white rounded-none font-black text-xs uppercase tracking-widest hover:bg-x-blue transition-all duration-300"
+                        >
+                          I Understand
+                        </button>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
+          </div>
 
           {/* Community Selector (Moved above editor) */}
           <div className="mb-6 relative">
-            <label className="text-xs font-black uppercase tracking-widest text-x-gray mb-2 block">
-              Post to Community
-            </label>
-            <div className="relative">
+            <div className="flex items-center">
               <button
                 type="button"
-                onClick={() => setShowCommunityDropdown((p) => !p)}
+                onClick={() => setIsCommunityModalOpen(true)}
                 disabled={communities.length === 0}
-                className={`w-full flex items-center justify-between gap-3 px-6 py-4 bg-transparent border border-white/10 rounded-full text-sm text-white hover:border-white/20 transition-all focus:outline-none shadow-sm ${communities.length === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className={`flex items-center gap-2.5 px-5 py-2.5 bg-white/5 border border-white/10 rounded-full hover:bg-white/10 hover:border-white/20 transition-all shadow-xl group ${communities.length === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
               >
                 <div className="flex items-center gap-2">
                   {communities.length === 0 ? (
-                    <span className="text-x-gray animate-pulse">Loading communities...</span>
+                    <span className="text-[11px] font-black uppercase tracking-widest text-x-gray animate-pulse">
+                      Loading...
+                    </span>
                   ) : selectedCommunity ? (
                     (() => {
-                      const c = communities.find((c) => c._id === selectedCommunity);
+                      const c = communities.find(
+                        (c) => c._id === selectedCommunity,
+                      );
                       return c ? (
                         <>
-                          <span className="w-7 h-7 flex items-center justify-center overflow-hidden shrink-0">
+                          <span className="w-5 h-5 flex items-center justify-center overflow-hidden shrink-0">
                             {c.icon?.startsWith("/") ? (
-                              <img src={c.icon} alt="" className="w-full h-full object-contain" />
+                              <img
+                                src={c.icon}
+                                alt=""
+                                className="w-full h-full object-contain"
+                              />
                             ) : (
-                              <span className="text-lg">{c.icon}</span>
+                              <span className="text-sm">{c.icon}</span>
                             )}
                           </span>
-                          <span className="font-bold">{c.name}</span>
+                          <span className="text-[11px] font-black uppercase tracking-widest text-white">
+                            {c.name}
+                          </span>
                         </>
                       ) : (
-                        <span className="text-x-gray">Select a community</span>
+                        <span className="text-[11px] font-black uppercase tracking-widest text-x-gray">
+                          Select Community
+                        </span>
                       );
                     })()
                   ) : (
-                    <span className="text-x-gray">Select a community</span>
+                    <span className="text-[11px] font-black uppercase tracking-widest text-x-gray group-hover:text-white transition-colors">
+                      Select Community
+                    </span>
                   )}
                 </div>
-                <svg className={`w-4 h-4 text-x-gray transition-transform ${showCommunityDropdown ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                <svg
+                  className="w-3.5 h-3.5 text-x-gray group-hover:text-white transition-colors"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={3}
+                    d="M19 9l-7 7-7-7"
+                  />
                 </svg>
               </button>
-
-                {showCommunityDropdown && (
-                  <div className="absolute top-full mt-1 left-0 right-0 z-50 bg-black/40 backdrop-blur-xl border border-white/10 rounded-none shadow-2xl max-h-56 overflow-y-auto">
-                    <button
-                      type="button"
-                      onClick={() => { setSelectedCommunity(""); setShowCommunityDropdown(false); }}
-                      className="w-full flex items-center gap-4 px-6 py-3.5 hover:bg-white/5 text-sm text-x-gray hover:text-white transition-colors text-left"
-                    >
-                      <span>🌐</span>
-                      <span className="font-medium">No community (general post)</span>
-                    </button>
-                    {communities.map((c) => (
-                      <button
-                        key={c._id}
-                        type="button"
-                        onClick={() => { 
-                          setSelectedCommunity(c._id); 
-                          setShowCommunityDropdown(false);
-                          setSelectedFlair(null); // Reset flair when community changes
-                        }}
-                        className={`w-full flex items-center gap-4 px-6 py-3.5 hover:bg-white/5 text-sm transition-colors text-left ${selectedCommunity === c._id ? "text-white bg-white/5 font-bold" : "text-x-gray hover:text-white"}`}
-                      >
-                        <span className="w-7 h-7 flex items-center justify-center overflow-hidden shrink-0">
-                          {c.icon?.startsWith("/") ? (
-                            <img src={c.icon} alt="" className="w-full h-full object-contain" />
-                          ) : (
-                            <span className="text-lg">{c.icon}</span>
-                          )}
-                        </span>
-                        <span className="font-semibold">{c.name}</span>
-                        {c.isMember && <span className="ml-auto text-[10px] bg-x-blue/20 text-x-blue px-2 py-0.5 rounded-full font-black uppercase tracking-wider">Joined</span>}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
             </div>
+
+            <CommunitySelectorModal
+              isOpen={isCommunityModalOpen}
+              onClose={() => setIsCommunityModalOpen(false)}
+              communities={communities}
+              selectedCommunityId={selectedCommunity}
+              onSelect={(id) => {
+                setSelectedCommunity(id);
+                setSelectedFlair(null);
+              }}
+            />
+          </div>
 
           {/* Flair Selection Toggle */}
           <div className="mb-6 relative">
@@ -359,23 +395,39 @@ const CreatePost = () => {
               <label className="text-xs font-black uppercase tracking-widest text-x-gray">
                 Post Category <span className="text-red-500 ml-1">*</span>
               </label>
-              
+
               {selectedCommunity && (
                 <button
                   type="button"
                   onClick={() => setShowFlairGrid(!showFlairGrid)}
                   className={`flex items-center gap-2.5 px-6 py-2.5 rounded-full text-[11px] font-black uppercase tracking-wider transition-all duration-300 shadow-xl ${
                     showFlairGrid || selectedFlair
-                      ? "" 
+                      ? ""
                       : "bg-white text-black hover:bg-white/90"
                   }`}
-                  style={showFlairGrid || selectedFlair ? {
-                    backgroundColor: selectedFlair ? selectedFlair.color : "var(--x-blue)",
-                    color: "#000"
-                  } : {}}
+                  style={
+                    showFlairGrid || selectedFlair
+                      ? {
+                          backgroundColor: selectedFlair
+                            ? selectedFlair.color
+                            : "var(--x-blue)",
+                          color: "#000",
+                        }
+                      : {}
+                  }
                 >
-                  <svg className={`w-3.5 h-3.5 transition-transform duration-300 ${showFlairGrid ? 'rotate-45' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" />
+                  <svg
+                    className={`w-3.5 h-3.5 transition-transform duration-300 ${showFlairGrid ? "rotate-45" : ""}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={3}
+                      d="M12 4v16m8-8H4"
+                    />
                   </svg>
                   {selectedFlair ? selectedFlair.name : "Add a Flair"}
                 </button>
@@ -391,9 +443,15 @@ const CreatePost = () => {
             {selectedCommunity && showFlairGrid && (
               <div className="flex flex-wrap gap-2 p-5 bg-white border border-white/20 rounded-2xl shadow-2xl">
                 {(() => {
-                  const comm = communities.find(c => c._id.toString() === selectedCommunity.toString());
+                  const comm = communities.find(
+                    (c) => c._id.toString() === selectedCommunity.toString(),
+                  );
                   if (!comm || !comm.flairs || comm.flairs.length === 0) {
-                    return <span className="text-black/40 text-xs italic">No flairs available</span>;
+                    return (
+                      <span className="text-black/40 text-xs italic">
+                        No flairs available
+                      </span>
+                    );
                   }
                   return comm.flairs.map((f, idx) => {
                     const isSelected = selectedFlair?.name === f.name;
@@ -408,11 +466,11 @@ const CreatePost = () => {
                         className={`px-5 py-2.5 rounded-full text-[11px] font-black tracking-wider transition-all duration-300 border shadow-sm ${
                           isSelected ? "scale-105" : "hover:scale-105"
                         }`}
-                        style={{ 
+                        style={{
                           background: f.color,
-                          borderColor: isSelected ? '#000' : 'transparent',
-                          color: '#000',
-                          borderWidth: isSelected ? '2px' : '1px'
+                          borderColor: isSelected ? "#000" : "transparent",
+                          color: "#000",
+                          borderWidth: isSelected ? "2px" : "1px",
                         }}
                       >
                         {f.name}
@@ -425,7 +483,9 @@ const CreatePost = () => {
 
             {!selectedCommunity && (
               <div className="w-full p-4 border border-dashed border-white/10 rounded-2xl bg-white/[0.02] text-center">
-                <span className="text-x-gray text-xs font-bold italic">Select a community above to unlock flairs</span>
+                <span className="text-x-gray text-xs font-bold italic">
+                  Select a community above to unlock flairs
+                </span>
               </div>
             )}
           </div>
@@ -433,8 +493,16 @@ const CreatePost = () => {
           {error && (
             <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-6 py-4 rounded-xl backdrop-blur-sm mb-6 mt-4 mx-1">
               <div className="flex items-center">
-                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                <svg
+                  className="w-5 h-5 mr-2"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                    clipRule="evenodd"
+                  />
                 </svg>
                 <span className="text-sm font-bold">{error}</span>
               </div>
@@ -457,29 +525,28 @@ const CreatePost = () => {
             />
           </div>
 
-
           <div className="flex flex-row gap-3 mb-6">
             {/* Add Media Section */}
             <div className="flex-1">
               <label className="flex flex-col items-center justify-center p-4 bg-[#000000] border-2 border-dashed border-white/20 rounded-2xl cursor-pointer hover:bg-x-dark/50 transition-all group h-full">
-                <input 
-                  type="file" 
+                <input
+                  type="file"
                   accept="image/*,application/pdf"
                   onChange={handleMediaChange}
                   className="hidden"
                 />
-                <img 
-                  src="/icons/image-gallery.png" 
-                  alt="Upload Media" 
+                <img
+                  src="/icons/image-gallery.png"
+                  alt="Upload Media"
                   className="w-10 h-10 mb-2 transition-transform group-hover:scale-110"
                   width="40"
                   height="40"
                 />
-                <span 
-                  className="text-sm font-bold tracking-tight text-center" 
-                  style={{ 
+                <span
+                  className="text-sm font-bold tracking-tight text-center"
+                  style={{
                     color: "#A855F7",
-                    fontFamily: "'Space Grotesk', sans-serif"
+                    fontFamily: "'Space Grotesk', sans-serif",
                   }}
                 >
                   Media
@@ -489,10 +556,13 @@ const CreatePost = () => {
 
             {/* Add Code Section */}
             <div className="flex-1">
-              <div 
+              <div
                 onClick={() => {
                   if (!formData.codeSnippet) {
-                    setFormData({ ...formData, codeSnippet: "// Start coding..." });
+                    setFormData({
+                      ...formData,
+                      codeSnippet: "// Start coding...",
+                    });
                     setSelectedLanguage("javascript");
                   } else {
                     setFormData({ ...formData, codeSnippet: "" });
@@ -501,18 +571,18 @@ const CreatePost = () => {
                 }}
                 className="flex flex-col items-center justify-center p-4 bg-[#000000] border-2 border-dashed border-white/20 rounded-2xl cursor-pointer hover:bg-x-dark/50 transition-all group h-full"
               >
-                <img 
-                  src="/icons/code.png" 
-                  alt="Add Code" 
+                <img
+                  src="/icons/code.png"
+                  alt="Add Code"
                   className="w-10 h-10 mb-2 transition-transform group-hover:scale-110"
                   width="40"
                   height="40"
                 />
-                <span 
-                  className="text-sm font-bold tracking-tight text-center" 
-                  style={{ 
+                <span
+                  className="text-sm font-bold tracking-tight text-center"
+                  style={{
                     color: "#A855F7",
-                    fontFamily: "'Space Grotesk', sans-serif"
+                    fontFamily: "'Space Grotesk', sans-serif",
                   }}
                 >
                   {formData.codeSnippet ? "Code" : "Code"}
@@ -522,25 +592,25 @@ const CreatePost = () => {
 
             {/* Add Repo Section */}
             <div className="flex-1">
-              <div 
+              <div
                 onClick={() => {
                   setShowRepoInput(!showRepoInput);
                   if (showPollInput) setShowPollInput(false);
                 }}
                 className={`flex flex-col items-center justify-center p-4 bg-[#000000] border-2 border-dashed border-white/20 rounded-2xl cursor-pointer hover:bg-x-dark/50 transition-all group h-full`}
               >
-                <img 
-                  src="/icons/folder.png" 
-                  alt="Add Repo" 
+                <img
+                  src="/icons/folder.png"
+                  alt="Add Repo"
                   className="w-10 h-10 mb-2 transition-transform group-hover:scale-110"
                   width="40"
                   height="40"
                 />
-                <span 
-                  className="text-sm font-bold tracking-tight text-center" 
-                  style={{ 
+                <span
+                  className="text-sm font-bold tracking-tight text-center"
+                  style={{
                     color: "#A855F7",
-                    fontFamily: "'Space Grotesk', sans-serif"
+                    fontFamily: "'Space Grotesk', sans-serif",
                   }}
                 >
                   {formData.repoUrl ? "Repo Added" : "Repo"}
@@ -550,25 +620,25 @@ const CreatePost = () => {
 
             {/* Add Poll Section */}
             <div className="flex-1">
-              <div 
+              <div
                 onClick={() => {
                   setShowPollInput(!showPollInput);
                   if (showRepoInput) setShowRepoInput(false);
                 }}
                 className={`flex flex-col items-center justify-center p-4 bg-[#000000] border-2 border-dashed border-white/20 rounded-2xl cursor-pointer hover:bg-x-dark/50 transition-all group h-full`}
               >
-                <img 
-                  src="/icons/poll.png" 
-                  alt="Add Poll" 
+                <img
+                  src="/icons/poll.png"
+                  alt="Add Poll"
                   className="w-10 h-10 mb-2 transition-transform group-hover:scale-110"
                   width="40"
                   height="40"
                 />
-                <span 
-                  className="text-sm font-bold tracking-tight text-center" 
-                  style={{ 
+                <span
+                  className="text-sm font-bold tracking-tight text-center"
+                  style={{
                     color: "#A855F7",
-                    fontFamily: "'Space Grotesk', sans-serif"
+                    fontFamily: "'Space Grotesk', sans-serif",
                   }}
                 >
                   {formData.pollQuestion ? "Poll Added" : "Poll"}
@@ -591,25 +661,35 @@ const CreatePost = () => {
                 />
               </div>
               <div className="relative border-none rounded-none bg-[#000000]">
-                  <input
-                    type="url"
-                    name="repoUrl"
-                    placeholder="GitHub Repository URL"
-                    className="w-full bg-transparent border-none text-x-white placeholder-x-gray px-4 py-3 pr-12 text-sm font-mono focus:outline-none transition-all"
-                    value={formData.repoUrl}
-                    onChange={handleChange}
-                  />
-                  {formData.repoUrl && (
-                    <button
-                      type="button"
-                      onClick={() => setFormData({ ...formData, repoUrl: "" })}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-x-gray hover:text-red-500 transition-colors"
+                <input
+                  type="url"
+                  name="repoUrl"
+                  placeholder="GitHub Repository URL"
+                  className="w-full bg-transparent border-none text-x-white placeholder-x-gray px-4 py-3 pr-12 text-sm font-mono focus:outline-none transition-all"
+                  value={formData.repoUrl}
+                  onChange={handleChange}
+                />
+                {formData.repoUrl && (
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, repoUrl: "" })}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-x-gray hover:text-red-500 transition-colors"
+                  >
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
                     >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
-                  )}
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                )}
               </div>
             </div>
           )}
@@ -623,12 +703,17 @@ const CreatePost = () => {
                   placeholder="Ask a question..."
                   className="w-full bg-transparent border-none text-x-white placeholder-x-gray px-8 py-4 text-base font-bold focus:outline-none transition-all"
                   value={formData.pollQuestion}
-                  onChange={(e) => setFormData({ ...formData, pollQuestion: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, pollQuestion: e.target.value })
+                  }
                 />
               </div>
               <div className="space-y-2.5">
                 {formData.pollOptions.map((opt, idx) => (
-                  <div key={idx} className="relative border-none rounded-full bg-[#0a0a0a]/50 overflow-hidden">
+                  <div
+                    key={idx}
+                    className="relative border-none rounded-full bg-[#0a0a0a]/50 overflow-hidden"
+                  >
                     <input
                       type="text"
                       placeholder={`Option ${idx + 1}`}
@@ -644,13 +729,25 @@ const CreatePost = () => {
                       <button
                         type="button"
                         onClick={() => {
-                          const newOpts = formData.pollOptions.filter((_, i) => i !== idx);
+                          const newOpts = formData.pollOptions.filter(
+                            (_, i) => i !== idx,
+                          );
                           setFormData({ ...formData, pollOptions: newOpts });
                         }}
                         className="absolute right-5 top-1/2 -translate-y-1/2 text-x-gray hover:text-red-500 transition-colors"
                       >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        <svg
+                          className="w-5 h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                          />
                         </svg>
                       </button>
                     )}
@@ -659,7 +756,12 @@ const CreatePost = () => {
                 {formData.pollOptions.length < 5 && (
                   <button
                     type="button"
-                    onClick={() => setFormData({ ...formData, pollOptions: [...formData.pollOptions, ""] })}
+                    onClick={() =>
+                      setFormData({
+                        ...formData,
+                        pollOptions: [...formData.pollOptions, ""],
+                      })
+                    }
                     className="text-[11px] font-black uppercase tracking-widest text-x-blue hover:text-white transition-colors pl-8"
                   >
                     + Add Option
@@ -677,15 +779,24 @@ const CreatePost = () => {
                   <span className="text-3xl">📄</span>
                   <div>
                     <p className="font-semibold text-x-white">{media.name}</p>
-                    <p className="text-xs text-x-gray">{(media.size / 1024 / 1024).toFixed(2)} MB - PDF Document</p>
+                    <p className="text-xs text-x-gray">
+                      {(media.size / 1024 / 1024).toFixed(2)} MB - PDF Document
+                    </p>
                   </div>
                 </div>
               ) : (
-                <img src={mediaPreview} alt="Preview" className="max-w-full h-auto max-h-64 rounded-xl border border-x-border shadow-2xl" />
+                <img
+                  src={mediaPreview}
+                  alt="Preview"
+                  className="max-w-full h-auto max-h-64 rounded-xl border border-x-border shadow-2xl"
+                />
               )}
               <button
                 type="button"
-                onClick={() => { setMedia(null); setMediaPreview(null); }}
+                onClick={() => {
+                  setMedia(null);
+                  setMediaPreview(null);
+                }}
                 className="absolute -top-3 -right-3 bg-red-600 hover:bg-red-700 text-white w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shadow-lg transform transition-transform group-hover/preview:scale-110"
               >
                 ✕
@@ -695,85 +806,115 @@ const CreatePost = () => {
 
           {(selectedLanguage || formData.codeSnippet) && (
             <div className="bg-[#1e1e1e] border border-x-border/50 rounded-xl overflow-hidden mb-8">
-                <div className="flex items-center justify-between bg-x-dark/60 px-4 py-2 border-b border-x-border/30">
-                  <div className="flex items-center space-x-2">
-                    <div className="flex space-x-1">
-                      <div className="w-3 h-3 rounded-full bg-red-500/60"></div>
-                      <div className="w-3 h-3 rounded-full bg-yellow-500/60"></div>
-                      <div className="w-3 h-3 rounded-full bg-green-500/60"></div>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <select
-                      value={selectedLanguage}
-                      onChange={(e) => {
-                        const newLang = e.target.value;
-                        setSelectedLanguage(newLang);
-                        if (newLang === "python" && formData.codeSnippet === "// Start coding...") {
-                          setFormData({ ...formData, codeSnippet: "print('Hello World')" });
-                        }
-                      }}
-                      className="bg-[#16181c] text-x-white text-sm border border-x-border rounded px-2 py-1 focus:outline-none focus:border-x-blue font-mono"
-                    >
-                      <option value="javascript">JavaScript</option>
-                      <option value="python">Python</option>
-                      <option value="cpp">C++</option>
-                      <option value="java">Java</option>
-                      <option value="html">HTML</option>
-                      <option value="css">CSS</option>
-                    </select>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        navigator.clipboard.writeText(formData.codeSnippet);
-                      }}
-                      className="text-x-gray hover:text-x-blue transition-colors p-1"
-                      title="Copy code"
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                      </svg>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setFormData({ ...formData, codeSnippet: "" });
-                        setSelectedLanguage("");
-                      }}
-                      className="text-x-gray hover:text-red-500 transition-colors p-1"
-                      title="Clear code"
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
+              <div className="flex items-center justify-between bg-x-dark/60 px-4 py-2 border-b border-x-border/30">
+                <div className="flex items-center space-x-2">
+                  <div className="flex space-x-1">
+                    <div className="w-3 h-3 rounded-full bg-red-500/60"></div>
+                    <div className="w-3 h-3 rounded-full bg-yellow-500/60"></div>
+                    <div className="w-3 h-3 rounded-full bg-green-500/60"></div>
                   </div>
                 </div>
-                <div className="p-4 bg-[#1e1e1e] min-h-[150px] max-h-[400px] overflow-y-auto overflow-x-hidden font-mono text-sm leading-relaxed border-t border-x-border/30">
-                  <Editor
-                    value={formData.codeSnippet}
-                    onValueChange={(code) => setFormData({ ...formData, codeSnippet: code || "" })}
-                    highlight={(code) => {
-                      const lang = selectedLanguage || "javascript";
-                      const grammar = Prism.languages[lang] || Prism.languages.javascript;
-                      return Prism.highlight(code, grammar, lang);
+                <div className="flex items-center space-x-3">
+                  <select
+                    value={selectedLanguage}
+                    onChange={(e) => {
+                      const newLang = e.target.value;
+                      setSelectedLanguage(newLang);
+                      if (
+                        newLang === "python" &&
+                        formData.codeSnippet === "// Start coding..."
+                      ) {
+                        setFormData({
+                          ...formData,
+                          codeSnippet: "print('Hello World')",
+                        });
+                      }
                     }}
-                    padding={0}
-                    style={{
-                      fontFamily: '"Fira Code", "Monaco", "Menlo", "Ubuntu Mono", "Consolas", monospace',
-                      fontSize: 14,
-                      backgroundColor: "transparent",
-                      color: "#e5e7eb",
-                      outline: "none",
-                      minHeight: "150px"
+                    className="bg-[#16181c] text-x-white text-sm border border-x-border rounded px-2 py-1 focus:outline-none focus:border-x-blue font-mono"
+                  >
+                    <option value="javascript">JavaScript</option>
+                    <option value="python">Python</option>
+                    <option value="cpp">C++</option>
+                    <option value="java">Java</option>
+                    <option value="html">HTML</option>
+                    <option value="css">CSS</option>
+                  </select>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText(formData.codeSnippet);
                     }}
-                    textareaClassName="focus:outline-none border-none ring-0 focus:ring-0"
-                  />
+                    className="text-x-gray hover:text-x-blue transition-colors p-1"
+                    title="Copy code"
+                  >
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFormData({ ...formData, codeSnippet: "" });
+                      setSelectedLanguage("");
+                    }}
+                    className="text-x-gray hover:text-red-500 transition-colors p-1"
+                    title="Clear code"
+                  >
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
                 </div>
               </div>
-            )}
+              <div className="p-4 bg-[#1e1e1e] min-h-[150px] max-h-[400px] overflow-y-auto overflow-x-hidden font-mono text-sm leading-relaxed border-t border-x-border/30">
+                <Editor
+                  value={formData.codeSnippet}
+                  onValueChange={(code) =>
+                    setFormData({ ...formData, codeSnippet: code || "" })
+                  }
+                  highlight={(code) => {
+                    const lang = selectedLanguage || "javascript";
+                    const grammar =
+                      Prism.languages[lang] || Prism.languages.javascript;
+                    return Prism.highlight(code, grammar, lang);
+                  }}
+                  padding={0}
+                  style={{
+                    fontFamily:
+                      '"Fira Code", "Monaco", "Menlo", "Ubuntu Mono", "Consolas", monospace',
+                    fontSize: 14,
+                    backgroundColor: "transparent",
+                    color: "#e5e7eb",
+                    outline: "none",
+                    minHeight: "150px",
+                  }}
+                  textareaClassName="focus:outline-none border-none ring-0 focus:ring-0"
+                />
+              </div>
+            </div>
+          )}
 
           <div className="flex flex-row justify-end items-center space-x-3 sm:space-x-4">
             {showCancel && (
@@ -785,7 +926,12 @@ const CreatePost = () => {
                       setShowConfirm(true);
                     } else {
                       window.scrollTo({ top: 0, behavior: "smooth" });
-                      setFormData({ content: "", codeSnippet: "", repoUrl: "", repoTitle: "" });
+                      setFormData({
+                        content: "",
+                        codeSnippet: "",
+                        repoUrl: "",
+                        repoTitle: "",
+                      });
                       setMedia(null);
                       setMediaPreview(null);
                       setShowRepoInput(false);
@@ -796,17 +942,22 @@ const CreatePost = () => {
                 >
                   Cancel
                 </button>
-                <svg 
-                  className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 hover:text-red-700 transition-colors mr-1 sm:mr-4 cursor-pointer" 
-                  fill="none" 
-                  stroke="currentColor" 
+                <svg
+                  className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 hover:text-red-700 transition-colors mr-1 sm:mr-4 cursor-pointer"
+                  fill="none"
+                  stroke="currentColor"
                   viewBox="0 0 24 24"
                   onClick={() => {
                     if (isMobile) {
                       setShowConfirm(true);
                     } else {
                       window.scrollTo({ top: 0, behavior: "smooth" });
-                      setFormData({ content: "", codeSnippet: "", repoUrl: "", repoTitle: "" });
+                      setFormData({
+                        content: "",
+                        codeSnippet: "",
+                        repoUrl: "",
+                        repoTitle: "",
+                      });
                       setMedia(null);
                       setMediaPreview(null);
                       setShowRepoInput(false);
@@ -814,14 +965,26 @@ const CreatePost = () => {
                     }
                   }}
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2.5}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </div>
             )}
 
             <button
               type="submit"
-              disabled={loading || !((() => { const d = document.createElement('div'); d.innerHTML = formData.content; return (d.textContent || '').trim(); })())}
+              disabled={
+                loading ||
+                !(() => {
+                  const d = document.createElement("div");
+                  d.innerHTML = formData.content;
+                  return (d.textContent || "").trim();
+                })()
+              }
               className={`bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 sm:px-6 py-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-colors duration-200 min-h-[40px] sm:min-h-[44px] h-[40px] sm:h-[44px]`}
               style={{ height: isMobile ? "40px" : "44px" }}
             >
@@ -833,10 +996,12 @@ const CreatePost = () => {
                   </>
                 ) : (
                   <>
-                    <span className="font-bold leading-none text-sm sm:text-base">Publish</span>
-                    <img 
-                      src="/icons/arrow-up.png" 
-                      alt="Publish" 
+                    <span className="font-bold leading-none text-sm sm:text-base">
+                      Publish
+                    </span>
+                    <img
+                      src="/icons/arrow-up.png"
+                      alt="Publish"
                       className="w-4 h-4 sm:w-5 sm:h-5 object-contain -translate-y-[1px]"
                       width="20"
                       height="20"
@@ -852,9 +1017,12 @@ const CreatePost = () => {
             <div className="fixed inset-0 z-[100] flex items-end justify-center p-4 pb-28 bg-black/40 backdrop-blur-sm animate-fade-in">
               <div className="bg-x-dark border border-white/10 rounded-[2rem] p-6 shadow-2xl max-w-xs w-full text-center space-y-6 relative overflow-hidden animate-slide-up">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 via-purple-500 to-blue-500 opacity-50"></div>
-                
+
                 <div className="space-y-2">
-                  <h3 className="text-xl font-black text-x-white tracking-tight" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+                  <h3
+                    className="text-xl font-black text-x-white tracking-tight"
+                    style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                  >
                     Discard draft?
                   </h3>
                   <p className="text-x-gray text-xs leading-relaxed opacity-80 font-medium">
@@ -866,7 +1034,12 @@ const CreatePost = () => {
                   <button
                     className="w-full py-3 bg-red-600/90 hover:bg-red-600 text-white text-sm font-black rounded-xl transition-all duration-200 active:scale-95"
                     onClick={() => {
-                      setFormData({ content: "", codeSnippet: "", repoUrl: "", repoTitle: "" });
+                      setFormData({
+                        content: "",
+                        codeSnippet: "",
+                        repoUrl: "",
+                        repoTitle: "",
+                      });
                       setMedia(null);
                       setMediaPreview(null);
                       setShowRepoInput(false);
@@ -890,16 +1063,28 @@ const CreatePost = () => {
 
         {/* Enhanced Preview Section with Clear Visual Distinction */}
         <div className="space-y-6">
-          {((formData.content && (() => { const d = document.createElement('div'); d.innerHTML = formData.content; return (d.textContent || '').trim(); })()) || mediaPreview) && (
+          {((formData.content &&
+            (() => {
+              const d = document.createElement("div");
+              d.innerHTML = formData.content;
+              return (d.textContent || "").trim();
+            })()) ||
+            mediaPreview) && (
             <div>
               <h3 className="text-lg font-semibold text-x-white mb-4 flex items-center">
                 Live Preview
               </h3>
               <div className="card p-6 bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/30">
                 <div className="flex items-center mb-6">
-                  <div className={`bg-black text-white w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold mr-4 shadow-lg overflow-hidden relative`}>
+                  <div
+                    className={`bg-black text-white w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold mr-4 shadow-lg overflow-hidden relative`}
+                  >
                     {user?.avatar ? (
-                      <img src={user.avatar} alt={user.displayName} className="w-full h-full object-cover" />
+                      <img
+                        src={user.avatar}
+                        alt={user.displayName}
+                        className="w-full h-full object-cover"
+                      />
                     ) : (
                       (user?.displayName || "Y").charAt(0).toUpperCase()
                     )}
@@ -910,37 +1095,50 @@ const CreatePost = () => {
                     </p>
                     <div className="flex items-center gap-1.5 mt-0.5">
                       <p className="text-sm text-x-gray">now</p>
-                      {selectedCommunity && (() => {
-                        const comm = communities.find(c => c._id.toString() === selectedCommunity.toString());
-                        return comm ? (
-                          <>
-                            <span className="text-x-gray/40 text-[10px] font-black">•</span>
-                            <div className="flex items-center gap-2">
-                              {selectedFlair && (
-                                <span 
-                                  className="px-1.5 py-0.5 rounded-full text-[10px] font-black tracking-wider text-black"
-                                  style={{ 
-                                    backgroundColor: selectedFlair.color,
-                                    border: 'none'
-                                  }}
-                                >
-                                  {selectedFlair.name}
-                                </span>
-                              )}
-                              <span className="inline-flex items-center gap-1.5 text-[10px] font-black" style={{ color: comm.color || "#1d9bf0" }}>
-                                <span className="w-4 h-4 flex items-center justify-center overflow-hidden shrink-0">
-                                  {comm.icon?.startsWith("/") ? (
-                                    <img src={comm.icon} alt="" className="w-full h-full object-contain" />
-                                  ) : (
-                                    comm.icon
-                                  )}
-                                </span>
-                                <span>{comm.name}</span>
+                      {selectedCommunity &&
+                        (() => {
+                          const comm = communities.find(
+                            (c) =>
+                              c._id.toString() === selectedCommunity.toString(),
+                          );
+                          return comm ? (
+                            <>
+                              <span className="text-x-gray/40 text-[10px] font-black">
+                                •
                               </span>
-                            </div>
-                          </>
-                        ) : null;
-                      })()}
+                              <div className="flex items-center gap-2">
+                                {selectedFlair && (
+                                  <span
+                                    className="px-1.5 py-0.5 rounded-full text-[10px] font-black tracking-wider text-black"
+                                    style={{
+                                      backgroundColor: selectedFlair.color,
+                                      border: "none",
+                                    }}
+                                  >
+                                    {selectedFlair.name}
+                                  </span>
+                                )}
+                                <span
+                                  className="inline-flex items-center gap-1.5 text-[10px] font-black"
+                                  style={{ color: comm.color || "#1d9bf0" }}
+                                >
+                                  <span className="w-4 h-4 flex items-center justify-center overflow-hidden shrink-0">
+                                    {comm.icon?.startsWith("/") ? (
+                                      <img
+                                        src={comm.icon}
+                                        alt=""
+                                        className="w-full h-full object-contain"
+                                      />
+                                    ) : (
+                                      comm.icon
+                                    )}
+                                  </span>
+                                  <span>{comm.name}</span>
+                                </span>
+                              </div>
+                            </>
+                          ) : null;
+                        })()}
                     </div>
                   </div>
                 </div>
@@ -955,18 +1153,34 @@ const CreatePost = () => {
                       />
                     </div>
                   )}
-                  
+
                   {/* Repository Link Preview */}
                   {formData.repoUrl && (
                     <div className="inline-flex items-center space-x-1.5 text-x-white group px-1">
-                      <svg className="w-4 h-4 text-x-white" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+                      <svg
+                        className="w-4 h-4 text-x-white"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
                       </svg>
                       <span className="text-xs font-black truncate">
-                        {formData.repoTitle || formData.repoUrl.split('/').slice(-2).join('/') || "New Repository"}
+                        {formData.repoTitle ||
+                          formData.repoUrl.split("/").slice(-2).join("/") ||
+                          "New Repository"}
                       </span>
-                      <svg className="w-3.5 h-3.5 text-red-500 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3.5} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      <svg
+                        className="w-3.5 h-3.5 text-red-500 opacity-80"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={3.5}
+                          d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                        />
                       </svg>
                     </div>
                   )}
@@ -978,7 +1192,11 @@ const CreatePost = () => {
                         <PdfCarousel file={media} />
                       ) : (
                         <div className="bg-x-dark/20 border border-x-border/30 rounded-xl overflow-hidden">
-                          <img src={mediaPreview} alt="Post Attachment Preview" className="w-full h-auto object-contain max-h-[500px]" />
+                          <img
+                            src={mediaPreview}
+                            alt="Post Attachment Preview"
+                            className="w-full h-auto object-contain max-h-[500px]"
+                          />
                         </div>
                       )}
                     </div>
@@ -991,15 +1209,17 @@ const CreatePost = () => {
                         {formData.pollQuestion}
                       </h4>
                       <div className="space-y-2">
-                        {formData.pollOptions.filter(opt => opt.trim()).map((opt, idx) => (
-                          <div key={idx} className="group relative">
-                            <div className="w-full h-10 bg-white/5 border border-white/5 rounded-full flex items-center px-4 transition-all">
-                              <span className="text-xs font-bold text-x-gray group-hover:text-x-white transition-colors">
-                                {opt}
-                              </span>
+                        {formData.pollOptions
+                          .filter((opt) => opt.trim())
+                          .map((opt, idx) => (
+                            <div key={idx} className="group relative">
+                              <div className="w-full h-10 bg-white/5 border border-white/5 rounded-full flex items-center px-4 transition-all">
+                                <span className="text-xs font-bold text-x-gray group-hover:text-x-white transition-colors">
+                                  {opt}
+                                </span>
+                              </div>
                             </div>
-                          </div>
-                        ))}
+                          ))}
                       </div>
                       <div className="pt-2 border-t border-white/5">
                         <p className="text-[10px] font-black uppercase tracking-widest text-x-gray/50">
@@ -1008,8 +1228,6 @@ const CreatePost = () => {
                       </div>
                     </div>
                   )}
-
-
 
                   {/* Code Section with Distinct Styling */}
                   {formData.codeSnippet && (
@@ -1036,8 +1254,12 @@ const CreatePost = () => {
                         </span>
                       </div>
                       <div className="p-4 overflow-x-auto">
-                        <pre className={`whitespace-pre-wrap font-mono text-sm leading-relaxed language-${selectedLanguage || 'javascript'}`}>
-                          <code className={`language-${selectedLanguage || 'javascript'}`}>
+                        <pre
+                          className={`whitespace-pre-wrap font-mono text-sm leading-relaxed language-${selectedLanguage || "javascript"}`}
+                        >
+                          <code
+                            className={`language-${selectedLanguage || "javascript"}`}
+                          >
                             {formData.codeSnippet}
                           </code>
                         </pre>
@@ -1087,12 +1309,20 @@ const CreatePost = () => {
             </div>
           )}
 
-          {!((() => { const d = document.createElement('div'); d.innerHTML = formData.content; return (d.textContent || '').trim(); })() || mediaPreview || formData.repoUrl) && (
+          {!(
+            (() => {
+              const d = document.createElement("div");
+              d.innerHTML = formData.content;
+              return (d.textContent || "").trim();
+            })() ||
+            mediaPreview ||
+            formData.repoUrl
+          ) && (
             <div className="card p-8 bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/20 text-center">
               <div className="flex items-center justify-center mx-auto mb-6">
-                <img 
-                  src="/icons/share.png" 
-                  alt="Share" 
+                <img
+                  src="/icons/share.png"
+                  alt="Share"
                   className="w-16 h-16 object-contain"
                   width="64"
                   height="64"
