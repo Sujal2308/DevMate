@@ -101,10 +101,10 @@ const CommunitySelectorModal = ({ isOpen, onClose, communities, onSelect, select
 
                   {/* Info */}
                   <div className="flex-1 min-w-0 text-left">
-                    <h3 className={`font-black text-sm leading-tight transition-colors truncate ${selectedCommunityId === c._id ? "text-x-blue" : "text-white"}`}>
+                    <h3 className={`font-black text-sm sm:text-lg leading-tight transition-colors truncate ${selectedCommunityId === c._id ? "text-x-blue" : "text-white"}`}>
                       {c.name}
                     </h3>
-                    <p className="text-x-gray text-[11px] mt-0.5 line-clamp-1 opacity-70">{c.description}</p>
+                    <p className="text-x-gray text-[11px] sm:text-sm mt-0.5 sm:mt-1 line-clamp-1 opacity-70">{c.description}</p>
                     <div className="flex items-center gap-3 mt-1">
                       <span className="text-[10px] text-x-gray">
                         <span className="font-bold text-white/80">{c.memberCount}</span> members

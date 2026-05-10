@@ -217,11 +217,11 @@ const CommunityCard = ({ community, onJoinLeave, loading }) => {
       {/* Info */}
       <div className="flex-1 min-w-0">
         <Link to={`/community/${community.slug}`}>
-          <h3 className="font-black text-white text-sm leading-tight group-hover:text-x-blue transition-colors truncate">
+          <h3 className="font-black text-white text-sm sm:text-lg leading-tight group-hover:text-x-blue transition-colors truncate">
             {community.name}
           </h3>
         </Link>
-        <p className="text-x-gray text-xs mt-0.5 line-clamp-1">{community.description}</p>
+        <p className="text-x-gray text-xs sm:text-sm mt-0.5 sm:mt-1 line-clamp-1">{community.description}</p>
         <div className="flex items-center gap-3 mt-1">
           <span className="text-xs text-x-gray">
             <span className="font-bold text-white">{community.memberCount}</span> members

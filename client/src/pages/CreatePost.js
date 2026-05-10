@@ -362,7 +362,7 @@ const CreatePost = () => {
                   )}
                 </div>
                 <svg
-                  className="w-3.5 h-3.5 text-x-gray group-hover:text-white transition-colors"
+                  className="w-4 h-4 text-x-gray group-hover:text-white transition-colors"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -370,8 +370,8 @@ const CreatePost = () => {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={3}
-                    d="M19 9l-7 7-7-7"
+                    strokeWidth={2.5}
+                    d="M7 9l5-5 5 5M7 15l5 5 5-5"
                   />
                 </svg>
               </button>
@@ -396,42 +396,46 @@ const CreatePost = () => {
                 Post Category <span className="text-red-500 ml-1">*</span>
               </label>
 
-              {selectedCommunity && (
-                <button
-                  type="button"
-                  onClick={() => setShowFlairGrid(!showFlairGrid)}
-                  className={`flex items-center gap-2.5 px-6 py-2.5 rounded-full text-[11px] font-black uppercase tracking-wider transition-all duration-300 shadow-xl ${
-                    showFlairGrid || selectedFlair
-                      ? ""
-                      : "bg-white text-black hover:bg-white/90"
-                  }`}
-                  style={
-                    showFlairGrid || selectedFlair
-                      ? {
-                          backgroundColor: selectedFlair
-                            ? selectedFlair.color
-                            : "var(--x-blue)",
-                          color: "#000",
-                        }
-                      : {}
+              <button
+                type="button"
+                onClick={() => {
+                  if (!selectedCommunity) {
+                    setError("Please select a community first to see available flairs");
+                    return;
                   }
+                  setShowFlairGrid(!showFlairGrid);
+                }}
+                className={`flex items-center gap-2.5 px-6 py-2.5 rounded-full text-[11px] font-black uppercase tracking-wider transition-all duration-300 shadow-xl ${
+                  showFlairGrid || selectedFlair
+                    ? ""
+                    : "bg-white text-black hover:bg-white/90"
+                }`}
+                style={
+                  showFlairGrid || selectedFlair
+                    ? {
+                        backgroundColor: selectedFlair
+                          ? selectedFlair.color
+                          : "var(--x-blue)",
+                        color: "#000",
+                      }
+                    : {}
+                }
+              >
+                <svg
+                  className={`w-3.5 h-3.5 transition-transform duration-300 ${showFlairGrid ? "rotate-45" : ""}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  <svg
-                    className={`w-3.5 h-3.5 transition-transform duration-300 ${showFlairGrid ? "rotate-45" : ""}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={3}
-                      d="M12 4v16m8-8H4"
-                    />
-                  </svg>
-                  {selectedFlair ? selectedFlair.name : "Add a Flair"}
-                </button>
-              )}
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={3}
+                    d="M12 4v16m8-8H4"
+                  />
+                </svg>
+                {selectedFlair ? selectedFlair.name : "Add a Flair"}
+              </button>
             </div>
 
             {selectedCommunity && !selectedFlair && !showFlairGrid && (
@@ -480,17 +484,9 @@ const CreatePost = () => {
                 })()}
               </div>
             )}
-
-            {!selectedCommunity && (
-              <div className="w-full p-4 border border-dashed border-white/10 rounded-2xl bg-white/[0.02] text-center">
-                <span className="text-x-gray text-xs font-bold italic">
-                  Select a community above to unlock flairs
-                </span>
-              </div>
-            )}
           </div>
 
-          {error && (
+          {/* {error && (
             <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-6 py-4 rounded-xl backdrop-blur-sm mb-6 mt-4 mx-1">
               <div className="flex items-center">
                 <svg
@@ -507,7 +503,7 @@ const CreatePost = () => {
                 <span className="text-sm font-bold">{error}</span>
               </div>
             </div>
-          )}
+          )} */}
 
           <div className="mb-6">
             <TiptapEditor
