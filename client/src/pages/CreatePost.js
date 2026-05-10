@@ -173,7 +173,7 @@ const CreatePost = () => {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto pt-0 pb-8 px-0 sm:px-4">
+    <div className="w-full max-w-2xl mx-auto pt-0 pb-8 px-0 sm:px-4 min-h-screen bg-black">
 
       {/* Single Column Layout */}
       <div className="space-y-4 sm:space-y-6 lg:space-y-8">
@@ -461,7 +461,7 @@ const CreatePost = () => {
           <div className="flex flex-row gap-3 mb-6">
             {/* Add Media Section */}
             <div className="flex-1">
-              <label className="flex flex-col items-center justify-center p-4 bg-[#000000] border-none rounded-2xl cursor-pointer hover:bg-x-dark/50 transition-all group h-full">
+              <label className="flex flex-col items-center justify-center p-4 bg-[#000000] border-2 border-dashed border-white/20 rounded-2xl cursor-pointer hover:bg-x-dark/50 transition-all group h-full">
                 <input 
                   type="file" 
                   accept="image/*,application/pdf"
@@ -499,7 +499,7 @@ const CreatePost = () => {
                     setSelectedLanguage("");
                   }
                 }}
-                className="flex flex-col items-center justify-center p-4 bg-[#000000] border-none rounded-2xl cursor-pointer hover:bg-x-dark/50 transition-all group h-full"
+                className="flex flex-col items-center justify-center p-4 bg-[#000000] border-2 border-dashed border-white/20 rounded-2xl cursor-pointer hover:bg-x-dark/50 transition-all group h-full"
               >
                 <img 
                   src="/icons/code.png" 
@@ -527,7 +527,7 @@ const CreatePost = () => {
                   setShowRepoInput(!showRepoInput);
                   if (showPollInput) setShowPollInput(false);
                 }}
-                className={`flex flex-col items-center justify-center p-4 bg-[#000000] border-none rounded-2xl cursor-pointer hover:bg-x-dark/50 transition-all group h-full`}
+                className={`flex flex-col items-center justify-center p-4 bg-[#000000] border-2 border-dashed border-white/20 rounded-2xl cursor-pointer hover:bg-x-dark/50 transition-all group h-full`}
               >
                 <img 
                   src="/icons/folder.png" 
@@ -555,7 +555,7 @@ const CreatePost = () => {
                   setShowPollInput(!showPollInput);
                   if (showRepoInput) setShowRepoInput(false);
                 }}
-                className={`flex flex-col items-center justify-center p-4 bg-[#000000] border-none rounded-2xl cursor-pointer hover:bg-x-dark/50 transition-all group h-full`}
+                className={`flex flex-col items-center justify-center p-4 bg-[#000000] border-2 border-dashed border-white/20 rounded-2xl cursor-pointer hover:bg-x-dark/50 transition-all group h-full`}
               >
                 <img 
                   src="/icons/poll.png" 
