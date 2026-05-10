@@ -451,7 +451,7 @@ const Profile = () => {
       }}
     >
         {/* Profile Info Card */}
-        <div className="bg-gradient-to-br from-x-dark/95 to-x-dark/70 backdrop-blur-sm border border-x-border/50 pt-8 pb-6 px-4 md:px-8 relative rounded-none mb-8">
+        <div className="bg-transparent border-none sm:bg-gradient-to-br sm:from-x-dark/95 sm:to-x-dark/70 sm:backdrop-blur-sm sm:border sm:border-x-border/50 pt-8 pb-6 px-4 md:px-8 relative rounded-none mb-8">
           {isOwnProfile ? (
             <div className="mb-6">
               <h1 
