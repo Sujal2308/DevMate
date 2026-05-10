@@ -5,9 +5,9 @@ import axios from "axios";
 const getBaseURL = () => {
   const hostname = window.location.hostname;
 
-  // For devmate.dev (Netlify) - use relative URLs to leverage proxy
-  if (hostname === "devmate.dev") {
-    return ""; // Netlify will proxy /api/* to Azure backend
+  // For Netlify deployment (Decoupled architecture)
+  if (hostname.includes("netlify.app") || hostname === "devmate.dev") {
+    return process.env.REACT_APP_API_URL || "https://devmate-9oiu.onrender.com";
   }
 
   // For Azure deployment where frontend and backend are served from same domain

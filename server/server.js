@@ -273,43 +273,12 @@ app.post("/api/test-forgot-email", async (req, res) => {
   }
 });
 
-// Serve static files from React build
-app.use(
-  express.static(path.join(__dirname, "../client/build"), {
-    maxAge: process.env.NODE_ENV === "production" ? "1d" : 0,
-    setHeaders: (res, path) => {
-      if (path.endsWith(".html")) {
-        res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-      }
-    },
-  })
-);
-
-// Serve React app for all non-API routes
-app.get("*", (req, res) => {
-  // Don't serve React for API routes
+// Error handling for 404
+app.use((req, res, next) => {
   if (req.path.startsWith("/api")) {
     return res.status(404).json({ message: "API route not found" });
   }
-
-  const buildPath = path.join(__dirname, "../client/build", "index.html");
-  if (require("fs").existsSync(buildPath)) {
-    res.sendFile(buildPath);
-  } else {
-    // Fail-safe response for production troubleshooting
-    res.status(200).send(`
-      <div style="font-family: sans-serif; padding: 40px; text-align: center; background: #0f172a; color: white; height: 100vh;">
-        <h1>🚀 Server is ALIVE!</h1>
-        <p>But the React build folder was not found in the expected location.</p>
-        <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 8px; display: inline-block; text-align: left; margin-top: 20px;">
-          <strong>Debug Info:</strong><br/>
-          Current Dir: <code>${__dirname}</code><br/>
-          Expected Build Path: <code>${buildPath}</code>
-        </div>
-        <p style="margin-top: 20px; color: #94a3b8;">This confirms your Backend and Environment Variables are working!</p>
-      </div>
-    `);
-  }
+  next();
 });
 
 // Error handling middleware
