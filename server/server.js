@@ -63,6 +63,7 @@ const io = new Server(server, {
     origin: [
       process.env.CLIENT_ORIGIN,
       "https://devmate-app.netlify.app",
+      "https://devmate-app-live.netlify.app",
       "https://strong-arithmetic-3b534a.netlify.app",
       "http://localhost:3000",
     ].filter(Boolean),
@@ -110,6 +111,7 @@ app.use(
       const allowedOrigins = [
         process.env.CLIENT_ORIGIN,
         "https://devmate-app.netlify.app",
+        "https://devmate-app-live.netlify.app",
         "https://strong-arithmetic-3b534a.netlify.app",
         "http://localhost:3000",
       ];
