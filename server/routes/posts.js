@@ -247,10 +247,12 @@ router.put("/:id/like", auth, async (req, res) => {
 router.post(
   "/:id/comment",
   auth,
+  upload.single("media"),
   [
     body("text")
-      .isLength({ min: 1, max: 500 })
-      .withMessage("Comment must be between 1 and 500 characters"),
+      .optional({ checkFalsy: true })
+      .isLength({ max: 500 })
+      .withMessage("Comment must be less than 500 characters"),
   ],
   async (req, res) => {
     try {
@@ -258,14 +260,30 @@ router.post(
       if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
       }
-      const { text } = req.body;
+      const { text, mediaUrl: bodyMediaUrl, mediaType: bodyMediaType } = req.body;
       const post = await Post.findById(req.params.id).populate("author");
       if (!post) {
         return res.status(404).json({ message: "Post not found" });
       }
+
+      let mediaUrl = bodyMediaUrl || "";
+      let mediaType = bodyMediaType || "";
+
+      if (req.file) {
+        mediaUrl = req.file.path;
+        mediaType = "image";
+      }
+
+      // If no text and no media, return error
+      if (!text && !mediaUrl) {
+        return res.status(400).json({ message: "Comment cannot be empty" });
+      }
+
       const newComment = {
         user: req.user._id,
-        text,
+        text: text || "",
+        mediaUrl,
+        mediaType,
       };
       post.comments.push(newComment);
       await post.save();

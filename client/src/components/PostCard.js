@@ -63,226 +63,11 @@ const ThreeDotsIcon = () => (
   </svg>
 );
 
-const CommentItem = ({ comment, postId, onUpdate, formatDate }) => {
-  const { user, token } = useAuth();
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [editing, setEditing] = useState(false);
-  const [editText, setEditText] = useState(comment.text);
-  const [deleting, setDeleting] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const menuRef = React.useRef();
 
-  const isCommentAuthor = comment.user?._id === user?.id;
-
-  // Close menu on outside click
-  React.useEffect(() => {
-    if (!menuOpen) return;
-    const handler = (e) => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
-        setMenuOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [menuOpen]);
-
-  const handleEdit = () => {
-    setEditing(true);
-    setMenuOpen(false);
-  };
-
-  const handleSaveEdit = async () => {
-    if (!editText.trim() || editText.trim() === comment.text) {
-      setEditing(false);
-      setEditText(comment.text);
-      return;
-    }
-
-    setSaving(true);
-    const editUrl = `/api/posts/${postId}/comment/${comment._id}`;
-    console.log("✏️ Attempting to edit comment at URL:", editUrl);
-    try {
-      const response = await axios.put(
-        editUrl,
-        { text: editText.trim() },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      console.log("✅ Edit response:", response.data);
-      onUpdate(response.data);
-      setEditing(false);
-    } catch (error) {
-      console.error("❌ Edit comment error:", error);
-      console.error("Response data:", error.response?.data);
-      const errorMessage =
-        error.response?.data?.message || "Failed to edit comment";
-      alert(errorMessage);
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const handleCancelEdit = () => {
-    setEditing(false);
-    setEditText(comment.text);
-  };
-
-  const handleDelete = async () => {
-    setDeleting(true);
-    setMenuOpen(false);
-    const deleteUrl = `/api/posts/${postId}/comment/${comment._id}`;
-    console.log("🗑️ Attempting to delete comment at URL:", deleteUrl);
-    try {
-      const response = await axios.delete(deleteUrl, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      console.log("✅ Delete response:", response.data);
-      onUpdate(response.data);
-    } catch (error) {
-      console.error("❌ Delete comment error:", error);
-      console.error("Response data:", error.response?.data);
-      const errorMessage =
-        error.response?.data?.message || "Failed to delete comment";
-      alert(errorMessage);
-    } finally {
-      setDeleting(false);
-    }
-  };
-
-  // Don't render deleted comments or comments without proper user data
-  if (comment.deleted || !comment.user || !comment.user._id) {
-    return null;
-  }
-
-  return (
-    <div className="flex space-x-3 items-start relative">
-      <div
-        className={`${getUserColor(
-          comment.user?._id,
-          comment.user?.username
-        )} text-white w-8 h-8 rounded-full flex items-center justify-center text-sm shadow-lg overflow-hidden relative`}
-      >
-        {comment.user?.avatar ? (
-          <img 
-            src={comment.user.avatar} 
-            alt={comment.user.displayName} 
-            className="w-full h-full object-cover" 
-            width="32"
-            height="32"
-            loading="lazy"
-          />
-        ) : (
-          comment.user?.displayName?.charAt(0)?.toUpperCase() ||
-          comment.user?.username?.charAt(0)?.toUpperCase() ||
-          "?"
-        )}
-      </div>
-
-      <div className="flex-1">
-        <div className="bg-x-dark/40 rounded-lg px-3 py-2">
-          <div className="flex items-center justify-between">
-            <Link
-              to={`/profile/${comment.user?.username || "#"}`}
-              className="font-medium text-sm text-x-white hover:text-x-blue"
-            >
-              {comment.user?.displayName ||
-                comment.user?.username ||
-                "Unknown User"}
-            </Link>
-
-            {/* Three dots menu for comment author */}
-            {isCommentAuthor && (
-              <div className="relative" ref={menuRef}>
-                <button
-                  onClick={() => setMenuOpen(!menuOpen)}
-                  className="p-1 hover:bg-x-dark/60 rounded-full transition-colors"
-                  disabled={deleting}
-                >
-                  <ThreeDotsIcon />
-                </button>
-
-                {menuOpen && (
-                  <div className="absolute right-0 mt-1 w-32 bg-x-dark border border-x-border rounded-lg shadow-lg z-10">
-                    <button
-                      onClick={handleEdit}
-                      className="w-full text-left px-4 py-2 text-x-white hover:bg-x-dark/40 font-mono text-sm"
-                      disabled={editing}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={handleDelete}
-                      className="w-full text-left px-4 py-2 text-red-400 hover:bg-x-dark/40 font-mono text-sm"
-                      disabled={deleting}
-                    >
-                      {deleting ? "Deleting..." : "Delete"}
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-
-          {editing ? (
-            <div className="mt-2">
-              <textarea
-                value={editText}
-                onChange={(e) => setEditText(e.target.value)}
-                className="w-full p-2 bg-x-black/50 border border-x-border text-x-white placeholder-x-gray rounded-lg resize-none focus:ring-2 focus:ring-x-blue focus:border-x-blue text-sm"
-                rows="2"
-                maxLength="500"
-                autoFocus
-              />
-              <div className="flex justify-between items-center mt-2">
-                <span className="text-xs text-x-gray">
-                  {editText.length}/500
-                </span>
-                <div className="space-x-2">
-                  <button
-                    onClick={handleCancelEdit}
-                    className="px-3 py-1 text-xs bg-x-dark/60 hover:bg-x-dark/80 border border-x-border text-x-white rounded-lg transition-colors"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleSaveEdit}
-                    disabled={!editText.trim() || saving}
-                    className="px-3 py-1 text-xs bg-x-blue hover:bg-x-blue-hover text-white rounded-lg transition-colors disabled:opacity-50"
-                  >
-                    {saving ? "Saving..." : "Save"}
-                  </button>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <p className="text-sm text-x-gray mt-1 font-poppins">
-              {comment.text}
-            </p>
-          )}
-        </div>
-
-        <div className="flex items-center gap-2 mt-1">
-          <p className="text-xs text-x-gray/70">
-            {formatDate(comment.createdAt)}
-          </p>
-          {comment.updatedAt && comment.updatedAt !== comment.createdAt && (
-            <p className="text-xs text-x-gray/50">• edited</p>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-};
 
 const PostCard = ({ post, onUpdate, onDelete }) => {
   const { user } = useAuth();
-  const [showCommentForm, setShowCommentForm] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [showComments, setShowComments] = useState(false);
-  const [visibleCommentsCount, setVisibleCommentsCount] = useState(3);
-  const [newComment, setNewComment] = useState("");
-  const [loading, setLoading] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [likeAnimating, setLikeAnimating] = useState(false); // For like button animation
@@ -408,27 +193,7 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
     }
   };
 
-  const handleComment = async (e) => {
-    e.preventDefault();
-    if (!newComment.trim()) return;
 
-    try {
-      setLoading(true);
-      const response = await axios.post(`/api/posts/${post._id}/comment`, {
-        text: newComment.trim(),
-      });
-      onUpdate(response.data);
-      setNewComment("");
-      setShowCommentForm(false);
-      // Keep comments visible and reset visible count to show the new comment
-      setShowComments(true);
-      setVisibleCommentsCount(3);
-    } catch (error) {
-      console.error("Comment error:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleDelete = async () => {
     setShowDeleteModal(false);
@@ -443,41 +208,9 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
     }
   };
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffInHours = (now - date) / (1000 * 60 * 60);
 
-    if (diffInHours < 1) {
-      return "Just now";
-    } else if (diffInHours < 24) {
-      return `${Math.floor(diffInHours)}h ago`;
-    } else {
-      return date.toLocaleDateString();
-    }
-  };
 
-  const handleToggleComments = () => {
-    setShowComments(!showComments);
-    if (!showComments) {
-      setVisibleCommentsCount(3); // Reset to show first 3 when opening
-    }
-  };
 
-  const handleViewMoreComments = () => {
-    setVisibleCommentsCount((prev) => prev + 3);
-  };
-
-  const getVisibleComments = () => {
-    if (!showComments) return [];
-    const nonDeletedComments = post.comments.filter((c) => !c.deleted);
-    return nonDeletedComments.slice(0, visibleCommentsCount);
-  };
-
-  const hasMoreComments = () => {
-    const nonDeletedComments = post.comments.filter((c) => !c.deleted);
-    return nonDeletedComments.length > visibleCommentsCount;
-  };
 
   return (
     <div className="card p-3 sm:p-4 lg:p-6">
@@ -1043,10 +776,10 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
             </span>
           </button>
         </div>
-        {/* Right side actions */}
+        {/* Right side actions - Discussion link */}
         <div className="ml-auto mr-[-8px] sm:mr-[-16px]">
-          <button
-            onClick={handleToggleComments}
+          <Link
+            to={`/post/${post._id}/discussion`}
             className="flex items-center space-x-2 text-sm text-x-gray hover:text-purple-500 transition-colors border border-x-border rounded-full px-3 sm:px-4 py-2"
           >
             <svg
@@ -1063,126 +796,11 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
               />
             </svg>
             <span className="text-x-white font-medium">
-              {showComments
-                ? "Hide Discussion"
-                : `${post.comments.filter((c) => !c.deleted).length} Discussion`}
+              {`${post.comments.filter((c) => !c.deleted).length} Discussion`}
             </span>
-          </button>
+          </Link>
         </div>
       </div>
-
-      {/* Comments Section */}
-      {showComments && post.comments.filter((c) => !c.deleted).length > 0 && (
-        <div className="mt-4 pt-4 border-t border-x-border ml-auto max-w-lg">
-          <div className="space-y-3">
-            {getVisibleComments()
-              .filter((c) => !c.deleted)
-              .map((comment) => (
-                <CommentItem
-                  key={comment._id}
-                  comment={comment}
-                  postId={post._id}
-                  onUpdate={onUpdate}
-                  formatDate={formatDate}
-                />
-              ))}
-          </div>
-
-          {/* View More Comments Button */}
-          {hasMoreComments() && (
-            <button
-              onClick={handleViewMoreComments}
-              className="mt-3 text-sm text-x-blue hover:text-x-blue-hover font-medium transition-colors"
-            >
-              View{" "}
-              {Math.min(
-                3,
-                post.comments.filter((c) => !c.deleted).length -
-                  visibleCommentsCount
-              )}{" "}
-              more comments
-            </button>
-          )}
-
-          {/* Add Comment Button */}
-          <div className="mt-3 pt-3 border-t border-x-border/30 flex justify-end">
-            <button
-              onClick={() => setShowCommentForm(!showCommentForm)}
-              className="text-sm text-x-blue hover:text-x-blue-hover font-medium transition-colors"
-            >
-              {showCommentForm ? "Cancel" : "Add a comment"}
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Show "No comments yet" message when comments are visible but empty */}
-      {showComments && post.comments.filter((c) => !c.deleted).length === 0 && (
-        <div className="mt-4 pt-4 border-t border-x-border text-center ml-auto max-w-lg">
-          <p className="text-sm text-x-gray">
-            No discussion yet. Be the first to start!
-          </p>
-          <div className="flex justify-end w-full">
-            <button
-              onClick={() => setShowCommentForm(!showCommentForm)}
-              className="mt-2 text-sm text-x-blue hover:text-x-blue-hover font-medium transition-colors"
-            >
-              {showCommentForm ? "Cancel" : "Add a comment"}
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Comment Form */}
-      {showCommentForm && (
-        <div className="mt-4 pt-4 border-t border-x-border ml-auto max-w-lg">
-          <form onSubmit={handleComment} className="flex space-x-3 w-full">
-            <div
-              className={`${getUserColor(
-                user?.id,
-                user?.username
-              )} text-white w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0 shadow-lg`}
-            >
-              {user?.displayName?.charAt(0).toUpperCase() ||
-                user?.username?.charAt(0).toUpperCase()}
-            </div>
-            <div className="flex-1 min-w-0">
-              <textarea
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                placeholder="Write a comment..."
-                className="w-full p-2 bg-x-black/50 border border-x-border text-x-white placeholder-x-gray rounded-lg resize-none focus:ring-2 focus:ring-x-blue focus:border-x-blue min-w-0"
-                rows="2"
-                maxLength="500"
-              />
-              <div className="flex justify-between items-center mt-2">
-                <span className="text-xs text-x-gray">
-                  {newComment.length}/500
-                </span>
-                <div className="space-x-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowCommentForm(false);
-                      setNewComment("");
-                    }}
-                    className="btn-secondary text-sm"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={!newComment.trim() || loading}
-                    className="btn-primary text-sm disabled:opacity-50"
-                  >
-                    {loading ? "Posting..." : "Comment"}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
-      )}
 
       {/* Share Modal */}
       <ShareModal

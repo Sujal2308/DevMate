@@ -41,6 +41,7 @@ import AdminRoute from "./components/routing/AdminRoute";
 import AdminDashboard from "./pages/AdminDashboard";
 import Communities from "./pages/Communities";
 import CommunityPage from "./pages/CommunityPage";
+import DiscussionPage from "./pages/DiscussionPage";
 function ScrollToTop() {
   const { pathname } = useLocation();
 
@@ -135,6 +136,14 @@ function AppContent() {
                       element={
                         <ProtectedRoute>
                           <PostDetail />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/post/:id/discussion"
+                      element={
+                        <ProtectedRoute>
+                          <DiscussionPage />
                         </ProtectedRoute>
                       }
                     />

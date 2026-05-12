@@ -81,6 +81,15 @@ const postSchema = new mongoose.Schema(
           required: true,
           maxlength: 500,
         },
+        mediaUrl: {
+          type: String,
+          default: "",
+        },
+        mediaType: {
+          type: String,
+          enum: ["image", "gif", ""],
+          default: "",
+        },
         createdAt: {
           type: Date,
           default: Date.now,
