@@ -260,7 +260,7 @@ router.post(
       if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
       }
-      const { text, mediaUrl: bodyMediaUrl, mediaType: bodyMediaType } = req.body;
+      const { text, mediaUrl: bodyMediaUrl, mediaType: bodyMediaType, parentCommentId } = req.body;
       const post = await Post.findById(req.params.id).populate("author");
       if (!post) {
         return res.status(404).json({ message: "Post not found" });
@@ -284,6 +284,7 @@ router.post(
         text: text || "",
         mediaUrl,
         mediaType,
+        parentCommentId: parentCommentId || null,
       };
       post.comments.push(newComment);
       await post.save();

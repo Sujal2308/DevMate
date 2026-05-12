@@ -102,6 +102,10 @@ const postSchema = new mongoose.Schema(
           type: Boolean,
           default: false,
         },
+        parentCommentId: {
+          type: mongoose.Schema.Types.ObjectId,
+          default: null,
+        },
       },
     ],
   },

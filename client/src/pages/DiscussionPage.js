@@ -67,6 +67,7 @@ const CommentThread = ({ comment, postId, onUpdate, depth = 0 }) => {
     try {
       const formData = new FormData();
       formData.append("text", `@${comment.user?.username || "user"} ${replyText.trim()}`);
+      formData.append("parentCommentId", comment._id); // Pass parent ID
       if (selectedImage) {
         formData.append("media", selectedImage);
         formData.append("mediaType", "image");
@@ -103,6 +104,22 @@ const CommentThread = ({ comment, postId, onUpdate, depth = 0 }) => {
     } catch (err) {
       console.error("Delete error:", err);
     }
+  };
+
+  const renderCommentText = (text) => {
+    if (!text) return null;
+    const mentionMatch = text.match(/^(@[a-zA-Z0-9_]+)/);
+    if (mentionMatch) {
+      const mention = mentionMatch[1];
+      const rest = text.slice(mention.length);
+      return (
+        <>
+          <span className="text-[#ff6347] font-bold">{mention}</span>
+          {rest}
+        </>
+      );
+    }
+    return text;
   };
 
   return (
@@ -167,7 +184,7 @@ const CommentThread = ({ comment, postId, onUpdate, depth = 0 }) => {
           <>
             <div className="pl-7 mb-1.5">
               <p className="text-sm text-white/80 leading-relaxed whitespace-pre-wrap break-words">
-                {comment.text}
+                {renderCommentText(comment.text)}
               </p>
               {comment.mediaUrl && (
                 <div className="mt-2 rounded-lg overflow-hidden border border-white/5 max-w-[240px] sm:max-w-[300px]">
@@ -277,6 +294,20 @@ const CommentThread = ({ comment, postId, onUpdate, depth = 0 }) => {
                 </div>
               </form>
             )}
+            {/* Recursive replies */}
+            {comment.replies && comment.replies.length > 0 && (
+              <div className="space-y-0">
+                {comment.replies.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)).map(reply => (
+                  <CommentThread
+                    key={reply._id}
+                    comment={reply}
+                    postId={postId}
+                    onUpdate={onUpdate}
+                    depth={depth + 1}
+                  />
+                ))}
+              </div>
+            )}
           </>
         )}
       </div>
@@ -362,9 +393,31 @@ const DiscussionPage = () => {
 
   const getSortedComments = () => {
     if (!post?.comments) return [];
+    
+    // Filter active comments
     const active = post.comments.filter((c) => !c.deleted);
-    if (sortBy === "oldest") return [...active].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-    return [...active].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    
+    // Build a map of comments
+    const commentMap = {};
+    active.forEach(c => {
+      commentMap[c._id] = { ...c, replies: [] };
+    });
+
+    const rootComments = [];
+    active.forEach(c => {
+      const commentWithReplies = commentMap[c._id];
+      if (c.parentCommentId && commentMap[c.parentCommentId]) {
+        commentMap[c.parentCommentId].replies.push(commentWithReplies);
+      } else {
+        rootComments.push(commentWithReplies);
+      }
+    });
+
+    // Sort top-level comments
+    if (sortBy === "oldest") {
+      return rootComments.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+    }
+    return rootComments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   };
 
   // Strip HTML for preview
@@ -489,19 +542,9 @@ const DiscussionPage = () => {
 
       {/* Add comment form */}
       {user && (
-        <form onSubmit={handleSubmitComment} className="mb-6">
-          <div className="flex gap-3">
-            <div
-              className={`${getUserColor(user?.id, user?.username)} w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0 shadow-lg overflow-hidden`}
-            >
-              {user?.avatar ? (
-                <img src={user.avatar} alt="" className="w-full h-full object-cover" />
-              ) : (
-                user?.displayName?.charAt(0)?.toUpperCase() || user?.username?.charAt(0)?.toUpperCase()
-              )}
-            </div>
-            <div className="flex-1">
-              <div className="bg-white/5 border border-white/10 focus-within:border-purple-500/50 transition-colors relative">
+        <form onSubmit={handleSubmitComment} className="mb-8">
+          <div className="w-full">
+            <div className="bg-white/5 border border-white/10 focus-within:border-purple-500/50 transition-colors relative">
                 <textarea
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
@@ -563,7 +606,6 @@ const DiscussionPage = () => {
                     {submitting ? "Posting..." : "Comment"}
                   </button>
                 </div>
-              </div>
             </div>
           </div>
         </form>
@@ -589,7 +631,7 @@ const DiscussionPage = () => {
               comment={comment}
               postId={post._id}
               onUpdate={handlePostUpdate}
-              depth={comment.text?.startsWith("@") ? 1 : 0}
+              depth={0}
             />
           ))}
         </div>
