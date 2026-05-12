@@ -198,25 +198,28 @@ const News = () => {
   return (
     <div className="min-h-screen bg-x-black text-x-white font-sans">
       {/* Header section with solid blue background */}
-      <div className="bg-x-blue border-b border-x-blue/30 pt-8 pb-6 mb-8 px-4 md:px-6">
+      <div className="bg-x-blue border-b border-x-blue/30 pt-8 pb-6 mb-8 px-4 md:px-6 relative group">
+        {/* Close button */}
+        <button 
+          onClick={() => window.history.back()}
+          className="absolute top-4 right-4 md:top-6 md:right-6 p-2 text-black md:text-x-white/50 hover:text-black md:hover:text-x-white hover:bg-black/10 md:hover:bg-white/10 rounded-full transition-all duration-300"
+          title="Go Back"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
         <div className="max-w-2xl mx-auto">
           <div className="flex items-center gap-4 mb-4">
             <h1 
-              className="text-3xl md:text-5xl font-black text-x-white tracking-tighter" 
+              className="text-4xl md:text-6xl font-black text-x-white tracking-[10px] uppercase italic" 
               style={{ 
-                fontFamily: "'Space Grotesk', sans-serif"
+                fontFamily: "'Outfit', sans-serif"
               }}
             >
               Dev News
             </h1>
-            <img 
-              src="/icons/fox.png" 
-              alt="Fox" 
-              className="w-10 h-10 md:w-16 md:h-16 object-contain -translate-y-1.5 md:-translate-y-3"
-              width="64"
-              height="64"
-              fetchpriority="high"
-            />
           </div>
           <p className="text-x-white text-base md:text-lg opacity-90">
             Stay updated with the latest trends in development and technology
