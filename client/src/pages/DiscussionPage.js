@@ -329,6 +329,8 @@ const DiscussionPage = () => {
   const [imagePreview, setImagePreview] = useState("");
   const fileInputRef = React.useRef(null);
 
+  const [showRules, setShowRules] = useState(false);
+
   const fetchPost = useCallback(async () => {
     try {
       const res = await axios.get(`/api/posts/${id}`);
@@ -506,6 +508,52 @@ const DiscussionPage = () => {
         >
           View Full Post →
         </Link>
+      </div>
+
+      {/* Discussion Rules Dropdown */}
+      <div className={`mb-8 overflow-hidden border border-white/5 transition-all duration-500 ease-in-out ${showRules ? 'bg-white rounded-xl shadow-2xl' : 'bg-white/[0.01] rounded-lg'}`}>
+        <button
+          onClick={() => setShowRules(!showRules)}
+          className={`w-full flex items-center justify-between px-4 py-3 text-[11px] font-black uppercase tracking-widest transition-colors duration-500 ${showRules ? 'text-gray-500 hover:bg-gray-50' : 'text-white/40 hover:bg-white/[0.02]'}`}
+        >
+          <div className="flex items-center gap-2">
+            <svg className={`w-3.5 h-3.5 transition-colors duration-500 ${showRules ? 'text-amber-600' : 'text-amber-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            Discussion Rules & Guidelines
+          </div>
+          <svg 
+            className={`w-3.5 h-3.5 transition-all duration-500 ${showRules ? 'rotate-180 text-gray-400' : ''}`} 
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        
+        <div className={`grid transition-all duration-500 ease-in-out ${showRules ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
+          <div className="overflow-hidden">
+            <div className="px-4 pb-5">
+              <div className="space-y-4 pt-2 border-t border-gray-100">
+                {[
+                  { title: "Respectful Communication", desc: "Treat others with the same respect you'd want. No personal attacks or harassment." },
+                  { title: "Relevant Discussion", desc: "Keep comments focused on the post content or related technical topics." },
+                  { title: "No Spam/Self-Promotion", desc: "Avoid posting links to your own products or repetitive promotional content." },
+                  { title: "Clean Language", desc: "Avoid excessive profanity and maintain a professional developer environment." }
+                ].map((rule, idx) => (
+                  <div key={idx} className="flex gap-4">
+                    <div className="text-[12px] sm:text-sm font-black text-purple-600/50 mt-0.5">{idx + 1}.</div>
+                    <div>
+                      <h4 className="text-[13px] sm:text-base font-bold text-gray-900 leading-tight mb-1">{rule.title}</h4>
+                      <p className="text-[11px] sm:text-[13px] text-gray-600 leading-relaxed font-medium">{rule.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Discussion header */}
