@@ -35,7 +35,7 @@ import FollowersList from "./pages/FollowersList";
 import FollowingList from "./pages/FollowingList"; // Import FollowingList
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
-import News from "./pages/News"; // Import News page
+import News from "./pages/News";
 import ProjectsList from "./pages/ProjectsList";
 import AdminRoute from "./components/routing/AdminRoute";
 import AdminDashboard from "./pages/AdminDashboard";

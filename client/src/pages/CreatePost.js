@@ -645,23 +645,33 @@ const CreatePost = () => {
 
           {/* Repo Input Field */}
           {showRepoInput && (
-            <div className="mb-6 space-y-1.5">
-              <div className="border-none rounded-none bg-[#000000]">
+            <div className="mb-6 space-y-4 p-5 bg-[#d97706]/10 backdrop-blur-sm border-2 border-white rounded-2xl relative group/repo">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowRepoInput(false);
+                  setFormData({ ...formData, repoUrl: "", repoTitle: "" });
+                }}
+                className="absolute -top-3 -right-3 bg-white hover:bg-gray-200 text-black w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shadow-lg transform transition-transform group-hover/repo:scale-110 z-10 border border-black/10"
+              >
+                ✕
+              </button>
+              <div className="border-b border-white/40 bg-transparent transition-all mb-4">
                 <input
                   type="text"
                   name="repoTitle"
                   placeholder="Repository Title (e.g., My Portfolio Website)"
-                  className="w-full bg-transparent border-none text-x-white placeholder-x-gray px-4 py-3 text-sm font-mono focus:outline-none transition-all"
+                  className="w-full bg-transparent border-none text-x-white placeholder-x-gray px-2 py-3 text-lg font-black focus:outline-none focus:ring-0 transition-none"
                   value={formData.repoTitle}
                   onChange={handleChange}
                 />
               </div>
-              <div className="relative border-none rounded-none bg-[#000000]">
+              <div className="relative border-b border-white/40 bg-transparent transition-all">
                 <input
                   type="url"
                   name="repoUrl"
                   placeholder="GitHub Repository URL"
-                  className="w-full bg-transparent border-none text-x-white placeholder-x-gray px-4 py-3 pr-12 text-sm font-mono focus:outline-none transition-all"
+                  className="w-full bg-transparent border-none text-x-white placeholder-x-gray px-2 py-3 pr-12 text-base font-mono focus:outline-none focus:ring-0 transition-none"
                   value={formData.repoUrl}
                   onChange={handleChange}
                 />
@@ -692,12 +702,22 @@ const CreatePost = () => {
 
           {/* Poll Input Field */}
           {showPollInput && (
-            <div className="mb-6 space-y-4">
-              <div className="border-none rounded-full bg-[#000000] overflow-hidden">
+            <div className="mb-6 space-y-4 p-5 bg-[#1d9bf0]/10 backdrop-blur-sm border-2 border-white rounded-2xl relative group/poll">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowPollInput(false);
+                  setFormData({ ...formData, pollQuestion: "", pollOptions: ["", ""] });
+                }}
+                className="absolute -top-3 -right-3 bg-white hover:bg-gray-200 text-black w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shadow-lg transform transition-transform group-hover/poll:scale-110 z-10 border border-black/10"
+              >
+                ✕
+              </button>
+              <div className="border-b-2 border-white bg-transparent mb-6">
                 <input
                   type="text"
                   placeholder="Ask a question..."
-                  className="w-full bg-transparent border-none text-x-white placeholder-x-gray px-8 py-4 text-base font-bold focus:outline-none transition-all"
+                  className="w-full bg-transparent border-none text-x-white placeholder-x-gray px-2 py-4 text-xl font-black focus:outline-none focus:ring-0 transition-none"
                   value={formData.pollQuestion}
                   onChange={(e) =>
                     setFormData({ ...formData, pollQuestion: e.target.value })
@@ -708,12 +728,12 @@ const CreatePost = () => {
                 {formData.pollOptions.map((opt, idx) => (
                   <div
                     key={idx}
-                    className="relative border-none rounded-full bg-[#0a0a0a]/50 overflow-hidden"
+                    className="relative border-b border-white/30 bg-transparent group/opt"
                   >
                     <input
                       type="text"
                       placeholder={`Option ${idx + 1}`}
-                      className="w-full bg-transparent border-none text-x-white placeholder-x-gray px-8 py-3.5 pr-14 text-sm font-medium focus:outline-none transition-all"
+                      className="w-full bg-transparent border-none text-x-white placeholder-x-gray px-2 py-3 pr-14 text-sm font-bold focus:outline-none focus:ring-0 transition-none"
                       value={opt}
                       onChange={(e) => {
                         const newOpts = [...formData.pollOptions];
@@ -758,7 +778,7 @@ const CreatePost = () => {
                         pollOptions: [...formData.pollOptions, ""],
                       })
                     }
-                    className="text-[11px] font-black uppercase tracking-widest text-x-blue hover:text-white transition-colors pl-8"
+                    className="text-[11px] font-black uppercase tracking-widest text-x-blue hover:text-white transition-colors mt-2 block w-fit"
                   >
                     + Add Option
                   </button>
@@ -793,7 +813,7 @@ const CreatePost = () => {
                   setMedia(null);
                   setMediaPreview(null);
                 }}
-                className="absolute -top-3 -right-3 bg-red-600 hover:bg-red-700 text-white w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shadow-lg transform transition-transform group-hover/preview:scale-110"
+                className="absolute -top-3 -right-3 bg-white hover:bg-gray-200 text-black w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shadow-lg transform transition-transform group-hover/preview:scale-110 border border-black/10"
               >
                 ✕
               </button>
@@ -1152,12 +1172,18 @@ const CreatePost = () => {
 
                   {/* Repository Link Preview */}
                   {formData.repoUrl && (
-                    <div className="inline-flex items-center space-x-1.5 text-x-white group px-1">
-                      <svg
-                        className="w-4 h-4 text-x-white"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
+                    <div className="mb-2 px-1">
+                      <a 
+                        href={formData.repoUrl} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="inline-flex items-center gap-2 text-x-white hover:text-x-blue transition-all group py-1 px-1 whitespace-nowrap"
                       >
+                        <svg
+                          className="w-5 h-5 shrink-0"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                        >
                         <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
                       </svg>
                       <span className="text-xs font-black truncate">
@@ -1178,7 +1204,8 @@ const CreatePost = () => {
                           d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                         />
                       </svg>
-                    </div>
+                    </a>
+                  </div>
                   )}
 
                   {/* Media Preview Section */}
@@ -1200,7 +1227,7 @@ const CreatePost = () => {
 
                   {/* Poll Preview Section */}
                   {formData.pollQuestion && (
-                    <div className="w-full mt-4 p-5 bg-black border-2 border-dashed border-white/10 rounded-none space-y-4">
+                    <div className="w-full mt-4 p-5 bg-[#1d9bf0]/10 backdrop-blur-sm border-2 border-white rounded-xl space-y-4">
                       <h4 className="text-sm font-black text-x-white tracking-tight leading-snug">
                         {formData.pollQuestion}
                       </h4>
@@ -1209,7 +1236,7 @@ const CreatePost = () => {
                           .filter((opt) => opt.trim())
                           .map((opt, idx) => (
                             <div key={idx} className="group relative">
-                              <div className="w-full h-10 bg-white/5 border border-white/5 rounded-full flex items-center px-4 transition-all">
+                              <div className="w-full h-10 bg-white/10 border border-white/10 rounded-full flex items-center px-4 transition-all">
                                 <span className="text-xs font-bold text-x-gray group-hover:text-x-white transition-colors">
                                   {opt}
                                 </span>

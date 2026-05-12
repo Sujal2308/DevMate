@@ -157,7 +157,7 @@ pre.code,
   }
 
   .x-main {
-    max-width: 112rem; /* 1792px - matches Edit Profile page */
+    max-width: 44rem; /* 704px - Consistent with feed and other pages */
     width: 100%;
     position: relative;
     margin: 0 auto; /* Center the content */
@@ -1196,17 +1196,7 @@ aside.xl\:w-80 {
 }
 
 /* Force positioning for TrendingNews - very close to main content */
-aside {
-  position: fixed !important;
-  top: 4rem !important;
-  left: calc(
-    420px + 640px + 10px
-  ) !important; /* Position just 10px after main content */
-  width: 320px !important;
-  height: calc(100vh - 4rem) !important;
-  z-index: 999 !important;
-  background: transparent !important;
-}
+/* aside positioning handled by component classes and flex layout */
 
 /* Prevent custom scrollbars on layout containers - force browser default */
 .x-container,
