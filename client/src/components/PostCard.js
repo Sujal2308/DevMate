@@ -962,20 +962,49 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
       </div>
 
       {/* Post Actions */}
-      <div className="flex items-center justify-start space-x-4 sm:space-x-6 py-2 sm:py-3 px-2 sm:px-4 border-t border-x-border">
-        <button
-          onClick={handleLike}
-          className={`flex items-center space-x-1 sm:space-x-2 text-sm ${
-            isLiked ? "text-red-500" : "text-x-gray hover:text-red-500"
-          } transition-colors relative`}
-          style={{ outline: "none" }}
-        >
-          <span className="relative flex items-center justify-center">
+      {/* Post Actions */}
+      <div className="flex items-center py-2 sm:py-3 px-2 sm:px-4 border-t border-x-border">
+        {/* Like, Share, Save wrapped in pill-shaped border */}
+        <div className="flex items-center space-x-4 sm:space-x-6 border border-x-border rounded-full px-3 sm:px-4 py-2 ml-[-12px] sm:ml-[-20px]">
+          <button
+            onClick={handleLike}
+            className={`flex items-center space-x-1 sm:space-x-2 text-sm ${
+              isLiked ? "text-red-500" : "text-x-gray hover:text-red-500"
+            } transition-colors relative`}
+            style={{ outline: "none" }}
+          >
+            <span className="relative flex items-center justify-center">
+              <svg
+                className={`w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 ${
+                  likeAnimating ? "scale-125 animate-like-pop" : ""
+                }`}
+                fill={isLiked ? "currentColor" : "none"}
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                />
+              </svg>
+              {likeAnimating && (
+                <span className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <span className="block w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-red-400/30 animate-like-burst"></span>
+                </span>
+              )}
+            </span>
+            <span className="text-x-white font-medium">{post.likes.length}</span>
+          </button>
+
+          <button
+            onClick={() => setShowShareModal(true)}
+            className="flex items-center space-x-1 sm:space-x-2 text-sm text-x-gray hover:text-purple-500 transition-colors"
+          >
             <svg
-              className={`w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 ${
-                likeAnimating ? "scale-125 animate-like-pop" : ""
-              }`}
-              fill={isLiked ? "currentColor" : "none"}
+              className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500"
+              fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
@@ -983,108 +1012,68 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
-                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"
               />
             </svg>
-            {likeAnimating && (
-              <span className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <span className="block w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-red-400/30 animate-like-burst"></span>
-              </span>
-            )}
-          </span>
-          <span className="text-x-white font-medium">{post.likes.length}</span>
-        </button>
+          </button>
 
-        <button
-          onClick={handleToggleComments}
-          className="flex items-center space-x-1 sm:space-x-2 text-sm text-x-gray hover:text-purple-500 transition-colors"
-        >
-          <svg
-            className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+          <button
+            onClick={handleSaveClick}
+            className={`flex items-center space-x-1 sm:space-x-2 text-sm ${
+              isSaved ? "text-x-green" : "text-x-gray hover:text-x-green"
+            } transition-colors relative`}
+            style={{ outline: "none" }}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-            />
-          </svg>
-          <span className="text-x-white font-medium hidden sm:inline">
-            {showComments
-              ? "Hide Comments"
-              : `${post.comments.filter((c) => !c.deleted).length} Comments`}
-          </span>
-          <span className="text-x-white font-medium sm:hidden">
-            {post.comments.filter((c) => !c.deleted).length}
-          </span>
-        </button>
-
-        <button
-          onClick={() => setShowShareModal(true)}
-          className="flex items-center space-x-1 sm:space-x-2 text-sm text-x-gray hover:text-purple-500 transition-colors"
-        >
-          <svg
-            className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+            <span className="relative flex items-center justify-center">
+              <svg
+                className={`w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 ${
+                  saveAnimating ? "scale-125 animate-like-pop" : ""
+                }`}
+                fill={isSaved ? "currentColor" : "none"}
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+              </svg>
+              {saveAnimating && (
+                <span className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <span className="block w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-green-400/30 animate-like-burst"></span>
+                </span>
+              )}
+            </span>
+          </button>
+        </div>
+        {/* Right side actions */}
+        <div className="ml-auto mr-[-8px] sm:mr-[-16px]">
+          <button
+            onClick={handleToggleComments}
+            className="flex items-center space-x-2 text-sm text-x-gray hover:text-purple-500 transition-colors border border-x-border rounded-full px-3 sm:px-4 py-2"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"
-            />
-          </svg>
-          <span className="text-x-white font-medium hidden sm:inline">
-            Share
-          </span>
-        </button>
-
-        <button
-          onClick={handleSaveClick}
-          className={`flex items-center space-x-1 sm:space-x-2 text-sm ${
-            isSaved ? "text-x-green" : "text-x-gray hover:text-x-green"
-          } transition-colors relative`}
-          style={{ outline: "none" }}
-        >
-          <span className="relative flex items-center justify-center">
             <svg
-              className={`w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 ${
-                saveAnimating ? "scale-125 animate-like-pop" : ""
-              }`}
-              fill={isSaved ? "currentColor" : "none"}
+              className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500"
+              fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M7 8h10M7 12h4m1 8l-4-2H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v12a2 2 0 01-2 2h-3l-4 2z"
+              />
             </svg>
-            {saveAnimating && (
-              <span className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <span className="block w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-green-400/30 animate-like-burst"></span>
-              </span>
-            )}
-          </span>
-          <span className="text-x-white font-medium hidden sm:inline">
-            {isSaved ? "Saved" : "Save"}
-          </span>
-        </button>
-
-        <Link
-          to={`/post/${post._id}`}
-          className="text-sm text-x-gray hover:text-x-blue transition-colors"
-        >
-          <span className="hidden sm:inline">View Details</span>
-          <span className="sm:hidden">Details</span>
-        </Link>
+            <span className="text-x-white font-medium">
+              {showComments
+                ? "Hide Discussion"
+                : `${post.comments.filter((c) => !c.deleted).length} Discussion`}
+            </span>
+          </button>
+        </div>
       </div>
 
       {/* Comments Section */}
       {showComments && post.comments.filter((c) => !c.deleted).length > 0 && (
-        <div className="mt-4 pt-4 border-t border-x-border">
+        <div className="mt-4 pt-4 border-t border-x-border ml-auto max-w-lg">
           <div className="space-y-3">
             {getVisibleComments()
               .filter((c) => !c.deleted)
@@ -1116,7 +1105,7 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
           )}
 
           {/* Add Comment Button */}
-          <div className="mt-3 pt-3 border-t border-x-border/30">
+          <div className="mt-3 pt-3 border-t border-x-border/30 flex justify-end">
             <button
               onClick={() => setShowCommentForm(!showCommentForm)}
               className="text-sm text-x-blue hover:text-x-blue-hover font-medium transition-colors"
@@ -1129,22 +1118,24 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
 
       {/* Show "No comments yet" message when comments are visible but empty */}
       {showComments && post.comments.filter((c) => !c.deleted).length === 0 && (
-        <div className="mt-4 pt-4 border-t border-x-border text-center">
+        <div className="mt-4 pt-4 border-t border-x-border text-center ml-auto max-w-lg">
           <p className="text-sm text-x-gray">
-            No comments yet. Be the first to comment!
+            No discussion yet. Be the first to start!
           </p>
-          <button
-            onClick={() => setShowCommentForm(!showCommentForm)}
-            className="mt-2 text-sm text-x-blue hover:text-x-blue-hover font-medium transition-colors"
-          >
-            {showCommentForm ? "Cancel" : "Add a comment"}
-          </button>
+          <div className="flex justify-end w-full">
+            <button
+              onClick={() => setShowCommentForm(!showCommentForm)}
+              className="mt-2 text-sm text-x-blue hover:text-x-blue-hover font-medium transition-colors"
+            >
+              {showCommentForm ? "Cancel" : "Add a comment"}
+            </button>
+          </div>
         </div>
       )}
 
       {/* Comment Form */}
       {showCommentForm && (
-        <div className="mt-4 pt-4 border-t border-x-border">
+        <div className="mt-4 pt-4 border-t border-x-border ml-auto max-w-lg">
           <form onSubmit={handleComment} className="flex space-x-3 w-full">
             <div
               className={`${getUserColor(
