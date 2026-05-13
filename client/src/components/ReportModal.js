@@ -67,7 +67,7 @@ const ReportModal = ({ isOpen, onClose, postId }) => {
       />
 
       {/* Modal Content */}
-      <div className="relative bg-[#080808] border border-red-500/20 w-full max-w-md shadow-[0_0_50px_rgba(239,68,68,0.1)] animate-scale-in overflow-hidden">
+      <div className="relative bg-[#080808] border-2 border-white w-full max-w-md shadow-[0_0_50px_rgba(239,68,68,0.1)] animate-scale-in overflow-hidden">
         {/* Glow effect at top */}
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-red-500 to-transparent opacity-50" />
 

@@ -61,6 +61,43 @@ router.post("/collections", auth, async (req, res) => {
   }
 });
 
+// Update collection name
+router.put("/collections/:collectionId", auth, async (req, res) => {
+  try {
+    const { name } = req.body;
+    if (!name) return res.status(400).json({ message: "Collection name is required" });
+
+    const user = await User.findById(req.user._id);
+    const collection = user.savedCollections.id(req.params.collectionId);
+    if (!collection) return res.status(404).json({ message: "Collection not found" });
+
+    collection.name = name;
+    await user.save();
+
+    res.json({ collections: user.savedCollections });
+  } catch (error) {
+    console.error("Update collection error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Delete collection
+router.delete("/collections/:collectionId", auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    const collection = user.savedCollections.id(req.params.collectionId);
+    if (!collection) return res.status(404).json({ message: "Collection not found" });
+
+    user.savedCollections.pull(req.params.collectionId);
+    await user.save();
+
+    res.json({ collections: user.savedCollections });
+  } catch (error) {
+    console.error("Delete collection error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 // Save or unsave a post (supports specific collection)
 router.put("/save/:postId", auth, async (req, res) => {
   try {

@@ -9,11 +9,25 @@
   body {
     @apply bg-x-black text-x-white font-x overflow-x-hidden;
     margin: 0;
-    font-family: "Poppins", "Helvetica Neue", Arial, sans-serif;
+    font-family: "Space Grotesk", "Inter", "Helvetica Neue", Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     width: 100%;
     max-width: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button, 
+  a, 
+  input, 
+  textarea, 
+  [role="button"] {
+    -webkit-tap-highlight-color: transparent;
+    outline: none !important;
+    &:focus {
+      outline: none !important;
+      box-shadow: none !important;
+    }
   }
 
   .lobster-regular {
@@ -53,6 +67,15 @@
 /* Enable smooth scrolling for all viewports */
 html {
   scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar Hide Utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 /* News page specific styles */

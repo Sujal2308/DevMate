@@ -640,59 +640,59 @@ const Profile = () => {
       {showFullProfile ? (
         <>
           {/* Minimalist Info Boxes Bar */}
-          <div className="flex flex-row items-center justify-between gap-4 mb-8 w-full">
-            {/* Skills Box */}
+          <div className="flex flex-wrap items-center justify-center gap-3 mb-8 w-full">
+            {/* Skills Pill */}
             <button 
               onClick={() => {
                 setShowSkills(!showSkills);
                 if (!showSkills) setShowSocials(false);
               }}
-              className={`flex-1 ${showSkills ? 'bg-x-blue border-solid border-x-blue shadow-[0_0_20px_rgba(29,155,240,0.4)]' : 'bg-black border-dashed border-white/20'} border rounded-none p-4 sm:p-6 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:bg-x-blue hover:border-solid hover:border-x-blue group`}
+              className={`flex-1 min-w-[120px] ${showSkills ? 'bg-x-blue border-solid border-x-blue shadow-[0_0_20px_rgba(29,155,240,0.3)]' : 'bg-white/5 border-white/10'} border rounded-full py-3 px-6 flex items-center justify-center gap-3 transition-all duration-300 hover:bg-x-blue hover:border-solid hover:border-x-blue group active:scale-95`}
             >
               <img 
                 src="/icons/skills.png" 
                 alt="Skills" 
-                className="w-10 h-10 sm:w-12 sm:h-12 object-contain transition-transform group-hover:scale-110" 
-                width="48"
-                height="48"
+                className="w-5 h-5 object-contain transition-transform group-hover:scale-110" 
+                width="20"
+                height="20"
                 loading="lazy"
               />
-              <span className={`text-[10px] sm:text-xs font-bold ${showSkills ? 'text-white' : 'text-x-white'} group-hover:text-white font-space uppercase tracking-[max(0.2em,2px)] opacity-70 group-hover:opacity-100`}>Skills</span>
+              <span className={`text-[11px] font-bold ${showSkills ? 'text-white' : 'text-x-white'} group-hover:text-white font-space uppercase tracking-widest`}>Skills</span>
             </button>
 
-            {/* Projects Box */}
+            {/* Projects Pill */}
             <Link 
               to={`/profile/${profileUser.username}/projects`}
-              className="flex-1 bg-black border border-dashed border-white/20 rounded-none p-4 sm:p-6 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:bg-x-blue hover:border-solid hover:border-x-blue group"
+              className="flex-1 min-w-[120px] bg-white/5 border border-white/10 rounded-full py-3 px-6 flex items-center justify-center gap-3 transition-all duration-300 hover:bg-x-blue hover:border-solid hover:border-x-blue group active:scale-95"
             >
               <img 
                 src="/icons/projects.png" 
                 alt="Projects" 
-                className="w-10 h-10 sm:w-12 sm:h-12 object-contain transition-transform group-hover:scale-110" 
-                width="48"
-                height="48"
+                className="w-5 h-5 object-contain transition-transform group-hover:scale-110" 
+                width="20"
+                height="20"
                 loading="lazy"
               />
-              <span className="text-[10px] sm:text-xs font-bold text-x-white group-hover:text-white font-space uppercase tracking-[max(0.2em,2px)] opacity-70 group-hover:opacity-100">Projects</span>
+              <span className="text-[11px] font-bold text-x-white group-hover:text-white font-space uppercase tracking-widest">Projects</span>
             </Link>
 
-            {/* Socials Box */}
+            {/* Socials Pill */}
             <button 
               onClick={() => {
                 setShowSocials(!showSocials);
                 if (!showSocials) setShowSkills(false);
               }}
-              className={`flex-1 ${showSocials ? 'bg-x-blue border-solid border-x-blue shadow-[0_0_20px_rgba(29,155,240,0.4)]' : 'bg-black border-dashed border-white/20'} border rounded-none p-4 sm:p-6 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:bg-x-blue hover:border-solid hover:border-x-blue group`}
+              className={`flex-1 min-w-[120px] ${showSocials ? 'bg-x-blue border-solid border-x-blue shadow-[0_0_20px_rgba(29,155,240,0.3)]' : 'bg-white/5 border-white/10'} border rounded-full py-3 px-6 flex items-center justify-center gap-3 transition-all duration-300 hover:bg-x-blue hover:border-solid hover:border-x-blue group active:scale-95`}
             >
               <img 
                 src="/icons/links.png" 
                 alt="Socials" 
-                className="w-10 h-10 sm:w-12 sm:h-12 object-contain transition-transform group-hover:scale-110" 
-                width="48"
-                height="48"
+                className="w-5 h-5 object-contain transition-transform group-hover:scale-110" 
+                width="20"
+                height="20"
                 loading="lazy"
               />
-              <span className={`text-[10px] sm:text-xs font-bold ${showSocials ? 'text-white' : 'text-x-white'} group-hover:text-white font-space uppercase tracking-[max(0.2em,2px)] opacity-70 group-hover:opacity-100`}>Socials</span>
+              <span className={`text-[11px] font-bold ${showSocials ? 'text-white' : 'text-x-white'} group-hover:text-white font-space uppercase tracking-widest`}>Socials</span>
             </button>
           </div>
 

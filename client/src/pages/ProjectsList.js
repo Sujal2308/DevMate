@@ -91,9 +91,9 @@ const ProjectsList = () => {
           </div>
           <Link 
             to={`/profile/${username}`}
-            className="p-2 border border-white/20 hover:border-white/60 transition-colors group"
+            className="p-2 border-none transition-colors group"
           >
-            <svg className="w-5 h-5 text-white/60 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-7 h-7 text-white hover:text-white/80 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </Link>
