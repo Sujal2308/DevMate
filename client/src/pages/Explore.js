@@ -40,6 +40,8 @@ const useWindowDimensions = () => {
 
 const Explore = () => {
   const [users, setUsers] = useState([]);
+  const [posts, setPosts] = useState([]);
+  const [searchType, setSearchType] = useState("all"); // "all", "people", "posts"
   const [loading, setLoading] = useState(true);
   const [searchLoading, setSearchLoading] = useState(false); // New search loading state
   const [error, setError] = useState("");
@@ -256,20 +258,26 @@ const Explore = () => {
     };
   }, [searchTerm]);
 
-  const fetchUsers = useCallback(async () => {
+  const fetchSearchResults = useCallback(async () => {
     try {
-      // Only set main loading if this is not a search operation
       if (!searchLoading) {
         setLoading(true);
       }
-      const params = new URLSearchParams();
-      if (debouncedSearchTerm) params.append("search", debouncedSearchTerm);
+      
+      const q = debouncedSearchTerm.trim();
+      if (!q) {
+        setUsers([]);
+        setPosts([]);
+        setLoading(false);
+        return;
+      }
 
-      const response = await axios.get(`/api/users?${params.toString()}`);
-      setUsers(response.data);
+      const response = await axios.get(`/api/search?q=${encodeURIComponent(q)}`);
+      setUsers(response.data.users || []);
+      setPosts(response.data.posts || []);
     } catch (error) {
-      setError("Failed to fetch users");
-      console.error("Fetch users error:", error);
+      setError("Failed to fetch search results");
+      console.error("Fetch search error:", error);
     } finally {
       if (!searchLoading) {
         setLoading(false);
@@ -277,10 +285,10 @@ const Explore = () => {
     }
   }, [debouncedSearchTerm, searchLoading]);
 
-  // Fetch users when search parameters change
+  // Fetch results when search parameters change
   useEffect(() => {
-    fetchUsers();
-  }, [fetchUsers]);
+    fetchSearchResults();
+  }, [fetchSearchResults]);
 
   // Skills filter logic removed
 
@@ -302,7 +310,7 @@ const Explore = () => {
   return (
     <div
       ref={rootContainerRef}
-      className={`w-full max-w-2xl mx-auto py-1 sm:py-2 lg:py-6 px-2 sm:px-3 lg:px-6 pb-6 lg:pb-8 explore-root-container bg-gradient-to-br from-x-dark/10 to-x-dark/5`}
+      className={`w-full max-w-2xl mx-auto px-0 py-0 pb-6 lg:pb-8 explore-root-container bg-gradient-to-br from-x-dark/10 to-x-dark/5`}
       style={{
         minHeight: isMobile ? "100vh" : "auto",
         height: "auto",
@@ -312,10 +320,18 @@ const Explore = () => {
       }}
     >
 
+
+      {/* Header Section */}
+      <div className="px-2 sm:px-3 lg:px-6 pt-6 mb-2">
+        <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tighter" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+          Your search space
+        </h1>
+      </div>
+
       {/* Search and Filter Controls - Fixed position on mobile when keyboard active */}
       <div
         ref={searchContainerRef}
-        className={`search-control-panel p-2 sm:p-3 lg:p-6 mb-1 sm:mb-2 lg:mb-4 mt-4-mobile overflow-x-hidden max-w-full`}
+        className={`search-control-panel p-2 sm:p-3 lg:p-6 mb-1 sm:mb-2 lg:mb-4 mt-2 overflow-x-hidden max-w-full`}
         style={{
           zIndex: isKeyboardOpen ? 50 : "auto",
           position: isKeyboardOpen ? "sticky" : "relative",
@@ -326,13 +342,6 @@ const Explore = () => {
         <div className="flex flex-col gap-2 sm:gap-3 lg:gap-4">
           <div className="flex flex-col gap-3 sm:gap-4 lg:gap-6">
             <div className="w-full">
-              <label
-                htmlFor="search"
-                className="block text-sm font-bold text-x-white mb-2 sm:mb-3"
-                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-              >
-                Search by name or username
-              </label>
               <div
                 className={
                   !isMobile
@@ -340,7 +349,7 @@ const Explore = () => {
                     : "relative"
                 }
               >
-                {/* Large Search Bar Row */}
+                {/* Animated Glowing Search Bar */}
                 <div className="w-full">
                   <SearchComponent
                     ref={searchInputRef}
@@ -355,8 +364,30 @@ const Explore = () => {
                       }
                     }}
                     clearSearch={() => setSearchTerm("")}
-                    placeholder="Search developers..."
+                    placeholder="Search anything..."
                   />
+                </div>
+
+                {/* Filter Tabs */}
+                <div className="flex items-center gap-2 mt-6">
+                  {[
+                    { id: "all", label: "All" },
+                    { id: "people", label: "People" },
+                    { id: "posts", label: "Posts" },
+                  ].map((tab) => (
+                    <button
+                      key={tab.id}
+                      onClick={() => setSearchType(tab.id)}
+                      className={`px-6 py-2 rounded-lg text-xs font-black tracking-widest transition-all duration-200 border-2 ${
+                        searchType === tab.id
+                          ? "bg-x-blue border-x-blue text-white shadow-lg shadow-x-blue/30 translate-y-[-1px]"
+                          : "bg-black border-white/10 text-x-gray hover:border-white/30 hover:text-white"
+                      }`}
+                      style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                    >
+                      {tab.label.toUpperCase()}
+                    </button>
+                  ))}
                 </div>
               </div>
             </div>
@@ -368,14 +399,12 @@ const Explore = () => {
       <div className={isMobile ? "overflow-x-hidden-mobile" : ""}>
         <div
           ref={resultsContainerRef}
-          className={`results-container ${
+          className={`results-container p-2 sm:p-3 lg:p-6 ${
             isMobile ? "fixed-height-mobile" : ""
           }`}
           style={{
             height: isMobile ? "calc(100vh - 180px)" : "auto", // increased height for more space
             paddingBottom: isMobile ? "0.75rem" : undefined, 
-            paddingLeft: isMobile ? "0.5rem" : undefined,
-            paddingRight: isMobile ? "0.5rem" : undefined,
             overflow: isMobile ? "auto" : "visible",
             contain: isMobile ? "content" : "none",
             transform: "translateZ(0)", // Force GPU acceleration
@@ -402,7 +431,7 @@ const Explore = () => {
                 {error}
               </div>
             </div>
-          ) : users.length === 0 || !shouldShowResults ? (
+          ) : (users.length === 0 && posts.length === 0) || !shouldShowResults ? (
             <div
               className={`text-center py-6 sm:py-10 flex flex-col items-center justify-center${
                 isMobile ? " mt-4 mobile-center-section" : ""
@@ -418,39 +447,41 @@ const Explore = () => {
                 />
               </div>
               <h3 className="text-xl sm:text-2xl font-bold text-x-white mb-3">
-                {debouncedSearchTerm && users.length === 0
-                  ? "No developers found"
-                  : "Find Your Perfect Team"}
+                {debouncedSearchTerm && users.length === 0 && posts.length === 0
+                  ? "No results found"
+                  : "Explore DevMate"}
               </h3>
               <p className="text-x-gray text-sm sm:text-base max-w-md mx-auto px-4">
-                {users.length === 0 && debouncedSearchTerm
+                {users.length === 0 && posts.length === 0 && debouncedSearchTerm
                   ? "Try adjusting your search criteria or explore other keywords."
-                  : "Search for developers by name or username to start collaborating on your next big project!"}
+                  : "Search for developers, skills, or interesting posts to discover the community!"}
               </p>
             </div>
           ) : (
             <>
-              <div className="mb-2 min-h-[100px]">
-                <div className="flex items-center justify-between">
-                  <p className="text-x-gray text-xs sm:text-sm">
-                    <span className="text-x-white font-semibold">
-                      {users.length}
-                    </span>{" "}
-                    developer{users.length !== 1 ? "s" : ""} found
-                    {debouncedSearchTerm && (
-                      <span className="text-x-blue">
-                        {" "}
-                        matching "{debouncedSearchTerm}"
-                      </span>
-                    )}
-                  </p>
-                  <div className="hidden md:block text-xs text-x-gray">
-                    💡 Click on profiles to connect
-                  </div>
-                </div>
+              <div className="mb-6">
+                <p className="text-x-gray text-xs sm:text-sm font-bold tracking-tight">
+                  <span className="text-x-white">
+                    {users.length + posts.length}
+                  </span>{" "}
+                  results found
+                  {debouncedSearchTerm && (
+                    <span className="text-x-blue/60">
+                      {" "}
+                      for "{debouncedSearchTerm}"
+                    </span>
+                  )}
+                </p>
               </div>
 
-              <div className="space-y-2 lg:space-y-4">
+              {/* Users Section */}
+              {users.length > 0 && (searchType === "all" || searchType === "people") && (
+                <div className="mb-10">
+                  <h2 className="text-lg font-bold text-x-white mb-4 flex items-center gap-2">
+                    <span className="w-1.5 h-6 bg-x-blue rounded-full"></span>
+                    Developers
+                  </h2>
+                  <div className="space-y-2 lg:space-y-4">
                 {users.map((user) => {
                   return (
                     <div
@@ -607,7 +638,69 @@ const Explore = () => {
                     </div>
                   );
                 })}
-              </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Posts Section */}
+              {posts.length > 0 && (searchType === "all" || searchType === "posts") && (
+                <div className="mb-10">
+                  <h2 className="text-lg font-bold text-x-white mb-4 flex items-center gap-2">
+                    <span className="w-1.5 h-6 bg-purple-500 rounded-full"></span>
+                    Posts
+                  </h2>
+                  <div className="space-y-3 sm:space-y-4">
+                    {posts.map((post) => (
+                      <Link
+                        key={post._id}
+                        to={`/post/${post._id}`}
+                        className="block bg-black/40 hover:bg-white/5 border-2 border-white rounded-xl p-5 transition-all group relative"
+                      >
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex items-start gap-4 flex-1 min-w-0">
+                            <div className="w-10 h-10 rounded-full overflow-hidden border border-white/20 flex-shrink-0">
+                              {post.author?.avatar ? (
+                                <img src={post.author.avatar} alt="" className="w-full h-full object-cover" />
+                              ) : (
+                                <div className="w-full h-full bg-x-dark flex items-center justify-center font-bold text-white uppercase text-xs">
+                                  {post.author?.username?.charAt(0) || "P"}
+                                </div>
+                              )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center justify-between gap-2">
+                                <h4 className="font-bold text-white text-base sm:text-lg group-hover:text-x-blue transition-colors truncate">
+                                  {post.title}
+                                </h4>
+                                
+                                {/* View Arrow - Aligned with Title */}
+                                <div className="flex-shrink-0 transform group-hover:translate-x-1 transition-transform duration-200">
+                                  <svg className="w-5 h-5 text-x-gray group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                                  </svg>
+                                </div>
+                              </div>
+                              
+                              <div className="flex items-center gap-2 mt-1">
+                                <span className="text-xs text-x-gray font-medium">@{post.author?.username}</span>
+                                <span className="text-[10px] text-white/20">•</span>
+                                <span className="text-[10px] text-white/40 uppercase tracking-tighter">
+                                  {new Date(post.createdAt).toLocaleDateString("en-US", { month: 'short', day: 'numeric' })}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div 
+                          className="text-sm text-x-gray mt-3 line-clamp-2 pl-14 opacity-80 group-hover:opacity-100 transition-opacity"
+                          dangerouslySetInnerHTML={{ __html: post.content }}
+                        />
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
             </>
           )}
         </div>

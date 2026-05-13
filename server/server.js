@@ -174,6 +174,7 @@ app.use("/api", limiter);
 app.use("/api/auth", checkDBConnection, require("./routes/auth"));
 app.use("/api/users", checkDBConnection, require("./routes/users"));
 app.use("/api/posts", checkDBConnection, require("./routes/posts"));
+app.use("/api/search", checkDBConnection, require("./routes/search"));
 app.use(
   "/api/notifications",
   checkDBConnection,
