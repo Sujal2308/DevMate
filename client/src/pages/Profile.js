@@ -569,8 +569,17 @@ const Profile = () => {
               </div>
               {/* Name and Info */}
               <div className="text-left flex flex-col justify-center min-h-[96px] md:min-h-[112px]">
-                <h1 className="text-base sm:text-xl md:text-2xl font-bold text-x-white mb-2 font-space">
-                  {profileUser.displayName || profileUser.username}
+                <h1 className="text-base sm:text-xl md:text-2xl font-bold text-x-white mb-2 font-space flex items-center gap-2">
+                  <span>{profileUser.displayName || profileUser.username}</span>
+                  {profileUser.gender === "Male" && (
+                    <img src="/icons/male.png" alt="Male" className="w-5 h-5 md:w-6 md:h-6 object-contain animate-fade-in" title="Male" />
+                  )}
+                  {profileUser.gender === "Female" && (
+                    <img src="/icons/femenine.png" alt="Female" className="w-5 h-5 md:w-6 md:h-6 object-contain animate-fade-in" title="Female" />
+                  )}
+                  {(profileUser.gender === "Non-binary" || profileUser.gender === "Other") && (
+                    <span className="text-purple-400 text-lg md:text-xl font-black animate-fade-in" title={profileUser.gender}>⚥</span>
+                  )}
                 </h1>
                 <div className="flex gap-8 mb-4">
                   <div className="flex flex-col items-center">

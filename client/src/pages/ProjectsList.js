@@ -74,9 +74,9 @@ const ProjectsList = () => {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div className="w-full max-w-2xl mx-auto pt-0 pb-8 px-0 sm:px-4">
+    <div className="w-full max-w-2xl mx-auto pt-8 pb-8 px-0 sm:px-4">
       {/* Header Card */}
-      <div className="bg-gradient-to-br from-x-dark/95 to-x-dark/70 backdrop-blur-sm border border-x-border/50 pt-8 pb-6 px-4 md:px-6 relative rounded-xl mb-8">
+      <div className="bg-transparent border-none pt-0 pb-4 px-0 relative rounded-none mb-4">
         <div className="mb-6 flex items-center justify-between">
           <div>
             <h1 
