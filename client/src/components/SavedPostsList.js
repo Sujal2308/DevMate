@@ -161,14 +161,14 @@ const SavedPostsList = ({ onBack }) => {
               </div>
             ) : (
               collections.map(c => (
-                <div key={c._id} className="bg-white/5 border-2 border-dashed border-white p-4 rounded-2xl flex items-center justify-between group transition-all">
+                <div key={c._id} className="bg-white/5 border-2 border-dashed border-white p-4 rounded-2xl flex items-center justify-between group transition-all min-w-0 overflow-hidden">
                   {editingId === c._id ? (
-                    <form onSubmit={handleUpdateCollection} className="flex-1 flex items-center gap-2">
+                    <form onSubmit={handleUpdateCollection} className="flex-1 flex items-center gap-2 min-w-0">
                       <input
                         type="text"
                         value={editName}
                         onChange={(e) => setEditName(e.target.value)}
-                        className="flex-1 min-w-0 bg-transparent border-b border-white/30 px-2 py-1.5 text-sm focus:outline-none text-white focus:border-x-blue transition-all"
+                        className="flex-1 w-0 min-w-0 bg-transparent border-b border-white/30 px-2 py-1.5 text-sm focus:outline-none text-white focus:border-x-blue transition-all"
                         autoFocus
                       />
                       <button type="submit" disabled={updating} className="p-2 bg-x-blue text-white rounded-xl shadow-[0_0_10px_rgba(29,155,240,0.3)]">
@@ -221,7 +221,7 @@ const SavedPostsList = ({ onBack }) => {
                   value={newCollectionName}
                   onChange={(e) => setNewCollectionName(e.target.value)}
                   placeholder="Name your new collection..."
-                  className="flex-1 min-w-0 bg-transparent border-none py-2 text-sm text-white placeholder-white/30 focus:outline-none"
+                  className="flex-1 w-0 min-w-0 bg-transparent border-none py-2 text-sm text-white placeholder-white/30 focus:outline-none"
                   autoFocus
                 />
                 <div className="flex items-center gap-1 pr-1">
