@@ -444,14 +444,14 @@ const Profile = () => {
   return (
     <>
     <div
-      className="max-w-2xl mx-auto pt-0 pb-8 px-0 sm:px-4"
+      className="max-w-2xl mx-auto pt-0 pb-8 px-0"
       style={{
         willChange: "scroll-position",
         transform: "translateZ(0)",
       }}
     >
         {/* Profile Info Card */}
-        <div className="bg-transparent border-none sm:bg-transparent sm:border sm:border-white/40 pt-8 pb-6 px-4 md:px-0 relative rounded-none mb-8">
+        <div className="bg-transparent border-none sm:bg-transparent sm:border sm:border-white/40 pt-8 pb-6 px-4 relative rounded-none mb-8">
           {isOwnProfile ? (
             <div className="mb-6">
               <h1 
@@ -521,7 +521,7 @@ const Profile = () => {
           >
             <div className={`flex flex-row items-start text-left mt-2`}>
               {/* Avatar */}
-              <div className="-ml-2 md:-ml-4 mb-0 mr-6 z-20 flex flex-col items-center gap-3">
+              <div className="ml-0 md:-ml-4 mb-0 mr-6 z-20 flex flex-col items-center gap-3">
                 <div 
                   onClick={() => profileUser.avatar && setShowAvatarPreview(true)}
                   className={`bg-black text-white w-24 h-24 md:w-28 md:h-28 rounded-full flex items-center justify-center text-2xl md:text-3xl font-bold border-4 border-x-border/20 shadow-2xl overflow-hidden relative ${profileUser.avatar ? 'cursor-pointer hover:scale-105 active:scale-95 transition-all duration-300' : ''}`}
@@ -852,7 +852,7 @@ const Profile = () => {
           )}
 
           <div className="mb-8">
-            <div className="border-b border-x-border/30 px-4 sm:px-0">
+            <div className="border-b border-x-border/30 px-4">
               <nav className="flex justify-start space-x-8">
                 <button
                   onClick={() => setActiveTab("posts")}
@@ -893,7 +893,7 @@ const Profile = () => {
           {/* Tab Content */}
           {activeTab === "posts" && (
             <div className="w-full max-w-2xl mx-auto px-0 py-2 sm:py-4 mb-24 md:mb-8">
-              <div className="flex items-center justify-start mb-8 border-b border-x-border/30 pb-4 px-4 sm:px-0">
+              <div className="flex items-center justify-start mb-8 border-b border-x-border/30 pb-4 px-4">
                 <h3 
                   className="text-3xl md:text-4xl font-black text-x-white tracking-tighter"
                   style={{ fontFamily: "'Space Grotesk', sans-serif" }}
@@ -1022,7 +1022,7 @@ const Profile = () => {
             </div>
           )}
           {activeTab === "about" && (
-            <div className="bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/30 p-8 animate-fade-in mb-8">
+            <div className="bg-transparent border-none p-4 sm:p-8 animate-fade-in mb-8">
               <div className="flex items-center justify-start mb-8 border-b border-x-border/30 pb-4">
                 <h3 
                   className="text-3xl md:text-4xl font-black text-x-white tracking-tighter"
