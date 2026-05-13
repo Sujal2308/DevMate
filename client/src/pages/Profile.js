@@ -451,7 +451,7 @@ const Profile = () => {
       }}
     >
         {/* Profile Info Card */}
-        <div className="bg-transparent border-none sm:bg-transparent sm:border sm:border-white/40 pt-8 pb-6 px-0 relative rounded-none mb-8">
+        <div className="bg-transparent border-none sm:bg-transparent sm:border sm:border-white/40 pt-8 pb-6 px-4 md:px-0 relative rounded-none mb-8">
           {isOwnProfile ? (
             <div className="mb-6">
               <h1 
