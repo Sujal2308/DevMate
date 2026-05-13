@@ -85,6 +85,11 @@ html {
   border-radius: 0;
   overflow: hidden;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
 }
 
 .code-snippet pre {
@@ -93,6 +98,19 @@ html {
   padding: 16px;
   font-family: "Monaco", "Menlo", "Ubuntu Mono", "Courier New", monospace;
   color: #e5e7eb;
+  max-width: 100% !important;
+  overflow-x: auto !important;
+  white-space: pre !important;
+  word-wrap: normal !important;
+}
+
+/* Specific fix for PrismJS blocks to prevent layout stretching */
+pre[class*="language-"],
+code[class*="language-"] {
+  max-width: 100% !important;
+  width: 100% !important;
+  overflow-x: auto !important;
+  white-space: pre !important;
 }
 
 /* Syntax highlighting colors */
@@ -197,6 +215,15 @@ pre.code,
     border-radius: 1rem;
     padding: 1.5rem;
     backdrop-filter: blur(4px);
+  }
+
+  .card {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
   }
 
   /* Custom button styles */

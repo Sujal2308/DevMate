@@ -102,9 +102,9 @@ function AppContent() {
         // Logged in layout - Responsive 3-column
         <>
           <div className="flex-1 flex flex-col">
-            <div className="x-container flex-1 flex">
+            <div className="x-container flex-1 flex min-w-0">
               <Sidebar />
-              <div className="flex flex-col flex-1">
+              <div className="flex flex-col flex-1 min-w-0">
                 <main className="x-main x-main-mobile flex-1 flex flex-col">
                   <Routes>
                     <Route

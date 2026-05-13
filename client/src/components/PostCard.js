@@ -213,7 +213,7 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
 
 
   return (
-    <div className="card p-3 sm:p-4 lg:p-6">
+    <div className="card w-full max-w-full p-3 sm:p-4 lg:p-6">
       {/* Post Header */}
       <div className="flex items-center justify-between mb-3 sm:mb-4">
         <div className="flex items-center flex-1 min-w-0">
@@ -611,9 +611,8 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
 
 
 
-        {/* Code Section with Expandable Toggle */}
         {post.codeSnippet && (
-          <div className="code-snippet relative bg-black border border-x-border/40 rounded-none overflow-hidden transition-all duration-300">
+          <div className="code-snippet w-full max-w-full relative bg-black border border-x-border/40 rounded-none overflow-hidden transition-all duration-300 min-w-0">
             {/* Toggle Header */}
             <button
               onClick={() => setShowFullCode(!showFullCode)}
@@ -668,10 +667,9 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
               </div>
             </button>
 
-            {/* Code Content */}
             {showFullCode && (
-              <div className="animate-fade-in border-t border-x-border/30">
-                <div className="p-4 overflow-x-auto bg-[#0d0d17]/50">
+              <div className="animate-fade-in border-t border-x-border/30 w-full max-w-full overflow-hidden min-w-0">
+                <div className="p-4 overflow-x-auto bg-[#0d0d17]/50 w-full max-w-full min-w-0">
                   <pre className={`text-sm sm:text-base font-mono text-x-white leading-relaxed language-${post.codeLanguage || 'javascript'}`}>
                     <code className={`language-${post.codeLanguage || 'javascript'}`}>
                       {post.codeSnippet}
