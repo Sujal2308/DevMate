@@ -22,6 +22,7 @@ const CreatePost = () => {
   const { user } = useAuth();
   const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
   const [formData, setFormData] = useState({
+    title: "",
     content: "",
     codeSnippet: "",
     repoUrl: "",
@@ -89,10 +90,6 @@ const CreatePost = () => {
   const handleMediaChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        setError("File size should not exceed 5MB");
-        return;
-      }
       if (error) setError("");
       setMedia(file);
       if (file.type.startsWith("image/")) {
@@ -114,20 +111,11 @@ const CreatePost = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const plainText = getPlainText(formData.content);
-    if (!plainText.trim()) {
-      setError("Post content is required");
-      return;
-    }
-    if (selectedCommunity && !selectedFlair) {
-      setError("Please select a flair for your community post");
-      return;
-    }
-
     try {
       setLoading(true);
 
       const payload = new FormData();
+      payload.append("title", formData.title.trim());
       payload.append("content", formData.content);
       if (formData.codeSnippet.trim()) {
         payload.append("codeSnippet", formData.codeSnippet.trim());
@@ -164,25 +152,18 @@ const CreatePost = () => {
       }
     } catch (error) {
       console.error(error);
-      const apiError = error.response?.data;
-      if (apiError?.errors?.length > 0) {
-        setError(apiError.errors[0].msg);
-      } else {
-        setError(apiError?.message || "Failed to create post");
-      }
-    } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto pt-0 pb-8 px-0 sm:px-4 min-h-screen bg-black">
+    <div className="w-full max-w-4xl mx-auto pt-0 pb-8 px-0 sm:px-4 min-h-screen bg-black">
       {/* Single Column Layout */}
       <div className="space-y-4 sm:space-y-6 lg:space-y-8">
         {/* Form Section */}
         <form
           onSubmit={handleSubmit}
-          className="p-3 sm:p-4 lg:p-8 bg-transparent mx-0 rounded-none relative"
+          className="p-3 sm:p-4 lg:p-4 bg-transparent mx-0 rounded-none relative"
         >
           {/* Integrated Header */}
           <div className="mb-8 border-b border-x-border/20 pb-6">
@@ -385,6 +366,7 @@ const CreatePost = () => {
               onSelect={(id) => {
                 setSelectedCommunity(id);
                 setSelectedFlair(null);
+                setError("");
               }}
             />
           </div>
@@ -400,7 +382,7 @@ const CreatePost = () => {
                 type="button"
                 onClick={() => {
                   if (!selectedCommunity) {
-                    setError("Please select a community first to see available flairs");
+                    setError("Select community first");
                     return;
                   }
                   setShowFlairGrid(!showFlairGrid);
@@ -486,8 +468,8 @@ const CreatePost = () => {
             )}
           </div>
 
-          {/* {error && (
-            <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-6 py-4 rounded-xl backdrop-blur-sm mb-6 mt-4 mx-1">
+          {error && (
+            <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-6 py-4 rounded-xl backdrop-blur-sm mb-6 mt-4 mx-1 animate-fade-in">
               <div className="flex items-center">
                 <svg
                   className="w-5 h-5 mr-2"
@@ -500,10 +482,48 @@ const CreatePost = () => {
                     clipRule="evenodd"
                   />
                 </svg>
-                <span className="text-sm font-bold">{error}</span>
+                <span className="text-sm font-bold tracking-tight">{error}</span>
               </div>
             </div>
-          )} */}
+          )}
+
+          <div className="mb-4 relative group/title">
+            <input
+              type="text"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              placeholder="Title"
+              className="w-full bg-transparent border-b-2 border-white py-4 pr-12 text-2xl font-bold text-white placeholder-white/20 focus:border-x-blue outline-none transition-all"
+              style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+              maxLength={200}
+            />
+            {formData.title && (
+              <button
+                type="button"
+                onClick={() => {
+                  setFormData((prev) => ({ ...prev, title: "" }));
+                  if (error) setError("");
+                }}
+                className="absolute right-0 top-1/2 -translate-y-1/2 p-2 text-white/40 hover:text-white transition-all hover:scale-110 active:scale-95"
+                title="Clear Title"
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2.5}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            )}
+          </div>
 
           <div className="mb-6">
             <TiptapEditor
@@ -1032,11 +1052,8 @@ const CreatePost = () => {
               type="submit"
               disabled={
                 loading ||
-                !(() => {
-                  const d = document.createElement("div");
-                  d.innerHTML = formData.content;
-                  return (d.textContent || "").trim();
-                })()
+                !formData.title.trim() ||
+                !getPlainText(formData.content).trim()
               }
               className={`bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 sm:px-6 py-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-colors duration-200 min-h-[40px] sm:min-h-[44px] h-[40px] sm:h-[44px]`}
               style={{ height: isMobile ? "40px" : "44px" }}
@@ -1149,6 +1166,18 @@ const CreatePost = () => {
                 </div>
 
                 <div className="space-y-6">
+                  {/* Title Preview */}
+                  {formData.title && (
+                    <div className="px-1">
+                      <h2 
+                        className="text-xl sm:text-2xl font-black text-x-white leading-tight tracking-tight"
+                        style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                      >
+                        {formData.title}
+                      </h2>
+                    </div>
+                  )}
+
                   {/* Text Content Section - Minimalist */}
                   {formData.content && (
                     <div className="bg-transparent border-none p-0">

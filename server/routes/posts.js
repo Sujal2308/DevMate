@@ -17,6 +17,10 @@ router.post(
   auth,
   upload.single("media"),
   [
+    body("title")
+      .trim()
+      .isLength({ min: 1, max: 200 })
+      .withMessage("Title is required and must be between 1 and 200 characters"),
     body("content")
       .isLength({ min: 1, max: 2000 })
       .withMessage("Content must be between 1 and 2000 characters"),
@@ -41,6 +45,7 @@ router.post(
       }
 
       const { 
+        title,
         content, 
         codeSnippet, 
         codeLanguage, 
@@ -82,6 +87,7 @@ router.post(
 
       const post = new Post({
         author: req.user._id,
+        title,
         content,
         codeSnippet: codeSnippet || "",
         codeLanguage: codeLanguage || "javascript",

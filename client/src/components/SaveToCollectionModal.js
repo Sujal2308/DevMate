@@ -116,7 +116,10 @@ const SaveToCollectionModal = ({ isOpen, onClose, post, isSaved, onSaveToggle })
       />
 
       {/* Modal Content */}
-      <div className="relative bg-[#080808] w-full max-w-sm rounded-2xl shadow-2xl border-2 border-white flex flex-col overflow-hidden animate-fade-in">
+      <div 
+        className="relative bg-[#080808] w-full max-w-sm rounded-2xl shadow-2xl border-2 border-white flex flex-col overflow-hidden animate-fade-in"
+        style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+      >
         
         <div className="flex items-center justify-between p-4 border-b border-white/10">
           <h2 className="text-lg font-bold text-white tracking-wide">Save to Collection</h2>

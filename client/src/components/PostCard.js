@@ -406,40 +406,53 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
         )}
       </div>
 
+      {/* Community Badge */}
+      {post.community && (
+        <div className="flex items-center gap-2 mb-3 px-1">
+          {post.flair && (
+            <span 
+              className="inline-flex items-center py-0.5 rounded-full text-[10px] font-black tracking-wider text-black"
+              style={{ 
+                backgroundColor: post.flair.color,
+                border: 'none',
+                paddingLeft: '6px',
+                paddingRight: '6px'
+              }}
+            >
+              {post.flair.name}
+            </span>
+          )}
+          <a
+            href={`/community/${post.community.slug}`}
+            className="inline-flex items-center gap-1.5 text-xs font-black transition-all duration-200 hover:opacity-80"
+            style={{ color: post.community.color || "#1d9bf0" }}
+          >
+            <span className="w-5 h-5 flex items-center justify-center overflow-hidden shrink-0">
+              {post.community.icon?.startsWith("/") ? (
+                <img src={post.community.icon} alt="" className="w-full h-full object-contain" />
+              ) : (
+                post.community.icon
+              )}
+            </span>
+            <span>{post.community.name}</span>
+          </a>
+        </div>
+      )}
+
+      {/* Post Title */}
+      {post.title && (
+        <div className="px-1 pb-3 mb-5 border-b-2 border-white">
+          <h2 
+            className="text-lg sm:text-xl font-black text-white leading-tight tracking-tight"
+            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+          >
+            {post.title}
+          </h2>
+        </div>
+      )}
+
       {/* Post Content */}
       <div className="mb-4 space-y-4">
-        {/* Community Badge */}
-        {post.community && (
-          <div className="flex items-center gap-2">
-            {post.flair && (
-              <span 
-                className="inline-flex items-center py-0.5 rounded-full text-[10px] font-black tracking-wider text-black"
-                style={{ 
-                  backgroundColor: post.flair.color,
-                  border: 'none',
-                  paddingLeft: '6px',
-                  paddingRight: '6px'
-                }}
-              >
-                {post.flair.name}
-              </span>
-            )}
-            <a
-              href={`/community/${post.community.slug}`}
-              className="inline-flex items-center gap-1.5 text-xs font-black transition-all duration-200 hover:opacity-80"
-              style={{ color: post.community.color || "#1d9bf0" }}
-            >
-              <span className="w-5 h-5 flex items-center justify-center overflow-hidden shrink-0">
-                {post.community.icon?.startsWith("/") ? (
-                  <img src={post.community.icon} alt="" className="w-full h-full object-contain" />
-                ) : (
-                  post.community.icon
-                )}
-              </span>
-              <span>{post.community.name}</span>
-            </a>
-          </div>
-        )}
         {/* Text Content - Minimalist (no border/bg/padding) */}
         <div className="bg-transparent border-none p-0">
           <div

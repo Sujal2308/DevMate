@@ -57,7 +57,10 @@ const ShareModal = ({ isOpen, onClose, postId }) => {
       />
 
       {/* Modal - Modern Rounded Style - Thick White Border */}
-      <div className="relative bg-[#0a0a0a] w-full max-w-sm rounded-2xl overflow-hidden shadow-[0_30px_70px_rgba(0,0,0,1)] border-2 border-white animate-scale-in">
+      <div 
+        className="relative bg-[#0a0a0a] w-full max-w-sm rounded-2xl overflow-hidden shadow-[0_30px_70px_rgba(0,0,0,1)] border-2 border-white animate-scale-in"
+        style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+      >
         <div className="p-6 sm:p-8">
           {/* Header */}
           <div className="flex items-center justify-between mb-8">

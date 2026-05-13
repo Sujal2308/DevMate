@@ -9,7 +9,7 @@
   body {
     @apply bg-x-black text-x-white font-x overflow-x-hidden;
     margin: 0;
-    font-family: "Space Grotesk", "Inter", "Helvetica Neue", Arial, sans-serif;
+    font-family: "Poppins", "Helvetica Neue", Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     width: 100%;
