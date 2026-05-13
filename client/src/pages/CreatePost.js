@@ -182,7 +182,7 @@ const CreatePost = () => {
         {/* Form Section */}
         <form
           onSubmit={handleSubmit}
-          className="p-3 sm:p-4 lg:p-8 bg-transparent border border-x-border/50 mx-0 rounded-none relative"
+          className="p-3 sm:p-4 lg:p-8 bg-transparent mx-0 rounded-none relative"
         >
           {/* Integrated Header */}
           <div className="mb-8 border-b border-x-border/20 pb-6">

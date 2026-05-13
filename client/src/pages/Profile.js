@@ -451,7 +451,7 @@ const Profile = () => {
       }}
     >
         {/* Profile Info Card */}
-        <div className="bg-transparent border-none sm:bg-gradient-to-br sm:from-x-dark/95 sm:to-x-dark/70 sm:backdrop-blur-sm sm:border sm:border-x-border/50 pt-8 pb-6 px-4 md:px-8 relative rounded-none mb-8">
+        <div className="bg-transparent border-none sm:bg-transparent sm:border sm:border-white/40 pt-8 pb-6 px-4 md:px-8 relative rounded-none mb-8">
           {isOwnProfile ? (
             <div className="mb-6">
               <h1 
@@ -569,14 +569,40 @@ const Profile = () => {
               </div>
               {/* Name and Info */}
               <div className="text-left flex flex-col justify-center min-h-[96px] md:min-h-[112px]">
-                <h1 className="text-base sm:text-xl md:text-2xl font-bold text-x-white mb-1 font-space">
+                <h1 className="text-base sm:text-xl md:text-2xl font-bold text-x-white mb-2 font-space">
                   {profileUser.displayName || profileUser.username}
                 </h1>
-                <p className="text-xs sm:text-base text-x-gray mb-2 font-mono opacity-80">
-                  @{profileUser.username}
-                </p>
-                <div className="flex flex-row space-x-4 mb-2 items-center">
-                  {/* Additional actions can go here */}
+                <div className="flex gap-8 mb-4">
+                  <div className="flex flex-col items-center">
+                    <span className="text-lg md:text-xl font-black text-x-white font-space leading-tight">
+                      {profileData.pagination?.total || 0}
+                    </span>
+                    <span className="text-[11px] text-x-white font-medium opacity-60 lowercase">
+                      posts
+                    </span>
+                  </div>
+                  <Link 
+                    to={`/profile/${profileUser.username}/followers`}
+                    className="flex flex-col items-center hover:text-x-blue transition-all group"
+                  >
+                    <span className="text-lg md:text-xl font-black text-x-white group-hover:text-x-blue font-space leading-tight">
+                      {profileUser.followersCount ?? (profileUser.followers?.length || 0)}
+                    </span>
+                    <span className="text-[11px] text-x-white group-hover:text-x-blue font-medium opacity-60 lowercase">
+                      followers
+                    </span>
+                  </Link>
+                  <Link 
+                    to={`/profile/${profileUser.username}/following`}
+                    className="flex flex-col items-center hover:text-x-blue transition-all group"
+                  >
+                    <span className="text-lg md:text-xl font-black text-x-white group-hover:text-x-blue font-space leading-tight">
+                      {profileUser.followingCount ?? (profileUser.following?.length || 0)}
+                    </span>
+                    <span className="text-[11px] text-x-white group-hover:text-x-blue font-medium opacity-60 lowercase">
+                      following
+                    </span>
+                  </Link>
                 </div>
                 {/* Follow button - stacked for own profile */}
                 {/* Date of joining for other users removed - only at cover image now */}
@@ -598,41 +624,7 @@ const Profile = () => {
             )}
           </div>
 
-          {/* Stats Row */}
-          <div className="mt-8 flex items-center justify-between border border-white/20 py-4 px-2 sm:px-6 rounded-full bg-black shadow-2xl shadow-black/50">
-            <div className="flex-1 text-center group cursor-default">
-              <div className="text-2xl sm:text-4xl font-black text-red-500 font-space leading-none py-1">
-                {profileData.pagination?.total || 0}
-              </div>
-              <div className="text-[9px] sm:text-[10px] text-x-gray uppercase tracking-[0.2em] font-space font-bold mt-1 opacity-70 group-hover:opacity-100 transition-opacity">
-                Posts
-              </div>
-            </div>
-            
-            <Link 
-              to={`/profile/${profileUser.username}/followers`}
-              className="flex-1 text-center group transition-transform active:scale-95 border-l border-r border-white/10"
-            >
-              <div className="text-2xl sm:text-4xl font-black text-green-500 font-space leading-none py-1 transition-colors">
-                {profileUser.followersCount ?? (profileUser.followers?.length || 0)}
-              </div>
-              <div className="text-[9px] sm:text-[10px] text-x-gray uppercase tracking-[0.2em] font-space font-bold mt-1 opacity-70 group-hover:opacity-100 transition-all">
-                Followers
-              </div>
-            </Link>
-            
-            <Link 
-              to={`/profile/${profileUser.username}/following`}
-              className="flex-1 text-center group transition-transform active:scale-95"
-            >
-              <div className="text-2xl sm:text-4xl font-black text-blue-500 font-space leading-none py-1 transition-colors">
-                {profileUser.followingCount ?? (profileUser.following?.length || 0)}
-              </div>
-              <div className="text-[9px] sm:text-[10px] text-x-gray uppercase tracking-[0.2em] font-space font-bold mt-1 opacity-70 group-hover:opacity-100 transition-all">
-                Following
-              </div>
-            </Link>
-          </div>
+          {/* Old Stats Row Removed (Now in header) */}
         </div>
 
       {/* Only show rest if not private, or if owner/follower */}
