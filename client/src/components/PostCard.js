@@ -350,10 +350,10 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
             <button
               onClick={handleFollowToggle}
               disabled={followLoading}
-              className={`flex items-center gap-1.5 px-3 py-1 text-sm font-black tracking-tight rounded-full border border-white/10 transition-all duration-300 ${
+              className={`flex items-center gap-1.5 px-3 py-1 text-sm font-medium tracking-tight rounded-full transition-all duration-300 ${
                 isFollowing 
-                  ? "text-x-white hover:text-red-500 hover:border-red-500/30" 
-                  : "text-x-blue hover:text-white hover:border-x-blue"
+                  ? "text-x-gray hover:text-red-500" 
+                  : "text-x-blue hover:text-white"
               }`}
             >
               {followLoading ? (
