@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "../config/axios";
+import { motion } from "framer-motion";
 
 const Communities = () => {
   const [communities, setCommunities] = useState([]);
@@ -18,11 +19,9 @@ const Communities = () => {
     setFetchError("");
     try {
       const token = localStorage.getItem("token");
-      console.log("Fetching communities, token:", token ? "present" : "missing");
       const res = await axios.get("/api/communities", {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
-      console.log("Communities response:", res.data);
       setCommunities(res.data);
     } catch (err) {
       console.error("Communities fetch error:", err);
@@ -68,10 +67,10 @@ const Communities = () => {
 
   if (loading) {
     return (
-      <div className="w-full max-w-2xl mx-auto px-4 py-8">
-        <div className="animate-pulse space-y-4">
+      <div className="w-full max-w-4xl mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="h-24 bg-white/5 rounded-xl" />
+            <div key={i} className="h-40 bg-white/5 rounded-xl animate-pulse" />
           ))}
         </div>
       </div>
@@ -79,35 +78,56 @@ const Communities = () => {
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto px-3 sm:px-4 pb-20">
+    <div className="w-full max-w-4xl mx-auto px-3 sm:px-6 pb-20">
       {/* Header */}
-      <div className="mb-8 border-b border-x-border/20 pb-6 pt-4 px-3 sm:px-0">
-        <div className="flex items-center mb-2">
-          <h1
-            className="text-4xl md:text-5xl font-black text-x-white tracking-tighter"
-            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-          >
-            Communities
-          </h1>
+      <div className="mb-10 pt-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div>
+            <h1
+              className="text-4xl md:text-5xl font-black text-white tracking-tighter mb-2"
+              style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+            >
+              Communities
+            </h1>
+            <p className="text-x-gray text-sm font-medium opacity-60">
+              Discover your tribe and share your journey.
+            </p>
+          </div>
+          
+          {/* Search */}
+          <div className="w-full md:w-64 relative">
+            <svg
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search..."
+              className="w-full bg-white/5 text-white pl-10 pr-4 py-2.5 rounded-xl text-xs font-bold focus:outline-none focus:ring-2 focus:ring-x-blue/30 transition-all border border-white/10"
+            />
+          </div>
         </div>
-        <p className="text-x-gray text-base opacity-70">
-          Join developer communities and share knowledge with your tribe.
-        </p>
       </div>
 
       {/* API Error */}
       {fetchError && (
-        <div className="px-3 sm:px-0 mb-6">
-          <div className="bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2 text-red-400 text-sm">
-              <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="mb-8">
+          <div className="bg-red-500/10 border-2 border-red-500/20 rounded-xl px-6 py-4 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3 text-red-400">
+              <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span>{fetchError}</span>
+              <span className="text-sm font-medium">{fetchError}</span>
             </div>
             <button
               onClick={fetchCommunities}
-              className="text-xs font-bold text-red-400 hover:text-red-300 shrink-0"
+              className="px-3 py-1.5 bg-red-500/20 rounded-lg text-[10px] font-bold text-red-400 hover:bg-red-500/30 transition-colors"
             >
               Retry
             </button>
@@ -115,34 +135,16 @@ const Communities = () => {
         </div>
       )}
 
-      {/* Search */}
-      <div className="px-3 sm:px-0 mb-6">
-        <div className="relative">
-          <svg
-            className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-black/50"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search communities..."
-            className="w-full bg-white text-black pl-11 pr-5 py-3 rounded-full text-sm font-bold focus:outline-none focus:ring-2 focus:ring-x-blue/30 transition-all placeholder-black/40 shadow-xl"
-          />
-        </div>
-      </div>
-
       {/* Joined Communities */}
       {joined.length > 0 && (
-        <section className="mb-8 px-3 sm:px-0">
-          <h2 className="text-xs font-black uppercase tracking-widest text-x-gray mb-3">
-            Joined · {joined.length}
-          </h2>
-          <div className="space-y-2">
+        <section className="mb-12">
+          <div className="flex items-center gap-4 mb-6">
+            <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-x-gray">
+              Joined Communities
+            </h2>
+            <div className="h-[1px] flex-1 bg-white/5"></div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {joined.map((c) => (
               <CommunityCard
                 key={c._id}
@@ -157,11 +159,14 @@ const Communities = () => {
 
       {/* Discover Communities */}
       {discover.length > 0 && (
-        <section className="px-3 sm:px-0">
-          <h2 className="text-xs font-black uppercase tracking-widest text-x-gray mb-3">
-            Discover · {discover.length}
-          </h2>
-          <div className="space-y-2">
+        <section className="mb-12">
+          <div className="flex items-center gap-4 mb-6">
+            <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-x-gray">
+              Discover New Tribes
+            </h2>
+            <div className="h-[1px] flex-1 bg-white/5"></div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {discover.map((c) => (
               <CommunityCard
                 key={c._id}
@@ -176,19 +181,22 @@ const Communities = () => {
 
       {/* Empty States */}
       {!fetchError && filtered.length === 0 && communities.length > 0 && (
-        <div className="text-center py-16 text-x-gray px-3">
-          <div className="text-4xl mb-3">🔍</div>
-          <p className="font-bold text-white">No communities found</p>
-          <p className="text-sm mt-1">Try a different search term</p>
+        <div className="text-center py-20 bg-white/5 rounded-xl border-2 border-dashed border-white/10">
+          <div className="text-4xl mb-4">🔍</div>
+          <p className="text-lg font-bold text-white">No matches found</p>
+          <p className="text-x-gray text-xs mt-2">Try searching for something else</p>
         </div>
       )}
 
       {!fetchError && communities.length === 0 && !loading && (
-        <div className="text-center py-16 text-x-gray px-3">
-          <div className="text-4xl mb-3">🏘️</div>
-          <p className="font-bold text-white">No communities yet</p>
-          <p className="text-sm mt-1">Communities will appear here once created</p>
-          <button onClick={fetchCommunities} className="mt-4 text-sm font-bold text-x-blue hover:underline">
+        <div className="text-center py-20 bg-white/5 rounded-xl border-2 border-dashed border-white/10">
+          <div className="text-4xl mb-4">🏘️</div>
+          <p className="text-lg font-bold text-white">The neighborhood is quiet</p>
+          <p className="text-x-gray text-xs mt-2">Check back later for new communities</p>
+          <button 
+            onClick={fetchCommunities} 
+            className="mt-6 px-6 py-2.5 bg-x-blue text-white rounded-lg font-black text-xs uppercase tracking-widest hover:scale-105 transition-transform"
+          >
             Refresh
           </button>
         </div>
@@ -199,63 +207,65 @@ const Communities = () => {
 
 const CommunityCard = ({ community, onJoinLeave, loading }) => {
   return (
-    <div className="flex items-center gap-4 p-3 px-5 bg-transparent border border-white/10 rounded-full hover:bg-white/[0.04] hover:border-white/20 transition-all duration-200 group">
-      {/* Icon */}
-      <Link to={`/community/${community.slug}`} className="shrink-0">
-        <div
-          className={`w-14 h-14 rounded-2xl flex items-center justify-center text-3xl shrink-0 overflow-hidden ${!community.icon?.startsWith("/") ? "" : "bg-transparent border-none"}`}
-          style={community.icon?.startsWith("/") ? {} : { background: `${community.color}20`, border: `1px solid ${community.color}30` }}
-        >
-          {community.icon?.startsWith("/") ? (
-            <img src={community.icon} alt="" className="w-full h-full object-contain p-2" />
-          ) : (
-            community.icon
-          )}
-        </div>
-      </Link>
+    <div className="bg-[#1a1a1a] border-2 border-[#333333] rounded-lg p-4 hover:border-x-blue transition-all duration-300 flex flex-col">
+      {/* Top Header Section */}
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-3">
+          {/* Logo icon */}
+          <Link to={`/community/${community.slug}`} className="shrink-0">
+            <div
+              className="w-12 h-12 rounded-lg flex items-center justify-center text-xl overflow-hidden bg-black border border-white/10"
+              style={!community.icon?.startsWith("/") ? { background: `${community.color}10` } : {}}
+            >
+              {community.icon?.startsWith("/") ? (
+                <img src={community.icon} alt="" className="w-full h-full object-contain p-1.5" />
+              ) : (
+                community.icon
+              )}
+            </div>
+          </Link>
 
-      {/* Info */}
-      <div className="flex-1 min-w-0">
-        <Link to={`/community/${community.slug}`}>
-          <h3 className="font-black text-white text-sm sm:text-lg leading-tight group-hover:text-x-blue transition-colors truncate">
-            {community.name}
-          </h3>
-        </Link>
-        <p className="text-x-gray text-xs sm:text-sm mt-0.5 sm:mt-1 line-clamp-1">{community.description}</p>
-        <div className="flex items-center gap-3 mt-1">
-          <span className="text-xs text-x-gray">
-            <span className="font-bold text-white">{community.memberCount}</span> members
-          </span>
-          {community.postCount > 0 && (
-            <span className="text-xs text-x-gray">
-              <span className="font-bold text-white">{community.postCount}</span> posts
-            </span>
-          )}
+          {/* Name and Member info */}
+          <div className="flex flex-col min-w-0 gap-0.5">
+            <Link to={`/community/${community.slug}`}>
+              <h3 className="font-black text-white text-sm tracking-tight truncate leading-tight">
+                {community.name}
+              </h3>
+            </Link>
+            <p className="text-[9px] font-bold text-x-gray uppercase tracking-widest opacity-50">
+              {community.memberCount.toLocaleString()} members
+            </p>
+          </div>
         </div>
+
+        {/* Action Button - Icon Only */}
+        <button
+          onClick={() => onJoinLeave(community)}
+          disabled={loading}
+          className={`w-10 h-10 shrink-0 flex items-center justify-center rounded-full transition-all border-2 ${
+            community.isMember
+              ? "bg-white/5 border-white/20 text-x-gray hover:text-red-400 hover:border-red-500/50"
+              : "bg-white border-white text-black hover:bg-x-blue hover:border-x-blue hover:text-white shadow-lg"
+          }`}
+        >
+          {loading ? (
+            <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+          ) : community.isMember ? (
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3.5} d="M5 13l4 4L19 7" />
+            </svg>
+          ) : (
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" />
+            </svg>
+          )}
+        </button>
       </div>
 
-      {/* Join / Leave */}
-      <button
-        onClick={() => onJoinLeave(community)}
-        disabled={loading}
-        className={`shrink-0 flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200 ${
-          community.isMember
-            ? "bg-white/10 text-x-gray hover:text-red-400 hover:bg-white/20"
-            : "bg-white text-black shadow-lg hover:scale-110 active:scale-95"
-        }`}
-      >
-        {loading ? (
-          <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-        ) : community.isMember ? (
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3.5} d="M5 13l4 4L19 7" />
-          </svg>
-        ) : (
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" />
-          </svg>
-        )}
-      </button>
+      {/* Description below everything else */}
+      <p className="text-white text-[13px] leading-relaxed line-clamp-2 opacity-80 group-hover:opacity-100 transition-opacity">
+        {community.description}
+      </p>
     </div>
   );
 };

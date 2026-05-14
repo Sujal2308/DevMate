@@ -191,12 +191,12 @@ const Profile = () => {
   // Follow/Unfollow logic for profile page
   const [isFollowing, setIsFollowing] = useState(false);
   const [followLoading, setFollowLoading] = useState(false);
-  const [showSkills, setShowSkills] = useState(false); // Controls the skills section visibility
   const [newSkill, setNewSkill] = useState("");
   const [skillSubmitting, setSkillSubmitting] = useState(false);
-  const [showSocials, setShowSocials] = useState(false);
   const [newSocial, setNewSocial] = useState({ platform: "", url: "" });
   const [socialSubmitting, setSocialSubmitting] = useState(false);
+  const [isEditingSkills, setIsEditingSkills] = useState(false);
+  const [isEditingSocials, setIsEditingSocials] = useState(false);
 
   useEffect(() => {
     if (profileData && user) {
@@ -639,87 +639,54 @@ const Profile = () => {
       {/* Only show rest if not private, or if owner/follower */}
       {showFullProfile ? (
         <>
-          {/* Minimalist Info Boxes Bar */}
-          <div className="flex flex-wrap items-center justify-center gap-3 mb-8 w-full">
-            {/* Skills Pill */}
-            <button 
-              onClick={() => {
-                setShowSkills(!showSkills);
-                if (!showSkills) setShowSocials(false);
-              }}
-              className={`flex-1 min-w-[120px] ${showSkills ? 'bg-x-blue border-solid border-x-blue shadow-[0_0_20px_rgba(29,155,240,0.3)]' : 'bg-white/5 border-white/10'} border rounded-full py-3 px-6 flex items-center justify-center gap-3 transition-all duration-300 hover:bg-x-blue hover:border-solid hover:border-x-blue group active:scale-95`}
-            >
-              <img 
-                src="/icons/skills.png" 
-                alt="Skills" 
-                className="w-5 h-5 object-contain transition-transform group-hover:scale-110" 
-                width="20"
-                height="20"
-                loading="lazy"
-              />
-              <span className={`text-[11px] font-bold ${showSkills ? 'text-white' : 'text-x-white'} group-hover:text-white font-space uppercase tracking-widest`}>Skills</span>
-            </button>
-
-            {/* Projects Pill */}
+          {/* Project Showcase Button */}
+          <div className="mb-8 flex justify-start">
             <Link 
               to={`/profile/${profileUser.username}/projects`}
-              className="flex-1 min-w-[120px] bg-white/5 border border-white/10 rounded-full py-3 px-6 flex items-center justify-center gap-3 transition-all duration-300 hover:bg-x-blue hover:border-solid hover:border-x-blue group active:scale-95"
+              className="inline-flex items-center gap-3 bg-black border-2 border-dashed border-white/60 hover:bg-x-blue hover:border-solid hover:border-x-blue transition-all duration-300 py-3 px-6 rounded-full group active:scale-95 shadow-lg"
             >
-              <img 
-                src="/icons/projects.png" 
-                alt="Projects" 
-                className="w-5 h-5 object-contain transition-transform group-hover:scale-110" 
-                width="20"
-                height="20"
-                loading="lazy"
-              />
-              <span className="text-[11px] font-bold text-x-white group-hover:text-white font-space uppercase tracking-widest">Projects</span>
+              <img src="/icons/projects.png" alt="Projects" className="w-4 h-4 object-contain group-hover:scale-110 transition-transform" />
+              <span className="text-sm font-black text-x-white group-hover:text-white font-space tracking-tight">Project Showcase</span>
+              <svg className="w-4 h-4 text-x-blue group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
             </Link>
-
-            {/* Socials Pill */}
-            <button 
-              onClick={() => {
-                setShowSocials(!showSocials);
-                if (!showSocials) setShowSkills(false);
-              }}
-              className={`flex-1 min-w-[120px] ${showSocials ? 'bg-x-blue border-solid border-x-blue shadow-[0_0_20px_rgba(29,155,240,0.3)]' : 'bg-white/5 border-white/10'} border rounded-full py-3 px-6 flex items-center justify-center gap-3 transition-all duration-300 hover:bg-x-blue hover:border-solid hover:border-x-blue group active:scale-95`}
-            >
-              <img 
-                src="/icons/links.png" 
-                alt="Socials" 
-                className="w-5 h-5 object-contain transition-transform group-hover:scale-110" 
-                width="20"
-                height="20"
-                loading="lazy"
-              />
-              <span className={`text-[11px] font-bold ${showSocials ? 'text-white' : 'text-x-white'} group-hover:text-white font-space uppercase tracking-widest`}>Socials</span>
-            </button>
           </div>
 
-          {/* Expanded Skills Section */}
-          {showSkills && (
-            <div className="mb-8 px-4 py-6 md:p-6 bg-black border border-dashed border-x-border/50 animate-fade-in w-full overflow-hidden">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold font-space tracking-widest text-x-white">Technical Skills</h3>
-                <button onClick={() => setShowSkills(false)} className="text-red-500 hover:text-red-400 transition-colors">
+          {/* Technical Skills Section - Always visible after header */}
+          <div className="mb-8 px-4 pt-5 pb-3 bg-white/5 border-none animate-fade-in w-full overflow-hidden rounded-3xl">
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-3">
+                <img src="/icons/skills.png" alt="Skills" className="w-6 h-6 object-contain" />
+                <h3 className="text-2xl font-black font-space tracking-tight text-x-white">
+                  Technical Skills
+                </h3>
+              </div>
+              {isOwnProfile && (
+                <button 
+                  onClick={() => setIsEditingSkills(!isEditingSkills)}
+                  className={`p-2 rounded-full transition-all duration-300 ${isEditingSkills ? 'bg-x-blue text-white shadow-[0_0_15px_rgba(29,155,240,0.4)]' : 'bg-white/5 text-x-blue hover:bg-white/10'}`}
+                  title={isEditingSkills ? "Finish Editing" : "Edit Skills"}
+                >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                   </svg>
                 </button>
-              </div>
+              )}
+            </div>
 
-              <div className="flex flex-wrap gap-2 mb-6">
-                {profileUser.skills && profileUser.skills.length > 0 ? (
-                  profileUser.skills.map((skill, index) => (
+            <div className={`flex flex-wrap gap-3 ${isEditingSkills ? 'mb-8' : 'mb-2'}`}>
+              {profileUser.skills && profileUser.skills.length > 0 ? (
+                profileUser.skills.map((skill, index) => (
                   <div 
                     key={index} 
-                    className="group relative flex items-center bg-black border border-x-green/30 px-4 py-1.5 rounded-full text-sm font-space font-bold text-x-green transition-all hover:border-x-green/60 hover:shadow-[0_0_10px_rgba(56,189,248,0.1)] shadow-lg"
+                    className="group relative flex items-center bg-black border border-x-green/30 px-5 py-2 rounded-full text-sm font-space font-bold text-x-green transition-all hover:border-x-green/60 hover:shadow-[0_0_15px_rgba(56,189,248,0.1)] shadow-lg"
                   >
                     {skill}
-                    {isOwnProfile && (
+                    {isOwnProfile && isEditingSkills && (
                       <button 
                         onClick={() => handleRemoveSkill(skill)}
-                        className="absolute -top-1.5 -right-1.5 bg-black border border-white/20 text-white hover:text-red-500 rounded-full p-0.5 transition-all shadow-lg active:scale-90"
+                        className="absolute -top-1.5 -right-1.5 bg-black border border-white/20 text-white hover:text-red-500 rounded-full p-1 transition-all shadow-lg active:scale-90 animate-in zoom-in fade-in duration-200"
                       >
                         <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -729,119 +696,130 @@ const Profile = () => {
                   </div>
                 ))
               ) : (
-                <p className="text-x-gray font-space italic opacity-60">No skills added yet...</p>
+                <p className="text-x-gray font-space italic opacity-60">No technical skills documented yet...</p>
               )}
             </div>
 
-            {isOwnProfile && (
-              <form onSubmit={handleAddSkill} className="flex flex-col sm:flex-row gap-3">
+            {isOwnProfile && isEditingSkills && (
+              <form onSubmit={handleAddSkill} className="flex flex-col sm:flex-row gap-3 max-w-md animate-in slide-in-from-top-4 fade-in duration-300">
                 <input
                   type="text"
-                  placeholder="Enter new skill..."
-                  className="flex-1 bg-white border border-x-border p-2 text-black text-sm focus:border-x-blue outline-none font-space transition-colors placeholder:text-gray-400 w-full"
+                  placeholder="Acquire new skill..."
+                  className="flex-1 bg-white border border-x-border p-2.5 text-black text-sm focus:border-x-blue outline-none font-space transition-colors placeholder:text-gray-400"
                   value={newSkill}
                   onChange={(e) => setNewSkill(e.target.value)}
+                  autoFocus
                 />
                 <button 
                   type="submit" 
                   disabled={skillSubmitting}
-                  className="bg-x-blue text-white px-6 py-2 sm:py-1 font-space font-bold tracking-widest text-[11px] uppercase hover:bg-x-blue/80 transition-colors disabled:opacity-50 whitespace-nowrap"
+                  className="bg-x-blue text-white px-6 py-2 font-space font-bold tracking-widest text-[11px] uppercase hover:bg-x-blue/80 transition-all disabled:opacity-50 whitespace-nowrap"
                 >
                   ADD SKILL
                 </button>
               </form>
             )}
-            </div>
-          )}
+          </div>
 
-          {/* Expanded Socials Section */}
-          {showSocials && (
-            <div className="mb-8 px-4 py-6 md:p-6 bg-black border border-dashed border-x-border/50 animate-fade-in w-full overflow-hidden">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold font-space tracking-wide text-x-white">Social Connections</h3>
-                <button onClick={() => setShowSocials(false)} className="text-red-500 hover:text-red-400 transition-colors">
+
+          {/* Socials Section - Always visible after skills */}
+          <div className="mb-8 px-4 pt-4 pb-2 bg-white/5 border-none animate-fade-in w-full overflow-hidden rounded-3xl">
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-3">
+                <img src="/icons/links.png" alt="Socials" className="w-6 h-6 object-contain" />
+                <h3 className="text-2xl font-black font-space tracking-tight text-x-white">
+                  Social Connections
+                </h3>
+              </div>
+              {isOwnProfile && (
+                <button 
+                  onClick={() => setIsEditingSocials(!isEditingSocials)}
+                  className={`p-2 rounded-full transition-all duration-300 ${isEditingSocials ? 'bg-[#e2442b] text-white shadow-[0_0_15px_rgba(226,68,43,0.4)]' : 'bg-white/5 text-[#e2442b] hover:bg-white/10'}`}
+                  title={isEditingSocials ? "Finish Editing" : "Edit Socials"}
+                >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                   </svg>
                 </button>
-              </div>
-
-              <div className="flex flex-wrap gap-4 mb-6">
-                {profileUser.socialLinks && profileUser.socialLinks.length > 0 ? (
-                  profileUser.socialLinks.map((social, index) => (
-                    <div 
-                      key={index} 
-                      className="group relative flex items-center border border-white/20 px-5 py-2 rounded-full transition-all hover:border-[#e2442b]/60"
-                    >
-                      <a 
-                        href={social.url} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        className="flex items-center space-x-2"
-                      >
-                        <span className="font-space font-bold text-sm text-x-white">
-                          {social.platform}
-                        </span>
-                        <svg className="w-4 h-4 opacity-80 group-hover:opacity-100 transition-opacity" style={{ color: '#e2442b' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                      </a>
-                      {isOwnProfile && (
-                        <button 
-                          onClick={() => handleRemoveSocial(social)} 
-                          className="absolute -top-1.5 -right-1.5 bg-black border border-white/20 text-white hover:text-red-500 rounded-full p-0.5 transition-all shadow-lg active:scale-90"
-                        >
-                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        </button>
-                      )}
-                    </div>
-                  ))
-                ) : (
-                  <div className="w-full py-8 text-center border border-dashed border-white/10">
-                    <p className="text-x-gray font-space italic opacity-60 text-sm tracking-widest uppercase">Connectivity Offline...</p>
-                  </div>
-                )}
-              </div>
-
-              {isOwnProfile && (
-                <form onSubmit={handleAddSocial} className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-[10px] font-bold text-x-gray uppercase tracking-widest mb-2 font-space">Platform</label>
-                      <input
-                        type="text"
-                        placeholder="e.g. GitHub, Portfolio"
-                        className="w-full bg-white border border-x-border p-3 text-black text-sm focus:border-x-blue outline-none font-space transition-colors placeholder:text-gray-400"
-                        value={newSocial.platform}
-                        onChange={(e) => setNewSocial({ ...newSocial, platform: e.target.value })}
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] font-bold text-x-gray uppercase tracking-widest mb-2 font-space">Profile URL</label>
-                      <input
-                        type="url"
-                        placeholder="https://..."
-                        className="w-full bg-white border border-x-border p-3 text-black text-sm focus:border-x-blue outline-none font-space transition-colors placeholder:text-gray-400"
-                        value={newSocial.url}
-                        onChange={(e) => setNewSocial({ ...newSocial, url: e.target.value })}
-                        required
-                      />
-                    </div>
-                  </div>
-                  <button 
-                    type="submit" 
-                    disabled={socialSubmitting}
-                    className="w-full bg-x-blue text-white py-4 sm:py-3 font-space font-bold tracking-widest text-xs uppercase hover:bg-x-blue/80 transition-all disabled:opacity-50"
-                  >
-                    Establish Connection
-                  </button>
-                </form>
               )}
             </div>
-          )}
+
+            <div className={`flex flex-wrap gap-4 ${isEditingSocials ? 'mb-6' : 'mb-2'}`}>
+              {profileUser.socialLinks && profileUser.socialLinks.length > 0 ? (
+                profileUser.socialLinks.map((social, index) => (
+                  <div 
+                    key={index} 
+                    className="group relative flex items-center border border-white/20 px-6 py-2 rounded-full transition-all hover:border-[#e2442b]/60 bg-black/20"
+                  >
+                    <a 
+                      href={social.url} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="flex items-center space-x-2"
+                    >
+                      <span className="font-space font-bold text-sm text-x-white">
+                        {social.platform}
+                      </span>
+                      <svg className="w-4 h-4 opacity-80 group-hover:opacity-100 transition-opacity" style={{ color: '#e2442b' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                    </a>
+                    {isOwnProfile && isEditingSocials && (
+                      <button 
+                        onClick={() => handleRemoveSocial(social)} 
+                        className="absolute -top-1.5 -right-1.5 bg-black border border-white/20 text-white hover:text-red-500 rounded-full p-1 transition-all shadow-lg active:scale-90 animate-in zoom-in fade-in duration-200"
+                      >
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    )}
+                  </div>
+                ))
+              ) : (
+                <div className="w-full py-8 text-center">
+                  <p className="text-x-gray font-space italic opacity-60 text-lg uppercase tracking-widest">Connectivity Offline...</p>
+                </div>
+              )}
+            </div>
+
+            {isOwnProfile && isEditingSocials && (
+              <form onSubmit={handleAddSocial} className="space-y-6 animate-in slide-in-from-top-4 fade-in duration-300">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-[10px] font-bold text-x-gray uppercase tracking-widest mb-2 font-space">Platform</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. GitHub, Portfolio"
+                      className="w-full bg-white border border-x-border p-3 text-black text-sm focus:border-x-blue outline-none font-space transition-colors placeholder:text-gray-400"
+                      value={newSocial.platform}
+                      onChange={(e) => setNewSocial({ ...newSocial, platform: e.target.value })}
+                      required
+                      autoFocus
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-bold text-x-gray uppercase tracking-widest mb-2 font-space">Profile URL</label>
+                    <input
+                      type="url"
+                      placeholder="https://..."
+                      className="w-full bg-white border border-x-border p-3 text-black text-sm focus:border-x-blue outline-none font-space transition-colors placeholder:text-gray-400"
+                      value={newSocial.url}
+                      onChange={(e) => setNewSocial({ ...newSocial, url: e.target.value })}
+                      required
+                    />
+                  </div>
+                </div>
+                <button 
+                  type="submit" 
+                  disabled={socialSubmitting}
+                  className="w-full bg-[#e2442b] text-white py-3 font-space font-bold tracking-widest text-xs uppercase hover:bg-[#e2442b]/80 transition-all disabled:opacity-50"
+                >
+                  Establish Connection
+                </button>
+              </form>
+            )}
+          </div>
 
           {/* Update Profile Prompt - Show for new users who haven't completed their profile */}
           {showUpdatePrompt && (
