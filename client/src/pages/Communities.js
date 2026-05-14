@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "../config/axios";
-import { motion } from "framer-motion";
 
 const Communities = () => {
   const [communities, setCommunities] = useState([]);
