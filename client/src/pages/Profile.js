@@ -643,12 +643,12 @@ const Profile = () => {
           <div className="mb-8 flex justify-start">
             <Link 
               to={`/profile/${profileUser.username}/projects`}
-              className="inline-flex items-center gap-3 bg-black border-2 border-dashed border-white/60 hover:bg-x-blue hover:border-solid hover:border-x-blue transition-all duration-300 py-3 px-6 rounded-full group active:scale-95 shadow-lg"
+              className="inline-flex items-center gap-3 bg-purple-900 border-2 border-dashed border-white/60 hover:bg-purple-800 hover:border-solid hover:border-white transition-all duration-300 py-3 px-6 rounded-full group active:scale-95 shadow-lg shadow-purple-900/40"
             >
               <img src="/icons/projects.png" alt="Projects" className="w-4 h-4 object-contain group-hover:scale-110 transition-transform" />
-              <span className="text-sm font-black text-x-white group-hover:text-white font-space tracking-tight">Project Showcase</span>
-              <svg className="w-4 h-4 text-x-blue group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              <span className="text-sm font-black text-white font-space tracking-tight">Project Showcase</span>
+              <svg className="w-4 h-4 text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M7 17L17 7M17 7H7M17 7V17" />
               </svg>
             </Link>
           </div>

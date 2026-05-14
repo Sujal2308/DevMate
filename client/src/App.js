@@ -42,6 +42,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import Communities from "./pages/Communities";
 import CommunityPage from "./pages/CommunityPage";
 import DiscussionPage from "./pages/DiscussionPage";
+import ExploreCommunities from "./pages/ExploreCommunities";
 function ScrollToTop() {
   const { pathname } = useLocation();
 
@@ -192,6 +193,14 @@ function AppContent() {
                       element={
                         <ProtectedRoute>
                           <Communities />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/explore-communities"
+                      element={
+                        <ProtectedRoute>
+                          <ExploreCommunities />
                         </ProtectedRoute>
                       }
                     />
