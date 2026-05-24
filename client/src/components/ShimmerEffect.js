@@ -92,89 +92,101 @@ const ShimmerEffect = ({ type = "feed" }) => {
   );
 
   const renderProfileShimmer = () => (
-    <div className="w-full max-w-6xl mx-auto py-2 sm:py-4 lg:py-8 px-3 sm:px-4 lg:px-6 space-y-6 sm:space-y-8">
-      {/* Hero Profile Section */}
-      <div className="relative mb-6 sm:mb-8">
-        {/* Cover Background shimmer */}
-        <div
-          className={`h-32 sm:h-48 lg:h-64 rounded-t-2xl sm:rounded-t-3xl ${shimmerClass}`}
-        ></div>
+    <div className="w-full max-w-2xl mx-auto py-4 sm:py-8 px-3 sm:px-4 space-y-6">
+      {/* Title Shimmer */}
+      <div className="mb-6">
+        <div className={`h-8 w-44 rounded-lg bg-x-dark/40 ${shimmerClass}`}></div>
+      </div>
 
-        {/* Profile info section */}
-        <div className="relative bg-x-card border border-x-border rounded-b-2xl sm:rounded-b-3xl p-4 sm:p-6 lg:p-8 -mt-12 sm:-mt-16 pt-16 sm:pt-20">
-          <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-8 space-y-4 sm:space-y-6 lg:space-y-0">
-            {/* Avatar */}
-            <div className="flex justify-center lg:justify-start">
-              <div
-                className={`w-20 h-20 sm:w-24 sm:h-24 lg:w-32 lg:h-32 rounded-2xl sm:rounded-full border-3 sm:border-4 border-x-black ${shimmerClass}`}
-              ></div>
-            </div>
+      {/* Profile Info Card Shimmer */}
+      <div className="bg-transparent border border-white/10 pt-8 pb-6 px-4 relative rounded-2xl mb-8 flex flex-row items-start justify-start gap-6 bg-x-dark/5">
+        {/* Avatar and Follow Button column */}
+        <div className="flex flex-col items-center gap-3 shrink-0">
+          <div className={`w-24 h-24 md:w-28 md:h-28 rounded-full border-4 border-x-border/10 ${shimmerClass} bg-x-dark/40`}></div>
+          <div className={`w-24 h-8 rounded-full ${shimmerClass} bg-x-dark/35`}></div>
+        </div>
 
-            {/* User info */}
-            <div className="flex-1 text-center lg:text-left space-y-4">
-              <div className="space-y-2">
-                <div
-                  className={`h-8 w-48 rounded mx-auto lg:mx-0 ${shimmerClass}`}
-                ></div>
-                <div
-                  className={`h-4 w-32 rounded mx-auto lg:mx-0 ${shimmerClass}`}
-                ></div>
-              </div>
+        {/* Info Column */}
+        <div className="flex-1 space-y-4 w-full">
+          {/* Display Name */}
+          <div className={`h-6 w-48 rounded ${shimmerClass} bg-x-dark/35`}></div>
 
-              <div className="space-y-2">
-                <div className={`h-4 w-full rounded ${shimmerClass}`}></div>
-                <div
-                  className={`h-4 w-3/4 rounded mx-auto lg:mx-0 ${shimmerClass}`}
-                ></div>
-              </div>
-
-              {/* Skills shimmer */}
-              <div className="flex flex-wrap gap-2 justify-center lg:justify-start">
-                {[1, 2, 3, 4].map((skill) => (
-                  <div
-                    key={skill}
-                    className={`h-6 w-16 rounded-full ${shimmerClass}`}
-                  ></div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-6 mt-8 pt-6 border-t border-x-border/30">
+          {/* Stats Row */}
+          <div className="flex gap-8 mb-4">
             {[1, 2, 3].map((stat) => (
-              <div key={stat} className="text-center space-y-2">
-                <div
-                  className={`h-6 w-12 rounded mx-auto ${shimmerClass}`}
-                ></div>
-                <div
-                  className={`h-4 w-16 rounded mx-auto ${shimmerClass}`}
-                ></div>
+              <div key={stat} className="flex flex-col items-center">
+                <div className={`h-5 w-8 rounded ${shimmerClass} bg-x-dark/35`}></div>
+                <div className={`h-3 w-12 rounded mt-1 ${shimmerClass} bg-x-dark/20`}></div>
               </div>
             ))}
           </div>
+
+          {/* Bio lines */}
+          <div className="space-y-2 mt-4">
+            <div className={`h-4 w-full rounded ${shimmerClass} bg-x-dark/25`}></div>
+            <div className={`h-4 w-5/6 rounded ${shimmerClass} bg-x-dark/25`}></div>
+          </div>
         </div>
       </div>
 
-      {/* Tabs shimmer */}
-      <div className="border-b border-x-border/30 mb-8">
+      {/* Project Showcase Button Shimmer */}
+      <div className="mb-8 flex justify-start">
+        <div className={`h-12 w-48 rounded-full border-2 border-dashed border-white/5 bg-x-dark/20 ${shimmerClass}`}></div>
+      </div>
+
+      {/* Technical Skills Section Shimmer */}
+      <div className="mb-8 p-6 bg-x-dark/20 border border-white/5 rounded-2xl">
+        {/* Header */}
+        <div className="flex items-center gap-3 mb-6">
+          <div className={`w-6 h-6 rounded ${shimmerClass} bg-x-dark/40`}></div>
+          <div className={`h-5 w-32 rounded ${shimmerClass} bg-x-dark/35`}></div>
+        </div>
+        {/* Pills grid */}
+        <div className="flex flex-wrap gap-3">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <div key={i} className={`h-7 w-20 rounded-full ${shimmerClass} bg-x-dark/30`}></div>
+          ))}
+        </div>
+      </div>
+
+      {/* Socials Section Shimmer */}
+      <div className="mb-8 p-6 bg-x-dark/20 border border-white/5 rounded-2xl">
+        {/* Header */}
+        <div className="flex items-center gap-3 mb-6">
+          <div className={`w-6 h-6 rounded ${shimmerClass} bg-x-dark/40`}></div>
+          <div className={`h-5 w-40 rounded ${shimmerClass} bg-x-dark/35`}></div>
+        </div>
+        {/* Connection cards */}
+        <div className="flex flex-wrap gap-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className={`h-10 w-32 rounded-xl ${shimmerClass} bg-x-dark/30`}></div>
+          ))}
+        </div>
+      </div>
+
+      {/* Tabs Navigation Shimmer */}
+      <div className="border-b border-white/5 mb-8 px-4">
         <div className="flex space-x-8">
-          <div className={`h-10 w-16 rounded-t ${shimmerClass}`}></div>
-          <div className={`h-10 w-20 rounded-t ${shimmerClass}`}></div>
+          <div className={`h-10 w-16 rounded-t ${shimmerClass} bg-x-dark/30`}></div>
+          <div className={`h-10 w-20 rounded-t ${shimmerClass} bg-x-dark/30`}></div>
+          <div className={`h-10 w-16 rounded-t ${shimmerClass} bg-x-dark/30`}></div>
         </div>
       </div>
 
-      {/* Posts grid shimmer */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {[1, 2, 3, 4].map((item) => (
-          <div key={item} className="x-card space-y-4">
-            <div className="space-y-3">
-              <div className={`h-4 w-full rounded ${shimmerClass}`}></div>
-              <div className={`h-4 w-3/4 rounded ${shimmerClass}`}></div>
+      {/* Posts List Shimmer */}
+      <div className="space-y-4">
+        {[1, 2].map((i) => (
+          <div key={i} className="p-5 bg-x-dark/15 border border-white/5 rounded-xl space-y-4">
+            <div className="flex items-start gap-4">
+              <div className={`w-10 h-10 rounded-full ${shimmerClass} bg-x-dark/35`}></div>
+              <div className="flex-1 space-y-2">
+                <div className={`h-4 w-32 rounded ${shimmerClass} bg-x-dark/35`}></div>
+                <div className={`h-3 w-20 rounded ${shimmerClass} bg-x-dark/25`}></div>
+              </div>
             </div>
-            <div className="flex items-center space-x-6">
-              <div className={`h-6 w-16 rounded ${shimmerClass}`}></div>
-              <div className={`h-6 w-20 rounded ${shimmerClass}`}></div>
+            <div className="space-y-2 pl-14">
+              <div className={`h-4 w-full rounded ${shimmerClass} bg-x-dark/20`}></div>
+              <div className={`h-4 w-5/6 rounded ${shimmerClass} bg-x-dark/20`}></div>
             </div>
           </div>
         ))}

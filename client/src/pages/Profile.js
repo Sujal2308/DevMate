@@ -5,6 +5,7 @@ import { useAuth } from "../contexts/AuthContext";
 import PostCard from "../components/PostCard";
 import UpdateProfilePrompt from "../components/UpdateProfilePrompt";
 import SavedPostsList from "../components/SavedPostsList";
+import ShimmerEffect from "../components/ShimmerEffect";
 
 const Profile = () => {
   const [profileData, setProfileData] = useState(null);
@@ -38,22 +39,29 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
+      setLoading(true);
+      const startTime = Date.now();
       try {
-        setLoading(true);
         // Fetch profile data with followers data to properly detect follow state
         const response = await axios.get(
           `/api/users/${username}?limit=8&includeFollowersData=true`
         );
-        setProfileData(response.data);
+        
+        const elapsedTime = Date.now() - startTime;
+        const remainingTime = Math.max(0, 800 - elapsedTime);
+        
+        setTimeout(() => {
+          setProfileData(response.data);
+          // Update pagination state from response
+          if (response.data.pagination) {
+            setHasMorePosts(response.data.pagination.hasMore);
+            setCurrentPage(response.data.pagination.current);
+          }
+          setLoading(false);
+        }, remainingTime);
 
-        // Update pagination state from response
-        if (response.data.pagination) {
-          setHasMorePosts(response.data.pagination.hasMore);
-          setCurrentPage(response.data.pagination.current);
-        }
       } catch (error) {
         setError(error.response?.data?.message || "Failed to fetch profile");
-      } finally {
         setLoading(false);
       }
     };
@@ -326,57 +334,7 @@ const Profile = () => {
   };
 
   if (loading) {
-    return (
-  <div className="max-w-2xl mx-auto py-8 px-4">
-        {/* Quick loading skeleton for better perceived performance */}
-        <div className="relative mb-8">
-          {/* Cover skeleton */}
-          <div className="h-40 md:h-64 bg-gradient-to-r from-gray-600 to-gray-500 animate-pulse relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-          </div>
-
-          {/* Profile info skeleton */}
-          <div className="bg-gradient-to-br from-x-dark/90 to-x-dark/60 backdrop-blur-sm border border-x-border/50 -mt-1 pt-2 md:pt-8 pb-6 px-4 md:px-8">
-            <div className="flex flex-row items-start justify-between">
-              <div className="flex flex-row items-start text-left">
-                {/* Avatar skeleton */}
-                <div className="relative -mt-2 md:-mt-12 mb-0 mr-6 z-20">
-                  <div className="bg-gray-600 animate-pulse w-20 h-20 md:w-32 md:h-32 rounded-2xl md:rounded-3xl border-4 border-x-dark shadow-2xl"></div>
-                </div>
-                {/* Name skeleton */}
-                <div className="text-left flex flex-col justify-start">
-                  <div className="h-6 md:h-8 bg-gray-600 animate-pulse rounded mb-2 w-48"></div>
-                  <div className="h-4 md:h-5 bg-gray-600 animate-pulse rounded mb-2 w-32"></div>
-                </div>
-              </div>
-            </div>
-
-            {/* Bio skeleton */}
-            <div className="mt-6">
-              <div className="h-4 bg-gray-600 animate-pulse rounded mb-2 w-3/4"></div>
-              <div className="h-4 bg-gray-600 animate-pulse rounded mb-2 w-1/2"></div>
-            </div>
-          </div>
-        </div>
-
-        {/* Metrics skeleton */}
-        <div className="bg-gradient-to-br from-x-dark/70 to-x-dark/40 backdrop-blur-sm border border-x-border/40 p-4 mb-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[...Array(4)].map((_, i) => (
-              <div
-                key={i}
-                className="bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/30 rounded-2xl p-6 text-center"
-              >
-                <div className="h-8 bg-gray-600 animate-pulse rounded mb-2 w-12 mx-auto"></div>
-                <div className="h-4 bg-gray-600 animate-pulse rounded w-16 mx-auto"></div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <p className="text-center text-x-gray text-sm">Loading profile...</p>
-      </div>
-    );
+    return <ShimmerEffect type="profile" />;
   }
 
   if (error || !profileData) {
@@ -640,13 +598,13 @@ const Profile = () => {
       {showFullProfile ? (
         <>
           {/* Project Showcase Button */}
-          <div className="mb-8 flex justify-start">
+          <div className="mb-8 flex justify-start w-full md:w-auto">
             <Link 
               to={`/profile/${profileUser.username}/projects`}
-              className="inline-flex items-center gap-3 bg-purple-900 border-2 border-dashed border-white/60 hover:bg-purple-800 hover:border-solid hover:border-white transition-all duration-300 py-3 px-6 rounded-full group active:scale-95 shadow-lg shadow-purple-900/40"
+              className="inline-flex items-center gap-3 bg-[#FF6347] md:bg-purple-900 border-2 border-dashed border-white/60 hover:bg-[#FF6347]/90 md:hover:bg-purple-800 hover:border-solid hover:border-white transition-all duration-300 py-3 px-6 rounded-2xl group active:scale-95 shadow-lg shadow-[#FF6347]/20 md:shadow-purple-900/40 w-full md:w-auto justify-center"
             >
               <img src="/icons/projects.png" alt="Projects" className="w-4 h-4 object-contain group-hover:scale-110 transition-transform" />
-              <span className="text-sm font-black text-white font-space tracking-tight">Project Showcase</span>
+              <span className="text-sm font-black text-white font-space tracking-tight">Projects Showcase</span>
               <svg className="w-4 h-4 text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M7 17L17 7M17 7H7M17 7V17" />
               </svg>

@@ -161,6 +161,13 @@ const Communities = () => {
                   loading={joiningId === c._id}
                 />
               ))}
+              
+              {/* End of list message */}
+              <div className="text-center py-8 mt-4 border-t border-white/5 animate-fade-in">
+                <p className="text-[10px] font-black text-x-gray uppercase tracking-[0.25em] opacity-60">
+                  🚀 You've reached the end of your communities
+                </p>
+              </div>
             </div>
           ) : (
             <div className="text-center py-20 bg-white/5 rounded-xl border-2 border-dashed border-white/10 mt-6">
@@ -212,7 +219,7 @@ const Communities = () => {
 
 const CommunityCard = ({ community, onJoinLeave, loading }) => {
   return (
-    <div className="flex flex-col p-6 bg-[#0a192f]/40 rounded-2xl border border-white/5 mb-4 hover:border-white/20 transition-all duration-300 shadow-xl">
+    <div className="flex flex-col p-6 bg-[#16181C] md:bg-[#0a192f]/40 rounded-2xl border border-white/5 mb-4 hover:border-white/20 transition-all duration-300 shadow-xl">
       {/* Top Header Section */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-3">

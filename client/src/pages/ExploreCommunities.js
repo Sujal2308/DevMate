@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../config/axios";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const ExploreCommunities = () => {
   const navigate = useNavigate();
@@ -17,16 +18,24 @@ const ExploreCommunities = () => {
   const fetchCommunities = async () => {
     setLoading(true);
     setFetchError("");
+    const startTime = Date.now();
     try {
       const token = localStorage.getItem("token");
       const res = await axios.get("/api/communities", {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
-      setCommunities(res.data);
+      
+      const elapsedTime = Date.now() - startTime;
+      const remainingTime = Math.max(0, 800 - elapsedTime);
+      
+      setTimeout(() => {
+        setCommunities(res.data);
+        setLoading(false);
+      }, remainingTime);
+      
     } catch (err) {
       console.error("Communities fetch error:", err);
       setFetchError(err.response?.data?.message || err.message || "Failed to load communities");
-    } finally {
       setLoading(false);
     }
   };
@@ -66,12 +75,8 @@ const ExploreCommunities = () => {
 
   if (loading) {
     return (
-      <div className="w-full max-w-4xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 gap-6">
-          {[...Array(6)].map((_, i) => (
-            <div key={i} className="h-40 bg-white/5 rounded-xl animate-pulse" />
-          ))}
-        </div>
+      <div className="flex items-center justify-center min-h-[70vh] w-full">
+        <LoadingSpinner compact={true} size="large" />
       </div>
     );
   }
@@ -144,6 +149,13 @@ const ExploreCommunities = () => {
                 loading={joiningId === c._id}
               />
             ))}
+            
+            {/* End of list message */}
+            <div className="text-center py-8 mt-4 border-t border-white/5 animate-fade-in">
+              <p className="text-[10px] font-black text-x-gray uppercase tracking-[0.25em] opacity-60">
+                🌍 You've reached the end of exploration
+              </p>
+            </div>
           </div>
         ) : (
           <div className="text-center py-16 flex flex-col items-center animate-in fade-in zoom-in duration-500">
@@ -165,7 +177,7 @@ const ExploreCommunities = () => {
 
 const CommunityCard = ({ community, onJoinLeave, loading }) => {
   return (
-    <div className="flex flex-col p-6 bg-[#0a192f]/40 rounded-2xl border border-white/5 mb-4 hover:border-white/20 transition-all duration-300 shadow-xl">
+    <div className="flex flex-col p-6 bg-[#16181C] md:bg-[#0a192f]/40 rounded-2xl border border-white/5 mb-4 hover:border-white/20 transition-all duration-300 shadow-xl">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-3">
           <Link to={`/community/${community.slug}`} className="shrink-0">

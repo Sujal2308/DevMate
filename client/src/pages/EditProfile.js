@@ -145,7 +145,7 @@ const EditProfile = () => {
               className="relative group/avatar cursor-pointer"
               onClick={() => fileInputRef.current?.click()}
             >
-              <div className="bg-gradient-to-br from-x-blue to-purple-500 text-white w-20 h-20 lg:w-28 lg:h-28 rounded-full flex items-center justify-center text-2xl lg:text-3xl font-bold border-4 border-x-dark shadow-2xl overflow-hidden relative transition-transform duration-300 group-hover/avatar:scale-105 active:scale-95">
+              <div className="bg-gradient-to-br from-x-blue to-purple-500 text-white w-24 h-24 lg:w-28 lg:h-28 rounded-full flex items-center justify-center text-2xl lg:text-3xl font-bold border-4 border-x-dark shadow-2xl overflow-hidden relative transition-transform duration-300 group-hover/avatar:scale-105 active:scale-95">
                 {avatarPreview ? (
                   <img src={avatarPreview} alt="Profile" className="w-full h-full object-cover" />
                 ) : (
