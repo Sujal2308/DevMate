@@ -601,7 +601,7 @@ const Profile = () => {
           <div className="mb-8 flex justify-start w-full md:w-auto">
             <Link 
               to={`/profile/${profileUser.username}/projects`}
-              className="inline-flex items-center gap-3 bg-[#FF6347] md:bg-purple-900 border-2 border-dashed border-white/60 hover:bg-[#FF6347]/90 md:hover:bg-purple-800 hover:border-solid hover:border-white transition-all duration-300 py-3 px-6 rounded-2xl group active:scale-95 shadow-lg shadow-[#FF6347]/20 md:shadow-purple-900/40 w-full md:w-auto justify-center"
+              className="inline-flex items-center gap-3 bg-[#0a192f] md:bg-purple-900 border-none md:border-2 md:border-dashed border-white/60 hover:bg-[#0a192f]/80 md:hover:bg-purple-800 md:hover:border-solid hover:border-white transition-all duration-300 py-3 px-6 rounded-2xl group active:scale-95 shadow-lg shadow-[#0a192f]/30 md:shadow-purple-900/40 w-full md:w-auto justify-center"
             >
               <img src="/icons/projects.png" alt="Projects" className="w-4 h-4 object-contain group-hover:scale-110 transition-transform" />
               <span className="text-sm font-black text-white font-space tracking-tight">Projects Showcase</span>
