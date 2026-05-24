@@ -20,7 +20,6 @@ import "prismjs/components/prism-css";
 
 const CreatePost = () => {
   const { user } = useAuth();
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
   const [formData, setFormData] = useState({
     title: "",
     content: "",
@@ -35,7 +34,6 @@ const CreatePost = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState("");
-  const [showCancel, setShowCancel] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [showRepoInput, setShowRepoInput] = useState(false);
   const [communities, setCommunities] = useState([]);
@@ -97,7 +95,6 @@ const CreatePost = () => {
       } else if (file.type === "application/pdf") {
         setMediaPreview("PDF_DOCUMENT");
       }
-      setShowCancel(true);
     }
   };
 
@@ -179,7 +176,9 @@ const CreatePost = () => {
                     clipRule="evenodd"
                   />
                 </svg>
-                <span className="text-sm font-bold tracking-tight">{error}</span>
+                <span className="text-sm font-bold tracking-tight">
+                  {error}
+                </span>
               </div>
             </div>
           )}
@@ -191,7 +190,11 @@ const CreatePost = () => {
                 type="button"
                 onClick={() => {
                   const plainText = getPlainText(formData.content).trim();
-                  const hasDraftContent = formData.title.trim() || plainText || formData.codeSnippet.trim() || media;
+                  const hasDraftContent =
+                    formData.title.trim() ||
+                    plainText ||
+                    formData.codeSnippet.trim() ||
+                    media;
                   if (hasDraftContent) {
                     setShowConfirm(true);
                   } else {
@@ -231,7 +234,7 @@ const CreatePost = () => {
                       onClick={() => setShowConfirm(false)}
                       className="fixed inset-0 z-40 bg-black/20 backdrop-blur-[2px]"
                     />
-                    
+
                     {/* Floating Dropdown Modal below the button */}
                     <motion.div
                       initial={{ opacity: 0, y: -10, scale: 0.95 }}
@@ -242,8 +245,12 @@ const CreatePost = () => {
                       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 via-purple-500 to-x-blue opacity-50"></div>
                       <div className="space-y-4">
                         <div className="space-y-1">
-                          <h4 className="text-sm font-black text-x-white tracking-tight font-space">Discard Draft?</h4>
-                          <p className="text-[10px] text-x-gray opacity-70 font-medium">This will clear all content.</p>
+                          <h4 className="text-sm font-black text-x-white tracking-tight font-space">
+                            Discard Draft?
+                          </h4>
+                          <p className="text-[10px] text-x-gray opacity-70 font-medium">
+                            This will clear all content.
+                          </p>
                         </div>
                         <div className="flex gap-2">
                           <button
@@ -263,7 +270,6 @@ const CreatePost = () => {
                               setMediaPreview(null);
                               setShowRepoInput(false);
                               setShowPollInput(false);
-                              setShowCancel(false);
                               setShowConfirm(false);
                               setSelectedFlair(null);
                             }}
@@ -375,11 +381,15 @@ const CreatePost = () => {
               {loading ? (
                 <>
                   <LoadingSpinner size="small" />
-                  <span className="hidden sm:inline text-[11px] font-black uppercase tracking-wider">Publishing...</span>
+                  <span className="hidden sm:inline text-[11px] font-black uppercase tracking-wider">
+                    Publishing...
+                  </span>
                 </>
               ) : (
                 <>
-                  <span className="hidden sm:inline text-[11px] font-black uppercase tracking-wider">Publish</span>
+                  <span className="hidden sm:inline text-[11px] font-black uppercase tracking-wider">
+                    Publish
+                  </span>
                   <img
                     src="/icons/arrow-up.png"
                     alt="Publish"
@@ -437,8 +447,12 @@ const CreatePost = () => {
                         <div>
                           <h4 className="text-xs font-space font-black text-neutral-900 uppercase tracking-wider">
                             {(() => {
-                              const comm = communities.find((c) => c._id === selectedCommunity);
-                              return comm ? `${comm.name} Rules` : "Platform Rules";
+                              const comm = communities.find(
+                                (c) => c._id === selectedCommunity,
+                              );
+                              return comm
+                                ? `${comm.name} Rules`
+                                : "Platform Rules";
                             })()}
                           </h4>
                           <p className="text-[9px] text-neutral-500 font-black uppercase tracking-widest mt-0.5">
@@ -457,24 +471,50 @@ const CreatePost = () => {
                       {/* Rules List (Scrollable) */}
                       <div className="flex-1 overflow-y-auto space-y-3 pr-1 scrollbar-hide py-1">
                         {(() => {
-                          const comm = communities.find((c) => c._id === selectedCommunity);
-                          const rulesToRender = comm?.rules && comm.rules.length > 0
-                            ? comm.rules
-                            : [
-                                { title: "Respectful Communication", description: "Treat others with the same respect you would want. No personal attacks, harassment, or flame wars." },
-                                { title: "Relevant Discussion", description: "Keep your posts focused on developer-related topics, technology, or programming." },
-                                { title: "No Spam / Self-Promotion", description: "Avoid posting repetitive links, unsolicited marketing, or commercial spam." },
-                                { title: "Clean & Professional Language", description: "Avoid excessive profanity, hate speech, and maintain a high standard of professional developer environment." }
-                              ];
+                          const comm = communities.find(
+                            (c) => c._id === selectedCommunity,
+                          );
+                          const rulesToRender =
+                            comm?.rules && comm.rules.length > 0
+                              ? comm.rules
+                              : [
+                                  {
+                                    title: "Respectful Communication",
+                                    description:
+                                      "Treat others with the same respect you would want. No personal attacks, harassment, or flame wars.",
+                                  },
+                                  {
+                                    title: "Relevant Discussion",
+                                    description:
+                                      "Keep your posts focused on developer-related topics, technology, or programming.",
+                                  },
+                                  {
+                                    title: "No Spam / Self-Promotion",
+                                    description:
+                                      "Avoid posting repetitive links, unsolicited marketing, or commercial spam.",
+                                  },
+                                  {
+                                    title: "Clean & Professional Language",
+                                    description:
+                                      "Avoid excessive profanity, hate speech, and maintain a high standard of professional developer environment.",
+                                  },
+                                ];
 
                           return rulesToRender.map((rule, idx) => (
-                            <div key={idx} className="flex gap-3 p-2.5 bg-neutral-50 border border-neutral-100 rounded-xl hover:border-neutral-200 transition-colors">
+                            <div
+                              key={idx}
+                              className="flex gap-3 p-2.5 bg-neutral-50 border border-neutral-100 rounded-xl hover:border-neutral-200 transition-colors"
+                            >
                               <div className="w-5 h-5 rounded-full bg-x-blue/10 border border-x-blue/20 flex items-center justify-center text-x-blue text-[10px] font-black shrink-0">
                                 {idx + 1}
                               </div>
                               <div>
-                                <h5 className="text-xs font-black text-neutral-900 leading-tight mb-0.5">{rule.title}</h5>
-                                <p className="text-[10px] text-neutral-600 leading-relaxed font-medium">{rule.description || rule.desc}</p>
+                                <h5 className="text-xs font-black text-neutral-900 leading-tight mb-0.5">
+                                  {rule.title}
+                                </h5>
+                                <p className="text-[10px] text-neutral-600 leading-relaxed font-medium">
+                                  {rule.description || rule.desc}
+                                </p>
                               </div>
                             </div>
                           ));
@@ -568,9 +608,7 @@ const CreatePost = () => {
                     </svg>
                     {selectedFlair ? selectedFlair.name : "Add a Flair"}
                   </span>
-                  {!selectedFlair && (
-                    <span className="text-red-500">*</span>
-                  )}
+                  {!selectedFlair && <span className="text-red-500">*</span>}
                 </button>
 
                 {selectedCommunity && showFlairGrid && (
@@ -584,7 +622,8 @@ const CreatePost = () => {
                     <div className="absolute top-full left-0 mt-2 z-50 flex flex-wrap gap-2 p-4 bg-white/95 backdrop-blur-md border border-neutral-200 rounded-xl shadow-2xl min-w-[280px]">
                       {(() => {
                         const comm = communities.find(
-                          (c) => c._id.toString() === selectedCommunity.toString(),
+                          (c) =>
+                            c._id.toString() === selectedCommunity.toString(),
                         );
                         if (!comm || !comm.flairs || comm.flairs.length === 0) {
                           return (
@@ -608,7 +647,9 @@ const CreatePost = () => {
                               }`}
                               style={{
                                 background: f.color,
-                                borderColor: isSelected ? "#000" : "transparent",
+                                borderColor: isSelected
+                                  ? "#000"
+                                  : "transparent",
                                 color: "#000",
                                 borderWidth: isSelected ? "2px" : "1px",
                               }}
@@ -630,10 +671,6 @@ const CreatePost = () => {
               value={formData.content}
               onChange={(html) => {
                 setFormData((prev) => ({ ...prev, content: html }));
-                const div = document.createElement("div");
-                div.innerHTML = html;
-                const text = div.textContent || "";
-                setShowCancel(text.trim().length > 0 || !!media);
                 if (error) setError("");
               }}
               onFocus={() => {}}
@@ -827,7 +864,11 @@ const CreatePost = () => {
                 type="button"
                 onClick={() => {
                   setShowPollInput(false);
-                  setFormData({ ...formData, pollQuestion: "", pollOptions: ["", ""] });
+                  setFormData({
+                    ...formData,
+                    pollQuestion: "",
+                    pollOptions: ["", ""],
+                  });
                 }}
                 className="absolute -top-3 -right-3 bg-white hover:bg-gray-200 text-black w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shadow-lg transform transition-transform group-hover/poll:scale-110 z-10 border border-black/10"
               >
@@ -1051,8 +1092,6 @@ const CreatePost = () => {
               </div>
             </div>
           )}
-
-
         </form>
 
         {/* Enhanced Preview Section with Clear Visual Distinction */}
@@ -1141,7 +1180,7 @@ const CreatePost = () => {
                   {/* Title Preview */}
                   {formData.title && (
                     <div className="px-1">
-                      <h2 
+                      <h2
                         className="text-xl sm:text-2xl font-black text-x-white leading-tight tracking-tight"
                         style={{ fontFamily: "'Space Grotesk', sans-serif" }}
                       >
@@ -1163,10 +1202,10 @@ const CreatePost = () => {
                   {/* Repository Link Preview */}
                   {formData.repoUrl && (
                     <div className="mb-2 px-1">
-                      <a 
-                        href={formData.repoUrl} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
+                      <a
+                        href={formData.repoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 text-x-white hover:text-x-blue transition-all group py-1 px-1 whitespace-nowrap"
                       >
                         <svg
@@ -1174,28 +1213,28 @@ const CreatePost = () => {
                           fill="currentColor"
                           viewBox="0 0 24 24"
                         >
-                        <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
-                      </svg>
-                      <span className="text-xs font-black truncate">
-                        {formData.repoTitle ||
-                          formData.repoUrl.split("/").slice(-2).join("/") ||
-                          "New Repository"}
-                      </span>
-                      <svg
-                        className="w-3.5 h-3.5 text-red-500 opacity-80"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={3.5}
-                          d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                        />
-                      </svg>
-                    </a>
-                  </div>
+                          <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+                        </svg>
+                        <span className="text-xs font-black truncate">
+                          {formData.repoTitle ||
+                            formData.repoUrl.split("/").slice(-2).join("/") ||
+                            "New Repository"}
+                        </span>
+                        <svg
+                          className="w-3.5 h-3.5 text-red-500 opacity-80"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={3.5}
+                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                          />
+                        </svg>
+                      </a>
+                    </div>
                   )}
 
                   {/* Media Preview Section */}
@@ -1353,8 +1392,6 @@ const CreatePost = () => {
           )}
         </div>
       </div>
-
-
 
       {/* Add keyframes for border gradient animation */}
       <style>
