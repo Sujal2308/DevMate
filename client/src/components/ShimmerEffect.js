@@ -130,8 +130,8 @@ const ShimmerEffect = ({ type = "feed" }) => {
       </div>
 
       {/* Project Showcase Button Shimmer */}
-      <div className="mb-8 flex justify-start">
-        <div className={`h-12 w-48 rounded-full border-2 border-dashed border-white/5 bg-x-dark/20 ${shimmerClass}`}></div>
+      <div className="mb-10 md:mb-8 flex justify-start w-full md:w-auto px-4 sm:px-0">
+        <div className={`h-6 md:h-12 w-32 md:w-48 rounded md:rounded-full border-0 md:border-2 md:border-dashed border-white/5 bg-x-dark/20 ${shimmerClass}`}></div>
       </div>
 
       {/* Technical Skills Section Shimmer */}

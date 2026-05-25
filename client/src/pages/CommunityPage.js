@@ -323,7 +323,7 @@ const CommunityPage = () => {
             {otherCommunities.map((c) => (
               <div
                 key={c._id}
-                className="flex items-center gap-3 p-2 px-4 bg-transparent border border-white/10 rounded-full hover:bg-white/[0.04] transition-all duration-200 group"
+                className="flex items-center gap-3 py-3 px-0 bg-transparent border-0 rounded-none transition-all duration-200 group"
               >
                 {/* Icon */}
                 <Link to={`/community/${c.slug}`} className="shrink-0">
@@ -349,9 +349,11 @@ const CommunityPage = () => {
                       {c.name}
                     </p>
                   </Link>
-                  <p className="text-xs text-x-gray">
-                    <span className="font-bold text-white/70">{c.memberCount}</span> members
-                  </p>
+                  {c.description && (
+                    <p className="text-xs text-x-gray truncate">
+                      {c.description}
+                    </p>
+                  )}
                 </div>
 
                 {/* Join/Leave */}

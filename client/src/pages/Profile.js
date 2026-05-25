@@ -598,16 +598,18 @@ const Profile = () => {
       {showFullProfile ? (
         <>
           {/* Project Showcase Button */}
-          <div className="mb-8 flex justify-start w-full md:w-auto">
+          <div className="mb-10 md:mb-8 flex justify-start w-full md:w-auto px-4 sm:px-0">
             <Link 
               to={`/profile/${profileUser.username}/projects`}
-              className="inline-flex items-center gap-3 bg-[#0a192f] md:bg-purple-900 border-none md:border-2 md:border-dashed border-white/60 hover:bg-[#0a192f]/80 md:hover:bg-purple-800 md:hover:border-solid hover:border-white transition-all duration-300 py-3 px-6 rounded-2xl group active:scale-95 shadow-lg shadow-[#0a192f]/30 md:shadow-purple-900/40 w-full md:w-auto justify-center"
+              className="inline-flex items-center gap-3 bg-transparent md:bg-[#0a192f] md:bg-purple-900 border-none md:border-2 md:border-dashed border-white/60 hover:bg-transparent md:hover:bg-purple-800 md:hover:border-solid hover:border-white transition-all duration-300 p-0 py-2 md:py-3 md:px-6 rounded-none md:rounded-2xl group active:scale-95 shadow-none md:shadow-lg md:shadow-[#0a192f]/30 md:shadow-purple-900/40 w-auto justify-start md:justify-center"
             >
-              <img src="/icons/projects.png" alt="Projects" className="w-4 h-4 object-contain group-hover:scale-110 transition-transform" />
-              <span className="text-sm font-black text-white font-space tracking-tight">Projects Showcase</span>
-              <svg className="w-4 h-4 text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M7 17L17 7M17 7H7M17 7V17" />
-              </svg>
+              <img src="/icons/projects.png" alt="Projects" className="w-5 h-5 md:w-4 md:h-4 object-contain group-hover:scale-110 transition-transform" />
+              <div className="flex items-center gap-1.5">
+                <span className="text-base md:text-sm font-black text-white font-space tracking-tight underline underline-offset-8 md:no-underline">Projects Showcase</span>
+                <svg className="w-5 h-5 md:w-4 md:h-4 text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M7 17L17 7M17 7H7M17 7V17" />
+                </svg>
+              </div>
             </Link>
           </div>
 
