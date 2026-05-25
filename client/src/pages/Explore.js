@@ -369,7 +369,7 @@ const Explore = () => {
                 </div>
 
                 {/* Filter Tabs */}
-                <div className="flex items-center gap-2 mt-6">
+                <div className="flex items-center gap-6 mt-6 border-b border-white/10 w-full">
                   {[
                     { id: "all", label: "All" },
                     { id: "people", label: "People" },
@@ -378,10 +378,10 @@ const Explore = () => {
                     <button
                       key={tab.id}
                       onClick={() => setSearchType(tab.id)}
-                      className={`px-6 py-2 rounded-lg text-xs font-black tracking-widest transition-all duration-200 border-2 ${
+                      className={`pb-3 px-1 text-xs font-black tracking-widest transition-all duration-200 border-b-2 -mb-[2px] ${
                         searchType === tab.id
-                          ? "bg-x-blue border-x-blue text-white shadow-lg shadow-x-blue/30 translate-y-[-1px]"
-                          : "bg-black border-white/10 text-x-gray hover:border-white/30 hover:text-white"
+                          ? "border-x-blue text-white"
+                          : "border-transparent text-x-gray hover:text-white"
                       }`}
                       style={{ fontFamily: "'Space Grotesk', sans-serif" }}
                     >
@@ -460,43 +460,29 @@ const Explore = () => {
           ) : (
             <>
               <div className="mb-6">
-                <p className="text-x-gray text-xs sm:text-sm font-bold tracking-tight">
+                <p className="text-x-gray text-xs sm:text-sm font-bold tracking-tight text-right">
                   <span className="text-x-white">
                     {users.length + posts.length}
                   </span>{" "}
                   results found
-                  {debouncedSearchTerm && (
-                    <span className="text-x-blue/60">
-                      {" "}
-                      for "{debouncedSearchTerm}"
-                    </span>
-                  )}
                 </p>
               </div>
 
               {/* Users Section */}
               {users.length > 0 && (searchType === "all" || searchType === "people") && (
                 <div className="mb-10">
-                  <h2 className="text-lg font-bold text-x-white mb-4 flex items-center gap-2">
-                    <span className="w-1.5 h-6 bg-x-blue rounded-full"></span>
-                    Developers
-                  </h2>
                   <div className="space-y-2 lg:space-y-4">
                 {users.map((user) => {
                   return (
                     <div
                       key={user._id}
-                      className={`w-full card transition-all duration-200 bg-black border-2 border-white/20 shadow-2xl ${
-                        isMobile 
-                          ? "!rounded-full px-6 py-3" 
-                          : "rounded-xl p-3 lg:p-6 px-8 hover:border-white/40"
-                      }`}
+                      className="w-full card transition-all duration-200 bg-transparent border-b border-white/10 pb-4"
                     >
                       <div className="w-full">
                         {/* Mobile Layout - Avatar and View Profile Button Horizontal */}
                         <div className="flex items-center justify-between sm:hidden">
                           <div className="flex items-center gap-3">
-                            <div className="bg-black text-white w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold shadow-lg border-2 border-[#a259f7] overflow-hidden relative flex-shrink-0">
+                            <div className="bg-black text-white w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold shadow-lg overflow-hidden relative flex-shrink-0">
                               {user.avatar ? (
                                 <img 
                                   src={user.avatar} 
@@ -523,7 +509,7 @@ const Explore = () => {
                           <div className="flex items-center gap-2">
                             <Link
                               to={`/profile/${user.username}`}
-                              className="p-2 transition-all duration-200 bg-x-blue text-white hover:bg-x-blue-hover rounded-full border border-white/10 shadow-lg"
+                              className="p-2 transition-all duration-200 bg-black text-white hover:bg-white hover:text-black rounded-full border border-white shadow-lg"
                               onClick={(e) => e.stopPropagation()}
                               title="View Profile"
                             >
@@ -534,14 +520,11 @@ const Explore = () => {
                           </div>
                         </div>
 
-                        {/* Expanded details for mobile only */}
-
-
                         {/* Desktop Layout - Side by Side with Action Buttons */}
-                        <div className="hidden sm:flex items-start justify-between gap-6 mb-4">
-                          <div className="flex items-start gap-6 flex-1">
+                        <div className="hidden sm:flex items-center justify-between gap-6">
+                          <div className="flex items-center gap-6 flex-1">
                             <div className="flex-shrink-0">
-                              <div className="bg-black text-white w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold shadow-lg border-2 border-[#a259f7] overflow-hidden relative">
+                              <div className="bg-black text-white w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold shadow-lg overflow-hidden relative">
                                 {user.avatar ? (
                                   <img 
                                     src={user.avatar} 
@@ -561,7 +544,7 @@ const Explore = () => {
                               <h3 className="font-bold text-x-white text-xl mb-1">
                                 {user.displayName || user.username}
                               </h3>
-                              <p className="text-base text-x-gray mb-3">
+                              <p className="text-base text-x-gray">
                                 @{user.username}
                               </p>
                             </div>
@@ -569,71 +552,12 @@ const Explore = () => {
                           <div className="flex items-center gap-3 flex-shrink-0">
                             <Link
                               to={`/profile/${user.username}`}
-                              className="text-base px-6 py-3 transition-all duration-200 whitespace-nowrap bg-x-blue text-white rounded-full hover:bg-x-blue-hover font-bold shadow-lg shadow-x-blue/20"
+                              className="text-base px-6 py-3 transition-all duration-200 whitespace-nowrap bg-black border border-white text-white rounded-full hover:bg-white hover:text-black font-bold shadow-lg"
                             >
                               View Profile
                             </Link>
                           </div>
                         </div>
-
-                        {/* Bio - Full Width (desktop only) */}
-                        {!isMobile && user.bio && (
-                          <div className="w-full mb-4">
-                            <p className="text-x-gray text-sm lg:text-base leading-relaxed text-left line-clamp-3">
-                              "{user.bio}"
-                            </p>
-                          </div>
-                        )}
-
-                        {/* Skills and Meta Info - Full Width (desktop only) */}
-                        {!isMobile && (
-                          <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-x-border/30">
-                            {/* Skills */}
-                            {user.skills && user.skills.length > 0 && (
-                              <div className="flex-1">
-                                <div className="flex flex-wrap gap-2 justify-start">
-                                  {user.skills
-                                    .slice(0, 8)
-                                    .map((skill, index) => (
-                                      <span
-                                        key={index}
-                                        className="bg-x-blue/20 text-x-blue border border-x-blue/30 px-3 py-1 rounded-full text-sm font-medium hover:bg-x-blue/30 transition-colors duration-200"
-                                      >
-                                        {skill}
-                                      </span>
-                                    ))}
-                                  {user.skills.length > 8 && (
-                                    <span className="text-sm text-x-gray px-3 py-1 bg-x-dark/60 rounded-full border border-x-border">
-                                      +{user.skills.length - 8} more
-                                    </span>
-                                  )}
-                                </div>
-                              </div>
-                            )}
-
-                            {/* Join Date */}
-                            <div className="flex items-center justify-start text-sm text-x-gray flex-shrink-0">
-                              <svg
-                                className="w-4 h-4 mr-2"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                />
-                              </svg>
-                              Joined{" "}
-                              {new Date(user.createdAt).toLocaleDateString(
-                                "en-US",
-                                { year: "numeric", month: "short" }
-                              )}
-                            </div>
-                          </div>
-                        )}
                       </div>
                     </div>
                   );
@@ -645,16 +569,12 @@ const Explore = () => {
               {/* Posts Section */}
               {posts.length > 0 && (searchType === "all" || searchType === "posts") && (
                 <div className="mb-10">
-                  <h2 className="text-lg font-bold text-x-white mb-4 flex items-center gap-2">
-                    <span className="w-1.5 h-6 bg-purple-500 rounded-full"></span>
-                    Posts
-                  </h2>
                   <div className="space-y-3 sm:space-y-4">
                     {posts.map((post) => (
                       <Link
                         key={post._id}
                         to={`/post/${post._id}`}
-                        className="block bg-black/40 hover:bg-white/5 border-2 border-white rounded-xl p-5 transition-all group relative"
+                        className="block bg-transparent hover:bg-white/5 border-b border-white/10 py-4 px-0 transition-all group relative"
                       >
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex items-start gap-4 flex-1 min-w-0">
