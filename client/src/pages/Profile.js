@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
 import PostCard from "../components/PostCard";
@@ -20,9 +20,20 @@ const Profile = () => {
   const { username } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [showAvatarPreview, setShowAvatarPreview] = useState(false);
   const menuRef = useRef(null);
+  const tabsRef = useRef(null);
+
+  // Handle autoscroll to posts if location hash is #posts or state has scrollToPosts
+  useEffect(() => {
+    if ((location.hash === "#posts" || location.state?.scrollToPosts) && tabsRef.current && !loading) {
+      setTimeout(() => {
+        tabsRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 400); // 400ms delay to ensure everything, including image sizes/fonts, is fully loaded and settled
+    }
+  }, [location.hash, location.state, loading]);
 
   // Handle clicking outside of menu to close it
   useEffect(() => {
@@ -789,7 +800,7 @@ const Profile = () => {
             />
           )}
 
-          <div className="mb-8">
+          <div className="mb-8" ref={tabsRef}>
             <div className="border-b border-x-border/30 px-4">
               <nav className="flex justify-start space-x-8">
                 <button

@@ -100,7 +100,7 @@ const ExploreCommunities = () => {
         {/* Search */}
         <div className="w-full relative max-w-xl">
           <svg
-            className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-black/30"
+            className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -112,7 +112,7 @@ const ExploreCommunities = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search new tribes..."
-            className="w-full bg-white text-black pl-14 pr-6 py-4 rounded-full text-sm font-bold focus:outline-none focus:ring-4 focus:ring-x-blue/10 transition-all border border-transparent shadow-2xl placeholder:text-black/40"
+            className="w-full bg-transparent text-white pl-14 pr-6 py-4 rounded-full text-sm font-bold focus:outline-none focus:ring-4 focus:ring-white/10 transition-all border-2 border-white shadow-2xl placeholder:text-white/40"
           />
         </div>
       </div>

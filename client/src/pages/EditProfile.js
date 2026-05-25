@@ -548,7 +548,7 @@ const EditProfile = () => {
           <button
             type="button"
             onClick={() => navigate(`/profile/${user.username}`)}
-            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full font-medium transition-all duration-200 flex items-center"
+            className="bg-red-500 hover:bg-red-600 text-white px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center"
           >
             <svg
               className="w-5 h-5 mr-2"
@@ -568,14 +568,14 @@ const EditProfile = () => {
           <button
             type="submit"
             disabled={loading}
-            className="bg-green-500 hover:bg-green-600 disabled:bg-green-500/50 text-white px-6 py-2 rounded-full font-medium transition-all duration-200 disabled:cursor-not-allowed flex items-center min-h-[44px]"
+            className="bg-green-500 hover:bg-green-600 disabled:bg-green-500/50 text-white px-6 py-2.5 rounded-lg font-medium transition-all duration-200 disabled:cursor-not-allowed flex items-center min-h-[44px]"
           >
             {loading ? (
               <>
                 <span className="w-5 h-5 mr-2 flex items-center justify-center">
                   <LoadingSpinner size="small" className="!py-0 !min-h-0" />
                 </span>
-                Saving Changes...
+                Saving...
               </>
             ) : (
               <>
@@ -592,7 +592,7 @@ const EditProfile = () => {
                     d="M5 13l4 4L19 7"
                   />
                 </svg>
-                Save Changes
+                Save
               </>
             )}
           </button>

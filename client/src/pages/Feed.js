@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import ShimmerEffect from "../components/ShimmerEffect";
@@ -18,8 +19,40 @@ const Feed = () => {
   const [showModal, setShowModal] = useState(false);
   const loaderRef = useRef(null);
   const { hasUnread } = useNotification();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const location = useLocation();
+
+  // Mobile menu states
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [communities, setCommunities] = useState([]);
+  const [isCommunitiesDropdownOpen, setIsCommunitiesDropdownOpen] = useState(false);
+
+  // Fetch communities for dropdown
+  useEffect(() => {
+    if (isMobileMenuOpen && communities.length === 0) {
+      const fetchCommunities = async () => {
+        try {
+          const res = await axios.get("/api/communities");
+          setCommunities(res.data.filter(c => c.isMember));
+        } catch (err) {
+          console.error("Failed to fetch communities for menu", err);
+        }
+      };
+      fetchCommunities();
+    }
+  }, [isMobileMenuOpen, communities.length]);
+
+  // Prevent scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobileMenuOpen]);
 
   const fetchPosts = useCallback(async (pageNum = 1) => {
     try {
@@ -212,28 +245,6 @@ const Feed = () => {
           Feed
         </h1>
         <div className="flex items-center gap-2 sm:gap-3">
-          {/* Mobile news icon */}
-          <Link
-            to="/news"
-            className={`inline sm:hidden p-2 transition-all duration-200 ${
-              location.pathname === "/news" ? "text-x-blue" : "text-white"
-            }`}
-            aria-label="News"
-          >
-            <svg
-              className="w-6 h-6"
-              fill={location.pathname === "/news" ? "currentColor" : "none"}
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
-              />
-            </svg>
-          </Link>
           {/* Mobile notification bell icon */}
           <Link
             to="/notifications"
@@ -257,6 +268,17 @@ const Feed = () => {
               <path fillRule="evenodd" d="M5.25 9a6.75 6.75 0 0113.5 0v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 01-.297 1.206c-1.544.57-3.16.99-4.831 1.243a3.75 3.75 0 11-7.48 0 24.585 24.585 0 01-4.831-1.244.75.75 0 01-.298-1.205A8.217 8.217 0 005.25 9.75V9zm4.502 8.9a2.25 2.25 0 104.496 0 25.057 25.057 0 01-4.496 0z" clipRule="evenodd" />
             </svg>
           </Link>
+
+          {/* NEW Mobile Menu Button */}
+          <button
+            onClick={() => setIsMobileMenuOpen(true)}
+            className="inline-flex sm:hidden p-2 mr-3 text-white transition-all duration-200"
+            aria-label="Menu"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
           
           {/* Desktop Notification Icon */}
           <Link
@@ -378,6 +400,142 @@ const Feed = () => {
         onClose={handleModalClose}
         onReload={handleModalReload}
       />
+
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && createPortal(
+        <div className="fixed inset-0 z-[99999] flex sm:hidden">
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setIsMobileMenuOpen(false)}
+          ></div>
+          
+          {/* Menu Drawer */}
+          <div className="fixed top-0 right-0 h-full w-[80%] max-w-sm bg-[#0a0a0a] border-l border-white/10 shadow-2xl flex flex-col transform transition-transform duration-300">
+            {/* Header */}
+            <div className="p-4 border-b border-white/10 flex justify-between items-center bg-black/20">
+              <span className="text-xl font-bold text-white tracking-tight ml-2">Menu</span>
+              <button 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="p-2 text-gray-400 hover:text-white transition-colors rounded-full bg-white/5"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Links */}
+            <div className="flex-1 overflow-y-auto py-4 px-3 flex flex-col gap-2">
+              <Link
+                to="/communities"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex items-center gap-3 px-4 py-3 text-white/90 hover:text-white hover:bg-white/5 rounded-xl transition-all duration-200 font-medium"
+              >
+                <svg className="w-5 h-5 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                </svg>
+                Discover Communities
+              </Link>
+              
+              <Link
+                to="/news"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex items-center gap-3 px-4 py-3 text-white/90 hover:text-white hover:bg-white/5 rounded-xl transition-all duration-200 font-medium"
+              >
+                <svg className="w-5 h-5 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                </svg>
+                Read News
+              </Link>
+
+              <Link
+                to={`/profile/${user?.username}#posts`}
+                state={{ scrollToPosts: true }}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex items-center gap-3 px-4 py-3 text-white/90 hover:text-white hover:bg-white/5 rounded-xl transition-all duration-200 font-medium"
+              >
+                <svg className="w-5 h-5 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                My Posts
+              </Link>
+
+              {/* Dropdown for Your Communities */}
+              <div className="flex flex-col mt-2">
+                <button
+                  onClick={() => setIsCommunitiesDropdownOpen(!isCommunitiesDropdownOpen)}
+                  className="flex items-center justify-between px-4 py-3 text-white/90 hover:text-white hover:bg-white/5 rounded-xl transition-all duration-200 font-medium w-full"
+                >
+                  <div className="flex items-center gap-3">
+                    <svg className="w-5 h-5 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    Your Communities
+                  </div>
+                  <svg 
+                    className={`w-4 h-4 text-white/40 transition-transform duration-200 ${isCommunitiesDropdownOpen ? "rotate-180" : ""}`}
+                    fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                
+                {isCommunitiesDropdownOpen && (
+                  <div className="mt-2 ml-0 pl-0 flex flex-col gap-2">
+                    {communities.length > 0 ? (
+                      communities.map(c => (
+                        <Link
+                          key={c._id}
+                          to={`/community/${c.slug}`}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className="flex items-center gap-3 py-2 px-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                        >
+                          <div 
+                            className={`w-7 h-7 rounded flex items-center justify-center text-xs shrink-0 overflow-hidden ${c.icon?.startsWith("/") ? "bg-transparent border-none" : ""}`}
+                            style={c.icon?.startsWith("/") ? {} : {
+                              background: c.color ? `${c.color}20` : "rgba(255,255,255,0.05)",
+                              border: c.color ? `1px solid ${c.color}30` : "1px solid rgba(255,255,255,0.1)",
+                            }}
+                          >
+                            {c.icon?.startsWith("/") ? (
+                              <img src={c.icon} alt="" className="w-full h-full object-contain p-1" />
+                            ) : (
+                              <span className="font-bold text-[10px]" style={{ color: c.color || "#ffffff" }}>
+                                {c.icon || c.name.substring(0, 2).toUpperCase()}
+                              </span>
+                            )}
+                          </div>
+                          <span className="truncate">{c.name}</span>
+                        </Link>
+                      ))
+                    ) : (
+                      <div className="py-2 px-3 text-sm text-gray-500 italic">No communities joined yet.</div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Footer Logout */}
+            <div className="p-4 border-t border-white/10 bg-black/20">
+              <button
+                onClick={() => {
+                  logout();
+                  setIsMobileMenuOpen(false);
+                }}
+                className="flex items-center justify-center gap-2 w-full py-3.5 bg-red-600 text-white hover:bg-red-700 rounded-full transition-colors font-bold shadow-lg shadow-red-900/20"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
     </div>
   );
 };
