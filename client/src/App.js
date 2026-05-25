@@ -317,19 +317,21 @@ function AppContent() {
           )}
         </div>
       )}
-      {/* Puzzle Icon - Top Left (Above Sidebar) */}
-      {showBranding && (
-        <div className="hidden lg:block fixed top-6 left-6 z-[9999] pointer-events-none select-none">
-          <img 
-            src="/icons/puzzle.png" 
-            alt="Puzzle" 
-            className="w-10 h-10 sm:w-12 sm:h-12 object-contain opacity-90 drop-shadow-lg"
-            width="48"
-            height="48"
-            fetchpriority="high"
-          />
-        </div>
-      )}
+
+    {/* Puzzle Icon - Top Left (Above Sidebar) */}
+    {showBranding && (
+      <div className="hidden lg:block fixed top-6 left-6 z-[9999] pointer-events-none select-none">
+        <img 
+          src="/icons/puzzle.png" 
+          alt="Puzzle" 
+          className="w-10 h-10 sm:w-12 sm:h-12 object-contain opacity-90 drop-shadow-lg"
+          width="48"
+          height="48"
+          fetchpriority="high"
+        />
+      </div>
+    )}
+
 
       {/* Global Floating Post Button for Mobile */}
       {/* <FloatingPostButton /> */}

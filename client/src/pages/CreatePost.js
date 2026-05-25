@@ -376,22 +376,22 @@ const CreatePost = () => {
                 !formData.title.trim() ||
                 !getPlainText(formData.content).trim()
               }
-              className="ml-auto bg-blue-600 hover:bg-blue-700 text-white font-bold transition-all duration-200 shrink-0 flex items-center justify-center w-10 h-10 border-2 border-transparent rounded-full sm:w-auto sm:h-10 sm:px-5 sm:gap-1.5"
+              className="ml-auto bg-white hover:bg-neutral-100 disabled:opacity-50 disabled:cursor-not-allowed text-black font-bold transition-all duration-200 shrink-0 flex items-center justify-center w-10 h-10 border-2 border-neutral-700 rounded-full sm:w-auto sm:h-10 sm:px-5 sm:gap-1.5"
             >
               {loading ? (
                 <>
                   <LoadingSpinner size="small" />
-                  <span className="hidden sm:inline text-[11px] font-black uppercase tracking-wider">
+                  <span className="hidden sm:inline text-[11px] font-black uppercase tracking-wider text-black">
                     Publishing...
                   </span>
                 </>
               ) : (
                 <>
-                  <span className="hidden sm:inline text-[11px] font-black uppercase tracking-wider">
+                  <span className="hidden sm:inline text-[11px] font-black uppercase tracking-wider text-black">
                     Publish
                   </span>
                   <img
-                    src="/icons/arrow-up.png"
+                    src="/icons/publish.png"
                     alt="Publish"
                     className="w-4 h-4 sm:w-3.5 sm:h-3.5 object-contain"
                     width="16"
