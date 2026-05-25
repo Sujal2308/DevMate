@@ -28,6 +28,7 @@ import SettingPage from "./pages/SettingPage";
 // import MessagesComingSoon from "./pages/MessagesComingSoon";
 import SplashScreen from "./components/SplashScreen";
 import Features from "./pages/Features"; // Import the new Features page
+import { Component as Loader3D } from "./components/ui/loader-3";
 import Support from "./pages/Support"; // Import the new Support page
 import { useLocation } from "react-router-dom";
 import Notifications from "./pages/Notifications"; // Import Notifications page
@@ -76,8 +77,8 @@ function AppContent() {
   if (loading) {
     // You can replace this with a fancier spinner if you want
     return (
-      <div className="flex items-center justify-center min-h-screen bg-x-black">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-x-blue"></div>
+      <div className="flex items-center justify-center min-h-screen bg-x-black overflow-hidden">
+        <Loader3D />
       </div>
     );
   }

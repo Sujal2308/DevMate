@@ -1,8 +1,12 @@
 import React from "react";
+import { Component as Loader3D } from "./ui/loader-3";
 
 const SplashScreen = () => {
   return (
     <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-x-black transition-opacity duration-700 animate-fade-in-out">
+      <div className="mb-16">
+        <Loader3D />
+      </div>
       <span className="mb-2 text-base sm:text-lg text-x-gray font-medium tracking-wide animate-slide-in opacity-80 select-none">
         welcome to
       </span>
