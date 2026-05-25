@@ -4,6 +4,12 @@ import { motion, AnimatePresence } from "framer-motion";
 const CommunitySelectorModal = ({ isOpen, onClose, communities, onSelect, selectedCommunityId }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
+  React.useEffect(() => {
+    if (!isOpen) {
+      setSearchTerm("");
+    }
+  }, [isOpen]);
+
   const filteredCommunities = communities.filter((c) =>
     c.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -43,7 +49,6 @@ const CommunitySelectorModal = ({ isOpen, onClose, communities, onSelect, select
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full bg-white/5 border border-white/10 rounded-full px-8 py-4 text-white placeholder-x-gray focus:outline-none focus:border-x-blue/50 transition-all text-lg font-bold"
                   style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-                  autoFocus
                 />
                 <svg className="absolute right-8 top-1/2 -translate-y-1/2 w-6 h-6 text-x-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -52,26 +57,43 @@ const CommunitySelectorModal = ({ isOpen, onClose, communities, onSelect, select
             </div>
 
             {/* Communities List */}
-            <div className="flex-1 overflow-y-auto space-y-3 pr-2 scrollbar-hide">
+            <div className="flex-1 overflow-y-auto space-y-3 pr-2 pb-24 scrollbar-hide">
               {/* General Post Option */}
               <button
                 onClick={() => {
                   onSelect("");
                   onClose();
                 }}
-                className={`w-full flex items-center gap-4 p-3 px-5 border transition-all duration-200 group rounded-full ${
-                  !selectedCommunityId 
-                    ? "bg-x-blue/10 border-x-blue shadow-lg shadow-x-blue/5" 
-                    : "bg-transparent border-white/10 hover:bg-white/[0.04] hover:border-white/20"
-                }`}
+                className="w-full flex flex-col items-stretch py-4 bg-transparent border-b border-white/[0.08] p-0 cursor-pointer text-left hover:opacity-85 transition-all duration-200 group relative pr-12"
               >
-                <span className="text-2xl w-10 h-10 flex items-center justify-center bg-black/20 rounded-full">🌐</span>
-                <div className="flex flex-col items-start">
-                  <span className={`font-black tracking-tight ${!selectedCommunityId ? "text-white" : "text-white/90"}`}>
+                {/* Row 1: Logo and Heading (perfectly centered vertically) */}
+                <div className="flex items-center gap-2 mb-1.5 w-full">
+                  <span className="text-lg w-8 h-8 flex items-center justify-center bg-white/5 border border-white/10 rounded-lg shrink-0 text-white">🌐</span>
+                  <h3 className={`font-black text-lg sm:text-xl leading-none transition-colors truncate ${!selectedCommunityId ? "text-x-blue" : "text-white group-hover:text-x-blue"}`}>
                     No community
-                  </span>
-                  <span className="text-xs font-bold text-white/50">Post to your general profile</span>
+                  </h3>
                 </div>
+
+                {/* Row 2: Description (aligned below Heading) */}
+                <p className="text-x-gray text-xs sm:text-sm leading-normal line-clamp-1 opacity-70 mt-1 mb-1 pl-10">
+                  Post to your general profile
+                </p>
+
+                {/* Row 3: Followers/Meta (aligned below Heading) */}
+                <div className="flex flex-wrap items-center gap-2 mt-1 pl-10">
+                  <span className="inline-flex items-center text-[10px] sm:text-xs font-bold text-x-gray bg-white/5 border border-white/10 rounded-full px-2.5 py-0.5">
+                    Global feed
+                  </span>
+                </div>
+
+                {/* Selection Checkmark */}
+                {!selectedCommunityId && (
+                  <div className="absolute right-0 top-1/2 -translate-y-1/2 shrink-0 w-8 h-8 rounded-full bg-x-blue flex items-center justify-center shadow-lg">
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3.5} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                )}
               </button>
 
               {filteredCommunities.map((c) => (
@@ -81,45 +103,45 @@ const CommunitySelectorModal = ({ isOpen, onClose, communities, onSelect, select
                     onSelect(c._id);
                     onClose();
                   }}
-                  className={`w-full flex items-center gap-4 p-3 px-5 border transition-all duration-200 group rounded-full ${
-                    selectedCommunityId === c._id 
-                      ? "bg-x-blue/10 border-x-blue shadow-lg shadow-x-blue/5" 
-                      : "bg-transparent border-white/10 hover:bg-white/[0.04] hover:border-white/20"
-                  }`}
+                  className="w-full flex flex-col items-stretch py-4 bg-transparent border-b border-white/[0.08] p-0 cursor-pointer text-left hover:opacity-85 transition-all duration-200 group relative pr-12"
                 >
-                  {/* Icon */}
-                  <div
-                    className={`w-14 h-14 rounded-2xl flex items-center justify-center text-3xl shrink-0 overflow-hidden ${!c.icon?.startsWith("/") ? "" : "bg-transparent border-none"}`}
-                    style={c.icon?.startsWith("/") ? {} : { background: `${c.color}20`, border: `1px solid ${c.color}30` }}
-                  >
-                    {c.icon?.startsWith("/") ? (
-                      <img src={c.icon} alt="" className="w-full h-full object-contain p-2" />
-                    ) : (
-                      c.icon
+                  {/* Row 1: Logo and Heading (perfectly centered vertically) */}
+                  <div className="flex items-center gap-2 mb-1.5 w-full">
+                    <div
+                      className={`w-8 h-8 rounded-lg flex items-center justify-center text-lg shrink-0 overflow-hidden ${!c.icon?.startsWith("/") ? "" : "bg-transparent border-none"}`}
+                      style={c.icon?.startsWith("/") ? {} : { background: `${c.color}20`, border: `1px solid ${c.color}30` }}
+                    >
+                      {c.icon?.startsWith("/") ? (
+                        <img src={c.icon} alt="" className="w-full h-full object-contain p-1" />
+                      ) : (
+                        c.icon
+                      )}
+                    </div>
+                    <h3 className={`font-black text-lg sm:text-xl leading-none transition-colors truncate ${selectedCommunityId === c._id ? "text-x-blue" : "text-white group-hover:text-x-blue"}`}>
+                      {c.name}
+                    </h3>
+                  </div>
+
+                  {/* Row 2: Description (aligned below Heading) */}
+                  <p className="text-x-gray text-xs sm:text-sm leading-normal line-clamp-1 opacity-70 mb-1 pl-10">
+                    {c.description}
+                  </p>
+
+                  {/* Row 3: Followers/Meta (aligned below Heading) */}
+                  <div className="flex flex-wrap items-center gap-2 mt-1 pl-10">
+                    <span className="inline-flex items-center text-[10px] sm:text-xs font-bold text-x-gray bg-white/5 border border-white/10 rounded-full px-2.5 py-0.5">
+                      <span className="font-bold text-white/85 mr-1">{c.memberCount}</span> followers
+                    </span>
+                    {c.isMember && (
+                      <span className="text-[9px] font-black uppercase tracking-widest text-x-blue/80 bg-x-blue/10 border border-x-blue/20 px-2.5 py-0.5 rounded-full">
+                        Joined
+                      </span>
                     )}
                   </div>
 
-                  {/* Info */}
-                  <div className="flex-1 min-w-0 text-left">
-                    <h3 className={`font-black text-sm sm:text-lg leading-tight transition-colors truncate ${selectedCommunityId === c._id ? "text-x-blue" : "text-white"}`}>
-                      {c.name}
-                    </h3>
-                    <p className="text-x-gray text-[11px] sm:text-sm mt-0.5 sm:mt-1 line-clamp-1 opacity-70">{c.description}</p>
-                    <div className="flex items-center gap-3 mt-1">
-                      <span className="text-[10px] text-x-gray">
-                        <span className="font-bold text-white/80">{c.memberCount}</span> members
-                      </span>
-                      {c.isMember && (
-                        <span className="text-[9px] font-black uppercase tracking-widest text-x-blue/80 bg-x-blue/10 px-2 py-0.5 rounded-full">
-                          Joined
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Selection Indicator */}
+                  {/* Selection Checkmark */}
                   {selectedCommunityId === c._id && (
-                    <div className="shrink-0 w-8 h-8 rounded-full bg-x-blue flex items-center justify-center shadow-lg">
+                    <div className="absolute right-0 top-1/2 -translate-y-1/2 shrink-0 w-8 h-8 rounded-full bg-x-blue flex items-center justify-center shadow-lg">
                       <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3.5} d="M5 13l4 4L19 7" />
                       </svg>
