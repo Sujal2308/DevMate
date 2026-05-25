@@ -422,8 +422,8 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
               {post.flair.name}
             </span>
           )}
-          <a
-            href={`/community/${post.community.slug}`}
+          <Link
+            to={`/community/${post.community.slug}`}
             className="inline-flex items-center gap-1.5 text-xs font-black transition-all duration-200 hover:opacity-80"
             style={{ color: post.community.color || "#1d9bf0" }}
           >
@@ -435,7 +435,7 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
               )}
             </span>
             <span>{post.community.name}</span>
-          </a>
+          </Link>
         </div>
       )}
 

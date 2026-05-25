@@ -265,23 +265,23 @@ const TiptapEditor = ({
       {/* Tiptap styles injected inline */}
       <style>{`
         .tiptap-wrapper {
-          background: #000;
-          border: 1px solid rgba(255,255,255,0.12);
-          border-radius: 12px;
+          background: transparent;
+          border: none;
+          border-radius: 0;
           overflow: hidden;
-          transition: border-color 0.2s, box-shadow 0.2s;
+          transition: none;
         }
         .tiptap-wrapper:focus-within {
-          border-color: #1d9bf0;
-          box-shadow: 0 0 0 3px rgba(29,155,240,0.15);
+          border-color: transparent;
+          box-shadow: none;
         }
 
         .tiptap-toolbar {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          padding: 8px 10px;
-          background: rgba(255,255,255,0.03);
+          padding: 8px 0px;
+          background: transparent;
           border-bottom: 1px solid rgba(255,255,255,0.08);
           gap: 12px;
           overflow: hidden;
@@ -322,11 +322,11 @@ const TiptapEditor = ({
           min-height: 320px;
           max-height: 600px;
           overflow-y: auto;
-          padding: 16px 18px;
+          padding: 16px 0px;
           outline: none;
           color: #f1f5f9;
-          font-size: 15px;
-          line-height: 1.7;
+          font-size: 24px;
+          line-height: 1.5;
           font-family: 'Inter', 'Space Grotesk', sans-serif;
           caret-color: #1d9bf0;
         }
@@ -339,6 +339,7 @@ const TiptapEditor = ({
           pointer-events: none;
           position: absolute;
           font-family: 'Inter', sans-serif;
+          font-size: 24px;
         }
 
         /* Prose styles inside editor */
