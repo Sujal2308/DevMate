@@ -548,7 +548,7 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
 
         {/* Poll Section */}
         {post.pollQuestion && (
-          <div className="w-full mt-4 mb-2 p-5 bg-transparent border-2 border-white rounded-xl space-y-4 shadow-xl">
+          <div className="w-full mt-4 mb-2 p-5 bg-white/5 border-2 border-white/20 rounded-xl space-y-4 shadow-xl">
             <div className="flex items-start justify-between gap-3">
               <h4 className="text-sm sm:text-base font-black text-x-white tracking-tight leading-snug">
                 {post.pollQuestion}
@@ -580,26 +580,32 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
                     }}
                     className="w-full group relative overflow-hidden disabled:cursor-default"
                   >
-                    <div className="w-full h-11 bg-white/5 border border-white/5 rounded-full flex items-center px-5 relative z-10 overflow-hidden transition-all hover:bg-white/10 active:scale-[0.98]">
+                    <div className={`w-full h-11 border rounded-full flex items-center px-5 relative z-10 overflow-hidden transition-all active:scale-[0.98] ${
+                      hasVoted 
+                        ? 'bg-white border-white text-black' 
+                        : 'bg-black border-white/10 hover:bg-white/5 text-x-white'
+                    }`}>
                       {/* Progress Bar Background */}
                       <div 
-                        className={`absolute left-0 top-0 bottom-0 transition-all duration-700 ease-out ${hasVoted ? 'bg-x-blue opacity-100' : 'bg-white/10'}`}
+                        className={`absolute left-0 top-0 bottom-0 transition-all duration-700 ease-out ${
+                          hasVoted ? 'bg-black/10' : 'bg-white/10'
+                        }`}
                         style={{ width: `${percentage}%` }}
                       />
                       
                       {/* Option Content */}
                       <div className="flex items-center justify-between w-full relative z-20">
-                        <span className={`text-xs sm:text-sm font-bold truncate pr-4 ${hasVoted ? 'text-white' : 'text-x-white'}`}>
+                        <span className={`text-xs sm:text-sm font-bold truncate pr-4 ${hasVoted ? 'text-black' : 'text-x-white'}`}>
                           {option.text}
                           {hasVoted && (
                             <span className="ml-2 inline-flex items-center">
-                              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                              <svg className="w-3 h-3 text-black" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
                               </svg>
                             </span>
                           )}
                         </span>
-                        <span className="text-[10px] sm:text-xs font-black font-mono text-white tabular-nums">
+                        <span className={`text-[10px] sm:text-xs font-black font-mono tabular-nums ${hasVoted ? 'text-black' : 'text-white'}`}>
                           {percentage}%
                         </span>
                       </div>

@@ -207,9 +207,9 @@ const SaveToCollectionModal = ({ isOpen, onClose, post, isSaved, onSaveToggle })
                     className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-all text-left group"
                   >
                     <div className="flex items-center space-x-3">
-                      <div className={`w-10 h-10 flex items-center justify-center rounded-xl border ${isPostInCollection ? 'bg-purple-500/10 border-purple-500/30' : 'bg-white/5 border-white/5'} transition-all group-hover:scale-105`}>
-                        <svg className={`w-5 h-5 ${isPostInCollection ? 'text-purple-400' : 'text-x-gray'}`} fill={isPostInCollection ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2.28a2 2 0 01.948.236l.576.288M14 20h4a2 2 0 002-2V8a2 2 0 00-2-2h-5L14 20z" />
+                      <div className={`w-10 h-10 flex items-center justify-center rounded-xl border ${isPostInCollection ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-white/5 border-white/5'} transition-all group-hover:scale-105`}>
+                        <svg className={`w-5 h-5 ${isPostInCollection ? 'text-emerald-400' : 'text-x-gray'}`} fill={isPostInCollection ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
                         </svg>
                       </div>
                       <div>
@@ -219,7 +219,7 @@ const SaveToCollectionModal = ({ isOpen, onClose, post, isSaved, onSaveToggle })
                     </div>
                     <div className={`w-5 h-5 rounded-full flex items-center justify-center transition-all border ${
                       isPostInCollection 
-                        ? 'bg-purple-500 border-purple-500 shadow-[0_0_10px_rgba(168,85,247,0.3)]' 
+                        ? 'bg-emerald-500 border-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.3)]' 
                         : 'bg-transparent border-white/20'
                     }`}>
                       {isPostInCollection && (

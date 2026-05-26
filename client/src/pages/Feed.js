@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import ShimmerEffect from "../components/ShimmerEffect";
 import PostCard from "../components/PostCard";
@@ -10,6 +10,7 @@ import { useNotification } from "../contexts/NotificationContext";
 import { useAuth } from "../contexts/AuthContext";
 
 const Feed = () => {
+  const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -19,7 +20,7 @@ const Feed = () => {
   const [showModal, setShowModal] = useState(false);
   const loaderRef = useRef(null);
   const { hasUnread } = useNotification();
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const location = useLocation();
 
   // Mobile menu states
@@ -414,7 +415,15 @@ const Feed = () => {
           <div className="fixed top-0 right-0 h-full w-[80%] max-w-sm bg-[#0a0a0a] border-l border-white/10 shadow-2xl flex flex-col transform transition-transform duration-300">
             {/* Header */}
             <div className="p-4 border-b border-white/10 flex justify-between items-center bg-black/20">
-              <span className="text-xl font-bold text-white tracking-tight ml-2">Menu</span>
+              <div className="flex items-center ml-2">
+                <img 
+                  src="/icons/puzzle.png" 
+                  alt="DevMate" 
+                  className="w-8 h-8 object-contain"
+                  width="32"
+                  height="32"
+                />
+              </div>
               <button 
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="p-2 text-gray-400 hover:text-white transition-colors rounded-full bg-white/5"
@@ -528,12 +537,12 @@ const Feed = () => {
               </div>
             </div>
 
-            {/* Footer Logout */}
+             {/* Footer Logout */}
             <div className="p-4 border-t border-white/10 bg-black/20">
               <button
                 onClick={() => {
-                  logout();
                   setIsMobileMenuOpen(false);
+                  navigate("/logout-confirm");
                 }}
                 className="flex items-center justify-center gap-2 w-full py-3.5 bg-red-600 text-white hover:bg-red-700 rounded-full transition-colors font-bold shadow-lg shadow-red-900/20"
               >

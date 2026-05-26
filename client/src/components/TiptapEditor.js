@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
@@ -40,6 +40,7 @@ const TiptapEditor = ({
   maxLength = 2000,
   onFocus,
 }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -79,21 +80,12 @@ const TiptapEditor = ({
 
   if (!editor) return null;
 
-  const chars = editor.storage.characterCount.characters();
-  const pct = Math.min((chars / maxLength) * 100, 100);
-  const isNearLimit = chars > maxLength * 0.85;
-  const isAtLimit = chars >= maxLength;
-
-  // Stroke dash for circular progress
-  const r = 8;
-  const circ = 2 * Math.PI * r;
-  const dash = circ - (pct / 100) * circ;
 
   return (
     <div className="tiptap-wrapper">
       {/* ── Toolbar ── */}
       <div className="tiptap-toolbar">
-        <div className="tiptap-toolbar-buttons">
+        <div className={`tiptap-toolbar-buttons ${isExpanded ? "tiptap-toolbar-buttons-expanded" : "tiptap-toolbar-buttons-collapsed"}`}>
           {/* Text style */}
           <ToolbarBtn
             onClick={() => editor.chain().focus().toggleBold().run()}
@@ -232,30 +224,32 @@ const TiptapEditor = ({
           </ToolbarBtn>
         </div>
 
-        {/* Right-aligned char counter */}
-        <div className="tiptap-toolbar-counter">
-          <span
-            className="text-[11px] font-mono transition-colors"
-            style={{ color: isAtLimit ? "#ef4444" : isNearLimit ? "#f59e0b" : "#6b7280" }}
+        {/* Right-aligned actions (toggle button) */}
+        <div className="tiptap-toolbar-right">
+          <button
+            type="button"
+            onClick={() => setIsExpanded(!isExpanded)}
+            title={isExpanded ? "Collapse formatting tools" : "Expand formatting tools"}
+            className="flex items-center justify-center w-8 h-8 rounded-full border-2 border-white/30 hover:border-white/60 text-x-gray hover:text-x-white hover:bg-white/8 transition-all duration-150 cursor-pointer flex-shrink-0"
           >
-            {chars}/{maxLength}
-          </span>
-          {/* Circular progress */}
-          <svg width="20" height="20" viewBox="0 0 20 20" className="flex-shrink-0">
-            <circle cx="10" cy="10" r={r} fill="none" stroke="#1f2937" strokeWidth="2.5" />
-            <circle
-              cx="10"
-              cy="10"
-              r={r}
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
               fill="none"
-              stroke={isAtLimit ? "#ef4444" : isNearLimit ? "#f59e0b" : "#1d9bf0"}
-              strokeWidth="2.5"
+              stroke="currentColor"
+              strokeWidth="3.2"
               strokeLinecap="round"
-              strokeDasharray={circ}
-              strokeDashoffset={dash}
-              style={{ transform: "rotate(-90deg)", transformOrigin: "center", transition: "stroke-dashoffset 0.2s" }}
-            />
-          </svg>
+              strokeLinejoin="round"
+              style={{
+                transform: isExpanded ? "rotate(45deg)" : "rotate(0deg)",
+                transition: "transform 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
+              }}
+            >
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
         </div>
       </div>
 
@@ -290,9 +284,35 @@ const TiptapEditor = ({
         .tiptap-toolbar-buttons {
           display: flex;
           align-items: center;
-          flex-wrap: wrap;
+          flex-wrap: nowrap;
           gap: 2px;
           flex-grow: 1;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          overflow: hidden;
+        }
+
+        .tiptap-toolbar-buttons-collapsed {
+          opacity: 0;
+          max-width: 0;
+          transform: translateX(-10px);
+          pointer-events: none;
+          padding: 0;
+          margin: 0;
+          gap: 0;
+        }
+
+        .tiptap-toolbar-buttons-expanded {
+          opacity: 1;
+          max-width: 500px;
+          transform: translateX(0);
+          pointer-events: auto;
+        }
+
+        .tiptap-toolbar-right {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          flex-shrink: 0;
         }
 
         .tiptap-toolbar-counter {
@@ -300,6 +320,10 @@ const TiptapEditor = ({
           align-items: center;
           gap: 8px;
           flex-shrink: 0;
+          transition: all 0.3s ease;
+        }
+
+        .tiptap-toolbar-counter.has-border {
           padding-left: 8px;
           border-left: 1px solid rgba(255,255,255,0.08);
         }
@@ -313,7 +337,7 @@ const TiptapEditor = ({
             -ms-overflow-style: none;  /* IE and Edge */
             padding-bottom: 2px;
           }
-          .tiptap-toolbar-buttons::-webkit-scrollbar {
+          .tiptap-toolbar-buttons-expanded::-webkit-scrollbar {
             display: none; /* Hide scrollbars for Chrome/Safari */
           }
         }
