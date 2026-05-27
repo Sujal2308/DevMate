@@ -175,15 +175,23 @@ const BottomNav = () => {
         >
           {isActive(`/profile/${user?.username}`) ? (
             <div className="w-6 h-6 rounded-full border-2 border-x-blue flex items-center justify-center overflow-hidden bg-x-blue">
-              <span className="text-white text-xs font-bold">
-                {user.displayName?.[0] || user.username?.[0]}
-              </span>
+              {user.avatar ? (
+                <img src={user.avatar} alt="Profile" className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-white text-xs font-bold">
+                  {user.displayName?.[0] || user.username?.[0]}
+                </span>
+              )}
             </div>
           ) : (
             <div className="w-6 h-6 rounded-full border border-x-gray flex items-center justify-center overflow-hidden">
-              <span className="text-x-gray text-xs font-bold">
-                {user.displayName?.[0] || user.username?.[0]}
-              </span>
+              {user.avatar ? (
+                <img src={user.avatar} alt="Profile" className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-x-gray text-xs font-bold">
+                  {user.displayName?.[0] || user.username?.[0]}
+                </span>
+              )}
             </div>
           )}
         </Link>
