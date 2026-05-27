@@ -715,11 +715,11 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
       {/* Post Actions */}
       <div className="flex items-center py-2 sm:py-3 px-2 sm:px-4 border-t border-x-border">
         {/* Like, Share, Save wrapped in pill-shaped border */}
-        <div className="flex items-center space-x-4 sm:space-x-6 border border-x-border rounded-full px-3 sm:px-4 py-2 ml-[-12px] sm:ml-[-20px]">
+        <div className="flex items-center space-x-4 sm:space-x-6 bg-x-dark border border-x-border rounded-full px-3 sm:px-4 py-2 ml-[-12px] sm:ml-[-20px]">
           <button
             onClick={handleLike}
             className={`flex items-center space-x-1 sm:space-x-2 text-sm ${
-              isLiked ? "text-red-500" : "text-x-gray hover:text-red-500"
+              isLiked ? "text-red-500" : "text-x-white hover:text-red-500"
             } transition-colors relative`}
             style={{ outline: "none" }}
           >
@@ -750,10 +750,10 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
 
           <button
             onClick={() => setShowShareModal(true)}
-            className="flex items-center space-x-1 sm:space-x-2 text-sm text-x-gray hover:text-purple-500 transition-colors"
+            className="flex items-center space-x-1 sm:space-x-2 text-sm text-x-white hover:text-purple-500 transition-colors"
           >
             <svg
-              className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500"
+              className="w-4 h-4 sm:w-5 sm:h-5"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -770,7 +770,7 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
           <button
             onClick={handleSaveClick}
             className={`flex items-center space-x-1 sm:space-x-2 text-sm ${
-              isSaved ? "text-x-green" : "text-x-gray hover:text-x-green"
+              isSaved ? "text-x-green" : "text-x-white hover:text-x-green"
             } transition-colors relative`}
             style={{ outline: "none" }}
           >
@@ -797,23 +797,23 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
         <div className="ml-auto mr-[-8px] sm:mr-[-16px]">
           <Link
             to={`/post/${post._id}/discussion`}
-            className="flex items-center space-x-2 text-sm text-x-gray hover:text-purple-500 transition-colors border border-x-border rounded-full px-3 sm:px-4 py-2"
+            className="flex items-center space-x-2 text-sm text-x-gray hover:text-purple-500 transition-colors bg-x-dark border border-x-border rounded-full px-3 sm:px-4 py-2"
           >
             <svg
               className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500"
               fill="none"
               stroke="currentColor"
+              strokeWidth="2"
               viewBox="0 0 24 24"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M7 8h10M7 12h4m1 8l-4-2H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v12a2 2 0 01-2 2h-3l-4 2z"
-              />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M16 3.13a4 4 0 0 1 0 7.75" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 1a8 8 0 0 1 0 12" />
             </svg>
             <span className="text-x-white font-medium">
-              {`${post.comments.filter((c) => !c.deleted).length} Discussion`}
+              {post.comments.filter((c) => !c.deleted).length}
+              <span className="hidden sm:inline"> Discussion</span>
             </span>
           </Link>
         </div>

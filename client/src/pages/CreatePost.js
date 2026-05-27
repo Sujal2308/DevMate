@@ -212,7 +212,7 @@ const CreatePost = () => {
           </div>
 
           {/* Preview Card */}
-          <div className="card p-6 bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/30">
+          <div className="p-0 bg-transparent border-none shadow-none rounded-none sm:card sm:p-6 sm:bg-gradient-to-br sm:from-x-dark/60 sm:to-x-dark/30 sm:backdrop-blur-sm sm:border sm:border-x-border/30 sm:rounded-2xl sm:shadow-2xl">
             <div className="flex items-center mb-6">
               <div
                 className={`bg-black text-white w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold mr-4 shadow-lg overflow-hidden relative`}
@@ -231,55 +231,50 @@ const CreatePost = () => {
                 <p className="font-semibold text-x-white">
                   {user?.displayName || "Your Name"}
                 </p>
-                <div className="flex items-center gap-1.5 mt-0.5">
-                  <p className="text-sm text-x-gray">now</p>
-                  {selectedCommunity &&
-                    (() => {
-                      const comm = communities.find(
-                        (c) =>
-                          c._id.toString() === selectedCommunity.toString(),
-                      );
-                      return comm ? (
-                        <>
-                          <span className="text-x-gray/40 text-[10px] font-black">
-                            •
-                          </span>
-                          <div className="flex items-center gap-2">
-                            {selectedFlair && (
-                              <span
-                                className="px-1.5 py-0.5 rounded-full text-[10px] font-black tracking-wider text-black"
-                                style={{
-                                  backgroundColor: selectedFlair.color,
-                                  border: "none",
-                                }}
-                              >
-                                {selectedFlair.name}
-                              </span>
-                            )}
-                            <span
-                              className="inline-flex items-center gap-1.5 text-[10px] font-black"
-                              style={{ color: comm.color || "#1d9bf0" }}
-                            >
-                              <span className="w-4 h-4 flex items-center justify-center overflow-hidden shrink-0">
-                                {comm.icon?.startsWith("/") ? (
-                                  <img
-                                    src={comm.icon}
-                                    alt=""
-                                    className="w-full h-full object-contain"
-                                  />
-                                ) : (
-                                  comm.icon
-                                )}
-                              </span>
-                              <span>{comm.name}</span>
-                            </span>
-                          </div>
-                        </>
-                      ) : null;
-                    })()}
-                </div>
               </div>
             </div>
+
+            {/* Community Badge & Flair (Below Header, Above Title) */}
+            {selectedCommunity &&
+              (() => {
+                const comm = communities.find(
+                  (c) => c._id.toString() === selectedCommunity.toString(),
+                );
+                return comm ? (
+                  <div className="flex items-center gap-2 mb-3 px-1 select-none">
+                    {selectedFlair && (
+                      <span
+                        className="inline-flex items-center py-0.5 rounded-full text-[10px] font-black tracking-wider text-black"
+                        style={{
+                          backgroundColor: selectedFlair.color,
+                          border: "none",
+                          paddingLeft: "6px",
+                          paddingRight: "6px",
+                        }}
+                      >
+                        {selectedFlair.name}
+                      </span>
+                    )}
+                    <span
+                      className="inline-flex items-center gap-1.5 text-xs font-black transition-all duration-200"
+                      style={{ color: comm.color || "#1d9bf0" }}
+                    >
+                      <span className="w-5 h-5 flex items-center justify-center overflow-hidden shrink-0">
+                        {comm.icon?.startsWith("/") ? (
+                          <img
+                            src={comm.icon}
+                            alt=""
+                            className="w-full h-full object-contain"
+                          />
+                        ) : (
+                          comm.icon
+                        )}
+                      </span>
+                      <span>{comm.name}</span>
+                    </span>
+                  </div>
+                ) : null;
+              })()}
 
             <div className="space-y-6">
               {/* Title Preview */}
@@ -425,41 +420,83 @@ const CreatePost = () => {
               )}
             </div>
 
-            <div className="flex items-center space-x-6 py-4 mt-6 border-t border-x-border/50">
-              <div className="flex items-center space-x-2 text-sm text-x-gray hover:text-red-400 transition-colors cursor-pointer">
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+            {/* Post Actions */}
+            <div className="flex items-center py-2 sm:py-3 px-2 sm:px-4 border-t border-x-border mt-6">
+              {/* Like, Share, Save wrapped in pill-shaped border */}
+              <div className="flex items-center space-x-4 sm:space-x-6 bg-x-dark border border-x-border rounded-full px-3 sm:px-4 py-2 ml-[-12px] sm:ml-[-20px]">
+                <button
+                  type="button"
+                  className="flex items-center space-x-1 sm:space-x-2 text-sm text-x-white hover:text-red-500 transition-colors"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                  />
-                </svg>
-                <span className="text-x-white font-medium">0</span>
-              </div>
-              <div className="flex items-center space-x-2 text-sm text-x-gray hover:text-x-blue transition-colors cursor-pointer">
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+                  <svg
+                    className="w-4 h-4 sm:w-5 sm:h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                    />
+                  </svg>
+                  <span className="text-x-white font-medium">0</span>
+                </button>
+
+                <button
+                  type="button"
+                  className="flex items-center space-x-1 sm:space-x-2 text-sm text-x-white hover:text-purple-500 transition-colors"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                  />
-                </svg>
-                <span className="text-x-white font-medium">0</span>
+                  <svg
+                    className="w-4 h-4 sm:w-5 sm:h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"
+                    />
+                  </svg>
+                </button>
+
+                <button
+                  type="button"
+                  className="flex items-center space-x-1 sm:space-x-2 text-sm text-x-white hover:text-x-green transition-colors"
+                >
+                  <svg
+                    className="w-4 h-4 sm:w-5 sm:h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                  </svg>
+                </button>
               </div>
-              <div className="text-sm text-x-gray hover:text-x-blue transition-colors cursor-pointer">
-                View Details
+
+              {/* Right side actions - Discussion link */}
+              <div className="ml-auto mr-[-8px] sm:mr-[-16px]">
+                <div className="flex items-center space-x-2 text-sm text-x-gray hover:text-purple-500 transition-colors bg-x-dark border border-x-border rounded-full px-3 sm:px-4 py-2 cursor-pointer">
+                  <svg
+                    className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 1a8 8 0 0 1 0 12" />
+                  </svg>
+                  <span className="text-x-white font-medium">
+                    0<span className="hidden sm:inline"> Discussion</span>
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -883,7 +920,7 @@ const CreatePost = () => {
           {/* Flair Selection Toggle (Below Title) */}
           {selectedCommunity && (
             <div className="flex flex-wrap items-center gap-3 mb-6 mt-2">
-              <div className="relative">
+              <div className="relative w-full">
                 <button
                   type="button"
                   onClick={() => {
@@ -934,7 +971,7 @@ const CreatePost = () => {
                       onClick={() => setShowFlairGrid(false)}
                     />
                     {/* Dropdown Modal with white background */}
-                    <div className="absolute top-full left-0 mt-2 z-50 flex flex-wrap gap-2 p-4 bg-white/95 backdrop-blur-md border border-neutral-200 rounded-xl shadow-2xl min-w-[280px]">
+                    <div className="absolute top-full left-0 w-full mt-2 z-50 flex flex-wrap gap-2 p-4 bg-white/95 backdrop-blur-md border border-neutral-200 rounded-xl shadow-2xl">
                       {(() => {
                         const comm = communities.find(
                           (c) =>
