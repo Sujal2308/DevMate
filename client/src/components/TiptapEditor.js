@@ -40,7 +40,7 @@ const TiptapEditor = ({
   maxLength = 2000,
   onFocus,
 }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -262,7 +262,7 @@ const TiptapEditor = ({
           background: transparent;
           border: none;
           border-radius: 0;
-          overflow: hidden;
+          overflow: visible;
           transition: none;
         }
         .tiptap-wrapper:focus-within {
@@ -271,11 +271,14 @@ const TiptapEditor = ({
         }
 
         .tiptap-toolbar {
+          position: sticky;
+          top: 0;
+          z-index: 30;
           display: flex;
           align-items: center;
           justify-content: space-between;
           padding: 8px 0px;
-          background: transparent;
+          background: #000000;
           border-bottom: 1px solid rgba(255,255,255,0.08);
           gap: 12px;
           overflow: hidden;
@@ -349,13 +352,16 @@ const TiptapEditor = ({
           padding: 16px 0px;
           outline: none;
           color: #f1f5f9;
-          font-size: 24px;
+          font-size: 16px;
           line-height: 1.5;
           font-family: 'Inter', 'Space Grotesk', sans-serif;
           caret-color: #1d9bf0;
         }
 
         /* Placeholder */
+        .tiptap-editor-area p.is-editor-empty {
+          font-size: 24px;
+        }
         .tiptap-editor-area p.is-editor-empty:first-child::before,
         .tiptap-placeholder:first-child::before {
           content: attr(data-placeholder);

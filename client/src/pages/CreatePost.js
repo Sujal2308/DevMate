@@ -678,126 +678,93 @@ const CreatePost = () => {
             />
           </div>
 
-          <div className="flex flex-row gap-3 mb-6">
+          <div className="flex items-center gap-3 mb-6 px-1">
             {/* Add Media Section */}
-            <div className="flex-1">
-              <label className="flex flex-col items-center justify-center p-4 bg-[#000000] border-2 border-dashed border-white/20 rounded-2xl cursor-pointer hover:bg-x-dark/50 transition-all group h-full">
-                <input
-                  type="file"
-                  accept="image/*,application/pdf"
-                  onChange={handleMediaChange}
-                  className="hidden"
-                />
-                <img
-                  src="/icons/image-gallery.png"
-                  alt="Upload Media"
-                  className="w-10 h-10 mb-2 transition-transform group-hover:scale-110"
-                  width="40"
-                  height="40"
-                />
-                <span
-                  className="text-sm font-bold tracking-tight text-center"
-                  style={{
-                    color: "#A855F7",
-                    fontFamily: "'Space Grotesk', sans-serif",
-                  }}
-                >
-                  Media
-                </span>
-              </label>
-            </div>
+            <label className={`flex items-center justify-center w-9 h-9 rounded-full border cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95 select-none ${
+              media 
+                ? "bg-white/20 border-white/40 shadow-[0_0_12px_rgba(255,255,255,0.1)]" 
+                : "bg-white/5 border-neutral-800 hover:border-neutral-600 hover:bg-white/10"
+            }`} title="Add Media">
+              <input
+                type="file"
+                accept="image/*,application/pdf"
+                onChange={handleMediaChange}
+                className="hidden"
+              />
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                <circle cx="8.5" cy="8.5" r="1.5" />
+                <polyline points="21 15 16 10 5 21" />
+              </svg>
+            </label>
 
             {/* Add Code Section */}
-            <div className="flex-1">
-              <div
-                onClick={() => {
-                  if (!formData.codeSnippet) {
-                    setFormData({
-                      ...formData,
-                      codeSnippet: "// Start coding...",
-                    });
-                    setSelectedLanguage("javascript");
-                  } else {
-                    setFormData({ ...formData, codeSnippet: "" });
-                    setSelectedLanguage("");
-                  }
-                }}
-                className="flex flex-col items-center justify-center p-4 bg-[#000000] border-2 border-dashed border-white/20 rounded-2xl cursor-pointer hover:bg-x-dark/50 transition-all group h-full"
-              >
-                <img
-                  src="/icons/code.png"
-                  alt="Add Code"
-                  className="w-10 h-10 mb-2 transition-transform group-hover:scale-110"
-                  width="40"
-                  height="40"
-                />
-                <span
-                  className="text-sm font-bold tracking-tight text-center"
-                  style={{
-                    color: "#A855F7",
-                    fontFamily: "'Space Grotesk', sans-serif",
-                  }}
-                >
-                  {formData.codeSnippet ? "Code" : "Code"}
-                </span>
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={() => {
+                if (!formData.codeSnippet) {
+                  setFormData({
+                    ...formData,
+                    codeSnippet: "// Start coding...",
+                  });
+                  setSelectedLanguage("javascript");
+                } else {
+                  setFormData({ ...formData, codeSnippet: "" });
+                  setSelectedLanguage("");
+                }
+              }}
+              className={`flex items-center justify-center w-9 h-9 rounded-full border cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95 ${
+                formData.codeSnippet
+                  ? "bg-white/20 border-white/40 shadow-[0_0_12px_rgba(255,255,255,0.1)]" 
+                  : "bg-white/5 border-neutral-800 hover:border-neutral-600 hover:bg-white/10"
+              }`}
+              title="Add Code"
+            >
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <polyline points="16 18 22 12 16 6" />
+                <polyline points="8 6 2 12 8 18" />
+              </svg>
+            </button>
 
             {/* Add Repo Section */}
-            <div className="flex-1">
-              <div
-                onClick={() => {
-                  setShowRepoInput(!showRepoInput);
-                  if (showPollInput) setShowPollInput(false);
-                }}
-                className={`flex flex-col items-center justify-center p-4 bg-[#000000] border-2 border-dashed border-white/20 rounded-2xl cursor-pointer hover:bg-x-dark/50 transition-all group h-full`}
-              >
-                <img
-                  src="/icons/folder.png"
-                  alt="Add Repo"
-                  className="w-10 h-10 mb-2 transition-transform group-hover:scale-110"
-                  width="40"
-                  height="40"
-                />
-                <span
-                  className="text-sm font-bold tracking-tight text-center"
-                  style={{
-                    color: "#A855F7",
-                    fontFamily: "'Space Grotesk', sans-serif",
-                  }}
-                >
-                  {formData.repoUrl ? "Repo Added" : "Repo"}
-                </span>
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setShowRepoInput(!showRepoInput);
+                if (showPollInput) setShowPollInput(false);
+              }}
+              className={`flex items-center justify-center w-9 h-9 rounded-full border cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95 ${
+                showRepoInput || formData.repoUrl
+                  ? "bg-white/20 border-white/40 shadow-[0_0_12px_rgba(255,255,255,0.1)]" 
+                  : "bg-white/5 border-neutral-800 hover:border-neutral-600 hover:bg-white/10"
+              }`}
+              title="Add Repository"
+            >
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+              </svg>
+            </button>
 
             {/* Add Poll Section */}
-            <div className="flex-1">
-              <div
-                onClick={() => {
-                  setShowPollInput(!showPollInput);
-                  if (showRepoInput) setShowRepoInput(false);
-                }}
-                className={`flex flex-col items-center justify-center p-4 bg-[#000000] border-2 border-dashed border-white/20 rounded-2xl cursor-pointer hover:bg-x-dark/50 transition-all group h-full`}
-              >
-                <img
-                  src="/icons/poll.png"
-                  alt="Add Poll"
-                  className="w-10 h-10 mb-2 transition-transform group-hover:scale-110"
-                  width="40"
-                  height="40"
-                />
-                <span
-                  className="text-sm font-bold tracking-tight text-center"
-                  style={{
-                    color: "#A855F7",
-                    fontFamily: "'Space Grotesk', sans-serif",
-                  }}
-                >
-                  {formData.pollQuestion ? "Poll Added" : "Poll"}
-                </span>
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setShowPollInput(!showPollInput);
+                if (showRepoInput) setShowRepoInput(false);
+              }}
+              className={`flex items-center justify-center w-9 h-9 rounded-full border cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95 ${
+                showPollInput || formData.pollQuestion
+                  ? "bg-white/20 border-white/40 shadow-[0_0_12px_rgba(255,255,255,0.1)]" 
+                  : "bg-white/5 border-neutral-800 hover:border-neutral-600 hover:bg-white/10"
+              }`}
+              title="Add Poll"
+            >
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <line x1="18" y1="20" x2="18" y2="10" />
+                <line x1="12" y1="20" x2="12" y2="4" />
+                <line x1="6" y1="20" x2="6" y2="14" />
+              </svg>
+            </button>
           </div>
 
           {/* Repo Input Field */}
