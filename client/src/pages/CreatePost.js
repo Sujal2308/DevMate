@@ -43,6 +43,7 @@ const CreatePost = () => {
   const [showPollInput, setShowPollInput] = useState(false);
   const [selectedFlair, setSelectedFlair] = useState(null);
   const [showFlairGrid, setShowFlairGrid] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -75,6 +76,10 @@ const CreatePost = () => {
       Prism.highlightAll();
     }
   }, [formData.codeSnippet, selectedLanguage]);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, [showPreview]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -152,6 +157,316 @@ const CreatePost = () => {
       setLoading(false);
     }
   };
+
+  if (showPreview) {
+    return (
+      <div className="w-full max-w-4xl mx-auto pt-0 pb-8 px-0 sm:px-4 min-h-screen bg-black">
+        <div className="p-3 sm:p-4 lg:p-4 bg-transparent mx-0 rounded-none relative">
+          
+          {/* Header */}
+          <div className="flex items-center justify-between mb-8 mt-4">
+             <button
+              type="button"
+              onClick={() => setShowPreview(false)}
+              className="flex items-center justify-center gap-2 w-9 h-9 sm:w-auto sm:h-auto sm:px-4 sm:py-2 bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 hover:border-neutral-600 rounded-full text-xs font-bold text-white transition-all active:scale-95"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                <line x1="19" y1="12" x2="5" y2="12" />
+                <polyline points="12 19 5 12 12 5" />
+              </svg>
+              <span className="hidden sm:inline">Back to Editor</span>
+            </button>
+            
+            <h2 className="text-xs sm:text-base md:text-lg font-black uppercase tracking-widest text-neutral-400 font-space">
+              Post Preview
+            </h2>
+
+             <button
+              type="button"
+              onClick={handleSubmit}
+              disabled={loading || !formData.title.trim() || !getPlainText(formData.content).trim()}
+              className="bg-white hover:bg-neutral-100 disabled:opacity-50 disabled:cursor-not-allowed text-black font-bold transition-all duration-200 flex items-center justify-center w-10 h-10 sm:w-auto sm:h-10 sm:px-5 gap-1.5 border-2 border-neutral-700 rounded-full"
+            >
+              {loading ? (
+                <>
+                  <LoadingSpinner size="small" />
+                  <span className="hidden sm:inline text-[11px] font-black uppercase tracking-wider text-black">
+                    Publishing...
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span className="hidden sm:inline text-[11px] font-black uppercase tracking-wider text-black">
+                    Publish
+                  </span>
+                  <img
+                    src="/icons/publish.png"
+                    alt="Publish"
+                    className="w-3.5 h-3.5 object-contain"
+                    width="16"
+                    height="16"
+                  />
+                </>
+              )}
+            </button>
+          </div>
+
+          {/* Preview Card */}
+          <div className="card p-6 bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/30">
+            <div className="flex items-center mb-6">
+              <div
+                className={`bg-black text-white w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold mr-4 shadow-lg overflow-hidden relative`}
+              >
+                {user?.avatar ? (
+                  <img
+                    src={user.avatar}
+                    alt={user.displayName}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  (user?.displayName || "Y").charAt(0).toUpperCase()
+                )}
+              </div>
+              <div>
+                <p className="font-semibold text-x-white">
+                  {user?.displayName || "Your Name"}
+                </p>
+                <div className="flex items-center gap-1.5 mt-0.5">
+                  <p className="text-sm text-x-gray">now</p>
+                  {selectedCommunity &&
+                    (() => {
+                      const comm = communities.find(
+                        (c) =>
+                          c._id.toString() === selectedCommunity.toString(),
+                      );
+                      return comm ? (
+                        <>
+                          <span className="text-x-gray/40 text-[10px] font-black">
+                            •
+                          </span>
+                          <div className="flex items-center gap-2">
+                            {selectedFlair && (
+                              <span
+                                className="px-1.5 py-0.5 rounded-full text-[10px] font-black tracking-wider text-black"
+                                style={{
+                                  backgroundColor: selectedFlair.color,
+                                  border: "none",
+                                }}
+                              >
+                                {selectedFlair.name}
+                              </span>
+                            )}
+                            <span
+                              className="inline-flex items-center gap-1.5 text-[10px] font-black"
+                              style={{ color: comm.color || "#1d9bf0" }}
+                            >
+                              <span className="w-4 h-4 flex items-center justify-center overflow-hidden shrink-0">
+                                {comm.icon?.startsWith("/") ? (
+                                  <img
+                                    src={comm.icon}
+                                    alt=""
+                                    className="w-full h-full object-contain"
+                                  />
+                                ) : (
+                                  comm.icon
+                                )}
+                              </span>
+                              <span>{comm.name}</span>
+                            </span>
+                          </div>
+                        </>
+                      ) : null;
+                    })()}
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              {/* Title Preview */}
+              {formData.title && (
+                <div className="px-1">
+                  <h2
+                    className="text-xl sm:text-2xl font-black text-x-white leading-tight tracking-tight"
+                    style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                  >
+                    {formData.title}
+                  </h2>
+                </div>
+              )}
+
+              {/* Text Content Section - Minimalist */}
+              {formData.content && (
+                <div className="bg-transparent border-none p-0">
+                  <div
+                    className="rich-content text-base leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: formData.content }}
+                  />
+                </div>
+              )}
+
+              {/* Repository Link Preview */}
+              {formData.repoUrl && (
+                <div className="mb-2 px-1">
+                  <a
+                    href={formData.repoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-x-white hover:text-x-blue transition-all group py-1 px-1 whitespace-nowrap"
+                  >
+                    <svg
+                      className="w-5 h-5 shrink-0"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+                    </svg>
+                    <span className="text-xs font-black truncate">
+                      {formData.repoTitle ||
+                        formData.repoUrl.split("/").slice(-2).join("/") ||
+                        "New Repository"}
+                    </span>
+                    <svg
+                      className="w-3.5 h-3.5 text-red-500 opacity-80"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={3.5}
+                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                      />
+                    </svg>
+                  </a>
+                </div>
+              )}
+
+              {/* Media Preview Section */}
+              {mediaPreview && (
+                <div className="w-full mt-4">
+                  {mediaPreview === "PDF_DOCUMENT" ? (
+                    <PdfCarousel file={media} />
+                  ) : (
+                    <div className="bg-x-dark/20 border border-x-border/30 rounded-xl overflow-hidden">
+                      <img
+                        src={mediaPreview}
+                        alt="Post Attachment Preview"
+                        className="w-full h-auto object-contain max-h-[500px]"
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Poll Preview Section */}
+              {formData.pollQuestion && (
+                <div className="w-full mt-4 p-5 bg-[#1d9bf0]/10 backdrop-blur-sm border-2 border-white rounded-xl space-y-4">
+                  <h4 className="text-sm font-black text-x-white tracking-tight leading-snug">
+                    {formData.pollQuestion}
+                  </h4>
+                  <div className="space-y-2">
+                    {formData.pollOptions
+                      .filter((opt) => opt.trim())
+                      .map((opt, idx) => (
+                        <div key={idx} className="group relative">
+                          <div className="w-full h-10 bg-white/10 border border-white/10 rounded-full flex items-center px-4 transition-all">
+                            <span className="text-xs font-bold text-x-gray group-hover:text-x-white transition-colors">
+                              {opt}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                  <div className="pt-2 border-t border-white/5">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-x-gray/50">
+                      Interactive Poll Preview
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Code Section with Distinct Styling */}
+              {formData.codeSnippet && (
+                <div className="code-snippet">
+                  <div className="flex items-center justify-between bg-x-blue px-4 py-3 border-b border-white/20">
+                    <div className="flex items-center space-x-2 text-white">
+                      <div className="flex space-x-1">
+                        <div className="w-3 h-3 rounded-full bg-red-500/60"></div>
+                        <div className="w-3 h-3 rounded-full bg-yellow-500/60"></div>
+                        <div className="w-3 h-3 rounded-full bg-green-500/60"></div>
+                      </div>
+                      <span className="text-xs text-white font-mono">
+                        💻{" "}
+                        {selectedLanguage
+                          ? `${
+                              selectedLanguage.charAt(0).toUpperCase() +
+                              selectedLanguage.slice(1)
+                            } Code`
+                          : "Code Snippet"}
+                      </span>
+                    </div>
+                    <span className="text-xs text-white font-mono uppercase tracking-wide opacity-90">
+                      Code Preview
+                    </span>
+                  </div>
+                  <div className="p-4 overflow-x-auto">
+                    <pre
+                      className={`whitespace-pre-wrap font-mono text-sm leading-relaxed language-${selectedLanguage || "javascript"}`}
+                    >
+                      <code
+                        className={`language-${selectedLanguage || "javascript"}`}
+                      >
+                        {formData.codeSnippet}
+                      </code>
+                    </pre>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center space-x-6 py-4 mt-6 border-t border-x-border/50">
+              <div className="flex items-center space-x-2 text-sm text-x-gray hover:text-red-400 transition-colors cursor-pointer">
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
+                </svg>
+                <span className="text-x-white font-medium">0</span>
+              </div>
+              <div className="flex items-center space-x-2 text-sm text-x-gray hover:text-x-blue transition-colors cursor-pointer">
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                  />
+                </svg>
+                <span className="text-x-white font-medium">0</span>
+              </div>
+              <div className="text-sm text-x-gray hover:text-x-blue transition-colors cursor-pointer">
+                View Details
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-4xl mx-auto pt-0 pb-8 px-0 sm:px-4 min-h-screen bg-black">
@@ -682,8 +997,8 @@ const CreatePost = () => {
             {/* Add Media Section */}
             <label className={`flex items-center justify-center w-9 h-9 rounded-full border cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95 select-none ${
               media 
-                ? "bg-white/20 border-white/40 shadow-[0_0_12px_rgba(255,255,255,0.1)]" 
-                : "bg-white/5 border-neutral-800 hover:border-neutral-600 hover:bg-white/10"
+                ? "bg-neutral-700 border-neutral-500 shadow-[0_0_12px_rgba(255,255,255,0.05)]" 
+                : "bg-neutral-800 border-neutral-700 hover:bg-neutral-700 hover:border-neutral-600"
             }`} title="Add Media">
               <input
                 type="file"
@@ -715,8 +1030,8 @@ const CreatePost = () => {
               }}
               className={`flex items-center justify-center w-9 h-9 rounded-full border cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95 ${
                 formData.codeSnippet
-                  ? "bg-white/20 border-white/40 shadow-[0_0_12px_rgba(255,255,255,0.1)]" 
-                  : "bg-white/5 border-neutral-800 hover:border-neutral-600 hover:bg-white/10"
+                  ? "bg-neutral-700 border-neutral-500 shadow-[0_0_12px_rgba(255,255,255,0.05)]" 
+                  : "bg-neutral-800 border-neutral-700 hover:bg-neutral-700 hover:border-neutral-600"
               }`}
               title="Add Code"
             >
@@ -735,8 +1050,8 @@ const CreatePost = () => {
               }}
               className={`flex items-center justify-center w-9 h-9 rounded-full border cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95 ${
                 showRepoInput || formData.repoUrl
-                  ? "bg-white/20 border-white/40 shadow-[0_0_12px_rgba(255,255,255,0.1)]" 
-                  : "bg-white/5 border-neutral-800 hover:border-neutral-600 hover:bg-white/10"
+                  ? "bg-neutral-700 border-neutral-500 shadow-[0_0_12px_rgba(255,255,255,0.05)]" 
+                  : "bg-neutral-800 border-neutral-700 hover:bg-neutral-700 hover:border-neutral-600"
               }`}
               title="Add Repository"
             >
@@ -754,8 +1069,8 @@ const CreatePost = () => {
               }}
               className={`flex items-center justify-center w-9 h-9 rounded-full border cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95 ${
                 showPollInput || formData.pollQuestion
-                  ? "bg-white/20 border-white/40 shadow-[0_0_12px_rgba(255,255,255,0.1)]" 
-                  : "bg-white/5 border-neutral-800 hover:border-neutral-600 hover:bg-white/10"
+                  ? "bg-neutral-700 border-neutral-500 shadow-[0_0_12px_rgba(255,255,255,0.05)]" 
+                  : "bg-neutral-800 border-neutral-700 hover:bg-neutral-700 hover:border-neutral-600"
               }`}
               title="Add Poll"
             >
@@ -764,6 +1079,20 @@ const CreatePost = () => {
                 <line x1="12" y1="20" x2="12" y2="4" />
                 <line x1="6" y1="20" x2="6" y2="14" />
               </svg>
+            </button>
+
+            {/* See Preview Button */}
+            <button
+              type="button"
+              onClick={() => setShowPreview(true)}
+              disabled={!formData.title.trim() && !getPlainText(formData.content).trim()}
+              className="ml-auto flex items-center gap-1.5 px-4 h-9 bg-neutral-800 hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed border border-neutral-700 hover:border-neutral-600 rounded-full text-xs font-bold text-white transition-all hover:scale-105 active:scale-95 font-space uppercase tracking-wider"
+            >
+              <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+              <span>See Preview</span>
             </button>
           </div>
 
@@ -1060,304 +1389,6 @@ const CreatePost = () => {
             </div>
           )}
         </form>
-
-        {/* Enhanced Preview Section with Clear Visual Distinction */}
-        <div className="space-y-6">
-          {((formData.content &&
-            (() => {
-              const d = document.createElement("div");
-              d.innerHTML = formData.content;
-              return (d.textContent || "").trim();
-            })()) ||
-            mediaPreview) && (
-            <div>
-              <h3 className="text-lg font-semibold text-x-white mb-4 flex items-center">
-                Live Preview
-              </h3>
-              <div className="card p-6 bg-gradient-to-br from-x-dark/60 to-x-dark/30 backdrop-blur-sm border border-x-border/30">
-                <div className="flex items-center mb-6">
-                  <div
-                    className={`bg-black text-white w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold mr-4 shadow-lg overflow-hidden relative`}
-                  >
-                    {user?.avatar ? (
-                      <img
-                        src={user.avatar}
-                        alt={user.displayName}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      (user?.displayName || "Y").charAt(0).toUpperCase()
-                    )}
-                  </div>
-                  <div>
-                    <p className="font-semibold text-x-white">
-                      {user?.displayName || "Your Name"}
-                    </p>
-                    <div className="flex items-center gap-1.5 mt-0.5">
-                      <p className="text-sm text-x-gray">now</p>
-                      {selectedCommunity &&
-                        (() => {
-                          const comm = communities.find(
-                            (c) =>
-                              c._id.toString() === selectedCommunity.toString(),
-                          );
-                          return comm ? (
-                            <>
-                              <span className="text-x-gray/40 text-[10px] font-black">
-                                •
-                              </span>
-                              <div className="flex items-center gap-2">
-                                {selectedFlair && (
-                                  <span
-                                    className="px-1.5 py-0.5 rounded-full text-[10px] font-black tracking-wider text-black"
-                                    style={{
-                                      backgroundColor: selectedFlair.color,
-                                      border: "none",
-                                    }}
-                                  >
-                                    {selectedFlair.name}
-                                  </span>
-                                )}
-                                <span
-                                  className="inline-flex items-center gap-1.5 text-[10px] font-black"
-                                  style={{ color: comm.color || "#1d9bf0" }}
-                                >
-                                  <span className="w-4 h-4 flex items-center justify-center overflow-hidden shrink-0">
-                                    {comm.icon?.startsWith("/") ? (
-                                      <img
-                                        src={comm.icon}
-                                        alt=""
-                                        className="w-full h-full object-contain"
-                                      />
-                                    ) : (
-                                      comm.icon
-                                    )}
-                                  </span>
-                                  <span>{comm.name}</span>
-                                </span>
-                              </div>
-                            </>
-                          ) : null;
-                        })()}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-6">
-                  {/* Title Preview */}
-                  {formData.title && (
-                    <div className="px-1">
-                      <h2
-                        className="text-xl sm:text-2xl font-black text-x-white leading-tight tracking-tight"
-                        style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-                      >
-                        {formData.title}
-                      </h2>
-                    </div>
-                  )}
-
-                  {/* Text Content Section - Minimalist */}
-                  {formData.content && (
-                    <div className="bg-transparent border-none p-0">
-                      <div
-                        className="rich-content text-base leading-relaxed"
-                        dangerouslySetInnerHTML={{ __html: formData.content }}
-                      />
-                    </div>
-                  )}
-
-                  {/* Repository Link Preview */}
-                  {formData.repoUrl && (
-                    <div className="mb-2 px-1">
-                      <a
-                        href={formData.repoUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-x-white hover:text-x-blue transition-all group py-1 px-1 whitespace-nowrap"
-                      >
-                        <svg
-                          className="w-5 h-5 shrink-0"
-                          fill="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
-                        </svg>
-                        <span className="text-xs font-black truncate">
-                          {formData.repoTitle ||
-                            formData.repoUrl.split("/").slice(-2).join("/") ||
-                            "New Repository"}
-                        </span>
-                        <svg
-                          className="w-3.5 h-3.5 text-red-500 opacity-80"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={3.5}
-                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                          />
-                        </svg>
-                      </a>
-                    </div>
-                  )}
-
-                  {/* Media Preview Section */}
-                  {mediaPreview && (
-                    <div className="w-full mt-4">
-                      {mediaPreview === "PDF_DOCUMENT" ? (
-                        <PdfCarousel file={media} />
-                      ) : (
-                        <div className="bg-x-dark/20 border border-x-border/30 rounded-xl overflow-hidden">
-                          <img
-                            src={mediaPreview}
-                            alt="Post Attachment Preview"
-                            className="w-full h-auto object-contain max-h-[500px]"
-                          />
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {/* Poll Preview Section */}
-                  {formData.pollQuestion && (
-                    <div className="w-full mt-4 p-5 bg-[#1d9bf0]/10 backdrop-blur-sm border-2 border-white rounded-xl space-y-4">
-                      <h4 className="text-sm font-black text-x-white tracking-tight leading-snug">
-                        {formData.pollQuestion}
-                      </h4>
-                      <div className="space-y-2">
-                        {formData.pollOptions
-                          .filter((opt) => opt.trim())
-                          .map((opt, idx) => (
-                            <div key={idx} className="group relative">
-                              <div className="w-full h-10 bg-white/10 border border-white/10 rounded-full flex items-center px-4 transition-all">
-                                <span className="text-xs font-bold text-x-gray group-hover:text-x-white transition-colors">
-                                  {opt}
-                                </span>
-                              </div>
-                            </div>
-                          ))}
-                      </div>
-                      <div className="pt-2 border-t border-white/5">
-                        <p className="text-[10px] font-black uppercase tracking-widest text-x-gray/50">
-                          Interactive Poll Preview
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Code Section with Distinct Styling */}
-                  {formData.codeSnippet && (
-                    <div className="code-snippet">
-                      <div className="flex items-center justify-between bg-x-blue px-4 py-3 border-b border-white/20">
-                        <div className="flex items-center space-x-2 text-white">
-                          <div className="flex space-x-1">
-                            <div className="w-3 h-3 rounded-full bg-red-500/60"></div>
-                            <div className="w-3 h-3 rounded-full bg-yellow-500/60"></div>
-                            <div className="w-3 h-3 rounded-full bg-green-500/60"></div>
-                          </div>
-                          <span className="text-xs text-white font-mono">
-                            💻{" "}
-                            {selectedLanguage
-                              ? `${
-                                  selectedLanguage.charAt(0).toUpperCase() +
-                                  selectedLanguage.slice(1)
-                                } Code`
-                              : "Code Snippet"}
-                          </span>
-                        </div>
-                        <span className="text-xs text-white font-mono uppercase tracking-wide opacity-90">
-                          Code Preview
-                        </span>
-                      </div>
-                      <div className="p-4 overflow-x-auto">
-                        <pre
-                          className={`whitespace-pre-wrap font-mono text-sm leading-relaxed language-${selectedLanguage || "javascript"}`}
-                        >
-                          <code
-                            className={`language-${selectedLanguage || "javascript"}`}
-                          >
-                            {formData.codeSnippet}
-                          </code>
-                        </pre>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex items-center space-x-6 py-4 mt-6 border-t border-x-border/50">
-                  <div className="flex items-center space-x-2 text-sm text-x-gray hover:text-red-400 transition-colors cursor-pointer">
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                      />
-                    </svg>
-                    <span className="text-x-white font-medium">0</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-sm text-x-gray hover:text-x-blue transition-colors cursor-pointer">
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                      />
-                    </svg>
-                    <span className="text-x-white font-medium">0</span>
-                  </div>
-                  <div className="text-sm text-x-gray hover:text-x-blue transition-colors cursor-pointer">
-                    View Details
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {!(
-            (() => {
-              const d = document.createElement("div");
-              d.innerHTML = formData.content;
-              return (d.textContent || "").trim();
-            })() ||
-            mediaPreview ||
-            formData.repoUrl
-          ) && (
-            <div className="card p-8 bg-gradient-to-br from-x-dark/40 to-x-dark/20 backdrop-blur-sm border border-x-border/20 text-center">
-              <div className="flex items-center justify-center mx-auto mb-6">
-                <img
-                  src="/icons/share.png"
-                  alt="Share"
-                  className="w-16 h-16 object-contain"
-                  width="64"
-                  height="64"
-                  loading="lazy"
-                />
-              </div>
-              <h3 className="text-lg font-semibold text-x-white mb-2">
-                Start Writing
-              </h3>
-              <p className="text-x-gray">
-                Your post preview will appear here as you type. Share your
-                thoughts with the community!
-              </p>
-            </div>
-          )}
-        </div>
       </div>
 
       {/* Add keyframes for border gradient animation */}
