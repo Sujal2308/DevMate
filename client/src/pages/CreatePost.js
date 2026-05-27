@@ -212,7 +212,7 @@ const CreatePost = () => {
           </div>
 
           {/* Preview Card */}
-          <div className="p-0 bg-transparent border-none shadow-none rounded-none sm:card sm:p-6 sm:bg-gradient-to-br sm:from-x-dark/60 sm:to-x-dark/30 sm:backdrop-blur-sm sm:border sm:border-x-border/30 sm:rounded-2xl sm:shadow-2xl">
+          <div className="p-4 bg-x-dark border border-x-border/20 rounded-xl sm:card sm:p-6 sm:bg-gradient-to-br sm:from-x-dark/60 sm:to-x-dark/30 sm:backdrop-blur-sm sm:border sm:border-x-border/30 sm:rounded-2xl sm:shadow-2xl">
             <div className="flex items-center mb-6">
               <div
                 className={`bg-black text-white w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold mr-4 shadow-lg overflow-hidden relative`}
