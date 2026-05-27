@@ -5,7 +5,6 @@ import axios from "axios";
 import ShimmerEffect from "../components/ShimmerEffect";
 import PostCard from "../components/PostCard";
 import FakeFeedLoader from "../components/FakeFeedLoader";
-import MinimalMessageModal from "../components/MinimalMessageModal";
 import { useNotification } from "../contexts/NotificationContext";
 import { useAuth } from "../contexts/AuthContext";
 
@@ -17,7 +16,6 @@ const Feed = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [showEndMessage, setShowEndMessage] = useState(false);
-  const [showModal, setShowModal] = useState(false);
   const loaderRef = useRef(null);
   const { hasUnread } = useNotification();
   const { user } = useAuth();
@@ -99,17 +97,10 @@ const Feed = () => {
     }
   }, [loading, hasMore, page, fetchPosts]);
 
-  // Check if user should see modal on each login session
+  // Auto-fetch posts on load
   useEffect(() => {
     if (user) {
-      const hasSeenFeedModalThisSession =
-        sessionStorage.getItem("hasSeenFeedModal");
-      if (!hasSeenFeedModalThisSession) {
-        setShowModal(true);
-      } else {
-        // Auto-fetch posts if user has seen modal in this session
-        fetchPosts();
-      }
+      fetchPosts();
     }
   }, [user, fetchPosts]);
 
@@ -164,27 +155,10 @@ const Feed = () => {
     setPosts(posts.filter((post) => post._id !== deletedPostId));
   };
 
-  const handleModalReload = () => {
-    sessionStorage.setItem("hasSeenFeedModal", "true");
-    setShowModal(false);
-    fetchPosts();
-  };
-
-  const handleModalClose = () => {
-    sessionStorage.setItem("hasSeenFeedModal", "true");
-    setShowModal(false);
-    setLoading(false);
-  };
-
   if (loading && posts.length === 0) {
     return (
       <div className="relative">
         <ShimmerEffect type="feed" />
-        <MinimalMessageModal
-          isOpen={showModal}
-          onClose={handleModalClose}
-          onReload={handleModalReload}
-        />
       </div>
     );
   }
@@ -205,11 +179,6 @@ const Feed = () => {
             Try Again
           </button>
         </div>
-        <MinimalMessageModal
-          isOpen={showModal}
-          onClose={handleModalClose}
-          onReload={handleModalReload}
-        />
       </div>
     );
   }
@@ -395,12 +364,6 @@ const Feed = () => {
           )}
         </div>
       )}
-
-      <MinimalMessageModal
-        isOpen={showModal}
-        onClose={handleModalClose}
-        onReload={handleModalReload}
-      />
 
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && createPortal(
