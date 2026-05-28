@@ -243,7 +243,7 @@ const CommentThread = ({ comment, postId, onUpdate, depth = 0 }) => {
                   </div>
                 )}
 
-                <div className="flex-1 bg-white/5 border border-white/10 focus-within:border-purple-500/50 transition-colors relative">
+                <div className="flex-1 bg-white/5 border border-white/10 focus-within:border-purple-500/50 transition-colors relative rounded-lg overflow-hidden">
                   <textarea
                     value={replyText}
                     onChange={(e) => setReplyText(e.target.value)}
@@ -542,12 +542,13 @@ const DiscussionPage = () => {
                   { title: "No Spam/Self-Promotion", desc: "Avoid posting links to your own products or repetitive promotional content." },
                   { title: "Clean Language", desc: "Avoid excessive profanity and maintain a professional developer environment." }
                 ].map((rule, idx) => (
-                  <div key={idx} className="flex gap-4">
-                    <div className="text-[12px] sm:text-sm font-black text-purple-600/50 mt-0.5">{idx + 1}.</div>
-                    <div>
-                      <h4 className="text-[13px] sm:text-base font-bold text-gray-900 leading-tight mb-1">{rule.title}</h4>
-                      <p className="text-[11px] sm:text-[13px] text-gray-600 leading-relaxed font-medium">{rule.desc}</p>
-                    </div>
+                  <div key={idx} className="space-y-1">
+                    <h4 className="text-[13px] sm:text-base font-bold text-gray-900 leading-tight">
+                      {rule.title}
+                    </h4>
+                    <p className="text-[11px] sm:text-[13px] text-gray-600 leading-relaxed font-medium">
+                      {rule.desc}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -592,7 +593,7 @@ const DiscussionPage = () => {
       {user && (
         <form onSubmit={handleSubmitComment} className="mb-8">
           <div className="w-full">
-            <div className="bg-white/5 border border-white/10 focus-within:border-purple-500/50 transition-colors relative">
+            <div className="bg-white/5 border border-white/10 focus-within:border-purple-500/50 transition-colors relative rounded-lg overflow-hidden">
                 <textarea
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}

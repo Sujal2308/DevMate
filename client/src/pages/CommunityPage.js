@@ -16,6 +16,7 @@ const CommunityPage = () => {
   const [allCommunities, setAllCommunities] = useState([]);
   const [joiningId, setJoiningId] = useState(null);
   const [selectedFlairFilter, setSelectedFlairFilter] = useState(null);
+  const [showRules, setShowRules] = useState(false);
 
   useEffect(() => {
     fetchCommunity();
@@ -102,6 +103,15 @@ const CommunityPage = () => {
   const filteredPosts = selectedFlairFilter 
     ? posts.filter(p => p.flair?.name === selectedFlairFilter)
     : posts;
+
+  const rulesToDisplay = community?.rules && community.rules.length > 0
+    ? community.rules.map(r => ({ title: r.title, desc: r.description }))
+    : [
+        { title: "Respectful Communication", desc: "Treat others with the same respect you'd want. No personal attacks or harassment." },
+        { title: "Relevant Content", desc: "Keep posts and discussions focused on the community's theme or related technical topics." },
+        { title: "No Spam/Self-Promotion", desc: "Avoid posting links to your own products or repetitive promotional content." },
+        { title: "Clean Language", desc: "Avoid excessive profanity and maintain a professional developer environment." }
+      ];
 
   if (loading) {
     return (
@@ -228,6 +238,48 @@ const CommunityPage = () => {
           {community.description}
         </p>
 
+        {/* Community Rules Dropdown */}
+        <div className={`mt-6 mb-2 overflow-hidden border border-white/5 transition-all duration-500 ease-in-out ${showRules ? 'bg-white rounded-xl shadow-2xl' : 'bg-white/[0.01] rounded-lg'}`}>
+          <button
+            onClick={() => setShowRules(!showRules)}
+            className={`w-full flex items-center justify-between px-4 py-3 text-[11px] font-black uppercase tracking-widest transition-colors duration-500 ${showRules ? 'text-gray-500 hover:bg-gray-50' : 'text-white/40 hover:bg-white/[0.02]'}`}
+          >
+            <div className="flex items-center gap-2">
+              <svg className={`w-3.5 h-3.5 transition-colors duration-500 ${showRules ? 'text-amber-600' : 'text-amber-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              Community Rules & Guidelines
+            </div>
+            <svg 
+              className={`w-3.5 h-3.5 transition-all duration-500 ${showRules ? 'rotate-180 text-gray-400' : ''}`} 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          
+          <div className={`grid transition-all duration-500 ease-in-out ${showRules ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
+            <div className="overflow-hidden">
+              <div className="px-4 pb-5">
+                <div className="space-y-4 pt-2 border-t border-gray-100">
+                  {rulesToDisplay.map((rule, idx) => (
+                    <div key={idx} className="space-y-1">
+                      <h4 className="text-[13px] sm:text-base font-bold text-gray-900 leading-tight">
+                        {rule.title}
+                      </h4>
+                      <p className="text-[11px] sm:text-[13px] text-gray-600 leading-relaxed font-medium">
+                        {rule.desc}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Flair Filter Bar */}
         {community?.flairs?.length > 0 && (
           <div className="w-full overflow-hidden mt-8">
@@ -319,7 +371,39 @@ const CommunityPage = () => {
               View all →
             </Link>
           </div>
-          <div className="space-y-2">
+          {/* Mobile Grid View (3 columns on mobile, hidden on tablet and above) */}
+          <div className="grid grid-cols-3 gap-3 sm:hidden">
+            {otherCommunities.map((c) => (
+              <Link
+                key={c._id}
+                to={`/community/${c.slug}`}
+                className="flex flex-col items-center text-center p-3 rounded-2xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.06] transition-all duration-200 min-w-0"
+              >
+                {/* Logo */}
+                <div
+                  className={`w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0 overflow-hidden ${!c.icon?.startsWith("/") ? "" : "bg-transparent border-none"}`}
+                  style={c.icon?.startsWith("/") ? {} : {
+                    background: `${c.color}20`,
+                    border: `1px solid ${c.color}30`,
+                  }}
+                >
+                  {c.icon?.startsWith("/") ? (
+                    <img src={c.icon} alt="" className="w-full h-full object-contain p-1.5" />
+                  ) : (
+                    c.icon
+                  )}
+                </div>
+
+                {/* Name */}
+                <span className="text-[10px] font-black text-white mt-2 truncate w-full leading-tight">
+                  {c.name}
+                </span>
+              </Link>
+            ))}
+          </div>
+
+          {/* Desktop List View (visible on tablet and above, hidden on mobile) */}
+          <div className="hidden sm:block space-y-2">
             {otherCommunities.map((c) => (
               <div
                 key={c._id}

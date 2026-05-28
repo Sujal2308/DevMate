@@ -24,7 +24,11 @@ const seedFlairs = async () => {
       { name: "Optimization", color: "#00ba7c" },
       { name: "Project Help", color: "#1d9bf0" },
       { name: "Interview Prep", color: "#f4212e" },
-      { name: "Trending / Hot", color: "#ff7b72" }
+      { name: "Trending / Hot", color: "#ff7b72" },
+      { name: "Motivation", color: "#f97316" },
+      { name: "Career Guide", color: "#3b82f6" },
+      { name: "Tutorial", color: "#10b981" },
+      { name: "UI/UX Design", color: "#a259ff" }
     ];
 
     for (const comm of communities) {
