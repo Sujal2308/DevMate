@@ -8,7 +8,7 @@ const Communities = () => {
   const [joiningId, setJoiningId] = useState(null);
   const [search, setSearch] = useState("");
   const [fetchError, setFetchError] = useState("");
-  const [activeTab] = useState("joined");
+  const [activeTab, setActiveTab] = useState("joined");
 
   useEffect(() => {
     fetchCommunities();
@@ -63,6 +63,7 @@ const Communities = () => {
   );
 
   const joined = filtered.filter((c) => c.isMember);
+  const discover = filtered.filter((c) => !c.isMember);
 
   if (loading) {
     return (
@@ -92,39 +93,41 @@ const Communities = () => {
           </p>
         </div>
         
-        {/* Search - Positioned below the main text */}
-        <div className="w-full relative max-w-xl">
-          <svg
-            className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Explore communities..."
-            className="w-full bg-transparent text-white pl-14 pr-6 py-4 rounded-full text-sm font-bold focus:outline-none focus:ring-4 focus:ring-white/10 transition-all border-2 border-white shadow-2xl placeholder:text-white/40"
-          />
-        </div>
-
-        {/* View Toggle Buttons */}
-        <div className="flex items-center gap-8 mt-10 border-b border-white/5 pb-2">
-          <div
-            className="pb-3 px-2 text-sm font-black transition-all relative text-[#FF6347]"
-          >
-            Joined
-            <div className="absolute bottom-0 left-0 w-full h-1 bg-[#FF6347] rounded-full"></div>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mt-8">
+          {/* Search - Positioned below the main text */}
+          <div className="w-full sm:max-w-md relative">
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Explore communities..."
+              className="w-full bg-transparent text-white pl-0 pr-0 py-2 border-b-2 border-white rounded-none text-sm font-bold focus:outline-none focus:border-purple-500 transition-colors placeholder:text-white/40"
+            />
           </div>
-          <Link
-            to="/explore-communities"
-            className="pb-3 px-2 text-sm font-black transition-all relative text-white opacity-60 hover:opacity-100 hover:text-purple-500"
-          >
-            Explore
-          </Link>
+
+          {/* View Toggle Buttons */}
+          <div className="flex items-center gap-3 shrink-0">
+            <button
+              onClick={() => setActiveTab("joined")}
+              className={`px-5 py-2.5 text-[10px] sm:text-xs font-black uppercase tracking-widest rounded-full transition-all select-none ${
+                activeTab === "joined"
+                  ? "text-white bg-[#FF6347] shadow-lg shadow-[#FF6347]/10"
+                  : "text-white/70 hover:text-white bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10"
+              }`}
+            >
+              Joined
+            </button>
+            <button
+              onClick={() => setActiveTab("discover")}
+              className={`px-5 py-2.5 text-[10px] sm:text-xs font-black uppercase tracking-widest rounded-full transition-all select-none ${
+                activeTab === "discover"
+                  ? "text-white bg-[#FF6347] shadow-lg shadow-[#FF6347]/10"
+                  : "text-white/70 hover:text-white bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10"
+              }`}
+            >
+              Discover
+            </button>
+          </div>
         </div>
       </div>
 
@@ -170,22 +173,72 @@ const Communities = () => {
               </div>
             </div>
           ) : (
-            <div className="text-center py-20 bg-white/5 rounded-xl border-2 border-dashed border-white/10 mt-6">
-              <div className="text-4xl mb-4">🏠</div>
-              <p className="text-lg font-bold text-white">No joined communities yet</p>
-              <p className="text-x-gray text-xs mt-2">Switch to Explore to find your tribe</p>
+            <div className="text-center py-16 px-6 bg-gradient-to-br from-[#16181C] to-[#0d0e12] rounded-2xl border border-white/5 shadow-2xl mt-6">
+              <div className="mx-auto w-16 h-16 rounded-full bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 mb-6">
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+              <h3 className="text-2xl font-black text-white tracking-tight" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+                No joined communities yet
+              </h3>
+              <p className="text-x-gray text-sm mt-2 max-w-sm mx-auto font-medium opacity-70">
+                You haven't joined any tribes yet. Discover new developer communities to get started.
+              </p>
               <Link 
                 to="/explore-communities" 
-                className="mt-6 px-6 py-2.5 bg-purple-600 text-white rounded-lg font-black text-xs uppercase tracking-widest hover:scale-105 transition-transform inline-block"
+                className="mt-8 px-8 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-full font-black text-[11px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all inline-block shadow-lg hover:shadow-purple-500/25"
               >
-                Go Explore
+                Go Discover
               </Link>
             </div>
           )}
         </section>
       )}
 
-      {/* Empty States */}
+      {/* Discover Communities View (inline) */}
+      {activeTab === "discover" && (
+        <section className="mb-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          {discover.length > 0 ? (
+            <div className="grid grid-cols-1 gap-4 mt-6">
+              {discover.slice(0, 3).map((c) => (
+                <CommunityCard
+                  key={c._id}
+                  community={c}
+                  onJoinLeave={handleJoinLeave}
+                  loading={joiningId === c._id}
+                />
+              ))}
+              
+              {/* View All Button */}
+              {discover.length > 3 && (
+                <div className="py-6 mt-4 border-t border-white/5 w-full">
+                  <Link
+                    to="/explore-communities"
+                    className="w-full block text-center py-3.5 bg-white/5 hover:bg-white/10 text-white border border-white/10 hover:border-white/20 rounded-xl font-black text-[11px] uppercase tracking-widest transition-all duration-200 active:scale-[0.99] shadow-md"
+                  >
+                    View All Communities
+                  </Link>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="text-center py-16 px-6 bg-gradient-to-br from-[#16181C] to-[#0d0e12] rounded-2xl border border-white/5 shadow-2xl mt-6">
+              <div className="mx-auto w-16 h-16 rounded-full bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 mb-6">
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="text-2xl font-black text-white tracking-tight" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+                All caught up!
+              </h3>
+              <p className="text-x-gray text-sm mt-2 max-w-sm mx-auto font-medium opacity-70">
+                You've joined all available communities. Excellent work!
+              </p>
+            </div>
+          )}
+        </section>
+      )}
       {!fetchError && filtered.length === 0 && communities.length > 0 && (
         <div className="text-center py-16 flex flex-col items-center animate-in fade-in zoom-in duration-500">
           <img src="/Feeling sorry-cuate.svg" alt="No results" className="w-80 h-80 mb-6 opacity-100" />

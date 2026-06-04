@@ -98,7 +98,7 @@ const ExploreCommunities = () => {
         </button>
 
         {/* Search */}
-        <div className="w-full relative max-w-xl">
+        <div className="w-full relative">
           <svg
             className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40"
             fill="none"

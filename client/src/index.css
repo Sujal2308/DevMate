@@ -198,7 +198,7 @@ pre.code,
   }
 
   .x-main {
-    max-width: 44rem; /* 704px - Consistent with feed and other pages */
+    max-width: 48rem; /* 768px - Increased width for better desktop layout */
     width: 100%;
     position: relative;
     margin: 0 auto; /* Center the content */
@@ -405,13 +405,13 @@ pre.code,
 /* Responsive breakpoints for better desktop support */
 @media (max-width: 1600px) {
   .x-main {
-    max-width: 44rem; /* 704px */
+    max-width: 48rem; /* 768px */
   }
 }
 
 @media (max-width: 1440px) {
   .x-main {
-    max-width: 42rem; /* 672px */
+    max-width: 46rem; /* 736px */
   }
 }
 
@@ -423,7 +423,7 @@ pre.code,
   }
 
   .x-main {
-    max-width: 40rem; /* 640px for smaller screens */
+    max-width: 42rem; /* 672px for smaller screens */
   }
 }
 
@@ -1715,4 +1715,11 @@ input[type="date"]::-webkit-clear-button {
   0%, 70% { opacity: 0; }
   75%, 87% { opacity: 0.2; }
   100% { opacity: 0; }
+}
+
+/* Custom layout width enhancement for desktop screens */
+@media (min-width: 640px) {
+  .max-w-2xl {
+    max-width: 48rem !important; /* 768px to match the wider .x-main container */
+  }
 }

@@ -14,7 +14,6 @@ const CommunityPage = () => {
   const [joining, setJoining] = useState(false);
   const [error, setError] = useState("");
   const [allCommunities, setAllCommunities] = useState([]);
-  const [joiningId, setJoiningId] = useState(null);
   const [selectedFlairFilter, setSelectedFlairFilter] = useState(null);
   const [showRules, setShowRules] = useState(false);
 
@@ -75,28 +74,6 @@ const CommunityPage = () => {
     }
   };
 
-  const handleOtherJoinLeave = async (c) => {
-    if (!user) return navigate("/login");
-    setJoiningId(c._id);
-    try {
-      const token = localStorage.getItem("token");
-      const action = c.isMember ? "leave" : "join";
-      await axios.post(`/api/communities/${action}/${c._id}`, {}, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setAllCommunities((prev) =>
-        prev.map((item) =>
-          item._id === c._id
-            ? { ...item, isMember: !item.isMember, memberCount: item.isMember ? item.memberCount - 1 : item.memberCount + 1 }
-            : item
-        )
-      );
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setJoiningId(null);
-    }
-  };
 
   const otherCommunities = allCommunities.filter((c) => c.slug !== slug);
 
@@ -144,7 +121,7 @@ const CommunityPage = () => {
         body { overflow-x: hidden !important; width: 100vw !important; position: relative !important; }
         .x-main, .x-main-mobile { overflow-x: hidden !important; max-width: 100vw !important; }
       `}</style>
-      <div className="w-full max-w-2xl mx-auto px-3 sm:px-4 pb-20">
+      <div className="w-full max-w-2xl mx-auto px-3 sm:px-4 pb-20 border-l border-r border-x-border/50">
       {/* Community Header */}
       <div
         className="mb-6 border-b border-x-border/20 pb-6 pt-4 sm:px-0"
@@ -371,13 +348,13 @@ const CommunityPage = () => {
               View all →
             </Link>
           </div>
-          {/* Mobile Grid View (3 columns on mobile, hidden on tablet and above) */}
-          <div className="grid grid-cols-3 gap-3 sm:hidden">
+          {/* Responsive Grid View (visible on all screens) */}
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
             {otherCommunities.map((c) => (
               <Link
                 key={c._id}
                 to={`/community/${c.slug}`}
-                className="flex flex-col items-center text-center p-3 rounded-2xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.06] transition-all duration-200 min-w-0"
+                className="flex flex-col items-center text-center p-3 rounded-2xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.06] hover:border-white/10 hover:scale-[1.03] active:scale-[0.98] transition-all duration-200 min-w-0"
               >
                 {/* Logo */}
                 <div
@@ -395,74 +372,10 @@ const CommunityPage = () => {
                 </div>
 
                 {/* Name */}
-                <span className="text-[10px] font-black text-white mt-2 truncate w-full leading-tight">
+                <span className="text-[10px] sm:text-xs font-black text-white mt-2 truncate w-full leading-tight">
                   {c.name}
                 </span>
               </Link>
-            ))}
-          </div>
-
-          {/* Desktop List View (visible on tablet and above, hidden on mobile) */}
-          <div className="hidden sm:block space-y-2">
-            {otherCommunities.map((c) => (
-              <div
-                key={c._id}
-                className="flex items-center gap-3 py-3 px-0 bg-transparent border-0 rounded-none transition-all duration-200 group"
-              >
-                {/* Icon */}
-                <Link to={`/community/${c.slug}`} className="shrink-0">
-                  <div
-                    className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl shrink-0 overflow-hidden ${!c.icon?.startsWith("/") ? "" : "bg-transparent border-none"}`}
-                    style={c.icon?.startsWith("/") ? {} : {
-                      background: `${c.color}20`,
-                      border: `1px solid ${c.color}30`,
-                    }}
-                  >
-                    {c.icon?.startsWith("/") ? (
-                      <img src={c.icon} alt="" className="w-full h-full object-contain p-2" />
-                    ) : (
-                      c.icon
-                    )}
-                  </div>
-                </Link>
-
-                {/* Info */}
-                <div className="flex-1 min-w-0">
-                  <Link to={`/community/${c.slug}`}>
-                    <p className="text-sm font-black text-white truncate group-hover:text-x-blue transition-colors">
-                      {c.name}
-                    </p>
-                  </Link>
-                  {c.description && (
-                    <p className="text-xs text-x-gray truncate">
-                      {c.description}
-                    </p>
-                  )}
-                </div>
-
-                {/* Join/Leave */}
-                <button
-                  onClick={() => handleOtherJoinLeave(c)}
-                  disabled={joiningId === c._id}
-                  className={`shrink-0 flex items-center justify-center w-8 h-8 rounded-full transition-all duration-200 hover:scale-110 active:scale-95 ${
-                    c.isMember
-                      ? "bg-white/5 text-x-gray border border-white/10"
-                      : "bg-white text-black border-none shadow-lg"
-                  }`}
-                >
-                  {joiningId === c._id ? (
-                    <span className="w-3 h-3 border border-current border-t-transparent rounded-full animate-spin" />
-                  ) : c.isMember ? (
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                    </svg>
-                  ) : (
-                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" />
-                    </svg>
-                  )}
-                </button>
-              </div>
             ))}
           </div>
         </div>

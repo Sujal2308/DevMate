@@ -592,17 +592,23 @@ const CreatePost = () => {
                       initial={{ opacity: 0, y: -10, scale: 0.95 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                      className="absolute top-full left-0 mt-3 z-50 w-72 p-5 bg-x-dark/95 backdrop-blur-xl border-2 border-neutral-700 rounded-[1.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden"
+                      className="absolute top-full left-0 mt-3 z-50 w-72 p-5 bg-white border border-neutral-200 rounded-xl shadow-2xl overflow-hidden"
                     >
-                      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 via-purple-500 to-x-blue opacity-50"></div>
                       <div className="space-y-4">
-                        <div className="space-y-1">
-                          <h4 className="text-sm font-black text-x-white tracking-tight font-space">
-                            Discard Draft?
-                          </h4>
-                          <p className="text-[10px] text-x-gray opacity-70 font-medium">
-                            This will clear all content.
-                          </p>
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 shrink-0">
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </div>
+                          <div>
+                            <h4 className="text-sm font-black text-neutral-900 tracking-tight font-space">
+                              Discard Draft?
+                            </h4>
+                            <p className="text-xs text-neutral-500 font-medium leading-tight">
+                              This will clear all content.
+                            </p>
+                          </div>
                         </div>
                         <div className="flex gap-2">
                           <button
@@ -625,14 +631,14 @@ const CreatePost = () => {
                               setShowConfirm(false);
                               setSelectedFlair(null);
                             }}
-                            className="flex-1 py-2.5 bg-red-600 hover:bg-red-500 text-white text-[10px] font-black rounded-lg transition-all active:scale-95"
+                            className="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white text-[11px] font-black uppercase tracking-wider rounded-lg transition-all active:scale-95 shadow-md shadow-red-600/10"
                           >
                             Discard
                           </button>
                           <button
                             type="button"
                             onClick={() => setShowConfirm(false)}
-                            className="flex-1 py-2.5 bg-white/5 hover:bg-white/10 text-x-white text-[10px] font-black rounded-lg transition-all active:scale-95 border border-white/10"
+                            className="flex-1 py-2.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 text-[11px] font-black uppercase tracking-wider rounded-lg transition-all active:scale-95 border border-neutral-200"
                           >
                             Keep
                           </button>
@@ -1142,11 +1148,11 @@ const CreatePost = () => {
                   setShowRepoInput(false);
                   setFormData({ ...formData, repoUrl: "", repoTitle: "" });
                 }}
-                className="absolute -top-3 -right-3 bg-white hover:bg-gray-200 text-black w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shadow-lg transform transition-transform group-hover/repo:scale-110 z-10 border border-black/10"
+                className="absolute top-4 right-4 bg-white/10 hover:bg-white/20 text-white hover:text-red-500 w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-200 z-10"
               >
                 ✕
               </button>
-              <div className="border-b border-white/40 bg-transparent transition-all mb-4">
+              <div className="border-b border-white/40 bg-transparent transition-all mb-4 pr-12">
                 <input
                   type="text"
                   name="repoTitle"
@@ -1203,11 +1209,11 @@ const CreatePost = () => {
                     pollOptions: ["", ""],
                   });
                 }}
-                className="absolute -top-3 -right-3 bg-white hover:bg-gray-200 text-black w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shadow-lg transform transition-transform group-hover/poll:scale-110 z-10 border border-black/10"
+                className="absolute top-4 right-4 bg-white/10 hover:bg-white/20 text-white hover:text-red-500 w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-200 z-10"
               >
                 ✕
               </button>
-              <div className="border-b-2 border-white bg-transparent mb-6">
+              <div className="border-b-2 border-white bg-transparent mb-6 pr-12">
                 <input
                   type="text"
                   placeholder="Ask a question..."
