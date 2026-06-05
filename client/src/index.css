@@ -67,6 +67,7 @@
 /* Enable smooth scrolling for all viewports */
 html {
   scroll-behavior: smooth;
+  scrollbar-gutter: stable;
 }
 
 /* Custom Scrollbar Hide Utility */

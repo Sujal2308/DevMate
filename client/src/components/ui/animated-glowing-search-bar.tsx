@@ -8,6 +8,7 @@ interface SearchProps {
   onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
   placeholder?: string;
   clearSearch: () => void;
+  variant?: 'default' | 'transparent';
 }
 
 const SearchComponent = forwardRef<HTMLInputElement, SearchProps>(({ 
@@ -17,7 +18,8 @@ const SearchComponent = forwardRef<HTMLInputElement, SearchProps>(({
   onBlur, 
   onKeyDown, 
   placeholder = "Search developers...",
-  clearSearch
+  clearSearch,
+  variant = 'default'
 }, ref) => {
   const uniqueId = useId();
   const searchGradientId = `search-${uniqueId.replace(/:/g, '')}`;
@@ -26,16 +28,20 @@ const SearchComponent = forwardRef<HTMLInputElement, SearchProps>(({
     <div className="relative flex items-center justify-center w-full">
       <div id="poda" className="relative flex items-center justify-center group w-full">
         {/* Glow Effects */}
-        <div className="absolute z-[-1] overflow-hidden h-full w-full max-h-[52px] rounded-full blur-[3px] glow-layer-1">
-        </div>
-        <div className="absolute z-[-1] overflow-hidden h-full w-full max-h-[48px] rounded-full blur-[3px] glow-layer-2">
-        </div>
+        {variant !== 'transparent' && (
+          <>
+            <div className="absolute z-[-1] overflow-hidden h-full w-full max-h-[52px] rounded-full blur-[3px] glow-layer-1">
+            </div>
+            <div className="absolute z-[-1] overflow-hidden h-full w-full max-h-[48px] rounded-full blur-[3px] glow-layer-2">
+            </div>
+            
+            <div className="absolute z-[-1] overflow-hidden h-full w-full max-h-[46px] rounded-full blur-[2px] glow-layer-3">
+            </div>
         
-        <div className="absolute z-[-1] overflow-hidden h-full w-full max-h-[46px] rounded-full blur-[2px] glow-layer-3">
-        </div>
- 
-        <div className="absolute z-[-1] overflow-hidden h-full w-full max-h-[42px] rounded-full blur-[0.5px] glow-layer-4">
-        </div>
+            <div className="absolute z-[-1] overflow-hidden h-full w-full max-h-[42px] rounded-full blur-[0.5px] glow-layer-4">
+            </div>
+          </>
+        )}
 
         <div id="main" className="relative group w-full">
           <input 
@@ -43,7 +49,10 @@ const SearchComponent = forwardRef<HTMLInputElement, SearchProps>(({
             placeholder={placeholder} 
             type="text" 
             name="text" 
-            className="bg-[#010201] border-none w-full h-[44px] rounded-full text-white pl-[48px] pr-[44px] text-sm focus:outline-none placeholder-gray-400" 
+            className={variant === 'transparent'
+              ? "bg-transparent border border-white/20 focus:border-x-blue rounded-full w-full h-[44px] text-white pl-[48px] pr-[44px] text-sm focus:outline-none placeholder-gray-400 transition-all shadow-[0_0_12px_rgba(29,155,240,0.25)] focus:shadow-[0_0_18px_rgba(29,155,240,0.55)]"
+              : "bg-[#010201] border-none w-full h-[44px] rounded-full text-white pl-[48px] pr-[44px] text-sm focus:outline-none placeholder-gray-400"
+            }
             value={value}
             onChange={onChange}
             onFocus={onFocus}
@@ -52,18 +61,25 @@ const SearchComponent = forwardRef<HTMLInputElement, SearchProps>(({
             autoComplete="off"
           />
           
-          <div id="input-mask" className="pointer-events-none w-[60px] h-[20px] absolute bg-gradient-to-r from-transparent to-black top-[12px] left-[52px] group-focus-within:hidden"></div>
-          <div id="pink-mask" className="pointer-events-none w-[30px] h-[20px] absolute bg-[#cf30aa] top-[12px] left-[5px] blur-2xl opacity-80 transition-all duration-2000 group-hover:opacity-0"></div>
-          
-          <div className="absolute h-[32px] w-[32px] overflow-hidden top-[6px] right-[6px] rounded-full
-                          before:absolute before:content-[''] before:w-[600px] before:h-[600px] before:bg-no-repeat before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:rotate-90
-                          before:bg-[conic-gradient(rgba(0,0,0,0),#3d3a4f,rgba(0,0,0,0)_50%,rgba(0,0,0,0)_50%,#3d3a4f,rgba(0,0,0,0)_100%)]
-                          before:brightness-135 before:animate-spin-slow">
-          </div>
+          {variant !== 'transparent' && (
+            <>
+              <div id="input-mask" className="pointer-events-none w-[60px] h-[20px] absolute bg-gradient-to-r from-transparent to-black top-[12px] left-[52px] group-focus-within:hidden"></div>
+              <div id="pink-mask" className="pointer-events-none w-[30px] h-[20px] absolute bg-[#cf30aa] top-[12px] left-[5px] blur-2xl opacity-80 transition-all duration-2000 group-hover:opacity-0"></div>
+              
+              <div className="absolute h-[32px] w-[32px] overflow-hidden top-[6px] right-[6px] rounded-full
+                              before:absolute before:content-[''] before:w-[600px] before:h-[600px] before:bg-no-repeat before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:rotate-90
+                              before:bg-[conic-gradient(rgba(0,0,0,0),#3d3a4f,rgba(0,0,0,0)_50%,rgba(0,0,0,0)_50%,#3d3a4f,rgba(0,0,0,0)_100%)]
+                              before:brightness-135 before:animate-spin-slow">
+              </div>
+            </>
+          )}
 
-          {/* Clear Button Container - Re-inserted in the filter icon's original position */}
+          {/* Clear Button Container */}
           {value && (
-            <div id="filter-icon" className="absolute top-[6px] right-[6px] flex items-center justify-center z-[2] h-[32px] w-[32px] [isolation:isolate] overflow-hidden rounded-full bg-gradient-to-b from-[#161329] via-black to-[#1d1b4b] border border-transparent">
+            <div id="filter-icon" className={variant === 'transparent'
+              ? "absolute top-[6px] right-[6px] flex items-center justify-center z-[2] h-[32px] w-[32px]"
+              : "absolute top-[6px] right-[6px] flex items-center justify-center z-[2] h-[32px] w-[32px] [isolation:isolate] overflow-hidden rounded-full bg-gradient-to-b from-[#161329] via-black to-[#1d1b4b] border border-transparent"
+            }>
               <button
                 type="button"
                 onClick={clearSearch}

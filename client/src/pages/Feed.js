@@ -18,6 +18,27 @@ const Feed = () => {
   const [searchUsers, setSearchUsers] = useState([]);
   const [searchCommunities, setSearchCommunities] = useState([]);
   const [searchTab, setSearchTab] = useState("posts"); // "posts", "people", "communities"
+  const [isSearchOverlayOpen, setIsSearchOverlayOpen] = useState(false);
+  const overlayInputRef = useRef(null);
+
+  useEffect(() => {
+    if (isSearchOverlayOpen && overlayInputRef.current) {
+      setTimeout(() => {
+        overlayInputRef.current.focus();
+      }, 50);
+    }
+  }, [isSearchOverlayOpen]);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape" && isSearchOverlayOpen) {
+        setIsSearchOverlayOpen(false);
+        setSearchTerm("");
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isSearchOverlayOpen]);
   const [searchLoading, setSearchLoading] = useState(false);
 
   const [isScrolled, setIsScrolled] = useState(false);
@@ -161,17 +182,21 @@ const Feed = () => {
     }
   }, [isMobileMenuOpen, communities.length]);
 
-  // Prevent scroll when mobile menu is open
+  // Prevent scroll when mobile menu, search overlay, or desktop search results are open
   useEffect(() => {
-    if (isMobileMenuOpen) {
+    const isSearchActive = isSearchOverlayOpen || searchTerm.trim() !== "";
+    if (isMobileMenuOpen || isSearchActive) {
       document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
     }
     return () => {
       document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
     };
-  }, [isMobileMenuOpen]);
+  }, [isMobileMenuOpen, isSearchOverlayOpen, searchTerm]);
 
   const fetchPosts = useCallback(async (pageNum = 1) => {
     try {
@@ -417,6 +442,11 @@ const Feed = () => {
             <SearchComponent
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              onFocus={() => {
+                if (window.innerWidth < 640) {
+                  setIsSearchOverlayOpen(true);
+                }
+              }}
               onKeyDown={handleSearchSubmit}
               clearSearch={() => setSearchTerm("")}
               placeholder="Search anything..."
@@ -486,6 +516,7 @@ const Feed = () => {
               <SearchComponent
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
+                onFocus={() => setIsSearchOverlayOpen(true)}
                 onKeyDown={handleSearchSubmit}
                 clearSearch={() => setSearchTerm("")}
                 placeholder="Search anything..."
@@ -493,29 +524,27 @@ const Feed = () => {
             </div>
           ) : (
             <div className="flex items-center gap-2 animate-fade-in">
-              {/* Mobile notification bell icon */}
-              <Link
-                to="/notifications"
-                className={`inline p-2 transition-all duration-200 relative ${
-                  location.pathname === "/notifications" ? "text-x-blue" : (hasUnread ? "text-x-red" : "text-white")
-                }`}
-                aria-label="Notifications"
+              {/* Mobile Search Icon */}
+              <button
+                onClick={() => setIsSearchOverlayOpen(true)}
+                className="inline p-2 transition-all duration-200 relative text-white hover:scale-105 active:scale-95"
+                aria-label="Search"
                 style={{
                   fontSize: 24,
-                  filter: (hasUnread && location.pathname !== "/notifications") ? "drop-shadow(0 0 8px #F91880)" : "none",
-                  transition: "color 0.2s, filter 0.2s",
+                  transition: "color 0.2s, transform 0.2s",
                 }}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
                   viewBox="0 0 24 24"
-                  fill={location.pathname === "/notifications" ? "currentColor" : "#ffffff"}
-                  width="24"
-                  height="24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-6 h-6"
                 >
-                  <path fillRule="evenodd" d="M5.25 9a6.75 6.75 0 0113.5 0v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 01-.297 1.206c-1.544.57-3.16.99-4.831 1.243a3.75 3.75 0 11-7.48 0 24.585 24.585 0 01-4.831-1.244.75.75 0 01-.298-1.205A8.217 8.217 0 005.25 9.75V9zm4.502 8.9a2.25 2.25 0 104.496 0 25.057 25.057 0 01-4.496 0z" clipRule="evenodd" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                 </svg>
-              </Link>
+              </button>
 
               {/* Mobile Menu Button */}
               <button
@@ -532,9 +561,10 @@ const Feed = () => {
         </div>
       </div>
 
-      {searchTerm.trim() !== "" ? (
+      {/* Desktop Inline Search Results */}
+      {searchTerm.trim() !== "" && !isSearchOverlayOpen && (
         <div 
-          className="fixed top-[64px] sm:top-[80px] left-1/2 -translate-x-1/2 w-full max-w-2xl z-[45] bg-[#000000] border-none sm:border-l sm:border-r sm:border-x-border/50 overflow-y-auto h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] px-0 sm:px-6 lg:px-8 pt-2 pb-24 sm:py-6 space-y-4 sm:space-y-6"
+          className="hidden sm:block fixed top-[68px] left-1/2 -translate-x-1/2 w-full max-w-2xl z-[45] bg-[#000000] border-l border-r border-x-border/50 overflow-y-auto h-[calc(100vh-68px)] px-6 lg:px-8 py-6 space-y-6"
           style={{ boxSizing: "border-box" }}
         >
           {/* Filter Tabs */}
@@ -597,7 +627,7 @@ const Feed = () => {
                     {searchUsers.map((u) => (
                       <div
                         key={u._id}
-                        className="flex flex-col p-4 sm:p-6 bg-transparent sm:bg-[#16181C] md:bg-[#0a192f]/40 rounded-none sm:rounded-2xl border-b border-white/10 sm:border sm:border-white/5 hover:border-white/20 transition-all duration-300 shadow-none sm:shadow-xl animate-in fade-in duration-200"
+                        className="flex flex-col p-4 sm:p-6 bg-black rounded-none sm:rounded-2xl border-b border-white/10 sm:border sm:border-white/5 hover:border-white/20 transition-all duration-300 shadow-none sm:shadow-xl animate-in fade-in duration-200"
                       >
                         <div className="flex items-center justify-between mb-3">
                           <div className="flex items-center gap-3">
@@ -655,7 +685,7 @@ const Feed = () => {
                   </div>
                 ) : (
                   <div className="text-center py-12 px-4">
-                    <h3 className="text-lg text-gray-500 mb-2 font-bold text-x-white">No people found</h3>
+                    <h3 className="text-lg text-gray-500 mb-2 font-bold text-x-white">No developers found</h3>
                     <p className="text-sm text-x-gray">
                       We couldn't find any developers matching "{searchTerm}"
                     </p>
@@ -671,7 +701,7 @@ const Feed = () => {
                       return (
                         <div
                           key={c._id}
-                          className="flex flex-col p-4 sm:p-6 bg-transparent sm:bg-[#16181C] md:bg-[#0a192f]/40 rounded-none sm:rounded-2xl border-b border-white/10 sm:border sm:border-white/5 hover:border-white/20 transition-all duration-300 shadow-none sm:shadow-xl"
+                          className="flex flex-col p-4 sm:p-6 bg-black rounded-none sm:rounded-2xl border-b border-white/10 sm:border sm:border-white/5 hover:border-white/20 transition-all duration-300 shadow-none sm:shadow-xl animate-in fade-in duration-200"
                         >
                           <div className="flex items-center justify-between mb-3">
                             <div className="flex items-center gap-3">
@@ -716,7 +746,7 @@ const Feed = () => {
                               )}
                             </button>
                           </div>
-                          <p className="text-white/90 text-sm leading-relaxed line-clamp-3 transition-opacity">
+                          <p className="text-white/90 text-sm leading-relaxed line-clamp-3 mb-3">
                             {c.description}
                           </p>
                         </div>
@@ -735,7 +765,9 @@ const Feed = () => {
             </>
           )}
         </div>
-      ) : posts.length === 0 && !loading ? (
+      )}
+
+      {posts.length === 0 && !loading ? (
         <div className="text-center py-8 sm:py-12 px-4">
           <svg
             className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400 mx-auto mb-3 sm:mb-4"
@@ -958,6 +990,255 @@ const Feed = () => {
           </div>
         </div>,
         document.body
+      )}
+
+      {/* Full-Screen Search Overlay with Blurred Background */}
+      {isSearchOverlayOpen && (
+        <div 
+          className="fixed inset-0 bg-black/75 backdrop-blur-xl z-[99999] overflow-y-auto px-4 py-6 sm:py-12 animate-fade-in"
+          onClick={(e) => {
+            // Close if clicking the backdrop itself
+            if (e.target === e.currentTarget) {
+              setIsSearchOverlayOpen(false);
+              setSearchTerm("");
+            }
+          }}
+        >
+          <div className="w-full max-w-2xl mx-auto flex flex-col gap-6">
+            {/* Exit button above the search bar */}
+            <div className="flex justify-start px-2">
+              <button
+                onClick={() => {
+                  setIsSearchOverlayOpen(false);
+                  setSearchTerm("");
+                }}
+                className="flex items-center gap-1.5 text-base font-black text-x-red hover:opacity-80 transition-all duration-200 active:scale-95"
+                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+              >
+                <svg className="w-5 h-5 text-x-red" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5} style={{ transform: "scaleX(-1)" }}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline strokeLinecap="round" strokeLinejoin="round" points="16 17 21 12 16 7" />
+                  <line strokeLinecap="round" strokeLinejoin="round" x1="21" x2="9" y1="12" y2="12" />
+                </svg>
+                <span>Exit</span>
+              </button>
+            </div>
+
+            {/* Scaled-up search bar container */}
+            <div className="w-full transform scale-[1.04] transition-transform duration-300 ease-out origin-center sticky top-0 z-[110] py-2">
+              <SearchComponent
+                ref={overlayInputRef}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={handleSearchSubmit}
+                clearSearch={() => setSearchTerm("")}
+                placeholder="Search anything..."
+              />
+            </div>
+
+            {/* Search Results */}
+            {searchTerm.trim() !== "" && (
+              <div className="w-full space-y-6 mt-4 pb-20 animate-fade-in">
+                {/* Filter Tabs */}
+                <div className="flex items-center gap-6 border-b border-white/10 w-full pb-1">
+                  {[
+                    { id: "posts", label: "Posts" },
+                    { id: "people", label: "People" },
+                    { id: "communities", label: "Communities" },
+                  ].map((tab) => (
+                    <button
+                      key={tab.id}
+                      onClick={() => setSearchTab(tab.id)}
+                      className={`pb-3 px-1 text-sm sm:text-base font-black tracking-wider transition-all duration-200 border-b-2 -mb-[2px] ${
+                        searchTab === tab.id
+                          ? "border-x-blue text-white"
+                          : "border-transparent text-x-gray hover:text-white"
+                      }`}
+                      style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+
+                {searchLoading ? (
+                  <div className="relative">
+                    <ShimmerEffect type="feed" />
+                  </div>
+                ) : (
+                  <>
+                    {searchTab === "posts" && (
+                      searchPosts.length > 0 ? (
+                        <div className="space-y-4 sm:space-y-6">
+                          {searchPosts.map((post) => (
+                            <PostCard
+                              key={post._id}
+                              post={post}
+                              onUpdate={(updatedPost) => {
+                                setSearchPosts(searchPosts.map(p => p._id === updatedPost._id ? updatedPost : p));
+                              }}
+                              onDelete={(deletedPostId) => {
+                                setSearchPosts(searchPosts.filter(p => p._id !== deletedPostId));
+                              }}
+                            />
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="text-center py-12 px-4">
+                          <h3 className="text-lg text-gray-500 mb-2 font-bold text-x-white">No posts found</h3>
+                          <p className="text-sm text-x-gray">
+                            We couldn't find any posts matching "{searchTerm}"
+                          </p>
+                        </div>
+                      )
+                    )}
+
+                    {searchTab === "people" && (
+                      searchUsers.length > 0 ? (
+                        <div className="space-y-4">
+                          {searchUsers.map((u) => (
+                            <div
+                              key={u._id}
+                              className="flex flex-col p-4 sm:p-6 bg-black rounded-2xl border border-white/5 hover:border-white/20 transition-all duration-300 shadow-xl"
+                            >
+                              <div className="flex items-center justify-between mb-3">
+                                <div className="flex items-center gap-3">
+                                  <Link to={`/profile/${u.username}`} className="shrink-0">
+                                    <div className="bg-black text-white w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold shadow-lg overflow-hidden relative border border-white/10">
+                                      {u.avatar ? (
+                                        <img src={u.avatar} alt={u.displayName} className="w-full h-full object-cover" />
+                                      ) : (
+                                        (u.displayName || u.username).charAt(0).toUpperCase()
+                                      )}
+                                    </div>
+                                  </Link>
+                                  <div className="flex flex-col min-w-0 gap-0.5">
+                                    <Link to={`/profile/${u.username}`}>
+                                      <h3 className="font-black text-white text-sm tracking-tight truncate leading-tight hover:text-x-blue transition-colors">
+                                        {u.displayName || u.username}
+                                      </h3>
+                                    </Link>
+                                    <p className="text-[9px] font-medium text-white/40 uppercase tracking-widest leading-none">
+                                      @{u.username}
+                                    </p>
+                                  </div>
+                                </div>
+                                <Link
+                                  to={`/profile/${u.username}`}
+                                  className="px-6 py-2 shrink-0 flex items-center justify-center rounded-full transition-all font-black text-[11px] uppercase tracking-widest bg-white text-black hover:bg-neutral-200 font-bold"
+                                >
+                                  View
+                                </Link>
+                              </div>
+                              {u.bio && (
+                                <p className="text-white/90 text-sm leading-relaxed line-clamp-3 transition-opacity mb-3">
+                                  {u.bio}
+                                </p>
+                              )}
+                              {u.skills && u.skills.length > 0 && (
+                                <div className="flex flex-wrap gap-1.5 mt-1">
+                                  {u.skills.slice(0, 5).map((skill, index) => (
+                                    <span
+                                      key={index}
+                                      className="text-[9px] font-black uppercase tracking-wider px-2.5 py-1 bg-white/5 border border-white/10 rounded text-x-gray/90"
+                                    >
+                                      {skill}
+                                    </span>
+                                  ))}
+                                  {u.skills.length > 5 && (
+                                    <span className="text-[9px] font-black uppercase tracking-wider px-2.5 py-1 bg-white/5 border border-white/10 rounded text-x-gray/50">
+                                      +{u.skills.length - 5} MORE
+                                    </span>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="text-center py-12 px-4">
+                          <h3 className="text-lg text-gray-500 mb-2 font-bold text-x-white">No developers found</h3>
+                          <p className="text-sm text-x-gray">
+                            We couldn't find any developers matching "{searchTerm}"
+                          </p>
+                        </div>
+                      )
+                    )}
+
+                    {searchTab === "communities" && (
+                      searchCommunities.length > 0 ? (
+                        <div className="space-y-4">
+                          {searchCommunities.map((c) => (
+                            <div
+                              key={c._id}
+                              className="flex flex-col p-4 sm:p-6 bg-black rounded-2xl border border-white/5 hover:border-white/20 transition-all duration-300 shadow-xl"
+                            >
+                              <div className="flex items-center justify-between mb-3">
+                                <div className="flex items-center gap-3 min-w-0">
+                                  <Link to={`/community/${c.slug}`} className="shrink-0">
+                                    <div
+                                      className="w-12 h-12 rounded-lg flex items-center justify-center text-xl overflow-hidden"
+                                      style={!c.icon?.startsWith("/") ? { background: `${c.color || "#1d9bf0"}10` } : {}}
+                                    >
+                                      {c.icon?.startsWith("/") ? (
+                                        <img src={c.icon} alt="" className="w-full h-full object-contain p-1.5" />
+                                      ) : (
+                                        c.icon || c.name.charAt(0).toUpperCase()
+                                      )}
+                                    </div>
+                                  </Link>
+                                  <div className="flex flex-col min-w-0 gap-0.5">
+                                    <Link to={`/community/${c.slug}`}>
+                                      <h3 className="font-black text-white text-sm tracking-tight truncate leading-tight hover:text-x-blue transition-colors">
+                                        {c.name}
+                                      </h3>
+                                    </Link>
+                                    <p className="text-[9px] font-medium text-white/40 uppercase tracking-widest leading-none">
+                                      {(c.members?.length || 0).toLocaleString()} {(c.members?.length || 0) === 1 ? "member" : "members"}
+                                    </p>
+                                  </div>
+                                </div>
+                                <button
+                                  onClick={() => handleJoinLeaveCommunity(c)}
+                                  disabled={joiningCommunityId === c._id}
+                                  className={`px-5 py-2 shrink-0 flex items-center justify-center rounded-full transition-all font-black text-[10px] uppercase tracking-widest ${
+                                    c.members?.includes(user?._id || user?.id)
+                                      ? "bg-white/10 text-white border border-white/20 hover:bg-red-600/20 hover:text-red-400 hover:border-red-500/30"
+                                      : "bg-x-blue text-white hover:bg-x-blue-hover"
+                                  } disabled:opacity-50`}
+                                >
+                                  {joiningCommunityId === c._id ? (
+                                    <span className="w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                                  ) : c.members?.includes(user?._id || user?.id) ? (
+                                    "Joined"
+                                  ) : (
+                                    "Join"
+                                  )}
+                                </button>
+                              </div>
+                              {c.description && (
+                                <p className="text-white/90 text-sm leading-relaxed line-clamp-3 mb-3">
+                                  {c.description}
+                                </p>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="text-center py-12 px-4">
+                          <h3 className="text-lg text-gray-500 mb-2 font-bold text-x-white">No communities found</h3>
+                          <p className="text-sm text-x-gray">
+                            We couldn't find any communities matching "{searchTerm}"
+                          </p>
+                        </div>
+                      )
+                    )}
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
       )}
       <style>
         {`

@@ -213,7 +213,7 @@ const PostCard = ({ post, onUpdate, onDelete }) => {
 
 
   return (
-    <div className="card w-full max-w-full p-3 sm:p-4 lg:p-6">
+    <div className="card w-full max-w-full p-3 sm:p-4 lg:p-6 bg-black border border-white/5 rounded-2xl">
       {/* Post Header */}
       <div className="flex items-center justify-between mb-3 sm:mb-4">
         <div className="flex items-center flex-1 min-w-0">
