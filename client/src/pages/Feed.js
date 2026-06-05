@@ -25,6 +25,16 @@ const Feed = () => {
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight;
+      const clientHeight = window.innerHeight || document.documentElement.clientHeight;
+      const scrollableRange = scrollHeight - clientHeight;
+
+      // If the page is not scrollable (max scroll range is 40px or less), keep header in normal state
+      if (scrollableRange <= 40) {
+        setIsScrolled(false);
+        return;
+      }
+
       if (scrollTop > 40) {
         setIsScrolled(true);
       } else {
@@ -32,6 +42,7 @@ const Feed = () => {
       }
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -311,7 +322,7 @@ const Feed = () => {
       >
         {/* Mobile Branded Header */}
         <h1 
-          className="flex sm:hidden items-center relative h-8 ml-3"
+          className="flex sm:hidden items-center relative h-8 ml-4"
         >
           {/* Unscrolled State: DevMate Brand Logo + Text */}
           <div 
@@ -335,16 +346,35 @@ const Feed = () => {
           </div>
 
           {/* Scrolled State: Feed Text */}
-          <span 
-            className={`absolute left-0 text-xl font-black text-white tracking-tight uppercase tracking-[0.15em] transition-all duration-300 ease-in-out ${
-              isScrolled 
-                ? "opacity-100 scale-100 translate-y-0" 
-                : "opacity-0 scale-90 pointer-events-none translate-y-[4px]"
-            }`}
-            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-          >
-            Feed
-          </span>
+          {searchTerm.trim() !== "" ? (
+            <button 
+              onClick={() => setSearchTerm("")}
+              className={`absolute left-0 top-1/2 -translate-y-1/2 flex items-center gap-1.5 text-lg font-black text-x-red transition-all duration-300 hover:opacity-85 ${
+                isScrolled 
+                  ? "opacity-100 scale-100 pointer-events-auto" 
+                  : "opacity-0 scale-90 pointer-events-none"
+              }`}
+              style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+            >
+              <svg className="w-5 h-5 text-x-red" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5} style={{ transform: "scaleX(-1)" }}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline strokeLinecap="round" strokeLinejoin="round" points="16 17 21 12 16 7" />
+                <line strokeLinecap="round" strokeLinejoin="round" x1="21" x2="9" y1="12" y2="12" />
+              </svg>
+              <span>Exit</span>
+            </button>
+          ) : (
+            <span 
+              className={`absolute left-0 text-xl font-black text-white tracking-tight uppercase tracking-[0.15em] transition-all duration-300 ease-in-out ${
+                isScrolled 
+                  ? "opacity-100 scale-100 translate-y-0" 
+                  : "opacity-0 scale-90 pointer-events-none translate-y-[4px]"
+              }`}
+              style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+            >
+              Feed
+            </span>
+          )}
         </h1>
 
         {/* Desktop Header Content Container (hidden on mobile) */}
@@ -354,13 +384,28 @@ const Feed = () => {
           <div className={`transition-all duration-300 overflow-hidden ${
             isScrolled ? "w-auto opacity-100" : "w-0 opacity-0 pointer-events-none"
           }`}>
-            <h1 
-              className="text-xl font-black text-white tracking-tight ml-4 lg:ml-6 uppercase tracking-[0.15em] select-none cursor-pointer hover:text-x-blue transition-colors" 
-              style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            >
-              Feed
-            </h1>
+            {searchTerm.trim() !== "" ? (
+              <button 
+                onClick={() => setSearchTerm("")}
+                className="flex items-center gap-1.5 text-lg sm:text-xl font-black text-x-red ml-4 lg:ml-6 hover:opacity-85 transition-opacity whitespace-nowrap"
+                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+              >
+                <svg className="w-5 h-5 text-x-red" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5} style={{ transform: "scaleX(-1)" }}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline strokeLinecap="round" strokeLinejoin="round" points="16 17 21 12 16 7" />
+                  <line strokeLinecap="round" strokeLinejoin="round" x1="21" x2="9" y1="12" y2="12" />
+                </svg>
+                <span>Exit</span>
+              </button>
+            ) : (
+              <h1 
+                className="text-xl font-black text-white tracking-tight ml-4 lg:ml-6 uppercase tracking-[0.15em] select-none cursor-pointer hover:text-x-blue transition-colors whitespace-nowrap" 
+                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              >
+                Feed
+              </h1>
+            )}
           </div>
 
           {/* Single Search Component wrapper */}
@@ -434,52 +479,66 @@ const Feed = () => {
 
         </div>
 
-        {/* Mobile-only notifications and menu buttons */}
-        <div className="flex sm:hidden items-center gap-2">
-          {/* Mobile notification bell icon */}
-          <Link
-            to="/notifications"
-            className={`inline p-2 mr-3 transition-all duration-200 relative ${
-              location.pathname === "/notifications" ? "text-x-blue" : (hasUnread ? "text-x-red" : "text-white")
-            }`}
-            aria-label="Notifications"
-            style={{
-              fontSize: 24,
-              filter: (hasUnread && location.pathname !== "/notifications") ? "drop-shadow(0 0 8px #F91880)" : "none",
-              transition: "color 0.2s, filter 0.2s",
-            }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill={location.pathname === "/notifications" ? "currentColor" : "#ffffff"}
-              width="24"
-              height="24"
-            >
-              <path fillRule="evenodd" d="M5.25 9a6.75 6.75 0 0113.5 0v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 01-.297 1.206c-1.544.57-3.16.99-4.831 1.243a3.75 3.75 0 11-7.48 0 24.585 24.585 0 01-4.831-1.244.75.75 0 01-.298-1.205A8.217 8.217 0 005.25 9.75V9zm4.502 8.9a2.25 2.25 0 104.496 0 25.057 25.057 0 01-4.496 0z" clipRule="evenodd" />
-            </svg>
-          </Link>
+        {/* Mobile-only notifications and menu buttons or search bar */}
+        <div className="flex sm:hidden items-center gap-2 flex-1 justify-end mr-4">
+          {isScrolled ? (
+            <div className="max-w-[200px] w-full transition-all duration-300 animate-fade-in">
+              <SearchComponent
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={handleSearchSubmit}
+                clearSearch={() => setSearchTerm("")}
+                placeholder="Search anything..."
+              />
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 animate-fade-in">
+              {/* Mobile notification bell icon */}
+              <Link
+                to="/notifications"
+                className={`inline p-2 transition-all duration-200 relative ${
+                  location.pathname === "/notifications" ? "text-x-blue" : (hasUnread ? "text-x-red" : "text-white")
+                }`}
+                aria-label="Notifications"
+                style={{
+                  fontSize: 24,
+                  filter: (hasUnread && location.pathname !== "/notifications") ? "drop-shadow(0 0 8px #F91880)" : "none",
+                  transition: "color 0.2s, filter 0.2s",
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill={location.pathname === "/notifications" ? "currentColor" : "#ffffff"}
+                  width="24"
+                  height="24"
+                >
+                  <path fillRule="evenodd" d="M5.25 9a6.75 6.75 0 0113.5 0v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 01-.297 1.206c-1.544.57-3.16.99-4.831 1.243a3.75 3.75 0 11-7.48 0 24.585 24.585 0 01-4.831-1.244.75.75 0 01-.298-1.205A8.217 8.217 0 005.25 9.75V9zm4.502 8.9a2.25 2.25 0 104.496 0 25.057 25.057 0 01-4.496 0z" clipRule="evenodd" />
+                </svg>
+              </Link>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(true)}
-            className="inline-flex p-2 mr-3 text-white transition-all duration-200"
-            aria-label="Menu"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
+              {/* Mobile Menu Button */}
+              <button
+                onClick={() => setIsMobileMenuOpen(true)}
+                className="inline-flex p-2 text-white transition-all duration-200"
+                aria-label="Menu"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
       {searchTerm.trim() !== "" ? (
         <div 
-          className="fixed top-[64px] sm:top-[80px] left-1/2 -translate-x-1/2 w-full max-w-2xl z-[45] bg-[#000000] border-l border-r border-x-border/50 overflow-y-auto h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-4 sm:space-y-6 pb-24"
+          className="fixed top-[64px] sm:top-[80px] left-1/2 -translate-x-1/2 w-full max-w-2xl z-[45] bg-[#000000] border-none sm:border-l sm:border-r sm:border-x-border/50 overflow-y-auto h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] px-0 sm:px-6 lg:px-8 pt-2 pb-24 sm:py-6 space-y-4 sm:space-y-6"
           style={{ boxSizing: "border-box" }}
         >
           {/* Filter Tabs */}
-          <div className="flex items-center gap-6 border-b border-white/10 w-full px-4 sm:px-6">
+          <div className="flex items-center gap-6 border-b border-white/10 w-full pl-3 pr-4 sm:px-6">
             {[
               { id: "posts", label: "Posts" },
               { id: "people", label: "People" },
@@ -488,14 +547,14 @@ const Feed = () => {
               <button
                 key={tab.id}
                 onClick={() => setSearchTab(tab.id)}
-                className={`pb-3 px-1 text-xs font-black tracking-widest transition-all duration-200 border-b-2 -mb-[2px] ${
+                className={`pb-3 px-1 text-sm sm:text-base font-black tracking-wider transition-all duration-200 border-b-2 -mb-[2px] ${
                   searchTab === tab.id
                     ? "border-x-blue text-white"
                     : "border-transparent text-x-gray hover:text-white"
                 }`}
                 style={{ fontFamily: "'Space Grotesk', sans-serif" }}
               >
-                {tab.label.toUpperCase()}
+                {tab.label}
               </button>
             ))}
           </div>
@@ -534,11 +593,11 @@ const Feed = () => {
 
               {searchTab === "people" && (
                 searchUsers.length > 0 ? (
-                  <div className="space-y-4 px-3 sm:px-5">
+                  <div className="space-y-4 px-0 sm:px-5">
                     {searchUsers.map((u) => (
                       <div
                         key={u._id}
-                        className="flex flex-col p-6 bg-[#16181C] md:bg-[#0a192f]/40 rounded-2xl border border-white/5 hover:border-white/20 transition-all duration-300 shadow-xl animate-in fade-in duration-200"
+                        className="flex flex-col p-4 sm:p-6 bg-transparent sm:bg-[#16181C] md:bg-[#0a192f]/40 rounded-none sm:rounded-2xl border-b border-white/10 sm:border sm:border-white/5 hover:border-white/20 transition-all duration-300 shadow-none sm:shadow-xl animate-in fade-in duration-200"
                       >
                         <div className="flex items-center justify-between mb-3">
                           <div className="flex items-center gap-3">
@@ -606,13 +665,13 @@ const Feed = () => {
 
               {searchTab === "communities" && (
                 searchCommunities.length > 0 ? (
-                  <div className="space-y-4 px-3 sm:px-5">
+                  <div className="space-y-4 px-0 sm:px-5">
                     {searchCommunities.map((c) => {
                       const isMember = c.members?.includes(user?._id || user?.id);
                       return (
                         <div
                           key={c._id}
-                          className="flex flex-col p-6 bg-[#16181C] md:bg-[#0a192f]/40 rounded-2xl border border-white/5 hover:border-white/20 transition-all duration-300 shadow-xl"
+                          className="flex flex-col p-4 sm:p-6 bg-transparent sm:bg-[#16181C] md:bg-[#0a192f]/40 rounded-none sm:rounded-2xl border-b border-white/10 sm:border sm:border-white/5 hover:border-white/20 transition-all duration-300 shadow-none sm:shadow-xl"
                         >
                           <div className="flex items-center justify-between mb-3">
                             <div className="flex items-center gap-3">

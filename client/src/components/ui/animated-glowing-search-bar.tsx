@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useId } from 'react';
 
 interface SearchProps {
   value: string;
@@ -19,6 +19,9 @@ const SearchComponent = forwardRef<HTMLInputElement, SearchProps>(({
   placeholder = "Search developers...",
   clearSearch
 }, ref) => {
+  const uniqueId = useId();
+  const searchGradientId = `search-${uniqueId.replace(/:/g, '')}`;
+  const searchlGradientId = `searchl-${uniqueId.replace(/:/g, '')}`;
   return (
     <div className="relative flex items-center justify-center w-full">
       <div id="poda" className="relative flex items-center justify-center group w-full">
@@ -75,14 +78,14 @@ const SearchComponent = forwardRef<HTMLInputElement, SearchProps>(({
           {/* Search Icon */}
           <div id="search-icon" className="absolute left-4 top-[12px]">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" viewBox="0 0 24 24" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" height="20" fill="none" className="feather feather-search">
-              <circle stroke="url(#search)" r="8" cy="11" cx="11"></circle>
-              <line stroke="url(#searchl)" y2="16.65" y1="22" x2="16.65" x1="22"></line>
+              <circle stroke={`url(#${searchGradientId})`} r="8" cy="11" cx="11"></circle>
+              <line stroke={`url(#${searchlGradientId})`} y2="16.65" y1="22" x2="16.65" x1="22"></line>
               <defs>
-                <linearGradient gradientTransform="rotate(50)" id="search">
+                <linearGradient gradientTransform="rotate(50)" id={searchGradientId}>
                   <stop stopColor="#f8e7f8" offset="0%"></stop>
                   <stop stopColor="#b6a9b7" offset="50%"></stop>
                 </linearGradient>
-                <linearGradient id="searchl">
+                <linearGradient id={searchlGradientId}>
                   <stop stopColor="#b6a9b7" offset="0%"></stop>
                   <stop stopColor="#837484" offset="50%"></stop>
                 </linearGradient>
