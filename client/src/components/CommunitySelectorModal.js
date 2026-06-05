@@ -27,6 +27,7 @@ const CommunitySelectorModal = ({ isOpen, onClose, communities, onSelect, select
             {/* Top Row - Title and Close */}
             <div className="flex items-center gap-2 mb-6 px-1">
               <button
+                type="button"
                 onClick={onClose}
                 className="p-2 bg-transparent border-none hover:bg-white/10 rounded-full transition-all shrink-0"
               >
@@ -60,6 +61,7 @@ const CommunitySelectorModal = ({ isOpen, onClose, communities, onSelect, select
             <div className="flex-1 overflow-y-auto space-y-3 pr-2 pb-24 scrollbar-hide">
               {/* General Post Option */}
               <button
+                type="button"
                 onClick={() => {
                   onSelect("");
                   onClose();
@@ -99,6 +101,7 @@ const CommunitySelectorModal = ({ isOpen, onClose, communities, onSelect, select
               {filteredCommunities.map((c) => (
                 <button
                   key={c._id}
+                  type="button"
                   onClick={() => {
                     onSelect(c._id);
                     onClose();
