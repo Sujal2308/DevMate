@@ -6,7 +6,7 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import ShimmerEffect from "../components/ShimmerEffect";
 import SearchComponent from "../components/ui/animated-glowing-search-bar";
@@ -39,14 +39,17 @@ const useWindowDimensions = () => {
 };
 
 const Explore = () => {
+  const [searchParams] = useSearchParams();
+  const queryParam = searchParams.get("q") || "";
+
   const [users, setUsers] = useState([]);
   const [posts, setPosts] = useState([]);
   const [searchType, setSearchType] = useState("all"); // "all", "people", "posts"
   const [loading, setLoading] = useState(true);
   const [searchLoading, setSearchLoading] = useState(false); // New search loading state
   const [error, setError] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(queryParam);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(queryParam);
 
   // Use the custom hook for dimensions
   const { width: windowWidth } = useWindowDimensions();
@@ -228,6 +231,12 @@ const Explore = () => {
       // No auto-focus logic needed for skills anymore
     }
   };
+
+  useEffect(() => {
+    const q = searchParams.get("q") || "";
+    setSearchTerm(q);
+    setDebouncedSearchTerm(q);
+  }, [searchParams]);
 
   useEffect(() => {
     let debounceTimeout = null;

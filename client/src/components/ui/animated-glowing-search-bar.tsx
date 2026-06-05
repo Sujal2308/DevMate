@@ -23,15 +23,15 @@ const SearchComponent = forwardRef<HTMLInputElement, SearchProps>(({
     <div className="relative flex items-center justify-center w-full">
       <div id="poda" className="relative flex items-center justify-center group w-full">
         {/* Glow Effects */}
-        <div className="absolute z-[-1] overflow-hidden h-full w-full max-h-[70px] rounded-full blur-[3px] glow-layer-1">
+        <div className="absolute z-[-1] overflow-hidden h-full w-full max-h-[52px] rounded-full blur-[3px] glow-layer-1">
         </div>
-        <div className="absolute z-[-1] overflow-hidden h-full w-full max-h-[65px] rounded-full blur-[3px] glow-layer-2">
+        <div className="absolute z-[-1] overflow-hidden h-full w-full max-h-[48px] rounded-full blur-[3px] glow-layer-2">
         </div>
         
-        <div className="absolute z-[-1] overflow-hidden h-full w-full max-h-[63px] rounded-full blur-[2px] glow-layer-3">
+        <div className="absolute z-[-1] overflow-hidden h-full w-full max-h-[46px] rounded-full blur-[2px] glow-layer-3">
         </div>
  
-        <div className="absolute z-[-1] overflow-hidden h-full w-full max-h-[59px] rounded-full blur-[0.5px] glow-layer-4">
+        <div className="absolute z-[-1] overflow-hidden h-full w-full max-h-[42px] rounded-full blur-[0.5px] glow-layer-4">
         </div>
 
         <div id="main" className="relative group w-full">
@@ -40,7 +40,7 @@ const SearchComponent = forwardRef<HTMLInputElement, SearchProps>(({
             placeholder={placeholder} 
             type="text" 
             name="text" 
-            className="bg-[#010201] border-none w-full h-[56px] rounded-full text-white px-[59px] text-lg focus:outline-none placeholder-gray-400" 
+            className="bg-[#010201] border-none w-full h-[44px] rounded-full text-white pl-[48px] pr-[44px] text-sm focus:outline-none placeholder-gray-400" 
             value={value}
             onChange={onChange}
             onFocus={onFocus}
@@ -49,10 +49,10 @@ const SearchComponent = forwardRef<HTMLInputElement, SearchProps>(({
             autoComplete="off"
           />
           
-          <div id="input-mask" className="pointer-events-none w-[100px] h-[20px] absolute bg-gradient-to-r from-transparent to-black top-[18px] left-[70px] group-focus-within:hidden"></div>
-          <div id="pink-mask" className="pointer-events-none w-[30px] h-[20px] absolute bg-[#cf30aa] top-[10px] left-[5px] blur-2xl opacity-80 transition-all duration-2000 group-hover:opacity-0"></div>
+          <div id="input-mask" className="pointer-events-none w-[60px] h-[20px] absolute bg-gradient-to-r from-transparent to-black top-[12px] left-[52px] group-focus-within:hidden"></div>
+          <div id="pink-mask" className="pointer-events-none w-[30px] h-[20px] absolute bg-[#cf30aa] top-[12px] left-[5px] blur-2xl opacity-80 transition-all duration-2000 group-hover:opacity-0"></div>
           
-          <div className="absolute h-[42px] w-[40px] overflow-hidden top-[7px] right-[7px] rounded-full
+          <div className="absolute h-[32px] w-[32px] overflow-hidden top-[6px] right-[6px] rounded-full
                           before:absolute before:content-[''] before:w-[600px] before:h-[600px] before:bg-no-repeat before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:rotate-90
                           before:bg-[conic-gradient(rgba(0,0,0,0),#3d3a4f,rgba(0,0,0,0)_50%,rgba(0,0,0,0)_50%,#3d3a4f,rgba(0,0,0,0)_100%)]
                           before:brightness-135 before:animate-spin-slow">
@@ -60,11 +60,11 @@ const SearchComponent = forwardRef<HTMLInputElement, SearchProps>(({
 
           {/* Clear Button Container - Re-inserted in the filter icon's original position */}
           {value && (
-            <div id="filter-icon" className="absolute top-2 right-2 flex items-center justify-center z-[2] max-h-10 max-w-[38px] h-full w-full [isolation:isolate] overflow-hidden rounded-full bg-gradient-to-b from-[#161329] via-black to-[#1d1b4b] border border-transparent">
+            <div id="filter-icon" className="absolute top-[6px] right-[6px] flex items-center justify-center z-[2] h-[32px] w-[32px] [isolation:isolate] overflow-hidden rounded-full bg-gradient-to-b from-[#161329] via-black to-[#1d1b4b] border border-transparent">
               <button
                 type="button"
                 onClick={clearSearch}
-                className="text-white hover:text-red-400 transition-colors text-2xl p-1"
+                className="text-white hover:text-red-400 transition-colors text-xl p-0.5"
                 aria-label="Clear search"
               >
                 ×
@@ -73,8 +73,8 @@ const SearchComponent = forwardRef<HTMLInputElement, SearchProps>(({
           )}
 
           {/* Search Icon */}
-          <div id="search-icon" className="absolute left-5 top-[15px]">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" height="24" fill="none" className="feather feather-search">
+          <div id="search-icon" className="absolute left-4 top-[12px]">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" viewBox="0 0 24 24" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" height="20" fill="none" className="feather feather-search">
               <circle stroke="url(#search)" r="8" cy="11" cx="11"></circle>
               <line stroke="url(#searchl)" y2="16.65" y1="22" x2="16.65" x1="22"></line>
               <defs>

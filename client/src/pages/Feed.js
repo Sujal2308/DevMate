@@ -7,10 +7,119 @@ import PostCard from "../components/PostCard";
 import FakeFeedLoader from "../components/FakeFeedLoader";
 import { useNotification } from "../contexts/NotificationContext";
 import { useAuth } from "../contexts/AuthContext";
+import SearchComponent from "../components/ui/animated-glowing-search-bar";
 
 const Feed = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const [searchPosts, setSearchPosts] = useState([]);
+  const [searchUsers, setSearchUsers] = useState([]);
+  const [searchCommunities, setSearchCommunities] = useState([]);
+  const [searchTab, setSearchTab] = useState("posts"); // "posts", "people", "communities"
+  const [searchLoading, setSearchLoading] = useState(false);
+
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      if (scrollTop > 40) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+
+
+  const handleSearchSubmit = (e) => {
+    if (e.key === "Enter") {
+      e.target.blur();
+    }
+  };
+
+  const [joiningCommunityId, setJoiningCommunityId] = useState(null);
+
+  const handleJoinLeaveCommunity = async (community) => {
+    setJoiningCommunityId(community._id);
+    try {
+      const token = localStorage.getItem("token");
+      const currentUserId = user?._id || user?.id;
+      const isMember = community.members?.includes(currentUserId);
+      const action = isMember ? "leave" : "join";
+      
+      await axios.post(`/api/communities/${action}/${community._id}`, {}, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setSearchCommunities((prev) =>
+        prev.map((c) => {
+          if (c._id === community._id) {
+            const updatedMembers = isMember
+              ? c.members.filter((id) => id !== currentUserId)
+              : [...(c.members || []), currentUserId];
+            return {
+              ...c,
+              members: updatedMembers,
+              memberCount: isMember ? (c.memberCount || 1) - 1 : (c.memberCount || 0) + 1,
+            };
+          }
+          return c;
+        })
+      );
+    } catch (err) {
+      console.error("Failed to join/leave community from search", err);
+    } finally {
+      setJoiningCommunityId(null);
+    }
+  };
+
+  useEffect(() => {
+    if (searchTerm.trim() === "") {
+      setDebouncedSearchTerm("");
+      setSearchPosts([]);
+      setSearchUsers([]);
+      setSearchCommunities([]);
+      setSearchTab("posts");
+      setSearchLoading(false);
+      return;
+    }
+
+    setSearchLoading(true);
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchTerm]);
+
+  useEffect(() => {
+    const fetchSearch = async () => {
+      if (!debouncedSearchTerm.trim()) {
+        setSearchLoading(false);
+        return;
+      }
+      try {
+        const res = await axios.get(`/api/search?q=${encodeURIComponent(debouncedSearchTerm.trim())}`);
+        setSearchPosts(res.data.posts || []);
+        setSearchUsers(res.data.users || []);
+        setSearchCommunities(res.data.communities || []);
+      } catch (err) {
+        console.error("Search error on feed", err);
+      } finally {
+        setSearchLoading(false);
+      }
+    };
+
+    fetchSearch();
+  }, [debouncedSearchTerm]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [page, setPage] = useState(1);
@@ -189,36 +298,148 @@ const Feed = () => {
         loading && posts.length === 0 ? " loading" : ""
       }`}
     >
-      <div className="flex flex-row justify-between items-center mb-4 sm:mb-6 lg:mb-8 gap-2 sm:gap-4">
+      {/* Spacer to prevent content from going behind fixed header */}
+      <div className="h-16 sm:h-20 w-full shrink-0" />
+
+      <div 
+        className={`fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-2xl z-[50] flex flex-row justify-between items-center gap-2 sm:gap-4 transition-all duration-300 px-0 sm:px-6 lg:px-8 ${
+          isScrolled 
+            ? "bg-black/95 backdrop-blur-md pt-2 pb-2 sm:py-3 border-b border-white/10 shadow-lg shadow-black/25" 
+            : "bg-black/95 border-b border-white/10 pt-2 pb-2 shadow-lg shadow-black/25 sm:bg-transparent sm:py-4 sm:border-b-transparent sm:shadow-none"
+        }`}
+        style={{ boxSizing: "border-box" }}
+      >
         {/* Mobile Branded Header */}
         <h1 
-          className="flex sm:hidden items-center gap-2 ml-3"
+          className="flex sm:hidden items-center relative h-8 ml-3"
         >
-          <img 
-            src="/icons/puzzle.png" 
-            alt="DevMate" 
-            className="w-8 h-8 object-contain"
-            width="32"
-            height="32"
-            fetchpriority="high"
-          />
-          <span className="text-2xl font-normal text-x-white lobster-regular">
-            DevMate
+          {/* Unscrolled State: DevMate Brand Logo + Text */}
+          <div 
+            className={`flex items-center gap-2 transition-all duration-300 ease-in-out ${
+              isScrolled 
+                ? "opacity-0 scale-90 pointer-events-none translate-y-[-4px]" 
+                : "opacity-100 scale-100 translate-y-0"
+            }`}
+          >
+            <img 
+              src="/icons/puzzle.png" 
+              alt="DevMate" 
+              className="w-8 h-8 object-contain"
+              width="32"
+              height="32"
+              fetchpriority="high"
+            />
+            <span className="text-2xl font-normal text-x-white lobster-regular">
+              DevMate
+            </span>
+          </div>
+
+          {/* Scrolled State: Feed Text */}
+          <span 
+            className={`absolute left-0 text-xl font-black text-white tracking-tight uppercase tracking-[0.15em] transition-all duration-300 ease-in-out ${
+              isScrolled 
+                ? "opacity-100 scale-100 translate-y-0" 
+                : "opacity-0 scale-90 pointer-events-none translate-y-[4px]"
+            }`}
+            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+          >
+            Feed
           </span>
         </h1>
 
-        {/* Desktop Title */}
-        <h1 
-          className="hidden sm:block text-2xl lg:text-4xl font-black text-x-white ml-4 lg:ml-6 tracking-tighter"
-          style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-        >
-          Feed
-        </h1>
-        <div className="flex items-center gap-2 sm:gap-3">
+        {/* Desktop Header Content Container (hidden on mobile) */}
+        <div className="hidden sm:flex flex-row items-center w-full">
+          
+          {/* Feed Title (Left side on Scroll) */}
+          <div className={`transition-all duration-300 overflow-hidden ${
+            isScrolled ? "w-auto opacity-100" : "w-0 opacity-0 pointer-events-none"
+          }`}>
+            <h1 
+              className="text-xl font-black text-white tracking-tight ml-4 lg:ml-6 uppercase tracking-[0.15em] select-none cursor-pointer hover:text-x-blue transition-colors" 
+              style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            >
+              Feed
+            </h1>
+          </div>
+
+          {/* Single Search Component wrapper */}
+          <div className={`transition-all duration-300 ease-in-out ${
+            isScrolled 
+              ? "max-w-[280px] ml-auto mr-3 sm:mr-4 flex-1" 
+              : "max-w-[320px] ml-3 flex-1"
+          }`}>
+            <SearchComponent
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={handleSearchSubmit}
+              clearSearch={() => setSearchTerm("")}
+              placeholder="Search anything..."
+            />
+          </div>
+
+          {/* Action Items */}
+          <div className={`flex items-center gap-2 sm:gap-3 ${!isScrolled ? "ml-auto" : "ml-0"}`}>
+            {/* Desktop Notification Icon - Hidden on Scroll */}
+            {!isScrolled && (
+              <Link
+                to="/notifications"
+                className={`flex p-2 transition-all duration-200 relative items-center justify-center ${
+                  location.pathname === "/notifications" ? "text-x-blue" : (hasUnread ? "text-x-red" : "text-x-white")
+                } hover:bg-x-blue/10 rounded-full`}
+                title="Notifications"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill={location.pathname === "/notifications" ? "currentColor" : "none"}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                  strokeWidth={2}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+                </svg>
+                {hasUnread && (
+                  <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border border-x-dark"></span>
+                )}
+              </Link>
+            )}
+
+            {/* Desktop Create Button - Collapsed to Icon on Scroll */}
+            <Link
+              to="/create-post"
+              className={`flex items-center justify-center transition-all duration-300 bg-black border border-white/20 text-white focus:outline-none hover:bg-white hover:text-black no-underline shadow-xl ${
+                isScrolled 
+                  ? "w-9 h-9 rounded-full" 
+                  : "font-black uppercase tracking-widest text-[10px] px-5 py-2.5 rounded-full gap-2"
+              }`}
+              title="Create Post"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 4v16m8-8H4"
+                />
+              </svg>
+              {!isScrolled && "Create"}
+            </Link>
+          </div>
+
+        </div>
+
+        {/* Mobile-only notifications and menu buttons */}
+        <div className="flex sm:hidden items-center gap-2">
           {/* Mobile notification bell icon */}
           <Link
             to="/notifications"
-            className={`inline sm:hidden p-2 mr-3 transition-all duration-200 relative ${
+            className={`inline p-2 mr-3 transition-all duration-200 relative ${
               location.pathname === "/notifications" ? "text-x-blue" : (hasUnread ? "text-x-red" : "text-white")
             }`}
             aria-label="Notifications"
@@ -239,63 +460,223 @@ const Feed = () => {
             </svg>
           </Link>
 
-          {/* NEW Mobile Menu Button */}
+          {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(true)}
-            className="inline-flex sm:hidden p-2 mr-3 text-white transition-all duration-200"
+            className="inline-flex p-2 mr-3 text-white transition-all duration-200"
             aria-label="Menu"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
-          
-          {/* Desktop Notification Icon */}
-          <Link
-            to="/notifications"
-            className={`hidden sm:flex p-2 transition-all duration-200 relative items-center justify-center ${
-              location.pathname === "/notifications" ? "text-x-blue" : (hasUnread ? "text-x-red" : "text-x-white")
-            } hover:bg-x-blue/10 rounded-full`}
-            title="Notifications"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill={location.pathname === "/notifications" ? "currentColor" : "none"}
-              stroke="currentColor"
-              className="w-6 h-6"
-              strokeWidth={2}
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
-            </svg>
-            {hasUnread && (
-              <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border border-x-dark"></span>
-            )}
-          </Link>
-
-          <Link
-            to="/create-post"
-            className="hidden sm:flex font-black uppercase tracking-widest text-[10px] px-5 py-2.5 rounded-full transition-all duration-300 bg-black border border-white/20 text-white focus:outline-none hover:bg-white hover:text-black no-underline items-center gap-2 shadow-xl"
-          >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 4v16m8-8H4"
-              />
-            </svg>
-            Create
-          </Link>
         </div>
       </div>
 
-      {posts.length === 0 && !loading ? (
+      {searchTerm.trim() !== "" ? (
+        <div 
+          className="fixed top-[64px] sm:top-[80px] left-1/2 -translate-x-1/2 w-full max-w-2xl z-[45] bg-[#000000] border-l border-r border-x-border/50 overflow-y-auto h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-4 sm:space-y-6 pb-24"
+          style={{ boxSizing: "border-box" }}
+        >
+          {/* Filter Tabs */}
+          <div className="flex items-center gap-6 border-b border-white/10 w-full px-4 sm:px-6">
+            {[
+              { id: "posts", label: "Posts" },
+              { id: "people", label: "People" },
+              { id: "communities", label: "Communities" },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setSearchTab(tab.id)}
+                className={`pb-3 px-1 text-xs font-black tracking-widest transition-all duration-200 border-b-2 -mb-[2px] ${
+                  searchTab === tab.id
+                    ? "border-x-blue text-white"
+                    : "border-transparent text-x-gray hover:text-white"
+                }`}
+                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+              >
+                {tab.label.toUpperCase()}
+              </button>
+            ))}
+          </div>
+
+          {searchLoading ? (
+            <div className="relative">
+              <ShimmerEffect type="feed" />
+            </div>
+          ) : (
+            <>
+              {searchTab === "posts" && (
+                searchPosts.length > 0 ? (
+                  <div className="space-y-4 sm:space-y-6">
+                    {searchPosts.map((post) => (
+                      <PostCard
+                        key={post._id}
+                        post={post}
+                        onUpdate={(updatedPost) => {
+                          setSearchPosts(searchPosts.map(p => p._id === updatedPost._id ? updatedPost : p));
+                        }}
+                        onDelete={(deletedPostId) => {
+                          setSearchPosts(searchPosts.filter(p => p._id !== deletedPostId));
+                        }}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12 px-4">
+                    <h3 className="text-lg text-gray-500 mb-2 font-bold text-x-white">No posts found</h3>
+                    <p className="text-sm text-x-gray">
+                      We couldn't find any posts matching "{searchTerm}"
+                    </p>
+                  </div>
+                )
+              )}
+
+              {searchTab === "people" && (
+                searchUsers.length > 0 ? (
+                  <div className="space-y-4 px-3 sm:px-5">
+                    {searchUsers.map((u) => (
+                      <div
+                        key={u._id}
+                        className="flex flex-col p-6 bg-[#16181C] md:bg-[#0a192f]/40 rounded-2xl border border-white/5 hover:border-white/20 transition-all duration-300 shadow-xl animate-in fade-in duration-200"
+                      >
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center gap-3">
+                            <Link to={`/profile/${u.username}`} className="shrink-0">
+                              <div className="bg-black text-white w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold shadow-lg overflow-hidden relative border border-white/10">
+                                {u.avatar ? (
+                                  <img src={u.avatar} alt={u.displayName} className="w-full h-full object-cover" />
+                                ) : (
+                                  (u.displayName || u.username).charAt(0).toUpperCase()
+                                )}
+                              </div>
+                            </Link>
+                            <div className="flex flex-col min-w-0 gap-0.5">
+                              <Link to={`/profile/${u.username}`}>
+                                <h3 className="font-black text-white text-sm tracking-tight truncate leading-tight hover:text-x-blue transition-colors">
+                                  {u.displayName || u.username}
+                                </h3>
+                              </Link>
+                              <p className="text-[9px] font-medium text-white/40 uppercase tracking-widest leading-none">
+                                @{u.username}
+                              </p>
+                            </div>
+                          </div>
+                          <Link
+                            to={`/profile/${u.username}`}
+                            className="px-6 py-2 shrink-0 flex items-center justify-center rounded-full transition-all font-black text-[11px] uppercase tracking-widest bg-white text-black hover:bg-neutral-200 font-bold"
+                          >
+                            View
+                          </Link>
+                        </div>
+                        {u.bio && (
+                          <p className="text-white/90 text-sm leading-relaxed line-clamp-3 transition-opacity mb-3">
+                            {u.bio}
+                          </p>
+                        )}
+                        {u.skills && u.skills.length > 0 && (
+                          <div className="flex flex-wrap gap-1.5 mt-1">
+                            {u.skills.slice(0, 5).map((skill, index) => (
+                              <span
+                                key={index}
+                                className="text-[9px] font-black uppercase tracking-wider px-2.5 py-1 bg-white/5 border border-white/10 rounded text-x-gray/90"
+                              >
+                                {skill}
+                              </span>
+                            ))}
+                            {u.skills.length > 5 && (
+                              <span className="text-[9px] font-black uppercase tracking-wider px-2.5 py-1 bg-white/5 border border-white/10 rounded text-x-gray/50">
+                                +{u.skills.length - 5} MORE
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12 px-4">
+                    <h3 className="text-lg text-gray-500 mb-2 font-bold text-x-white">No people found</h3>
+                    <p className="text-sm text-x-gray">
+                      We couldn't find any developers matching "{searchTerm}"
+                    </p>
+                  </div>
+                )
+              )}
+
+              {searchTab === "communities" && (
+                searchCommunities.length > 0 ? (
+                  <div className="space-y-4 px-3 sm:px-5">
+                    {searchCommunities.map((c) => {
+                      const isMember = c.members?.includes(user?._id || user?.id);
+                      return (
+                        <div
+                          key={c._id}
+                          className="flex flex-col p-6 bg-[#16181C] md:bg-[#0a192f]/40 rounded-2xl border border-white/5 hover:border-white/20 transition-all duration-300 shadow-xl"
+                        >
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-3">
+                              <Link to={`/community/${c.slug}`} className="shrink-0">
+                                <div
+                                  className="w-12 h-12 rounded-lg flex items-center justify-center text-xl overflow-hidden"
+                                  style={!c.icon?.startsWith("/") ? { background: `${c.color || "#1d9bf0"}10` } : {}}
+                                >
+                                  {c.icon?.startsWith("/") ? (
+                                    <img src={c.icon} alt="" className="w-full h-full object-contain p-1.5" />
+                                  ) : (
+                                    c.icon || c.name.charAt(0).toUpperCase()
+                                  )}
+                                </div>
+                              </Link>
+                              <div className="flex flex-col min-w-0 gap-0.5">
+                                <Link to={`/community/${c.slug}`}>
+                                  <h3 className="font-black text-white text-sm tracking-tight truncate leading-tight hover:text-x-blue transition-colors">
+                                    {c.name}
+                                  </h3>
+                                </Link>
+                                <p className="text-[9px] font-medium text-white uppercase tracking-widest opacity-40">
+                                  {(c.members?.length || 0).toLocaleString()} members
+                                </p>
+                              </div>
+                            </div>
+                            <button
+                              onClick={() => handleJoinLeaveCommunity(c)}
+                              disabled={joiningCommunityId === c._id}
+                              className={`px-6 py-2 shrink-0 flex items-center justify-center rounded-full transition-all font-black text-[11px] uppercase tracking-widest ${
+                                isMember
+                                  ? "bg-white/5 border border-white/20 text-x-gray hover:text-red-400 hover:border-red-500/50"
+                                  : "bg-x-blue text-white shadow-lg shadow-x-blue/20 hover:scale-105 active:scale-95"
+                              }`}
+                            >
+                              {joiningCommunityId === c._id ? (
+                                <span className="w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                              ) : isMember ? (
+                                "Joined"
+                              ) : (
+                                "Join"
+                              )}
+                            </button>
+                          </div>
+                          <p className="text-white/90 text-sm leading-relaxed line-clamp-3 transition-opacity">
+                            {c.description}
+                          </p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="text-center py-12 px-4">
+                    <h3 className="text-lg text-gray-500 mb-2 font-bold text-x-white">No communities found</h3>
+                    <p className="text-sm text-x-gray">
+                      We couldn't find any communities matching "{searchTerm}"
+                    </p>
+                  </div>
+                )
+              )}
+            </>
+          )}
+        </div>
+      ) : posts.length === 0 && !loading ? (
         <div className="text-center py-8 sm:py-12 px-4">
           <svg
             className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400 mx-auto mb-3 sm:mb-4"
@@ -519,6 +900,17 @@ const Feed = () => {
         </div>,
         document.body
       )}
+      <style>
+        {`
+          @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          .animate-fade-in {
+            animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+          }
+        `}
+      </style>
     </div>
   );
 };
