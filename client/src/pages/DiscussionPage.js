@@ -220,20 +220,90 @@ const CommentThread = ({ comment, postId, onUpdate, depth = 0 }) => {
 
             {/* Reply form */}
             {showReply && (
-              <form onSubmit={handleReply} className="pl-7 mt-3">
-                {/* Media Preview inside the box */}
+              <form onSubmit={handleReply} className="pl-7 mt-3 w-full animate-fade-in">
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleImageChange}
+                  accept="image/*"
+                  className="hidden"
+                />
+
+                <div className="border-b border-white/20 focus-within:border-purple-500 transition-colors flex items-center gap-2 pb-1">
+                  <textarea
+                    value={replyText}
+                    onChange={(e) => setReplyText(e.target.value)}
+                    placeholder={`Reply to @${comment.user?.username || "user"}...`}
+                    className="flex-1 bg-transparent border-none px-0 py-2 text-sm text-white placeholder-white/30 resize-none focus:outline-none min-h-[38px] max-h-[120px]"
+                    rows={1}
+                    maxLength={500}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        handleReply(e);
+                      }
+                    }}
+                  />
+                  
+                  <div className="flex items-center gap-2 self-end pb-1.5">
+                    {replyText.length > 0 && (
+                      <span className="text-[10px] text-white/20 self-center mr-1">
+                        {replyText.length}/500
+                      </span>
+                    )}
+
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="text-white/40 hover:text-purple-400 transition-colors p-1"
+                      title="Upload Image"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </button>
+
+                    <button
+                      type="submit"
+                      disabled={(!replyText.trim() && !selectedImage) || submitting}
+                      className="text-white hover:text-white/80 disabled:text-white/20 transition-all p-1 disabled:opacity-30"
+                      title="Post Reply"
+                    >
+                      {submitting ? (
+                        <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                      ) : (
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+                        </svg>
+                      )}
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => { setShowReply(false); setReplyText(""); removeMedia(); }}
+                      className="text-[11px] font-bold text-white/40 hover:text-white transition-colors self-center px-1"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+
+                {/* Media Preview */}
                 {imagePreview && (
-                  <div className="mb-3 px-3">
+                  <div className="mt-2 px-1">
                     <div className="relative inline-block group">
                       <img 
                         src={imagePreview} 
                         alt="preview" 
-                        className="max-h-24 rounded border border-white/10" 
+                        className="max-h-20 rounded border border-white/10" 
                       />
                       <button
                         type="button"
                         onClick={removeMedia}
-                        className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 bg-red-500 text-white rounded-full p-1 shadow-lg z-10"
+                        className="absolute -top-1.5 -right-1.5 bg-red-500 text-white rounded-full p-1 shadow-lg z-10 hover:bg-red-600 transition-colors"
                       >
                         <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
@@ -242,56 +312,6 @@ const CommentThread = ({ comment, postId, onUpdate, depth = 0 }) => {
                     </div>
                   </div>
                 )}
-
-                <div className="flex-1 bg-white/5 border border-white/10 focus-within:border-purple-500/50 transition-colors relative rounded-lg overflow-hidden">
-                  <textarea
-                    value={replyText}
-                    onChange={(e) => setReplyText(e.target.value)}
-                    placeholder={`Reply to ${comment.user?.username || "user"}...`}
-                    className="w-full bg-transparent border-none px-3 py-2 text-sm text-white placeholder-white/30 resize-none focus:outline-none min-h-[60px]"
-                    rows={2}
-                    maxLength={500}
-                  />
-                  
-                  <div className="flex items-center justify-between px-3 pb-2">
-                    <div className="flex items-center gap-3">
-                      <input
-                        type="file"
-                        ref={fileInputRef}
-                        onChange={handleImageChange}
-                        accept="image/*"
-                        className="hidden"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => fileInputRef.current?.click()}
-                        className="text-white/30 hover:text-purple-400 transition-colors"
-                        title="Upload Image"
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                      </button>
-                      <span className="text-[10px] text-white/20">{replyText.length}/500</span>
-                    </div>
-                    <div className="flex gap-2">
-                      <button
-                        type="button"
-                        onClick={() => { setShowReply(false); setReplyText(""); removeMedia(); }}
-                        className="px-3 py-1 text-[11px] font-bold text-white/40 hover:text-white transition-colors"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="submit"
-                        disabled={(!replyText.trim() && !selectedImage) || submitting}
-                        className="px-4 py-1 text-[11px] font-bold bg-purple-600 hover:bg-purple-500 text-white rounded-full transition-colors disabled:opacity-30"
-                      >
-                        {submitting ? "..." : "Reply"}
-                      </button>
-                    </div>
-                  </div>
-                </div>
               </form>
             )}
             {/* Recursive replies */}
@@ -324,12 +344,13 @@ const DiscussionPage = () => {
   const [error, setError] = useState("");
   const [newComment, setNewComment] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [sortBy, setSortBy] = useState("newest");
+  const [sortBy] = useState("newest");
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
   const fileInputRef = React.useRef(null);
 
   const [showRules, setShowRules] = useState(false);
+  const [showFullPostContent, setShowFullPostContent] = useState(false);
 
   const fetchPost = useCallback(async () => {
     try {
@@ -461,20 +482,31 @@ const DiscussionPage = () => {
   const postPreview = getPlainText(post.content);
 
   return (
-    <div className="w-full max-w-2xl mx-auto py-4 sm:py-6 px-3 sm:px-4 pb-20 lg:pb-8">
-      {/* Back navigation */}
-      <button
-        onClick={() => navigate(-1)}
-        className="flex items-center gap-2 text-white/40 hover:text-white transition-colors mb-6 group"
-      >
-        <svg className="w-4 h-4 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-        </svg>
-        <span className="text-sm font-medium">Back</span>
-      </button>
+    <div 
+      className="w-full max-w-2xl mx-auto py-4 sm:py-6 px-3 sm:px-4 pb-20 lg:pb-8"
+      style={{ fontFamily: "'Poppins', sans-serif" }}
+    >
+      {/* Top Header Row */}
+      <div className="flex items-center justify-between mb-6">
+        {/* Back navigation */}
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-2 text-white/40 hover:text-white transition-colors group"
+        >
+          <svg className="w-4 h-4 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          <span className="text-sm font-medium">Back</span>
+        </button>
+
+        {/* Discussion Lobby Label */}
+        <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-purple-400 bg-purple-500/10 border border-purple-500/20 px-3 py-1 rounded-full">
+          Discussion Lobby
+        </span>
+      </div>
 
       {/* Post summary card */}
-      <div className="border-2 border-dashed border-white/20 rounded-xl p-4 sm:p-5 mb-6 bg-white/[0.02]">
+      <div className="border-2 border-white rounded-xl p-4 sm:p-5 mb-6 bg-white/[0.02]">
         <div className="flex items-center gap-2.5 mb-3">
           <Link to={`/profile/${post.author?.username || "#"}`}>
             <div
@@ -499,43 +531,97 @@ const DiscussionPage = () => {
             <p className="text-[10px] text-white/30">{formatTimeAgo(post.createdAt)}</p>
           </div>
         </div>
-        <p className="text-sm text-white/60 line-clamp-3 leading-relaxed">
-          {postPreview.length > 200 ? postPreview.slice(0, 200) + "..." : postPreview}
-        </p>
-        <Link
-          to={`/post/${post._id}`}
-          className="inline-block mt-3 text-[11px] font-bold text-purple-400 hover:text-purple-300 uppercase tracking-wider transition-colors"
-        >
-          View Full Post →
-        </Link>
+        {(() => {
+          const hasAttachments = !!(post.codeSnippet || post.mediaUrl || post.repoUrl);
+          const canExpand = postPreview.length > 200 || hasAttachments;
+
+          return !showFullPostContent ? (
+            <>
+              <p className="text-sm text-white/60 line-clamp-3 leading-relaxed">
+                {postPreview.length > 200 ? postPreview.slice(0, 200) + "..." : postPreview}
+              </p>
+              {canExpand && (
+                <button
+                  onClick={() => setShowFullPostContent(true)}
+                  className="inline-flex items-center gap-1.5 mt-3 text-xs font-semibold text-x-blue hover:text-blue-400 transition-colors focus:outline-none"
+                >
+                  <span className="text-lg font-black leading-none">+</span> View Full Post
+                </button>
+              )}
+            </>
+          ) : (
+            <div className="space-y-4 animate-fade-in">
+              {/* Rich HTML Content */}
+              <div
+                className="rich-content text-sm text-white/80 leading-relaxed space-y-2"
+                dangerouslySetInnerHTML={{ __html: post.content }}
+              />
+
+              {/* Code Snippet Attachment */}
+              {post.codeSnippet && (
+                <div className="bg-black border border-white/5 rounded-lg p-3 overflow-x-auto font-mono text-xs text-white/80 max-w-full">
+                  <pre><code>{post.codeSnippet}</code></pre>
+                </div>
+              )}
+
+              {/* GitHub Repo link */}
+              {post.repoUrl && (
+                <div className="mt-2">
+                  <a 
+                    href={post.repoUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="inline-flex items-center gap-1.5 text-xs text-purple-400 hover:text-purple-300 font-bold"
+                  >
+                    <span>GitHub Repository →</span>
+                  </a>
+                </div>
+              )}
+
+              {/* Media Attachment */}
+              {post.mediaUrl && (
+                <div className="rounded-lg overflow-hidden border border-white/5 max-h-[360px] bg-black/20 flex items-center justify-center">
+                  <img src={post.mediaUrl} alt="post attachment" className="max-w-full max-h-[360px] object-contain" />
+                </div>
+              )}
+
+              <button
+                onClick={() => setShowFullPostContent(false)}
+                className="inline-flex items-center gap-1.5 mt-1 text-xs font-semibold text-x-blue hover:text-blue-400 transition-colors focus:outline-none"
+              >
+                <span className="text-lg font-black leading-none">−</span> Show Less
+              </button>
+            </div>
+          );
+        })()}
       </div>
 
       {/* Discussion Rules Dropdown */}
-      <div className={`mb-8 overflow-hidden border border-white/5 transition-all duration-500 ease-in-out ${showRules ? 'bg-white rounded-xl shadow-2xl' : 'bg-white/[0.01] rounded-lg'}`}>
+      <div className={`mb-8 overflow-hidden rounded-[24px] border transition-all duration-500 ease-in-out ${showRules ? 'bg-red-600 border-red-500 shadow-2xl' : 'bg-white/[0.01] border-white/5'}`}>
         <button
           onClick={() => setShowRules(!showRules)}
-          className={`w-full flex items-center justify-between px-4 py-3 text-[11px] font-black uppercase tracking-widest transition-colors duration-500 ${showRules ? 'text-gray-500 hover:bg-gray-50' : 'text-white/40 hover:bg-white/[0.02]'}`}
+          className={`w-full flex items-center justify-between px-6 py-3 text-[11px] font-black uppercase tracking-widest transition-colors duration-500 ${showRules ? 'text-white hover:bg-red-700' : 'text-white/40 hover:bg-white/[0.02]'}`}
         >
           <div className="flex items-center gap-2">
-            <svg className={`w-3.5 h-3.5 transition-colors duration-500 ${showRules ? 'text-amber-600' : 'text-amber-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            <svg className={`w-3.5 h-3.5 transition-colors duration-500 ${showRules ? 'text-white' : 'text-red-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
             </svg>
             Discussion Rules & Guidelines
           </div>
           <svg 
-            className={`w-3.5 h-3.5 transition-all duration-500 ${showRules ? 'rotate-180 text-gray-400' : ''}`} 
+            className={`w-3.5 h-3.5 transition-all duration-500 text-white ${showRules ? 'rotate-180' : ''}`} 
             fill="none" 
             stroke="currentColor" 
             viewBox="0 0 24 24"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3.5} d="M19 9l-7 7-7-7" />
           </svg>
         </button>
         
         <div className={`grid transition-all duration-500 ease-in-out ${showRules ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
           <div className="overflow-hidden">
-            <div className="px-4 pb-5">
-              <div className="space-y-4 pt-2 border-t border-gray-100">
+            <div className="px-6 pb-5">
+              <div className="space-y-4 pt-2 border-t border-red-500">
                 {[
                   { title: "Respectful Communication", desc: "Treat others with the same respect you'd want. No personal attacks or harassment." },
                   { title: "Relevant Discussion", desc: "Keep comments focused on the post content or related technical topics." },
@@ -543,10 +629,10 @@ const DiscussionPage = () => {
                   { title: "Clean Language", desc: "Avoid excessive profanity and maintain a professional developer environment." }
                 ].map((rule, idx) => (
                   <div key={idx} className="space-y-1">
-                    <h4 className="text-[13px] sm:text-base font-bold text-gray-900 leading-tight">
+                    <h4 className="text-[13px] sm:text-base font-bold text-white leading-tight">
                       {rule.title}
                     </h4>
-                    <p className="text-[11px] sm:text-[13px] text-gray-600 leading-relaxed font-medium">
+                    <p className="text-[11px] sm:text-[13px] text-black leading-relaxed font-medium">
                       {rule.desc}
                     </p>
                   </div>
@@ -559,103 +645,101 @@ const DiscussionPage = () => {
 
       {/* Discussion header */}
       <div className="flex items-center justify-between mb-5">
-        <h2
-          className="text-xl sm:text-2xl font-black text-white tracking-tight"
-          style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-        >
+        <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
           Discussion
           <span className="ml-2 text-base font-normal text-white/30">
             ({comments.length})
           </span>
         </h2>
-        {/* Sort toggle */}
-        <div className="flex items-center bg-white/5 rounded-full p-0.5 border border-white/10">
-          <button
-            onClick={() => setSortBy("newest")}
-            className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all ${
-              sortBy === "newest" ? "bg-purple-600 text-white" : "text-white/40 hover:text-white/60"
-            }`}
-          >
-            New
-          </button>
-          <button
-            onClick={() => setSortBy("oldest")}
-            className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all ${
-              sortBy === "oldest" ? "bg-purple-600 text-white" : "text-white/40 hover:text-white/60"
-            }`}
-          >
-            Old
-          </button>
-        </div>
       </div>
 
       {/* Add comment form */}
       {user && (
         <form onSubmit={handleSubmitComment} className="mb-8">
           <div className="w-full">
-            <div className="bg-white/5 border border-white/10 focus-within:border-purple-500/50 transition-colors relative rounded-lg overflow-hidden">
-                <textarea
-                  value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
-                  placeholder="Share your thoughts..."
-                  className="w-full bg-transparent border-none px-4 py-3 text-sm text-white placeholder-white/30 resize-none focus:outline-none"
-                  rows={3}
-                  maxLength={500}
-                />
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleImageChange}
+              accept="image/*"
+              className="hidden"
+            />
 
-                {/* Media Preview inside the box */}
-                {imagePreview && (
-                  <div className="px-4 pb-3">
-                    <div className="relative inline-block group">
-                      <img 
-                        src={imagePreview} 
-                        alt="preview" 
-                        className="max-h-32 rounded border border-white/10" 
-                      />
-                      <button
-                        type="button"
-                        onClick={removeMedia}
-                        className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 bg-red-500 text-white rounded-full p-1 shadow-lg z-10"
-                      >
-                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
+            <div className="border-b border-white/20 focus-within:border-purple-500 transition-colors flex items-center gap-2 pb-1">
+              <textarea
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                placeholder="Share your thoughts..."
+                className="flex-1 bg-transparent border-none px-0 py-2 text-sm text-white placeholder-white/30 resize-none focus:outline-none min-h-[38px] max-h-[120px]"
+                rows={1}
+                maxLength={500}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSubmitComment(e);
+                  }
+                }}
+              />
+              
+              <div className="flex items-center gap-2 self-end pb-1.5">
+                {newComment.length > 0 && (
+                  <span className="text-[10px] text-white/20 self-center mr-1">
+                    {newComment.length}/500
+                  </span>
                 )}
+                
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="text-white/40 hover:text-purple-400 transition-colors p-1"
+                  title="Upload Image"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </button>
+                
+                <button
+                  type="submit"
+                  disabled={(!newComment.trim() && !selectedImage) || submitting}
+                  className="text-white hover:text-white/80 disabled:text-white/20 transition-all p-1 disabled:opacity-30"
+                  title="Post Comment"
+                >
+                  {submitting ? (
+                    <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  ) : (
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+                    </svg>
+                  )}
+                </button>
+              </div>
+            </div>
 
-                <div className="flex items-center justify-between px-4 pb-2">
-                  <div className="flex items-center gap-4">
-                    <input
-                      type="file"
-                      ref={fileInputRef}
-                      onChange={handleImageChange}
-                      accept="image/*"
-                      className="hidden"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => fileInputRef.current?.click()}
-                      className="text-white/30 hover:text-purple-400 transition-colors"
-                      title="Upload Image"
-                    >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                      </svg>
-                    </button>
-                    <span className="text-[10px] text-white/20">{newComment.length}/500</span>
-                  </div>
-                  
+            {/* Media Preview */}
+            {imagePreview && (
+              <div className="mt-3 px-1 animate-fade-in">
+                <div className="relative inline-block group">
+                  <img 
+                    src={imagePreview} 
+                    alt="preview" 
+                    className="max-h-32 rounded border border-white/10" 
+                  />
                   <button
-                    type="submit"
-                    disabled={(!newComment.trim() && !selectedImage) || submitting}
-                    className="px-6 py-1.5 text-[11px] font-black bg-purple-600 hover:bg-purple-500 text-white rounded-full uppercase tracking-wider transition-all disabled:opacity-30 shadow-lg"
+                    type="button"
+                    onClick={removeMedia}
+                    className="absolute -top-1.5 -right-1.5 bg-red-500 text-white rounded-full p-1 shadow-lg z-10 hover:bg-red-600 transition-colors"
                   >
-                    {submitting ? "Posting..." : "Comment"}
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
                   </button>
                 </div>
-            </div>
+              </div>
+            )}
           </div>
         </form>
       )}
@@ -665,12 +749,18 @@ const DiscussionPage = () => {
 
       {/* Comments list */}
       {comments.length === 0 ? (
-        <div className="text-center py-12">
-          <svg className="w-12 h-12 text-white/10 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-          </svg>
-          <p className="text-sm text-white/30 font-medium">No discussion yet</p>
-          <p className="text-xs text-white/20 mt-1">Be the first to share your thoughts!</p>
+        <div className="py-8 text-center max-w-sm mx-auto">
+          {/* Icon Container */}
+          <div className="w-12 h-12 mx-auto mb-3 flex items-center justify-center">
+            <img src="/icons/qa.png" alt="No comments yet" className="w-10 h-10 object-contain" />
+          </div>
+          
+          <h3 className="text-sm font-bold text-white mb-1 tracking-wide">
+            No comments yet
+          </h3>
+          <p className="text-[11px] text-white/40 leading-relaxed font-medium max-w-[260px] mx-auto">
+            Be the first to share your thoughts and start the conversation below!
+          </p>
         </div>
       ) : (
         <div className="space-y-0">
