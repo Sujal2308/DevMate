@@ -44,6 +44,8 @@ const CreatePost = () => {
   const [selectedFlair, setSelectedFlair] = useState(null);
   const [showFlairGrid, setShowFlairGrid] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const [showPublishModal, setShowPublishModal] = useState(false);
+  const [publishSuccess, setPublishSuccess] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -110,9 +112,17 @@ const CreatePost = () => {
     return div.textContent || div.innerText || "";
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = (e) => {
+    if (e) e.preventDefault();
+    setShowPublishModal(true);
+  };
 
+  const handleClosePublishModal = () => {
+    if (loading || publishSuccess) return;
+    setShowPublishModal(false);
+  };
+
+  const handleConfirmPublish = async () => {
     try {
       setLoading(true);
 
@@ -146,14 +156,22 @@ const CreatePost = () => {
 
       await axios.post("/api/posts", payload);
 
-      // Navigate back to community page if came from one
-      if (location.state?.communitySlug) {
-        navigate(`/community/${location.state.communitySlug}`);
-      } else {
-        navigate("/feed");
-      }
+      setPublishSuccess(true);
+      setTimeout(() => {
+        setShowPublishModal(false);
+        setPublishSuccess(false);
+        // Navigate back to community page if came from one
+        if (location.state?.communitySlug) {
+          navigate(`/community/${location.state.communitySlug}`);
+        } else {
+          navigate("/feed");
+        }
+      }, 2000);
     } catch (error) {
       console.error(error);
+      setError(error.response?.data?.message || "Failed to publish post. Please try again.");
+      setShowPublishModal(false);
+    } finally {
       setLoading(false);
     }
   };
@@ -185,11 +203,11 @@ const CreatePost = () => {
               type="button"
               onClick={handleSubmit}
               disabled={loading || !formData.title.trim() || !getPlainText(formData.content).trim()}
-              className="bg-white hover:bg-neutral-100 disabled:opacity-50 disabled:cursor-not-allowed text-black font-bold transition-all duration-200 flex items-center justify-center w-10 h-10 sm:w-auto sm:h-10 sm:px-5 gap-1.5 border-2 border-neutral-700 rounded-full"
+              className="bg-transparent text-white sm:bg-white sm:text-black hover:bg-white/10 sm:hover:bg-neutral-100 disabled:opacity-50 disabled:cursor-not-allowed font-bold transition-all duration-200 flex items-center justify-center w-10 h-10 sm:border-2 sm:border-neutral-700 sm:rounded-full sm:w-auto sm:h-10 sm:px-5 gap-1.5"
             >
               {loading ? (
                 <>
-                  <LoadingSpinner size="small" />
+                  <LoadingSpinner size="small" compact={true} />
                   <span className="hidden sm:inline text-[11px] font-black uppercase tracking-wider text-black">
                     Publishing...
                   </span>
@@ -199,13 +217,19 @@ const CreatePost = () => {
                   <span className="hidden sm:inline text-[11px] font-black uppercase tracking-wider text-black">
                     Publish
                   </span>
-                  <img
-                    src="/icons/publish.png"
-                    alt="Publish"
-                    className="w-3.5 h-3.5 object-contain"
-                    width="16"
-                    height="16"
-                  />
+                  <svg
+                    className="w-6 h-6 sm:w-3.5 sm:h-3.5 rotate-45 transform"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={3}
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"
+                    />
+                  </svg>
                 </>
               )}
             </button>
@@ -734,11 +758,11 @@ const CreatePost = () => {
                 !formData.title.trim() ||
                 !getPlainText(formData.content).trim()
               }
-              className="ml-auto bg-white hover:bg-neutral-100 disabled:opacity-50 disabled:cursor-not-allowed text-black font-bold transition-all duration-200 shrink-0 flex items-center justify-center w-10 h-10 border-2 border-neutral-700 rounded-full sm:w-auto sm:h-10 sm:px-5 sm:gap-1.5"
+              className="ml-auto bg-transparent text-white sm:bg-white sm:text-black hover:bg-white/10 sm:hover:bg-neutral-100 disabled:opacity-50 disabled:cursor-not-allowed font-bold transition-all duration-200 shrink-0 flex items-center justify-center w-10 h-10 sm:border-2 sm:border-neutral-700 sm:rounded-full sm:w-auto sm:h-10 sm:px-5 sm:gap-1.5"
             >
               {loading ? (
                 <>
-                  <LoadingSpinner size="small" />
+                  <LoadingSpinner size="small" compact={true} />
                   <span className="hidden sm:inline text-[11px] font-black uppercase tracking-wider text-black">
                     Publishing...
                   </span>
@@ -748,13 +772,19 @@ const CreatePost = () => {
                   <span className="hidden sm:inline text-[11px] font-black uppercase tracking-wider text-black">
                     Publish
                   </span>
-                  <img
-                    src="/icons/publish.png"
-                    alt="Publish"
-                    className="w-4 h-4 sm:w-3.5 sm:h-3.5 object-contain"
-                    width="16"
-                    height="16"
-                  />
+                  <svg
+                    className="w-6 h-6 sm:w-3.5 sm:h-3.5 rotate-45 transform"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={3}
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"
+                    />
+                  </svg>
                 </>
               )}
             </button>
@@ -1038,11 +1068,7 @@ const CreatePost = () => {
 
           <div className="flex items-center gap-3 mb-6 px-1">
             {/* Add Media Section */}
-            <label className={`flex items-center justify-center w-9 h-9 rounded-full border cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95 select-none ${
-              media 
-                ? "bg-neutral-700 border-neutral-500 shadow-[0_0_12px_rgba(255,255,255,0.05)]" 
-                : "bg-neutral-800 border-neutral-700 hover:bg-neutral-700 hover:border-neutral-600"
-            }`} title="Add Media">
+            <label className="flex items-center justify-center w-9 h-9 rounded-full border cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95 select-none bg-neutral-800 border-neutral-700 hover:bg-neutral-700 hover:border-neutral-600" title="Add Media">
               <input
                 type="file"
                 accept="image/*,application/pdf"
@@ -1071,11 +1097,7 @@ const CreatePost = () => {
                   setSelectedLanguage("");
                 }
               }}
-              className={`flex items-center justify-center w-9 h-9 rounded-full border cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95 ${
-                formData.codeSnippet
-                  ? "bg-neutral-700 border-neutral-500 shadow-[0_0_12px_rgba(255,255,255,0.05)]" 
-                  : "bg-neutral-800 border-neutral-700 hover:bg-neutral-700 hover:border-neutral-600"
-              }`}
+              className="flex items-center justify-center w-9 h-9 rounded-full border cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95 bg-neutral-800 border-neutral-700 hover:bg-neutral-700 hover:border-neutral-600"
               title="Add Code"
             >
               <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -1088,14 +1110,22 @@ const CreatePost = () => {
             <button
               type="button"
               onClick={() => {
-                setShowRepoInput(!showRepoInput);
-                if (showPollInput) setShowPollInput(false);
+                if (showRepoInput) {
+                  setShowRepoInput(false);
+                  setFormData((prev) => ({ ...prev, repoUrl: "", repoTitle: "" }));
+                } else {
+                  setShowRepoInput(true);
+                  if (showPollInput) {
+                    setShowPollInput(false);
+                    setFormData((prev) => ({
+                      ...prev,
+                      pollQuestion: "",
+                      pollOptions: ["", ""],
+                    }));
+                  }
+                }
               }}
-              className={`flex items-center justify-center w-9 h-9 rounded-full border cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95 ${
-                showRepoInput || formData.repoUrl
-                  ? "bg-neutral-700 border-neutral-500 shadow-[0_0_12px_rgba(255,255,255,0.05)]" 
-                  : "bg-neutral-800 border-neutral-700 hover:bg-neutral-700 hover:border-neutral-600"
-              }`}
+              className="flex items-center justify-center w-9 h-9 rounded-full border cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95 bg-neutral-800 border-neutral-700 hover:bg-neutral-700 hover:border-neutral-600"
               title="Add Repository"
             >
               <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -1107,14 +1137,22 @@ const CreatePost = () => {
             <button
               type="button"
               onClick={() => {
-                setShowPollInput(!showPollInput);
-                if (showRepoInput) setShowRepoInput(false);
+                if (showPollInput) {
+                  setShowPollInput(false);
+                  setFormData((prev) => ({
+                    ...prev,
+                    pollQuestion: "",
+                    pollOptions: ["", ""],
+                  }));
+                } else {
+                  setShowPollInput(true);
+                  if (showRepoInput) {
+                    setShowRepoInput(false);
+                    setFormData((prev) => ({ ...prev, repoUrl: "", repoTitle: "" }));
+                  }
+                }
               }}
-              className={`flex items-center justify-center w-9 h-9 rounded-full border cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95 ${
-                showPollInput || formData.pollQuestion
-                  ? "bg-neutral-700 border-neutral-500 shadow-[0_0_12px_rgba(255,255,255,0.05)]" 
-                  : "bg-neutral-800 border-neutral-700 hover:bg-neutral-700 hover:border-neutral-600"
-              }`}
+              className="flex items-center justify-center w-9 h-9 rounded-full border cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95 bg-neutral-800 border-neutral-700 hover:bg-neutral-700 hover:border-neutral-600"
               title="Add Poll"
             >
               <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -1125,34 +1163,24 @@ const CreatePost = () => {
             </button>
 
             {/* See Preview Button */}
-            <button
-              type="button"
-              onClick={() => setShowPreview(true)}
-              disabled={!formData.title.trim() && !getPlainText(formData.content).trim()}
-              className="ml-auto flex items-center gap-1.5 px-4 h-9 bg-neutral-800 hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed border border-neutral-700 hover:border-neutral-600 rounded-full text-xs font-bold text-white transition-all hover:scale-105 active:scale-95 font-space uppercase tracking-wider"
-            >
-              <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                <circle cx="12" cy="12" r="3" />
-              </svg>
-              <span>See Preview</span>
-            </button>
+             <button
+               type="button"
+               onClick={() => setShowPreview(true)}
+               disabled={!formData.title.trim() && !getPlainText(formData.content).trim()}
+               className="ml-auto flex items-center justify-center sm:gap-1.5 w-9 h-9 sm:w-auto sm:px-4 bg-neutral-800 hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed border border-neutral-700 hover:border-neutral-600 rounded-full text-xs font-bold text-white transition-all hover:scale-105 active:scale-95 font-space uppercase tracking-wider"
+             >
+               <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                 <circle cx="12" cy="12" r="3" />
+               </svg>
+               <span className="hidden sm:inline">See Preview</span>
+             </button>
           </div>
 
           {/* Repo Input Field */}
           {showRepoInput && (
             <div className="mb-6 space-y-4 p-5 bg-[#d97706]/10 backdrop-blur-sm border-2 border-white rounded-2xl relative group/repo">
-              <button
-                type="button"
-                onClick={() => {
-                  setShowRepoInput(false);
-                  setFormData({ ...formData, repoUrl: "", repoTitle: "" });
-                }}
-                className="absolute top-4 right-4 bg-white/10 hover:bg-white/20 text-white hover:text-red-500 w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-200 z-10"
-              >
-                ✕
-              </button>
-              <div className="border-b border-white/40 bg-transparent transition-all mb-4 pr-12">
+              <div className="border-b border-white/40 bg-transparent transition-all mb-4">
                 <input
                   type="text"
                   name="repoTitle"
@@ -1199,21 +1227,7 @@ const CreatePost = () => {
           {/* Poll Input Field */}
           {showPollInput && (
             <div className="mb-6 space-y-4 p-5 bg-[#1d9bf0]/10 backdrop-blur-sm border-2 border-white rounded-2xl relative group/poll">
-              <button
-                type="button"
-                onClick={() => {
-                  setShowPollInput(false);
-                  setFormData({
-                    ...formData,
-                    pollQuestion: "",
-                    pollOptions: ["", ""],
-                  });
-                }}
-                className="absolute top-4 right-4 bg-white/10 hover:bg-white/20 text-white hover:text-red-500 w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-200 z-10"
-              >
-                ✕
-              </button>
-              <div className="border-b-2 border-white bg-transparent mb-6 pr-12">
+              <div className="border-b-2 border-white bg-transparent mb-6">
                 <input
                   type="text"
                   placeholder="Ask a question..."
@@ -1433,6 +1447,110 @@ const CreatePost = () => {
           )}
         </form>
       </div>
+
+      {/* Publish Confirmation Modal */}
+      <AnimatePresence>
+        {showPublishModal && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/35 backdrop-blur-[3px]"
+              onClick={handleClosePublishModal}
+            />
+
+            {/* Modal Content */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+              className="relative bg-[#080808] border-2 border-white w-full max-w-md rounded-2xl shadow-[0_0_50px_rgba(29,155,240,0.1)] overflow-hidden"
+            >
+              {/* Glow effect at top - using blue glow for publish */}
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#1d9bf0] to-transparent opacity-50" />
+
+              <div className="p-6">
+                {publishSuccess ? (
+                  <div className="py-12 text-center animate-fade-in">
+                    <div className="w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-emerald-500/30">
+                      <svg className="w-8 h-8 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-2 font-space">
+                      Published Successfully
+                    </h3>
+                    <p className="text-x-gray text-sm font-medium">
+                      Your post is now live and visible to the community!
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    {/* Header */}
+                    <div className="flex items-center justify-between mb-6 animate-fade-in">
+                      <div className="flex items-center space-x-3">
+                        <div className="p-2 bg-[#1d9bf0]/10 rounded-lg border border-[#1d9bf0]/20">
+                          <svg className="w-5 h-5 text-[#1d9bf0]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                          </svg>
+                        </div>
+                        <h2 className="text-lg font-bold text-white font-space">
+                          Publish Post
+                        </h2>
+                      </div>
+                      <button 
+                        onClick={handleClosePublishModal} 
+                        disabled={loading}
+                        className="text-x-gray hover:text-white transition-colors disabled:opacity-30"
+                      >
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+
+                    <div className="space-y-4 mb-6 animate-fade-in">
+                      <p className="text-x-white/80 text-sm font-medium leading-relaxed">
+                        Are you sure you want to publish this post? It will be immediately visible to the selected community and on the feed.
+                      </p>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex space-x-3 pt-2">
+                      <button
+                        type="button"
+                        onClick={handleClosePublishModal}
+                        disabled={loading}
+                        className="flex-1 px-4 py-2.5 bg-transparent border border-white/10 text-x-gray hover:text-white hover:border-white/20 transition-all font-bold text-sm rounded-xl disabled:opacity-30 disabled:cursor-not-allowed"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleConfirmPublish}
+                        disabled={loading}
+                        className="flex-1 px-4 py-2.5 bg-[#1d9bf0] text-black hover:bg-[#1a8cd8] transition-all font-bold text-sm rounded-xl disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[#1d9bf0]/20 flex items-center justify-center gap-2"
+                      >
+                        {loading ? (
+                          <>
+                            <LoadingSpinner size="small" compact={true} />
+                            <span>Publishing...</span>
+                          </>
+                        ) : (
+                          <span>Confirm</span>
+                        )}
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* Add keyframes for border gradient animation */}
       <style>
