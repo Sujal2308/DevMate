@@ -204,7 +204,7 @@ pre.code,
     position: relative;
     margin: 0 auto; /* Center the content */
     box-sizing: border-box;
-    border: 1px solid rgba(255, 255, 255, 0.1); /* Minimal border */
+    border: none;
     border-radius: 8px; /* Subtle rounded corners */
     padding-left: 1rem;
     padding-right: 1rem;

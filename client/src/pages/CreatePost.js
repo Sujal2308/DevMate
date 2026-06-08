@@ -1067,54 +1067,115 @@ const CreatePost = () => {
           </div>
 
           <div className="flex items-center gap-3 mb-6 px-1">
-            {/* Add Media Section */}
-            <label className="flex items-center justify-center w-9 h-9 rounded-full border cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95 select-none bg-neutral-800 border-neutral-700 hover:bg-neutral-700 hover:border-neutral-600" title="Add Media">
-              <input
-                type="file"
-                accept="image/*,application/pdf"
-                onChange={handleMediaChange}
-                className="hidden"
-              />
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                <circle cx="8.5" cy="8.5" r="1.5" />
-                <polyline points="21 15 16 10 5 21" />
-              </svg>
-            </label>
+            {/* Group wrapper for the 4 action buttons */}
+            <div className="flex items-center gap-1.5 p-1 bg-transparent border border-neutral-700/60 rounded-full">
+              {/* Add Media Section */}
+              <label
+                className={`flex items-center justify-center w-9 h-9 rounded-full cursor-pointer transition-all duration-200 select-none active:scale-95 ${
+                  media
+                    ? "text-x-blue bg-x-blue/10 hover:bg-x-blue/20"
+                    : "text-white hover:bg-white/5"
+                }`}
+                title="Add Media"
+              >
+                <input
+                  type="file"
+                  accept="image/*,application/pdf"
+                  onChange={handleMediaChange}
+                  className="hidden"
+                />
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                  <circle cx="8.5" cy="8.5" r="1.5" />
+                  <polyline points="21 15 16 10 5 21" />
+                </svg>
+              </label>
 
-            {/* Add Code Section */}
-            <button
-              type="button"
-              onClick={() => {
-                if (!formData.codeSnippet) {
-                  setFormData({
-                    ...formData,
-                    codeSnippet: "// Start coding...",
-                  });
-                  setSelectedLanguage("javascript");
-                } else {
-                  setFormData({ ...formData, codeSnippet: "" });
-                  setSelectedLanguage("");
-                }
-              }}
-              className="flex items-center justify-center w-9 h-9 rounded-full border cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95 bg-neutral-800 border-neutral-700 hover:bg-neutral-700 hover:border-neutral-600"
-              title="Add Code"
-            >
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <polyline points="16 18 22 12 16 6" />
-                <polyline points="8 6 2 12 8 18" />
-              </svg>
-            </button>
+              {/* Add Code Section */}
+              <button
+                type="button"
+                onClick={() => {
+                  if (!formData.codeSnippet) {
+                    setFormData({
+                      ...formData,
+                      codeSnippet: "// Start coding...",
+                    });
+                    setSelectedLanguage("javascript");
+                  } else {
+                    setFormData({ ...formData, codeSnippet: "" });
+                    setSelectedLanguage("");
+                  }
+                }}
+                className={`flex items-center justify-center w-9 h-9 rounded-full cursor-pointer transition-all duration-200 active:scale-95 ${
+                  formData.codeSnippet
+                    ? "text-x-blue bg-x-blue/10 hover:bg-x-blue/20"
+                    : "text-white hover:bg-white/5"
+                }`}
+                title="Add Code"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <polyline points="16 18 22 12 16 6" />
+                  <polyline points="8 6 2 12 8 18" />
+                </svg>
+              </button>
 
-            {/* Add Repo Section */}
-            <button
-              type="button"
-              onClick={() => {
-                if (showRepoInput) {
-                  setShowRepoInput(false);
-                  setFormData((prev) => ({ ...prev, repoUrl: "", repoTitle: "" }));
-                } else {
-                  setShowRepoInput(true);
+              {/* Add Repo Section */}
+              <button
+                type="button"
+                onClick={() => {
+                  if (showRepoInput) {
+                    setShowRepoInput(false);
+                    setFormData((prev) => ({
+                      ...prev,
+                      repoUrl: "",
+                      repoTitle: "",
+                    }));
+                  } else {
+                    setShowRepoInput(true);
+                    if (showPollInput) {
+                      setShowPollInput(false);
+                      setFormData((prev) => ({
+                        ...prev,
+                        pollQuestion: "",
+                        pollOptions: ["", ""],
+                      }));
+                    }
+                  }
+                }}
+                className={`flex items-center justify-center w-9 h-9 rounded-full cursor-pointer transition-all duration-200 active:scale-95 ${
+                  showRepoInput
+                    ? "text-x-blue bg-x-blue/10 hover:bg-x-blue/20"
+                    : "text-white hover:bg-white/5"
+                }`}
+                title="Add Repository"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                </svg>
+              </button>
+
+              {/* Add Poll Section */}
+              <button
+                type="button"
+                onClick={() => {
                   if (showPollInput) {
                     setShowPollInput(false);
                     setFormData((prev) => ({
@@ -1122,45 +1183,38 @@ const CreatePost = () => {
                       pollQuestion: "",
                       pollOptions: ["", ""],
                     }));
+                  } else {
+                    setShowPollInput(true);
+                    if (showRepoInput) {
+                      setShowRepoInput(false);
+                      setFormData((prev) => ({
+                        ...prev,
+                        repoUrl: "",
+                        repoTitle: "",
+                      }));
+                    }
                   }
-                }
-              }}
-              className="flex items-center justify-center w-9 h-9 rounded-full border cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95 bg-neutral-800 border-neutral-700 hover:bg-neutral-700 hover:border-neutral-600"
-              title="Add Repository"
-            >
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
-              </svg>
-            </button>
-
-            {/* Add Poll Section */}
-            <button
-              type="button"
-              onClick={() => {
-                if (showPollInput) {
-                  setShowPollInput(false);
-                  setFormData((prev) => ({
-                    ...prev,
-                    pollQuestion: "",
-                    pollOptions: ["", ""],
-                  }));
-                } else {
-                  setShowPollInput(true);
-                  if (showRepoInput) {
-                    setShowRepoInput(false);
-                    setFormData((prev) => ({ ...prev, repoUrl: "", repoTitle: "" }));
-                  }
-                }
-              }}
-              className="flex items-center justify-center w-9 h-9 rounded-full border cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95 bg-neutral-800 border-neutral-700 hover:bg-neutral-700 hover:border-neutral-600"
-              title="Add Poll"
-            >
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <line x1="18" y1="20" x2="18" y2="10" />
-                <line x1="12" y1="20" x2="12" y2="4" />
-                <line x1="6" y1="20" x2="6" y2="14" />
-              </svg>
-            </button>
+                }}
+                className={`flex items-center justify-center w-9 h-9 rounded-full cursor-pointer transition-all duration-200 active:scale-95 ${
+                  showPollInput
+                    ? "text-x-blue bg-x-blue/10 hover:bg-x-blue/20"
+                    : "text-white hover:bg-white/5"
+                }`}
+                title="Add Poll"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <line x1="18" y1="20" x2="18" y2="10" />
+                  <line x1="12" y1="20" x2="12" y2="4" />
+                  <line x1="6" y1="20" x2="6" y2="14" />
+                </svg>
+              </button>
+            </div>
 
             {/* See Preview Button */}
              <button

@@ -197,35 +197,38 @@ const News = () => {
 
   return (
     <div className="min-h-screen bg-x-black text-x-white font-sans">
-      {/* Header section with solid blue background */}
-      <div className="bg-x-blue border-b border-x-blue/30 pt-8 pb-6 mb-8 px-4 md:px-6 relative group">
-        {/* Close button */}
-        <button 
-          onClick={() => window.history.back()}
-          className="absolute top-4 right-4 md:top-6 md:right-6 p-2 text-black md:text-x-white/50 hover:text-black md:hover:text-x-white hover:bg-black/10 md:hover:bg-white/10 rounded-full transition-all duration-300"
-          title="Go Back"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-
-        <div className="max-w-2xl mx-auto">
-          <div className="flex items-center gap-4 mb-4">
-            <h1 
-              className="text-4xl md:text-6xl font-black text-x-white tracking-[10px] uppercase italic" 
-              style={{ 
-                fontFamily: "'Outfit', sans-serif"
-              }}
-            >
-              Dev News
-            </h1>
-          </div>
-          <p className="text-x-white text-base md:text-lg opacity-90">
+      <div className="flex items-start justify-between mb-8 border-b border-x-border/10 pb-4 pt-8 max-w-2xl mx-auto px-4 md:px-6 relative">
+        <div className="flex flex-col min-w-0 pr-12">
+          <h1
+            className="text-3xl md:text-4xl font-black text-x-white tracking-tight"
+            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+          >
+            Dev News
+          </h1>
+          <p className="text-x-gray text-xs sm:text-sm mt-1">
             Stay updated with the latest trends in development and technology
           </p>
-          {error && <p className="text-red-100 text-xs mt-4">Note: {error}</p>}
+          {error && <p className="text-x-red text-xs mt-1">Note: {error}</p>}
         </div>
+        <button
+          onClick={() => window.history.back()}
+          className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-red-500/10 transition-colors shrink-0 text-red-500 hover:text-red-400 absolute right-4 top-8"
+          title="Go Back"
+        >
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
       </div>
 
       <div className="max-w-2xl mx-auto p-4 md:p-6">
@@ -233,7 +236,7 @@ const News = () => {
           {news.slice(0, visibleCount).map((article) => (
             <article
               key={article.id}
-              className="bg-black rounded-none p-3 md:p-4 hover:bg-x-dark/20 transition-all duration-300 group cursor-pointer shadow-2xl"
+              className="py-4 border-b border-x-border/10 last:border-b-0 hover:bg-white/[0.01] transition-all duration-300 group cursor-pointer"
               onClick={() => article.url !== "#" && window.open(article.url, "_blank")}
             >
               <div className="flex items-start justify-between mb-3 md:mb-4">

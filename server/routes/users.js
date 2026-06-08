@@ -650,6 +650,7 @@ router.get("/:username/followers", async (req, res) => {
         _id: u._id,
         username: u.username,
         displayName: u.displayName,
+        avatar: u.avatar,
       })),
     });
   } catch (error) {

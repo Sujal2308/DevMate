@@ -330,7 +330,7 @@ const Feed = () => {
 
   return (
     <div
-      className={`w-full max-w-2xl mx-auto py-2 sm:py-4 lg:py-6 px-4 sm:px-6 lg:px-8 pb-20 lg:pb-8 x-main border-l border-r border-x-border/50 bg-gradient-to-br from-x-dark/10 to-x-dark/5${
+      className={`w-full max-w-2xl mx-auto py-2 sm:py-4 lg:py-6 px-4 sm:px-6 lg:px-8 pb-20 lg:pb-8 x-main border-l border-r border-x-border/50 lg:border-none bg-gradient-to-br from-x-dark/10 to-x-dark/5${
         loading && posts.length === 0 ? " loading" : ""
       }`}
     >
@@ -483,15 +483,15 @@ const Feed = () => {
             {/* Desktop Create Button - Collapsed to Icon on Scroll */}
             <Link
               to="/create-post"
-              className={`flex items-center justify-center transition-all duration-300 bg-black border border-white/20 text-white focus:outline-none hover:bg-white hover:text-black no-underline shadow-xl ${
+              className={`flex items-center justify-center transition-all duration-300 focus:outline-none no-underline shadow-xl ${
                 isScrolled 
-                  ? "w-9 h-9 rounded-full" 
-                  : "font-black uppercase tracking-widest text-[10px] px-5 py-2.5 rounded-full gap-2"
+                  ? "w-[44px] h-[44px] bg-red-600 hover:bg-red-700 text-white border-none rounded-full" 
+                  : "bg-black border border-white/20 text-white hover:bg-white hover:text-black font-black uppercase tracking-widest text-[10px] px-5 py-2.5 rounded-full gap-2"
               }`}
               title="Create Post"
             >
               <svg
-                className="w-4 h-4"
+                className={`transition-all duration-300 ${isScrolled ? "w-5 h-5" : "w-4 h-4"}`}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -499,7 +499,7 @@ const Feed = () => {
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth={2}
+                  strokeWidth={2.5}
                   d="M12 4v16m8-8H4"
                 />
               </svg>
@@ -564,7 +564,7 @@ const Feed = () => {
       {/* Desktop Inline Search Results */}
       {searchTerm.trim() !== "" && !isSearchOverlayOpen && (
         <div 
-          className="hidden sm:block fixed top-[68px] left-1/2 -translate-x-1/2 w-full max-w-2xl z-[45] bg-[#000000] border-l border-r border-x-border/50 overflow-y-auto h-[calc(100vh-68px)] px-6 lg:px-8 py-6 space-y-6"
+          className="hidden sm:block fixed top-[68px] left-1/2 -translate-x-1/2 w-full max-w-2xl z-[45] bg-[#000000] border-l border-r border-x-border/50 lg:border-none overflow-y-auto h-[calc(100vh-68px)] px-6 lg:px-8 py-6 space-y-6"
           style={{ boxSizing: "border-box" }}
         >
           {/* Filter Tabs */}
