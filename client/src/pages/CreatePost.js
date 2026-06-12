@@ -47,6 +47,16 @@ const CreatePost = () => {
   const [showPublishModal, setShowPublishModal] = useState(false);
   const [publishSuccess, setPublishSuccess] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [expandedRuleIdx, setExpandedRuleIdx] = useState(0);
+  const [isDesktop, setIsDesktop] = useState(typeof window !== "undefined" ? window.innerWidth >= 640 : true);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 640);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -792,7 +802,7 @@ const CreatePost = () => {
           </div>
 
           {selectedCommunity && (
-            <div className="text-white/80 text-xs font-semibold mb-3 mt-1 px-1 flex flex-wrap items-center gap-1 select-none relative z-[45]">
+            <div className="w-full text-white/80 text-xs font-semibold mb-3 mt-1 px-1 flex flex-wrap items-center gap-1 select-none relative z-[45]">
               <svg
                 className="w-3.5 h-3.5 text-amber-500 shrink-0 mr-1"
                 fill="none"
@@ -821,20 +831,20 @@ const CreatePost = () => {
                   <>
                     {/* Backdrop overlay */}
                     <div
-                      className="fixed inset-0 z-40 bg-black/10 backdrop-blur-[1px]"
+                      className="fixed inset-0 z-[80] sm:z-40 bg-black/40 sm:bg-black/10 backdrop-blur-sm sm:backdrop-blur-[1px]"
                       onClick={() => setShowRules(false)}
                     />
-                    {/* Floating Dropdown Modal below the statement button */}
+                    {/* Responsive Modal: Bottom sheet on mobile, Dropdown on desktop */}
                     <motion.div
-                      initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                      className="absolute top-full left-0 mt-2 z-50 w-80 sm:w-96 p-5 bg-white border-2 border-neutral-200 rounded-[1.5rem] shadow-2xl overflow-hidden flex flex-col max-h-[350px]"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 20 }}
+                      className="fixed sm:absolute top-0 sm:top-full bottom-0 sm:bottom-auto left-0 sm:mt-2 z-[90] sm:z-50 w-full sm:w-full pt-12 pb-5 px-5 sm:p-5 bg-white border-t sm:border border-neutral-200 rounded-t-none sm:rounded-xl shadow-[0_-10px_40px_rgba(0,0,0,0.15)] sm:shadow-2xl overflow-hidden flex flex-col h-full sm:h-auto sm:max-h-[450px]"
                     >
                       {/* Header */}
                       <div className="flex items-center justify-between pb-3 border-b border-neutral-100 mb-3 shrink-0">
                         <div>
-                          <h4 className="text-xs font-space font-black text-neutral-900 uppercase tracking-wider">
+                          <h4 className="text-sm font-space font-black text-neutral-900 tracking-wider">
                             {(() => {
                               const comm = communities.find(
                                 (c) => c._id === selectedCommunity,
@@ -851,7 +861,7 @@ const CreatePost = () => {
                         <button
                           type="button"
                           onClick={() => setShowRules(false)}
-                          className="w-6 h-6 rounded-full bg-neutral-100 border border-neutral-200 flex items-center justify-center text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 transition-all font-bold text-xs"
+                          className="w-9 h-9 flex items-center justify-center text-neutral-500 hover:text-neutral-900 transition-all text-xl bg-transparent border-none outline-none cursor-pointer active:scale-90"
                         >
                           ✕
                         </button>
@@ -892,19 +902,47 @@ const CreatePost = () => {
                           return rulesToRender.map((rule, idx) => (
                             <div
                               key={idx}
-                              className="flex gap-3 p-2.5 bg-neutral-50 border border-neutral-100 rounded-xl hover:border-neutral-200 transition-colors"
+                              onClick={isDesktop ? undefined : () => setExpandedRuleIdx(expandedRuleIdx === idx ? null : idx)}
+                              className={`flex flex-col bg-[#ff6347] rounded-[1.75rem] sm:rounded-xl py-3 px-5 select-none shadow-sm border-none mb-3 ${isDesktop ? "cursor-default" : "cursor-pointer active:scale-[0.99]"}`}
                             >
-                              <div className="w-5 h-5 rounded-full bg-x-blue/10 border border-x-blue/20 flex items-center justify-center text-x-blue text-[10px] font-black shrink-0">
-                                {idx + 1}
+                              <div className="flex items-center justify-between w-full">
+                                <div className="flex items-center gap-3">
+                                  <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center text-[#ff6347] text-xs font-black shrink-0 shadow-sm">
+                                    {idx + 1}
+                                  </div>
+                                  <h5 className="text-sm font-black text-white leading-tight">
+                                    {rule.title}
+                                  </h5>
+                                </div>
+                                {!isDesktop && (
+                                  <span className="text-white font-bold text-base shrink-0 mr-1">
+                                    {expandedRuleIdx === idx ? "−" : "+"}
+                                  </span>
+                                )}
                               </div>
-                              <div>
-                                <h5 className="text-xs font-black text-neutral-900 leading-tight mb-0.5">
-                                  {rule.title}
-                                </h5>
-                                <p className="text-[10px] text-neutral-600 leading-relaxed font-medium">
-                                  {rule.description || rule.desc}
-                                </p>
-                              </div>
+                              {isDesktop ? (
+                                <div className="mt-2">
+                                  <p className="text-xs text-white/90 leading-relaxed font-medium pl-9">
+                                    {rule.description || rule.desc}
+                                  </p>
+                                </div>
+                              ) : (
+                                <AnimatePresence initial={false}>
+                                  {expandedRuleIdx === idx && (
+                                    <motion.div
+                                      initial={{ height: 0, opacity: 0, marginTop: 0 }}
+                                      animate={{ height: "auto", opacity: 1, marginTop: 8 }}
+                                      exit={{ height: 0, opacity: 0, marginTop: 0 }}
+                                      transition={{ duration: 0.2 }}
+                                      className="overflow-hidden"
+                                    >
+                                      <p className="text-xs text-white/90 leading-relaxed font-medium pl-9">
+                                        {rule.description || rule.desc}
+                                      </p>
+                                    </motion.div>
+                                  )}
+                                </AnimatePresence>
+                              )}
                             </div>
                           ));
                         })()}
@@ -1608,15 +1646,24 @@ const CreatePost = () => {
       </AnimatePresence>
 
       {/* Mobile Floating Action Button (FAB) */}
-      <button
-        type="button"
-        onClick={() => setIsMobileMenuOpen(true)}
-        className="sm:hidden fixed bottom-6 left-6 z-[70] flex items-center justify-center w-14 h-14 bg-x-blue text-white rounded-full shadow-[0_4px_14px_0_rgba(29,155,240,0.39)] hover:scale-105 active:scale-95 transition-all"
-      >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-        </svg>
-      </button>
+      <AnimatePresence>
+        {!(isMobileMenuOpen || showRules || isCommunityModalOpen || showPublishModal || showConfirm) && (
+          <motion.button
+            key="mobile-fab"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+            type="button"
+            onClick={() => setIsMobileMenuOpen(true)}
+            className="sm:hidden fixed bottom-6 left-6 z-[70] flex items-center justify-center w-14 h-14 bg-x-blue text-white rounded-full shadow-[0_4px_14px_0_rgba(29,155,240,0.39)] hover:scale-105 active:scale-95 transition-all"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+          </motion.button>
+        )}
+      </AnimatePresence>
 
       {/* Mobile Tools Bottom Sheet */}
       <AnimatePresence>
