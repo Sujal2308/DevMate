@@ -22,8 +22,8 @@ const BottomNav = () => {
     });
   };
 
-  // Don't render if user is not logged in
-  if (!user) return null;
+  // Don't render if user is not logged in or if on the create post page
+  if (!user || location.pathname === "/create-post") return null;
 
   const isActive = (path) => {
     // Consider root path as feed

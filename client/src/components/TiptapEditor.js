@@ -357,10 +357,17 @@ const TiptapEditor = ({
           font-family: 'Inter', 'Space Grotesk', sans-serif;
           caret-color: #1d9bf0;
         }
+        @media (max-width: 640px) {
+          .tiptap-editor-area {
+            min-height: calc(100vh - 250px);
+            min-height: calc(100dvh - 250px);
+            max-height: none;
+          }
+        }
 
         /* Placeholder */
         .tiptap-editor-area p.is-editor-empty {
-          font-size: 24px;
+          font-size: 16px;
         }
         .tiptap-editor-area p.is-editor-empty:first-child::before,
         .tiptap-placeholder:first-child::before {
@@ -369,7 +376,7 @@ const TiptapEditor = ({
           pointer-events: none;
           position: absolute;
           font-family: 'Inter', sans-serif;
-          font-size: 24px;
+          font-size: 16px;
         }
 
         /* Prose styles inside editor */

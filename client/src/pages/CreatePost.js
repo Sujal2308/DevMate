@@ -34,6 +34,7 @@ const CreatePost = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState("");
+  const [showConfirm, setShowConfirm] = useState(false);
   const [showRepoInput, setShowRepoInput] = useState(false);
   const [communities, setCommunities] = useState([]);
   const [selectedCommunity, setSelectedCommunity] = useState("");
@@ -180,52 +181,12 @@ const CreatePost = () => {
       <div className="w-full max-w-4xl mx-auto pt-0 pb-8 px-0 sm:px-4 min-h-screen bg-black">
         <div className="p-3 sm:p-4 lg:p-4 bg-transparent mx-0 rounded-none relative">
           
-          {/* Mobile Toggle (Compose / Preview) */}
-          <div className="flex sm:hidden justify-center mb-6 mt-2">
-            <div className="flex bg-neutral-900/80 border border-neutral-800 p-1 rounded-full w-full max-w-[280px] shadow-lg shadow-black/40">
-              <button
-                type="button"
-                onClick={() => setShowPreview(false)}
-                className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-full text-xs font-bold transition-all duration-200 ${
-                  !showPreview
-                    ? "bg-neutral-800 text-white shadow-sm"
-                    : "text-neutral-400 hover:text-white"
-                }`}
-              >
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-                </svg>
-                <span>Compose</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  if (formData.title.trim() || getPlainText(formData.content).trim()) {
-                    setShowPreview(true);
-                  }
-                }}
-                disabled={!formData.title.trim() && !getPlainText(formData.content).trim()}
-                className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-full text-xs font-bold transition-all duration-200 ${
-                  showPreview
-                    ? "bg-neutral-800 text-white shadow-sm"
-                    : "text-neutral-400 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed"
-                }`}
-              >
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                <span>Preview</span>
-              </button>
-            </div>
-          </div>
-
           {/* Header */}
           <div className="flex items-center justify-between mb-8 mt-4">
              <button
               type="button"
               onClick={() => setShowPreview(false)}
-              className="hidden sm:flex items-center justify-center gap-2 w-9 h-9 sm:w-auto sm:h-auto sm:px-4 sm:py-2 bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 hover:border-neutral-600 rounded-full text-xs font-bold text-white transition-all active:scale-95"
+              className="flex items-center justify-center gap-2 w-9 h-9 sm:w-auto sm:h-auto sm:px-4 sm:py-2 bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 hover:border-neutral-600 rounded-full text-xs font-bold text-white transition-all active:scale-95"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                 <line x1="19" y1="12" x2="5" y2="12" />
@@ -577,45 +538,6 @@ const CreatePost = () => {
           onSubmit={handleSubmit}
           className="p-3 sm:p-4 lg:p-4 bg-transparent mx-0 rounded-none relative"
         >
-          {/* Mobile Toggle (Compose / Preview) */}
-          <div className="flex sm:hidden justify-center mb-6 mt-2">
-            <div className="flex bg-neutral-900/80 border border-neutral-800 p-1 rounded-full w-full max-w-[280px] shadow-lg shadow-black/40">
-              <button
-                type="button"
-                onClick={() => setShowPreview(false)}
-                className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-full text-xs font-bold transition-all duration-200 ${
-                  !showPreview
-                    ? "bg-neutral-800 text-white shadow-sm"
-                    : "text-neutral-400 hover:text-white"
-                }`}
-              >
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-                </svg>
-                <span>Compose</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  if (formData.title.trim() || getPlainText(formData.content).trim()) {
-                    setShowPreview(true);
-                  }
-                }}
-                disabled={!formData.title.trim() && !getPlainText(formData.content).trim()}
-                className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-full text-xs font-bold transition-all duration-200 ${
-                  showPreview
-                    ? "bg-neutral-800 text-white shadow-sm"
-                    : "text-neutral-400 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed"
-                }`}
-              >
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                <span>Preview</span>
-              </button>
-            </div>
-          </div>
           {error && (
             <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-6 py-4 rounded-xl backdrop-blur-sm mb-6 mt-4 mx-1 animate-fade-in">
               <div className="flex items-center">
@@ -638,6 +560,119 @@ const CreatePost = () => {
           )}
 
           <div className="flex flex-row items-center gap-3 mb-6 mt-4 w-full flex-nowrap overflow-visible">
+            {/* Cross/Cancel Button to go back */}
+            <div className="relative shrink-0">
+              <button
+                type="button"
+                onClick={() => {
+                  const plainText = getPlainText(formData.content).trim();
+                  const hasDraftContent =
+                    formData.title.trim() ||
+                    plainText ||
+                    formData.codeSnippet.trim() ||
+                    media;
+                  if (hasDraftContent) {
+                    setShowConfirm(true);
+                  } else {
+                    if (location.state?.communitySlug) {
+                      navigate(`/community/${location.state.communitySlug}`);
+                    } else {
+                      navigate("/feed");
+                    }
+                  }
+                }}
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-red-600 hover:bg-red-700 transition-all text-white border-none shrink-0"
+                title="Go Back"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2.5}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+
+              <AnimatePresence>
+                {showConfirm && (
+                  <>
+                    {/* Backdrop for blur and closing */}
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      onClick={() => setShowConfirm(false)}
+                      className="fixed inset-0 z-40 bg-black/20 backdrop-blur-[2px]"
+                    />
+
+                    {/* Floating Dropdown Modal below the button */}
+                    <motion.div
+                      initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                      className="absolute top-full left-0 mt-3 z-50 w-72 p-5 bg-white border border-neutral-200 rounded-xl shadow-2xl overflow-hidden"
+                    >
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 shrink-0">
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </div>
+                          <div>
+                            <h4 className="text-sm font-black text-neutral-900 tracking-tight font-space">
+                              Discard Draft?
+                            </h4>
+                            <p className="text-xs text-neutral-500 font-medium leading-tight">
+                              This will clear all content.
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              window.scrollTo({ top: 0, behavior: "smooth" });
+                              setFormData({
+                                title: "",
+                                content: "",
+                                codeSnippet: "",
+                                repoUrl: "",
+                                repoTitle: "",
+                                pollQuestion: "",
+                                pollOptions: ["", ""],
+                              });
+                              setMedia(null);
+                              setMediaPreview(null);
+                              setShowRepoInput(false);
+                              setShowPollInput(false);
+                              setShowConfirm(false);
+                              setSelectedFlair(null);
+                            }}
+                            className="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white text-[11px] font-black uppercase tracking-wider rounded-lg transition-all active:scale-95 shadow-md shadow-red-600/10"
+                          >
+                            Discard
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setShowConfirm(false)}
+                            className="flex-1 py-2.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 text-[11px] font-black uppercase tracking-wider rounded-lg transition-all active:scale-95 border border-neutral-200"
+                          >
+                            Keep
+                          </button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  </>
+                )}
+              </AnimatePresence>
+            </div>
 
             {/* Community Selector */}
             <div className="relative min-w-0 shrink">
@@ -646,11 +681,11 @@ const CreatePost = () => {
                   type="button"
                   onClick={() => setIsCommunityModalOpen(true)}
                   disabled={communities.length === 0}
-                  className={`flex items-center gap-1.5 sm:gap-2.5 px-1 sm:px-5 h-10 bg-transparent sm:bg-white/5 border-b-4 ${selectedCommunity ? 'border-b-[tomato] hover:border-b-[tomato]/80' : 'border-b-white hover:border-b-white/80'} border-t-0 border-l-0 border-r-0 sm:border-2 sm:border-neutral-700 rounded-none sm:rounded-full sm:hover:bg-white/10 sm:hover:border-white/20 transition-all group min-w-0 max-w-full ${communities.length === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                  className={`flex items-center gap-1.5 sm:gap-2.5 px-4 sm:px-5 h-10 bg-white/5 border-2 border-neutral-700 rounded-full hover:bg-white/10 hover:border-white/20 transition-all shadow-md group min-w-0 max-w-full ${communities.length === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
                   <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 max-w-full">
                     {communities.length === 0 ? (
-                      <span className="text-[11px] font-black tracking-wide text-white animate-pulse">
+                      <span className="text-[11px] font-black uppercase tracking-widest text-x-gray animate-pulse">
                         Loading...
                       </span>
                     ) : selectedCommunity ? (
@@ -671,24 +706,24 @@ const CreatePost = () => {
                                 <span className="text-xs">{c.icon}</span>
                               )}
                             </span>
-                            <span className="text-[11px] font-black tracking-wide text-white truncate max-w-[120px] sm:max-w-[200px] md:max-w-none inline-block align-middle">
+                            <span className="text-[11px] font-black uppercase tracking-widest text-white truncate max-w-[120px] sm:max-w-[200px] md:max-w-none inline-block align-middle">
                               {c.name}
                             </span>
                           </>
                         ) : (
-                          <span className="text-[11px] font-black tracking-wide text-white">
+                          <span className="text-[11px] font-black uppercase tracking-widest text-x-gray">
                             Select Community
                           </span>
                         );
                       })()
                     ) : (
-                      <span className="text-[11px] font-black tracking-wide text-white transition-colors">
+                      <span className="text-[11px] font-black uppercase tracking-widest text-x-gray group-hover:text-white transition-colors">
                         Select Community
                       </span>
                     )}
                   </div>
                   <svg
-                    className="w-3.5 h-3.5 text-white transition-colors shrink-0"
+                    className="w-3.5 h-3.5 text-x-gray group-hover:text-white transition-colors shrink-0"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -931,10 +966,10 @@ const CreatePost = () => {
                     }
                     setShowFlairGrid(!showFlairGrid);
                   }}
-                  className={`flex items-center justify-between gap-2.5 px-5 h-10 rounded-full text-[11px] font-black uppercase tracking-wider transition-all duration-300 shadow-md border-2 ${
+                  className={`flex items-center justify-between gap-2.5 h-10 rounded-full text-sm font-bold transition-all duration-300 ${
                     selectedFlair
-                      ? "border-transparent"
-                      : "bg-white/5 border-neutral-700 text-x-gray hover:bg-white/10 hover:border-white/20 group hover:text-white"
+                      ? "px-5 border-2 border-transparent shadow-md"
+                      : "px-1 bg-transparent text-x-gray group hover:text-white"
                   }`}
                   style={
                     selectedFlair
@@ -959,7 +994,7 @@ const CreatePost = () => {
                         d="M12 4v16m8-8H4"
                       />
                     </svg>
-                    {selectedFlair ? selectedFlair.name : "Add a Flair"}
+                    {selectedFlair ? selectedFlair.name : "Category"}
                   </span>
                   {!selectedFlair && <span className="text-red-500">*</span>}
                 </button>
@@ -1019,7 +1054,7 @@ const CreatePost = () => {
             </div>
           )}
 
-          <div className="mb-6">
+          <div className="mb-6 flex flex-col">
             <TiptapEditor
               value={formData.content}
               onChange={(html) => {
@@ -1029,127 +1064,76 @@ const CreatePost = () => {
               onFocus={() => {}}
               maxLength={2000}
             />
-          </div>
 
-          <div className="flex items-center gap-3 mb-6 px-1">
-            {/* Group wrapper for the 4 action buttons */}
-            <div className="flex items-center gap-1.5 p-1 bg-transparent border border-neutral-700/60 rounded-full">
-              {/* Add Media Section */}
-              <label
-                className={`flex items-center justify-center w-9 h-9 rounded-full cursor-pointer transition-all duration-200 select-none active:scale-95 ${
-                  media
-                    ? "text-x-blue bg-x-blue/10 hover:bg-x-blue/20"
-                    : "text-white hover:bg-white/5"
-                }`}
-                title="Add Media"
-              >
-                <input
-                  type="file"
-                  accept="image/*,application/pdf"
-                  onChange={handleMediaChange}
-                  className="hidden"
-                />
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
+            <div className="flex items-center gap-3 mt-4 pt-4 border-t border-neutral-800 w-full">
+              {/* Group wrapper for the 4 action buttons */}
+              <div className="flex items-center gap-2 py-1">
+                {/* Add Media Section */}
+                <label
+                  className={`flex items-center justify-center w-9 h-9 rounded-full cursor-pointer transition-all duration-200 select-none active:scale-95 ${
+                    media
+                      ? "text-x-blue bg-x-blue/10 hover:bg-x-blue/20"
+                      : "text-white hover:bg-white/5"
+                  }`}
+                  title="Add Media"
                 >
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                  <circle cx="8.5" cy="8.5" r="1.5" />
-                  <polyline points="21 15 16 10 5 21" />
-                </svg>
-              </label>
+                  <input
+                    type="file"
+                    accept="image/*,application/pdf"
+                    onChange={handleMediaChange}
+                    className="hidden"
+                  />
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                    <circle cx="8.5" cy="8.5" r="1.5" />
+                    <polyline points="21 15 16 10 5 21" />
+                  </svg>
+                </label>
 
-              {/* Add Code Section */}
-              <button
-                type="button"
-                onClick={() => {
-                  if (!formData.codeSnippet) {
-                    setFormData({
-                      ...formData,
-                      codeSnippet: "// Start coding...",
-                    });
-                    setSelectedLanguage("javascript");
-                  } else {
-                    setFormData({ ...formData, codeSnippet: "" });
-                    setSelectedLanguage("");
-                  }
-                }}
-                className={`flex items-center justify-center w-9 h-9 rounded-full cursor-pointer transition-all duration-200 active:scale-95 ${
-                  formData.codeSnippet
-                    ? "text-x-blue bg-x-blue/10 hover:bg-x-blue/20"
-                    : "text-white hover:bg-white/5"
-                }`}
-                title="Add Code"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                >
-                  <polyline points="16 18 22 12 16 6" />
-                  <polyline points="8 6 2 12 8 18" />
-                </svg>
-              </button>
-
-              {/* Add Repo Section */}
-              <button
-                type="button"
-                onClick={() => {
-                  if (showRepoInput) {
-                    setShowRepoInput(false);
-                    setFormData((prev) => ({
-                      ...prev,
-                      repoUrl: "",
-                      repoTitle: "",
-                    }));
-                  } else {
-                    setShowRepoInput(true);
-                    if (showPollInput) {
-                      setShowPollInput(false);
-                      setFormData((prev) => ({
-                        ...prev,
-                        pollQuestion: "",
-                        pollOptions: ["", ""],
-                      }));
+                {/* Add Code Section */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!formData.codeSnippet) {
+                      setFormData({
+                        ...formData,
+                        codeSnippet: "// Start coding...",
+                      });
+                      setSelectedLanguage("javascript");
+                    } else {
+                      setFormData({ ...formData, codeSnippet: "" });
+                      setSelectedLanguage("");
                     }
-                  }
-                }}
-                className={`flex items-center justify-center w-9 h-9 rounded-full cursor-pointer transition-all duration-200 active:scale-95 ${
-                  showRepoInput
-                    ? "text-x-blue bg-x-blue/10 hover:bg-x-blue/20"
-                    : "text-white hover:bg-white/5"
-                }`}
-                title="Add Repository"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
+                  }}
+                  className={`flex items-center justify-center w-9 h-9 rounded-full cursor-pointer transition-all duration-200 active:scale-95 ${
+                    formData.codeSnippet
+                      ? "text-x-blue bg-x-blue/10 hover:bg-x-blue/20"
+                      : "text-white hover:bg-white/5"
+                  }`}
+                  title="Add Code"
                 >
-                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
-                </svg>
-              </button>
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <polyline points="16 18 22 12 16 6" />
+                    <polyline points="8 6 2 12 8 18" />
+                  </svg>
+                </button>
 
-              {/* Add Poll Section */}
-              <button
-                type="button"
-                onClick={() => {
-                  if (showPollInput) {
-                    setShowPollInput(false);
-                    setFormData((prev) => ({
-                      ...prev,
-                      pollQuestion: "",
-                      pollOptions: ["", ""],
-                    }));
-                  } else {
-                    setShowPollInput(true);
+                {/* Add Repo Section */}
+                <button
+                  type="button"
+                  onClick={() => {
                     if (showRepoInput) {
                       setShowRepoInput(false);
                       setFormData((prev) => ({
@@ -1157,43 +1141,94 @@ const CreatePost = () => {
                         repoUrl: "",
                         repoTitle: "",
                       }));
+                    } else {
+                      setShowRepoInput(true);
+                      if (showPollInput) {
+                        setShowPollInput(false);
+                        setFormData((prev) => ({
+                          ...prev,
+                          pollQuestion: "",
+                          pollOptions: ["", ""],
+                        }));
+                      }
                     }
-                  }
-                }}
-                className={`flex items-center justify-center w-9 h-9 rounded-full cursor-pointer transition-all duration-200 active:scale-95 ${
-                  showPollInput
-                    ? "text-x-blue bg-x-blue/10 hover:bg-x-blue/20"
-                    : "text-white hover:bg-white/5"
-                }`}
-                title="Add Poll"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
+                  }}
+                  className={`flex items-center justify-center w-9 h-9 rounded-full cursor-pointer transition-all duration-200 active:scale-95 ${
+                    showRepoInput
+                      ? "text-x-blue bg-x-blue/10 hover:bg-x-blue/20"
+                      : "text-white hover:bg-white/5"
+                  }`}
+                  title="Add Repository"
                 >
-                  <line x1="18" y1="20" x2="18" y2="10" />
-                  <line x1="12" y1="20" x2="12" y2="4" />
-                  <line x1="6" y1="20" x2="6" y2="14" />
-                </svg>
-              </button>
-            </div>
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                  </svg>
+                </button>
 
-            {/* See Preview Button */}
-             <button
-               type="button"
-               onClick={() => setShowPreview(true)}
-               disabled={!formData.title.trim() && !getPlainText(formData.content).trim()}
-               className="ml-auto hidden sm:flex items-center justify-center sm:gap-1.5 w-9 h-9 sm:w-auto sm:px-4 bg-neutral-800 hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed border border-neutral-700 hover:border-neutral-600 rounded-full text-xs font-bold text-white transition-all hover:scale-105 active:scale-95 font-space uppercase tracking-wider"
-             >
-               <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                 <circle cx="12" cy="12" r="3" />
-               </svg>
-               <span className="hidden sm:inline">See Preview</span>
-             </button>
+                {/* Add Poll Section */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (showPollInput) {
+                      setShowPollInput(false);
+                      setFormData((prev) => ({
+                        ...prev,
+                        pollQuestion: "",
+                        pollOptions: ["", ""],
+                      }));
+                    } else {
+                      setShowPollInput(true);
+                      if (showRepoInput) {
+                        setShowRepoInput(false);
+                        setFormData((prev) => ({
+                          ...prev,
+                          repoUrl: "",
+                          repoTitle: "",
+                        }));
+                      }
+                    }
+                  }}
+                  className={`flex items-center justify-center w-9 h-9 rounded-full cursor-pointer transition-all duration-200 active:scale-95 ${
+                    showPollInput
+                      ? "text-x-blue bg-x-blue/10 hover:bg-x-blue/20"
+                      : "text-white hover:bg-white/5"
+                  }`}
+                  title="Add Poll"
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <line x1="18" y1="20" x2="18" y2="10" />
+                    <line x1="12" y1="20" x2="12" y2="4" />
+                    <line x1="6" y1="20" x2="6" y2="14" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* See Preview Button */}
+               <button
+                 type="button"
+                 onClick={() => setShowPreview(true)}
+                 disabled={!formData.title.trim() && !getPlainText(formData.content).trim()}
+                 className="ml-auto flex items-center justify-center sm:gap-1.5 w-9 h-9 sm:w-auto sm:px-4 bg-neutral-800 hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed border border-neutral-700 hover:border-neutral-600 rounded-full text-xs font-bold text-white transition-all hover:scale-105 active:scale-95 font-space uppercase tracking-wider"
+               >
+                 <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                   <circle cx="12" cy="12" r="3" />
+                 </svg>
+                 <span className="hidden sm:inline">See Preview</span>
+               </button>
+            </div>
           </div>
 
           {/* Repo Input Field */}
