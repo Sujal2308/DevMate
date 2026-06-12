@@ -1065,7 +1065,7 @@ const CreatePost = () => {
               maxLength={2000}
             />
 
-            <div className="flex items-center gap-3 mt-4 pt-4 border-t border-neutral-800 w-full">
+            <div className="flex items-center gap-3 mt-4 pt-4 pb-2 border-t border-neutral-800 w-full sticky bottom-0 bg-black/95 backdrop-blur-md z-[60]">
               {/* Group wrapper for the 4 action buttons */}
               <div className="flex items-center gap-2 py-1">
                 {/* Add Media Section */}
