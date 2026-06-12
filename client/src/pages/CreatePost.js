@@ -46,6 +46,7 @@ const CreatePost = () => {
   const [showPreview, setShowPreview] = useState(false);
   const [showPublishModal, setShowPublishModal] = useState(false);
   const [publishSuccess, setPublishSuccess] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -1065,7 +1066,7 @@ const CreatePost = () => {
               maxLength={2000}
             />
 
-            <div className="flex items-center gap-3 mt-4 pt-4 pb-2 border-t border-neutral-800 w-full sticky bottom-0 bg-black/95 backdrop-blur-md z-[60]">
+            <div className="hidden sm:flex items-center gap-3 mt-4 pt-4 pb-2 border-t border-neutral-800 w-full sticky bottom-0 bg-black/95 backdrop-blur-md z-[60]">
               {/* Group wrapper for the 4 action buttons */}
               <div className="flex items-center gap-2 py-1">
                 {/* Add Media Section */}
@@ -1603,6 +1604,104 @@ const CreatePost = () => {
               </div>
             </motion.div>
           </div>
+        )}
+      </AnimatePresence>
+
+      {/* Mobile Floating Action Button (FAB) */}
+      <button
+        type="button"
+        onClick={() => setIsMobileMenuOpen(true)}
+        className="sm:hidden fixed bottom-6 left-6 z-[70] flex items-center justify-center w-14 h-14 bg-x-blue text-white rounded-full shadow-[0_4px_14px_0_rgba(29,155,240,0.39)] hover:scale-105 active:scale-95 transition-all"
+      >
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+        </svg>
+      </button>
+
+      {/* Mobile Tools Bottom Sheet */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="sm:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[80]"
+            />
+            <motion.div
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="sm:hidden fixed bottom-0 left-0 w-full bg-[#111111] border-t border-neutral-800 rounded-t-3xl z-[90] p-6 shadow-2xl flex flex-col gap-4"
+              style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 24px)' }}
+            >
+              <div className="w-12 h-1.5 bg-neutral-700 rounded-full mx-auto mb-2" />
+              
+              <h3 className="text-white font-bold text-lg font-space mb-2">Add to post</h3>
+              
+              <div className="grid grid-cols-4 gap-4 mb-4">
+                {/* Media Button */}
+                <label className="flex flex-col items-center gap-2 cursor-pointer group">
+                  <div className={`flex items-center justify-center w-14 h-14 rounded-full transition-all ${media ? "bg-x-blue/20 text-x-blue" : "bg-neutral-800 text-white group-active:scale-95 group-hover:bg-neutral-700"}`}>
+                    <input type="file" accept="image/*,application/pdf" onChange={(e) => { handleMediaChange(e); setIsMobileMenuOpen(false); }} className="hidden" />
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" /></svg>
+                  </div>
+                  <span className="text-[11px] font-bold text-neutral-400">Media</span>
+                </label>
+
+                {/* Code Button */}
+                <button type="button" onClick={() => {
+                  if (!formData.codeSnippet) { setFormData({...formData, codeSnippet: "// Start coding..."}); setSelectedLanguage("javascript"); }
+                  else { setFormData({...formData, codeSnippet: ""}); setSelectedLanguage(""); }
+                  setIsMobileMenuOpen(false);
+                }} className="flex flex-col items-center gap-2 group">
+                  <div className={`flex items-center justify-center w-14 h-14 rounded-full transition-all ${formData.codeSnippet ? "bg-x-blue/20 text-x-blue" : "bg-neutral-800 text-white group-active:scale-95 group-hover:bg-neutral-700"}`}>
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" /></svg>
+                  </div>
+                  <span className="text-[11px] font-bold text-neutral-400">Code</span>
+                </button>
+
+                {/* Repo Button */}
+                <button type="button" onClick={() => {
+                  if (showRepoInput) { setShowRepoInput(false); setFormData(prev => ({...prev, repoUrl: "", repoTitle: ""})); }
+                  else { setShowRepoInput(true); if (showPollInput) { setShowPollInput(false); setFormData(prev => ({...prev, pollQuestion: "", pollOptions: ["", ""]})); } }
+                  setIsMobileMenuOpen(false);
+                }} className="flex flex-col items-center gap-2 group">
+                  <div className={`flex items-center justify-center w-14 h-14 rounded-full transition-all ${showRepoInput ? "bg-x-blue/20 text-x-blue" : "bg-neutral-800 text-white group-active:scale-95 group-hover:bg-neutral-700"}`}>
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" /></svg>
+                  </div>
+                  <span className="text-[11px] font-bold text-neutral-400">Repo</span>
+                </button>
+
+                {/* Poll Button */}
+                <button type="button" onClick={() => {
+                  if (showPollInput) { setShowPollInput(false); setFormData(prev => ({...prev, pollQuestion: "", pollOptions: ["", ""]})); }
+                  else { setShowPollInput(true); if (showRepoInput) { setShowRepoInput(false); setFormData(prev => ({...prev, repoUrl: "", repoTitle: ""})); } }
+                  setIsMobileMenuOpen(false);
+                }} className="flex flex-col items-center gap-2 group">
+                  <div className={`flex items-center justify-center w-14 h-14 rounded-full transition-all ${showPollInput ? "bg-x-blue/20 text-x-blue" : "bg-neutral-800 text-white group-active:scale-95 group-hover:bg-neutral-700"}`}>
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" /></svg>
+                  </div>
+                  <span className="text-[11px] font-bold text-neutral-400">Poll</span>
+                </button>
+              </div>
+
+              {/* Preview Button */}
+              <button
+                type="button"
+                onClick={() => { setShowPreview(true); setIsMobileMenuOpen(false); }}
+                disabled={!formData.title.trim() && !getPlainText(formData.content).trim()}
+                className="flex items-center justify-center gap-2 w-full h-12 bg-white text-black disabled:opacity-50 disabled:cursor-not-allowed rounded-xl font-bold transition-all active:scale-95 font-space tracking-wide"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" />
+                </svg>
+                See Preview
+              </button>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
 
