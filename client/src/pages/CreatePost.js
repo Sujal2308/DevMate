@@ -753,9 +753,9 @@ const CreatePost = () => {
                 onClose={() => setIsCommunityModalOpen(false)}
                 communities={communities}
                 selectedCommunityId={selectedCommunity}
-                onSelect={(id) => {
+                onSelect={(id, flair) => {
                   setSelectedCommunity(id);
-                  setSelectedFlair(null);
+                  setSelectedFlair(flair || null);
                   setError("");
                 }}
               />
@@ -1014,7 +1014,7 @@ const CreatePost = () => {
                     selectedFlair
                       ? {
                           backgroundColor: selectedFlair.color,
-                          color: "#000",
+                          color: "#fff",
                         }
                       : {}
                   }
@@ -1075,9 +1075,9 @@ const CreatePost = () => {
                               style={{
                                 background: f.color,
                                 borderColor: isSelected
-                                  ? "#000"
+                                  ? "#fff"
                                   : "transparent",
-                                color: "#000",
+                                color: "#fff",
                                 borderWidth: isSelected ? "2px" : "1px",
                               }}
                             >
