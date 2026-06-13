@@ -113,6 +113,7 @@ const CreatePost = () => {
       } else if (file.type === "application/pdf") {
         setMediaPreview("PDF_DOCUMENT");
       }
+      scrollToBottom();
     }
   };
 
@@ -121,6 +122,15 @@ const CreatePost = () => {
     const div = document.createElement("div");
     div.innerHTML = html;
     return div.textContent || div.innerText || "";
+  };
+
+  const scrollToBottom = () => {
+    setTimeout(() => {
+      window.scrollTo({
+        top: document.documentElement.scrollHeight || document.body.scrollHeight,
+        behavior: "smooth"
+      });
+    }, 150);
   };
 
   const handleSubmit = (e) => {
@@ -187,10 +197,8 @@ const CreatePost = () => {
     }
   };
 
-  if (showPreview) {
-    return (
-      <div className="w-full max-w-4xl mx-auto pt-0 pb-8 px-0 sm:px-4 min-h-screen bg-black">
-        <div className="p-3 sm:p-4 lg:p-4 bg-transparent mx-0 rounded-none relative">
+  const previewContent = (
+    <div className="p-3 sm:p-4 lg:p-4 bg-transparent mx-0 rounded-none relative">
           
           {/* Header */}
           <div className="flex items-center justify-between mb-8 mt-4">
@@ -536,14 +544,15 @@ const CreatePost = () => {
             </div>
           </div>
         </div>
-      </div>
-    );
-  }
+  );
 
   return (
     <div className="w-full max-w-4xl mx-auto pt-0 pb-8 px-0 sm:px-4 min-h-screen bg-black">
-      {/* Single Column Layout */}
-      <div className="space-y-4 sm:space-y-6 lg:space-y-8">
+      {showPreview ? (
+        previewContent
+      ) : (
+        /* Single Column Layout */
+        <div className="space-y-4 sm:space-y-6 lg:space-y-8">
         {/* Form Section */}
         <form
           onSubmit={handleSubmit}
@@ -1273,6 +1282,19 @@ const CreatePost = () => {
           {/* Repo Input Field */}
           {showRepoInput && (
             <div className="mb-6 space-y-4 p-5 bg-[#d97706]/10 backdrop-blur-sm border-2 border-white rounded-2xl relative group/repo">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowRepoInput(false);
+                  setFormData(prev => ({ ...prev, repoUrl: "", repoTitle: "" }));
+                }}
+                className="absolute top-4 right-4 text-white/50 hover:text-white bg-white/10 hover:bg-white/20 p-1.5 rounded-full transition-all duration-200 z-10"
+                title="Remove repo"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
               <div className="border-b border-white/40 bg-transparent transition-all mb-4">
                 <input
                   type="text"
@@ -1320,6 +1342,19 @@ const CreatePost = () => {
           {/* Poll Input Field */}
           {showPollInput && (
             <div className="mb-6 space-y-4 p-5 bg-[#1d9bf0]/10 backdrop-blur-sm border-2 border-white rounded-2xl relative group/poll">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowPollInput(false);
+                  setFormData(prev => ({ ...prev, pollQuestion: "", pollOptions: ["", ""] }));
+                }}
+                className="absolute top-4 right-4 text-white/50 hover:text-white bg-white/10 hover:bg-white/20 p-1.5 rounded-full transition-all duration-200 z-10"
+                title="Remove poll"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
               <div className="border-b-2 border-white bg-transparent mb-6">
                 <input
                   type="text"
@@ -1540,6 +1575,7 @@ const CreatePost = () => {
           )}
         </form>
       </div>
+      )}
 
       {/* Publish Confirmation Modal */}
       <AnimatePresence>
@@ -1665,6 +1701,59 @@ const CreatePost = () => {
         )}
       </AnimatePresence>
 
+      {/* Mobile Compose / Preview Toggle */}
+      <AnimatePresence>
+        {!(isMobileMenuOpen || showRules || isCommunityModalOpen || showPublishModal || showConfirm) && (
+          <motion.div
+            key="mobile-toggle"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+            className="sm:hidden fixed bottom-6 right-6 z-[70] flex items-center bg-neutral-900/90 backdrop-blur-md border border-neutral-800 rounded-full p-1 shadow-lg h-12"
+          >
+            <div className="relative flex items-center h-full gap-1">
+              {/* Compose Button */}
+              <button
+                type="button"
+                onClick={() => setShowPreview(false)}
+                className={`relative z-10 h-full px-4 rounded-full text-xs font-bold font-space transition-colors duration-200 flex items-center justify-center ${
+                  !showPreview ? "text-white" : "text-neutral-500 hover:text-neutral-300"
+                }`}
+              >
+                {!showPreview && (
+                  <motion.div
+                    layoutId="active-pill"
+                    className="absolute inset-0 bg-black rounded-full z-[-1]"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                )}
+                Compose
+              </button>
+
+              {/* Preview Button */}
+              <button
+                type="button"
+                onClick={() => setShowPreview(true)}
+                disabled={!formData.title.trim() && !getPlainText(formData.content).trim()}
+                className={`relative z-10 h-full px-4 rounded-full text-xs font-bold font-space transition-colors duration-200 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center ${
+                  showPreview ? "text-white" : "text-neutral-500 hover:text-neutral-300"
+                }`}
+              >
+                {showPreview && (
+                  <motion.div
+                    layoutId="active-pill"
+                    className="absolute inset-0 bg-black rounded-full z-[-1]"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                )}
+                Preview
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Mobile Tools Bottom Sheet */}
       <AnimatePresence>
         {isMobileMenuOpen && (
@@ -1700,7 +1789,11 @@ const CreatePost = () => {
 
                 {/* Code Button */}
                 <button type="button" onClick={() => {
-                  if (!formData.codeSnippet) { setFormData({...formData, codeSnippet: "// Start coding..."}); setSelectedLanguage("javascript"); }
+                  if (!formData.codeSnippet) { 
+                    setFormData({...formData, codeSnippet: "// Start coding..."}); 
+                    setSelectedLanguage("javascript"); 
+                    scrollToBottom();
+                  }
                   else { setFormData({...formData, codeSnippet: ""}); setSelectedLanguage(""); }
                   setIsMobileMenuOpen(false);
                 }} className="flex flex-col items-center gap-2 group">
@@ -1713,7 +1806,11 @@ const CreatePost = () => {
                 {/* Repo Button */}
                 <button type="button" onClick={() => {
                   if (showRepoInput) { setShowRepoInput(false); setFormData(prev => ({...prev, repoUrl: "", repoTitle: ""})); }
-                  else { setShowRepoInput(true); if (showPollInput) { setShowPollInput(false); setFormData(prev => ({...prev, pollQuestion: "", pollOptions: ["", ""]})); } }
+                  else { 
+                    setShowRepoInput(true); 
+                    if (showPollInput) { setShowPollInput(false); setFormData(prev => ({...prev, pollQuestion: "", pollOptions: ["", ""]})); } 
+                    scrollToBottom();
+                  }
                   setIsMobileMenuOpen(false);
                 }} className="flex flex-col items-center gap-2 group">
                   <div className={`flex items-center justify-center w-14 h-14 rounded-full transition-all ${showRepoInput ? "bg-x-blue/20 text-x-blue" : "bg-neutral-800 text-white group-active:scale-95 group-hover:bg-neutral-700"}`}>
@@ -1725,7 +1822,11 @@ const CreatePost = () => {
                 {/* Poll Button */}
                 <button type="button" onClick={() => {
                   if (showPollInput) { setShowPollInput(false); setFormData(prev => ({...prev, pollQuestion: "", pollOptions: ["", ""]})); }
-                  else { setShowPollInput(true); if (showRepoInput) { setShowRepoInput(false); setFormData(prev => ({...prev, repoUrl: "", repoTitle: ""})); } }
+                  else { 
+                    setShowPollInput(true); 
+                    if (showRepoInput) { setShowRepoInput(false); setFormData(prev => ({...prev, repoUrl: "", repoTitle: ""})); } 
+                    scrollToBottom();
+                  }
                   setIsMobileMenuOpen(false);
                 }} className="flex flex-col items-center gap-2 group">
                   <div className={`flex items-center justify-center w-14 h-14 rounded-full transition-all ${showPollInput ? "bg-x-blue/20 text-x-blue" : "bg-neutral-800 text-white group-active:scale-95 group-hover:bg-neutral-700"}`}>
@@ -1734,19 +1835,6 @@ const CreatePost = () => {
                   <span className="text-[11px] font-bold text-neutral-400">Poll</span>
                 </button>
               </div>
-
-              {/* Preview Button */}
-              <button
-                type="button"
-                onClick={() => { setShowPreview(true); setIsMobileMenuOpen(false); }}
-                disabled={!formData.title.trim() && !getPlainText(formData.content).trim()}
-                className="flex items-center justify-center gap-2 w-full h-12 bg-white text-black disabled:opacity-50 disabled:cursor-not-allowed rounded-xl font-bold transition-all active:scale-95 font-space tracking-wide"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" />
-                </svg>
-                See Preview
-              </button>
             </motion.div>
           </>
         )}
