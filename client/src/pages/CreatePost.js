@@ -205,57 +205,25 @@ const CreatePost = () => {
              <button
               type="button"
               onClick={() => setShowPreview(false)}
-              className="flex items-center justify-center gap-2 w-9 h-9 sm:w-auto sm:h-auto sm:px-4 sm:py-2 bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 hover:border-neutral-600 rounded-full text-xs font-bold text-white transition-all active:scale-95"
+              className="hidden sm:flex items-center justify-center gap-2 sm:px-4 sm:py-2 bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 hover:border-neutral-600 rounded-full text-xs font-bold text-white transition-all active:scale-95"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                 <line x1="19" y1="12" x2="5" y2="12" />
                 <polyline points="12 19 5 12 12 5" />
               </svg>
-              <span className="hidden sm:inline">Back to Editor</span>
+              <span>Back to Editor</span>
             </button>
             
-            <h2 className="text-xs sm:text-base md:text-lg font-black uppercase tracking-widest text-neutral-400 font-space">
+            <h2 className="text-xs sm:text-base md:text-lg font-black uppercase tracking-widest text-neutral-400 font-space text-center w-full sm:w-auto">
               Post Preview
             </h2>
 
-             <button
-              type="button"
-              onClick={handleSubmit}
-              disabled={loading || !formData.title.trim() || !getPlainText(formData.content).trim()}
-              className="bg-transparent text-white sm:bg-white sm:text-black hover:bg-white/10 sm:hover:bg-neutral-100 disabled:opacity-50 disabled:cursor-not-allowed font-bold transition-all duration-200 flex items-center justify-center w-10 h-10 sm:border-2 sm:border-neutral-700 sm:rounded-full sm:w-auto sm:h-10 sm:px-5 gap-1.5"
-            >
-              {loading ? (
-                <>
-                  <LoadingSpinner size="small" compact={true} />
-                  <span className="hidden sm:inline text-[11px] font-black uppercase tracking-wider text-black">
-                    Publishing...
-                  </span>
-                </>
-              ) : (
-                <>
-                  <span className="hidden sm:inline text-[11px] font-black uppercase tracking-wider text-black">
-                    Publish
-                  </span>
-                  <svg
-                    className="w-6 h-6 sm:w-3.5 sm:h-3.5 rotate-45 transform"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={3}
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"
-                    />
-                  </svg>
-                </>
-              )}
-            </button>
+            {/* Spacer to balance the layout */}
+            <div className="hidden sm:block sm:w-[110px]" />
           </div>
 
           {/* Preview Card */}
-          <div className="p-4 bg-x-dark border border-x-border/20 rounded-xl sm:card sm:p-6 sm:bg-gradient-to-br sm:from-x-dark/60 sm:to-x-dark/30 sm:backdrop-blur-sm sm:border sm:border-x-border/30 sm:rounded-2xl sm:shadow-2xl">
+          <div className="p-4 sm:p-6">
             <div className="flex items-center mb-6">
               <div
                 className={`bg-black text-white w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold mr-4 shadow-lg overflow-hidden relative`}
@@ -322,7 +290,7 @@ const CreatePost = () => {
             <div className="space-y-6">
               {/* Title Preview */}
               {formData.title && (
-                <div className="px-1">
+                <div className="px-1 border-b-[3px] border-white pb-3 mb-4">
                   <h2
                     className="text-xl sm:text-2xl font-black text-x-white leading-tight tracking-tight"
                     style={{ fontFamily: "'Space Grotesk', sans-serif" }}
@@ -547,7 +515,7 @@ const CreatePost = () => {
   );
 
   return (
-    <div className="w-full max-w-4xl mx-auto pt-0 pb-8 px-0 sm:px-4 min-h-screen bg-black">
+    <div className="w-full max-w-4xl mx-auto pt-0 pb-8 px-0 sm:px-4 min-h-screen bg-black sm:border-x sm:border-neutral-800 relative flex flex-col">
       {showPreview ? (
         previewContent
       ) : (
@@ -1113,170 +1081,7 @@ const CreatePost = () => {
               maxLength={2000}
             />
 
-            <div className="hidden sm:flex items-center gap-3 mt-4 pt-4 pb-2 border-t border-neutral-800 w-full sticky bottom-0 bg-black/95 backdrop-blur-md z-[60]">
-              {/* Group wrapper for the 4 action buttons */}
-              <div className="flex items-center gap-2 py-1">
-                {/* Add Media Section */}
-                <label
-                  className={`flex items-center justify-center w-9 h-9 rounded-full cursor-pointer transition-all duration-200 select-none active:scale-95 ${
-                    media
-                      ? "text-x-blue bg-x-blue/10 hover:bg-x-blue/20"
-                      : "text-white hover:bg-white/5"
-                  }`}
-                  title="Add Media"
-                >
-                  <input
-                    type="file"
-                    accept="image/*,application/pdf"
-                    onChange={handleMediaChange}
-                    className="hidden"
-                  />
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                  >
-                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                    <circle cx="8.5" cy="8.5" r="1.5" />
-                    <polyline points="21 15 16 10 5 21" />
-                  </svg>
-                </label>
 
-                {/* Add Code Section */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (!formData.codeSnippet) {
-                      setFormData({
-                        ...formData,
-                        codeSnippet: "// Start coding...",
-                      });
-                      setSelectedLanguage("javascript");
-                    } else {
-                      setFormData({ ...formData, codeSnippet: "" });
-                      setSelectedLanguage("");
-                    }
-                  }}
-                  className={`flex items-center justify-center w-9 h-9 rounded-full cursor-pointer transition-all duration-200 active:scale-95 ${
-                    formData.codeSnippet
-                      ? "text-x-blue bg-x-blue/10 hover:bg-x-blue/20"
-                      : "text-white hover:bg-white/5"
-                  }`}
-                  title="Add Code"
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                  >
-                    <polyline points="16 18 22 12 16 6" />
-                    <polyline points="8 6 2 12 8 18" />
-                  </svg>
-                </button>
-
-                {/* Add Repo Section */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (showRepoInput) {
-                      setShowRepoInput(false);
-                      setFormData((prev) => ({
-                        ...prev,
-                        repoUrl: "",
-                        repoTitle: "",
-                      }));
-                    } else {
-                      setShowRepoInput(true);
-                      if (showPollInput) {
-                        setShowPollInput(false);
-                        setFormData((prev) => ({
-                          ...prev,
-                          pollQuestion: "",
-                          pollOptions: ["", ""],
-                        }));
-                      }
-                    }
-                  }}
-                  className={`flex items-center justify-center w-9 h-9 rounded-full cursor-pointer transition-all duration-200 active:scale-95 ${
-                    showRepoInput
-                      ? "text-x-blue bg-x-blue/10 hover:bg-x-blue/20"
-                      : "text-white hover:bg-white/5"
-                  }`}
-                  title="Add Repository"
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
-                  </svg>
-                </button>
-
-                {/* Add Poll Section */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (showPollInput) {
-                      setShowPollInput(false);
-                      setFormData((prev) => ({
-                        ...prev,
-                        pollQuestion: "",
-                        pollOptions: ["", ""],
-                      }));
-                    } else {
-                      setShowPollInput(true);
-                      if (showRepoInput) {
-                        setShowRepoInput(false);
-                        setFormData((prev) => ({
-                          ...prev,
-                          repoUrl: "",
-                          repoTitle: "",
-                        }));
-                      }
-                    }
-                  }}
-                  className={`flex items-center justify-center w-9 h-9 rounded-full cursor-pointer transition-all duration-200 active:scale-95 ${
-                    showPollInput
-                      ? "text-x-blue bg-x-blue/10 hover:bg-x-blue/20"
-                      : "text-white hover:bg-white/5"
-                  }`}
-                  title="Add Poll"
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                  >
-                    <line x1="18" y1="20" x2="18" y2="10" />
-                    <line x1="12" y1="20" x2="12" y2="4" />
-                    <line x1="6" y1="20" x2="6" y2="14" />
-                  </svg>
-                </button>
-              </div>
-
-              {/* See Preview Button */}
-               <button
-                 type="button"
-                 onClick={() => setShowPreview(true)}
-                 disabled={!formData.title.trim() && !getPlainText(formData.content).trim()}
-                 className="ml-auto flex items-center justify-center sm:gap-1.5 w-9 h-9 sm:w-auto sm:px-4 bg-neutral-800 hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed border border-neutral-700 hover:border-neutral-600 rounded-full text-xs font-bold text-white transition-all hover:scale-105 active:scale-95 font-space uppercase tracking-wider"
-               >
-                 <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                   <circle cx="12" cy="12" r="3" />
-                 </svg>
-                 <span className="hidden sm:inline">See Preview</span>
-               </button>
-            </div>
           </div>
 
           {/* Repo Input Field */}
@@ -1683,7 +1488,7 @@ const CreatePost = () => {
 
       {/* Mobile Floating Action Button (FAB) */}
       <AnimatePresence>
-        {!(isMobileMenuOpen || showRules || isCommunityModalOpen || showPublishModal || showConfirm) && (
+        {!(isMobileMenuOpen || showRules || isCommunityModalOpen || showPublishModal || showConfirm || showPreview) && (
           <motion.button
             key="mobile-fab"
             initial={{ scale: 0, opacity: 0 }}
@@ -1697,6 +1502,32 @@ const CreatePost = () => {
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
             </svg>
+          </motion.button>
+        )}
+      </AnimatePresence>
+
+      {/* Mobile Floating Publish Button in Preview Mode */}
+      <AnimatePresence>
+        {showPreview && !(isMobileMenuOpen || showRules || isCommunityModalOpen || showPublishModal || showConfirm) && (
+          <motion.button
+            key="mobile-publish"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+            type="button"
+            onClick={handleSubmit}
+            disabled={loading || !formData.title.trim() || !getPlainText(formData.content).trim()}
+            className="sm:hidden fixed bottom-6 left-6 z-[70] flex items-center justify-center px-5 h-12 bg-[#1d9bf0] text-white font-bold text-xs rounded-full shadow-[0_4px_14px_0_rgba(29,155,240,0.3)] font-space transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? (
+              <div className="flex items-center gap-1.5">
+                <LoadingSpinner size="small" compact={true} />
+                <span>Publishing...</span>
+              </div>
+            ) : (
+              <span>Publish</span>
+            )}
           </motion.button>
         )}
       </AnimatePresence>
@@ -1839,6 +1670,201 @@ const CreatePost = () => {
           </>
         )}
       </AnimatePresence>
+
+      {/* Desktop Floating Action Dock (Separated Left & Right) */}
+      <div className="hidden sm:block sticky bottom-6 w-full px-6 pointer-events-none z-[60] mt-auto">
+        <div className="flex items-center justify-between w-full pointer-events-auto">
+          {/* Left Dock: 4 Action Icons */}
+          {!showPreview ? (
+            <div className="flex items-center gap-2 bg-neutral-900/90 backdrop-blur-md border border-neutral-800/80 rounded-full p-2.5 shadow-2xl h-14 w-fit">
+              {/* Add Media Section */}
+              <label
+                className={`flex items-center justify-center w-9 h-9 rounded-full cursor-pointer transition-all duration-200 select-none active:scale-95 ${
+                  media
+                    ? "text-x-blue bg-x-blue/10 hover:bg-x-blue/20"
+                    : "text-white hover:bg-white/5"
+                }`}
+                title="Add Media"
+              >
+                <input
+                  type="file"
+                  accept="image/*,application/pdf"
+                  onChange={handleMediaChange}
+                  className="hidden"
+                />
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                  <circle cx="8.5" cy="8.5" r="1.5" />
+                  <polyline points="21 15 16 10 5 21" />
+                </svg>
+              </label>
+
+              {/* Add Code Section */}
+              <button
+                type="button"
+                onClick={() => {
+                  if (!formData.codeSnippet) {
+                    setFormData({
+                      ...formData,
+                      codeSnippet: "// Start coding...",
+                    });
+                    setSelectedLanguage("javascript");
+                  } else {
+                    setFormData({ ...formData, codeSnippet: "" });
+                    setSelectedLanguage("");
+                  }
+                }}
+                className={`flex items-center justify-center w-9 h-9 rounded-full cursor-pointer transition-all duration-200 active:scale-95 ${
+                  formData.codeSnippet
+                    ? "text-x-blue bg-x-blue/10 hover:bg-x-blue/20"
+                    : "text-white hover:bg-white/5"
+                }`}
+                title="Add Code"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <polyline points="16 18 22 12 16 6" />
+                  <polyline points="8 6 2 12 8 18" />
+                </svg>
+              </button>
+
+              {/* Add Repo Section */}
+              <button
+                type="button"
+                onClick={() => {
+                  if (showRepoInput) {
+                    setShowRepoInput(false);
+                    setFormData((prev) => ({
+                      ...prev,
+                      repoUrl: "",
+                      repoTitle: "",
+                    }));
+                  } else {
+                    setShowRepoInput(true);
+                    if (showPollInput) {
+                      setShowPollInput(false);
+                      setFormData((prev) => ({
+                        ...prev,
+                        pollQuestion: "",
+                        pollOptions: ["", ""],
+                      }));
+                    }
+                  }
+                }}
+                className={`flex items-center justify-center w-9 h-9 rounded-full cursor-pointer transition-all duration-200 active:scale-95 ${
+                  showRepoInput
+                    ? "text-x-blue bg-x-blue/10 hover:bg-x-blue/20"
+                    : "text-white hover:bg-white/5"
+                }`}
+                title="Add Repository"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                </svg>
+              </button>
+
+              {/* Add Poll Section */}
+              <button
+                type="button"
+                onClick={() => {
+                  if (showPollInput) {
+                    setShowPollInput(false);
+                    setFormData((prev) => ({
+                      ...prev,
+                      pollQuestion: "",
+                      pollOptions: ["", ""],
+                    }));
+                  } else {
+                    setShowPollInput(true);
+                    if (showRepoInput) {
+                      setShowRepoInput(false);
+                      setFormData((prev) => ({
+                        ...prev,
+                        repoUrl: "",
+                        repoTitle: "",
+                      }));
+                    }
+                  }
+                }}
+                className={`flex items-center justify-center w-9 h-9 rounded-full cursor-pointer transition-all duration-200 active:scale-95 ${
+                  showPollInput
+                    ? "text-x-blue bg-x-blue/10 hover:bg-x-blue/20"
+                    : "text-white hover:bg-white/5"
+                }`}
+                title="Add Poll"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <line x1="18" y1="20" x2="18" y2="10" />
+                  <line x1="12" y1="20" x2="12" y2="4" />
+                  <line x1="6" y1="20" x2="6" y2="14" />
+                </svg>
+              </button>
+            </div>
+          ) : (
+            <div />
+          )}
+
+          {/* Right Dock: Compose / Preview Toggle */}
+          <div className="flex items-center bg-neutral-900 border border-neutral-800 rounded-full p-1 h-12 shadow-2xl">
+            <button
+              type="button"
+              onClick={() => setShowPreview(false)}
+              className={`relative px-4 h-full rounded-full text-[11px] font-bold font-space transition-colors duration-200 flex items-center justify-center ${
+                !showPreview ? "text-white" : "text-neutral-500 hover:text-neutral-300"
+              }`}
+            >
+              {!showPreview && (
+                <motion.div
+                  layoutId="active-pill-desktop"
+                  className="absolute inset-0 bg-black rounded-full z-0"
+                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                />
+              )}
+              <span className="relative z-10">Compose</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowPreview(true)}
+              disabled={!formData.title.trim() && !getPlainText(formData.content).trim()}
+              className={`relative px-4 h-full rounded-full text-[11px] font-bold font-space transition-colors duration-200 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center ${
+                showPreview ? "text-white" : "text-neutral-500 hover:text-neutral-300"
+              }`}
+            >
+              {showPreview && (
+                <motion.div
+                  layoutId="active-pill-desktop"
+                  className="absolute inset-0 bg-black rounded-full z-0"
+                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                />
+              )}
+              <span className="relative z-10">Preview</span>
+            </button>
+          </div>
+        </div>
+      </div>
 
       {/* Add keyframes for border gradient animation */}
       <style>
